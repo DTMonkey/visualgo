@@ -101,21 +101,20 @@ function closeRemove() {
 	}
 }
 
-$( document ).ready(function() {
-	
-	//must define actions-hide click function
-	$('#actions-hide').click(function() {
-		if(isActionsOpen) {
-			closeSearch();
-			closeInsert();
-			closeRemove();
-			hideActionsPanel();
-		} else {
-			if(isActionsEnabled) {
-				showActionsPanel();
-			}
+function hideEntireActionsPanel() {
+	if(isActionsOpen) {
+		closeSearch();
+		closeInsert();
+		closeRemove();
+		hideActionsPanel();
+	} else {
+		if(isActionsEnabled) {
+			showActionsPanel();
 		}
-	});
+	}
+}
+
+$( document ).ready(function() {
 	
 	//the actions with pullout inputs
 	$('#search').click(function() {
@@ -144,8 +143,28 @@ $( document ).ready(function() {
 		closeRemove();
 	});
 		
-	//start by showing help overlay -- later control appearance using cookie?
+	//start by showing help overlay -- change to tutorial mode
+	/*
 	$('#dark-overlay').fadeIn(function(){
 		$('#help').fadeIn();
+	});
+	*/
+	
+	//tutorial mode
+	$('#bst-tutorial-2 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#bst-tutorial-3 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#bst-tutorial-4 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#bst-tutorial-5 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#bst-tutorial-6 .tutorial-next').click(function() {
+		hideCodetracePanel();
 	});
 });

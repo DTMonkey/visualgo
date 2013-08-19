@@ -1,3 +1,5 @@
+var mode="exploration";
+
 //codetrace highlight
 function highlightLine(lineNumber) { /*lineNumber has to be an integer in [1, 7]*/
 	if(lineNumber == 0) {
@@ -10,7 +12,7 @@ function highlightLine(lineNumber) { /*lineNumber has to be an integer in [1, 7]
 
 //disabling certain panels/player controls when user should not press them
 var isActionsEnabled = true;
-var isStatusCodetraceEnabled = false;
+var isStatusCodetraceEnabled = true;
 var isPlayerEnabled = false;
 
 function enablePlayer() {
@@ -61,7 +63,6 @@ function showActionsPanel() {
 			width: "+="+actionsWidth,
 		});
 		isActionsOpen = true;
-
 	}
 }
 function hideActionsPanel() {
@@ -121,9 +122,6 @@ $( document ).ready(function() {
 	});
 	
 	//mmode menu
-	var mode="exploration";
-	$('#question').hide();
-	//$('#other-modes').hide();
 	
 	$('#mode-button').click(function() {
 		$('#other-modes').toggle();
@@ -143,16 +141,20 @@ $( document ).ready(function() {
 		var newMode = $(this).html();
 		
 		$(this).html(currentMode);
-		$('#mode-button').html(newMode + '<img src="img/arrow_white.png" alt="Home"/>');
+		$('#mode-button').html(newMode + '<img src="img/arrow_white.png"/>');
 		
 		if(newMode=="Exploration Mode") {
+			mode = "exploration";
 			$('#status-hide').show();
 			$('#codetrace-hide').show();
 			$('#actions-hide').show();
 			$('#status').show();
 			$('#codetrace').show();
 			$('#actions').show();
+			$('.tutorial-dialog').hide();
+			enableActionsOnly();
 		/*} else if(newMode=="Training Mode") {
+			mode = "training";
 			$('#status').hide();
 			$('#codetrace').hide();
 			$('#actions').hide();
@@ -161,20 +163,33 @@ $( document ).ready(function() {
 			$('#actions-hide').hide();
 			*/
 		} else if (newMode=="Tutorial Mode") {
+			mode = "tutorial";
 			$('#status-hide').show();
 			$('#codetrace-hide').show();
 			$('#actions-hide').show();
 			$('#status').show();
 			$('#codetrace').show();
 			$('#actions').show();
-			$('#dark-overlay').fadeIn(function(){
+			/*$('#dark-overlay').fadeIn(function(){
 				$('#help').fadeIn();
-			});
+			});*/
+			if(!isActionsEnabled) { //that means animation is playing
+				stop();
+			}
+			isActionsEnabled = true;
+			isStatusCodetraceEnabled = true;
+			$('#actions-hide').css('background-color','#ed5a7d');
+			$('#status-hide').css('background-color','#2ebbd1');
+			$('#codetrace-hide').css('background-color','#52bc69');
+			enablePlayer();
+			hideEntireActionsPanel();
+			hideStatusPanel();
+			hideCodetracePanel();
+			$('.tutorial-dialog').first().fadeIn(500);
 		}
 	});
 	
 	//arrow buttons to show/hide panels	
-	//actions-hide is in the vizname_actions.js file
 	$('#status-hide').click(function() {
 		if(isStatusOpen) {
 			hideStatusPanel();
@@ -193,5 +208,16 @@ $( document ).ready(function() {
 			}
 		}
 	});
+	$('#actions-hide').click(function() {
+		hideEntireActionsPanel(); //must define hideEntireActionsPanel() function in vizname_actions.js file
+	});
 	
+	//tutorial mode
+	$('.tutorial-dialog .tutorial-next').click(function() {
+		var nextNo = parseInt($(this).parent().attr('id').slice(-1))+1;
+		var nextId = '#bst-tutorial-'+nextNo;
+		$(this).parent().fadeOut(500, function() {
+			$(nextId).fadeIn(500);
+		});
+	});
 });

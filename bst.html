@@ -41,7 +41,7 @@
 		<fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
     </span>
     <div id="mode-menu">
-    	<div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
+    	<div id="mode-button">Exploration Mode<img src="img/arrow_white.png"/></div>
         <div id="other-modes">
             <a href="#">Tutorial Mode</a>
             <!--<a href="#">Training Mode</a>--> <!--under construction-->
@@ -166,6 +166,43 @@
     </div>
 </div>
 
+<!--tutorial dialogs here-->
+<div id="bst-tutorial-1" class="tutorial-dialog">
+	A Binary Search Tree (BST) is a tree in which each node has only 2 children. A node's left child (if existent) must hold a value smaller than its own, and its right child (if existent) must hold a value larger than its own. An AVL tree is a self-balancing BST.
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-2" class="tutorial-dialog">
+	To toggle between the standard Binary Search Tree and the AVL Tree, select the respective header.
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-3" class="tutorial-dialog">
+	All available operations on the BST/AVL Tree will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-4" class="tutorial-dialog">
+	View the visualisation here!
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-5" class="tutorial-dialog">
+	As the action is being carried out, each step will be described in the status panel.
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-6" class="tutorial-dialog">
+	You can also follow the psuedocode highlights to trace the algorithm.
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-7" class="tutorial-dialog">
+	Control the animation with the player controls! Keyboard shortcuts are:<br/><br/>
+    <strong>Spacebar:</strong> play/pause/replay<br/>
+    <strong>Left and right arrows:</strong> step backward and step forward<br/>
+    <strong>- and +:</strong> decrease or increase speed<br/>
+    <strong>End:</strong> stop the animation
+    <div class="tutorial-next">Next >></div>
+</div>
+<div id="bst-tutorial-8" class="tutorial-dialog">
+	Return to "Exploration Mode" to start exploring!
+</div>
+
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
 <script src="js/graph_library/helperObjects.js"></script>
@@ -187,7 +224,7 @@
     var gw = bstWidget.getGraphWidget();
 
 	function findMin() {
-		if(bstWidget.findMin()) {
+		if((mode=="exploration")&&bstWidget.findMin()) {
 			$('#current-action').show();
 			$('#current-action p').html("Find minimum");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -197,7 +234,7 @@
 	}
 	
 	function findMax() {
-		if(bstWidget.findMax()) {
+		if((mode=="exploration")&&bstWidget.findMax()) {
 			$('#current-action').show();
 			$('#current-action p').html("Find maximum");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -209,7 +246,7 @@
     function searchVertex(){
         var input = $('#v-search').val();
         input = parseInt(input);
-        if(bstWidget.search(input)) {
+        if((mode=="exploration")&&bstWidget.search(input)) {
 			$('#current-action').show();
 			$('#current-action p').html("Search for "+ input);
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -221,7 +258,7 @@
     function insertVertex(){
         var input = $('#v-insert').val();
         input = input.split(",");
-        if(bstWidget.insertArr(input)) {
+        if((mode=="exploration")&&bstWidget.insertArr(input)) {
 			$('#current-action').show();
 			$('#current-action p').html("Insert "+ input);
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -233,7 +270,7 @@
    function removeVertex(){
         var input = $('#v-remove').val();
         input = input.split(",");
-        if(bstWidget.removeArr(input)) {
+        if((mode=="exploration")&&bstWidget.removeArr(input)) {
 			$('#current-action').show();
 			$('#current-action p').html("Remove "+ input);
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -243,7 +280,7 @@
     }
 	
 	function inorderTraversal(){
-        if(bstWidget.inorderTraversal()) {
+        if((mode=="exploration")&&bstWidget.inorderTraversal()) {
 			$('#current-action').show();
 			$('#current-action p').html("In-order Traversal");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);

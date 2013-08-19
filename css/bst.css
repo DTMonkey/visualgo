@@ -143,3 +143,89 @@
 	left: 201px;
 	padding: 8px 0px 7px;
 }
+
+/*all tutorial stuff here*/
+#bst-tutorial-1 {
+	top: 60px;
+	left: 60px;
+	width: 250px;
+}
+#bst-tutorial-2 {
+	top: 60px;
+	left: 220px;
+	width: 230px;
+}
+	#bst-tutorial-2:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-3 {
+	bottom: 200px;
+	left: 60px;
+	width: 220px;
+}
+	#bst-tutorial-3:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-4 {
+	top: 300px;
+	left: 50%;
+	width: 200px;
+	margin-left: -110px;
+}
+	#bst-tutorial-4:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-5 {
+	bottom: 335px;
+	right: 150px;
+	width: 200px;
+}
+	#bst-tutorial-5:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-6 {
+	bottom: 275px;
+	right: 170px;
+	width: 180px;
+}
+	#bst-tutorial-6:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-7 {
+	bottom: 70px;
+	left: 50%;
+	width: 220px;
+	margin-left: -120px;
+}
+	#bst-tutorial-7:before {
+		top: 100%;
+		left: 50%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#bst-tutorial-8 {
+	top: 70px;
+	right: 60px;
+	width: 150px;
+}
+	#bst-tutorial-8:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}

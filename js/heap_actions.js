@@ -81,21 +81,20 @@ function closeInsert() {
 	}
 }
 
-$( document ).ready(function() {
-	
-	//must define actions-hide click function
-	$('#actions-hide').click(function() {
-		if(isActionsOpen) {
-			closeBuildv1();
-			closeBuildv2();
-			closeInsert();
-			hideActionsPanel();
-		} else {
-			if(isActionsEnabled) {
-				showActionsPanel();
-			}
+function hideEntireActionsPanel() {
+	if(isActionsOpen) {
+		closeBuildv1();
+		closeBuildv2();
+		closeInsert();
+		hideActionsPanel();
+	} else {
+		if(isActionsEnabled) {
+			showActionsPanel();
 		}
-	});
+	}
+}
+
+$( document ).ready(function() {
 	
 	//the actions with pullout inputs
 	$('#buildv1').click(function() {

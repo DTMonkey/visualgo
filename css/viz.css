@@ -244,20 +244,31 @@ html { overflow-y: auto; } /*override common.css*/
 	-o-transition: .5s; /* Opera */	
 }
 
-/*------------end PAGES PAGE ONLY------------*/
-
-@media (min-width: 320px) { /* 320-480px */
-
+/*tutorial stuff*/
+.tutorial-dialog {
+	position: fixed;
+	background: black;
+	color: white;
+	padding: 12px;
+	border-radius: 3px;
+	display: none;
 }
-
-@media (min-width: 480px) { /* 480-768px */
-
-}
-
-@media (min-width: 768px) { /* 768-1024px */
-
-}
-
-@media (min-width: 1024px) { /* more than 1024px */
-
-}
+	.tutorial-dialog:before {
+		content: " ";
+		position: absolute;
+		height: 0px;
+		width: 0px;
+		border-style:solid;
+		border-width:10px;
+		border-color: transparent;
+	}
+	.tutorial-next {
+		position: absolute;
+		bottom: -10px;
+		right: -10px;
+		padding: 5px 8px;
+		background: #999;
+		color: white;
+		cursor: pointer;
+		border-radius: 2px;
+	}

@@ -184,7 +184,7 @@
 	var gw = heapWidget.getGraphWidget();
 		
 	function buildv1() {
-		if (heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
+		if ((mode=="exploration")&&heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
 			$('#current-action').show();
 			$('#current-action p').html("Build heap version 1: "+ $('#arrv1').val());
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -194,7 +194,7 @@
 	}
 	
 	function buildv2() {
-		if (heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
+		if ((mode=="exploration")&&heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
 			$('#current-action').show();
 			$('#current-action p').html("Build heap version 2: "+ $('#arrv2').val());
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -204,7 +204,7 @@
 	}
 		
 	function insert() {
-		if (heapWidget.insert(parseInt(document.getElementById("v").value), true)) {
+		if ((mode=="exploration")&&heapWidget.insert(parseInt(document.getElementById("v").value), true)) {
 			$('#current-action').show();
 			$('#current-action p').html("Insert "+ $('#v').val());
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -215,7 +215,7 @@
 	}
 	
 	function extractmax() {
-		if (heapWidget.extractMax(true)) {
+		if ((mode=="exploration")&&heapWidget.extractMax(true)) {
 			$('#current-action').show();
 			$('#current-action p').html("Extract max");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -228,7 +228,7 @@
 	}
 	
 	function heapsort() {
-		if (heapWidget.heapSort()) {
+		if ((mode=="exploration")&&heapWidget.heapSort()) {
 			$('#current-action').show();
 			$('#current-action p').html("Heapsort");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
@@ -243,7 +243,6 @@
 	//playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidgetNew.js
 	var isPaused = false;
 	function isAtEnd() {
-		//alert(gw.getCurrentIteration()+", "+(gw.getTotalIteration()-1));
 		return (gw.getCurrentIteration()==(gw.getTotalIteration()-1));
 	}
 	
