@@ -1,0 +1,263 @@
+@charset "utf-8";
+
+html { overflow-y: auto; } /*override common.css*/
+#main { padding: 40px; } /*override common.css*/
+
+/*top-bar right*/
+#mode-menu {
+	z-index: 1001;
+	float: right;
+	background: black;
+	font-size: 14px;
+	width: 160px;
+	position: relative;
+}
+	#mode-button { cursor: pointer; padding: 11px 15px; }
+		#mode-button img { /*down arrow*/
+			position: absolute;
+			top: 18px;
+			right: 15px;
+			display: inline-block;
+		}
+	#other-modes {
+		position: absolute;
+		width: 160px;
+		background: black;
+		display: none;
+	}
+	#other-modes a {
+		display: block;
+		padding: 8px 15px;
+	}
+
+#left-bar {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 40px;
+	background: black;
+	z-index: -1;
+}
+
+#right-bar {
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	height: 100%;
+	width: 40px;
+	background: black;
+	z-index: -2;
+}
+
+#bottom-bar { /*overwrite common.css*/
+	position: fixed;
+	bottom: 0px;
+	box-sizing: border-box;
+	-moz-box-sizing:border-box; /* Firefox */
+	width: 100%;
+}
+
+#speed-control {
+	position: fixed;
+	left: 40px;
+	bottom: 15px;
+	color: white;
+	font-size: 11px;
+	line-height: 100%;
+}
+	#speed-control .ui-slider {
+		position: relative;
+		display: inline-block;
+		margin: 0px 10px;
+		border-left: 5px solid #666;
+		border-right: 5px solid #666;
+		background-color: #666;
+		height: 6px;
+		width: 70px;
+	}
+		#speed-control .ui-slider-handle {
+			position: absolute;
+			margin-left: -5px;
+			border: none;
+			outline: none;
+			background-color: white;
+			height: 6px;
+			width: 10px;
+		}
+
+#media-controls {
+
+}
+	.media-control-button {
+		cursor: pointer;
+		position: fixed;
+	}
+		.media-control-button img {
+			display: inline-block;
+		}
+	#next {
+		bottom: 10px;
+		left: 50%;
+		margin-left: -210px; /*23px space*/
+	}
+	#pause, #play {
+		bottom: 8px;
+		left: 50%;
+		margin-left: -249px;
+	}
+	#previous {
+		bottom: 10px;
+		left: 50%;
+		margin-left: -284px;
+	}
+	#stop {
+		bottom: 10px;
+		left: 50%;
+		margin-left: 198px;
+	}
+	#progress-bar.ui-slider {
+		bottom: 17px;
+		left: 50%;
+		margin-left: -175px;
+		background-color: #666;
+		height: 6px;
+		width: 350px;
+	}
+		#progress-bar .ui-slider-handle {
+			position: absolute;
+			border: none;
+			outline: none;
+			background-color: #52bc69;
+			height: 6px;
+			width: 1px;
+		}
+		#progress-bar .ui-slider-range {
+			position: absolute;
+			background-color: #52bc69;
+			height: 6px;
+		}
+
+#viz {
+	margin: 0px 20px;
+	text-align: center;
+	overflow: hidden;
+}
+
+.execAction { cursor: pointer; }
+	.execAction p:hover { background: black; }
+
+.panel {
+	position: fixed;
+	color: white;
+	width: 0px;
+	overflow: hidden;
+}
+	.panel-hide { position: fixed; cursor: pointer; }
+	
+#current-action {
+	top: 60px;
+	left: 60px;
+	background: black;
+	width: auto;
+	display: none;
+}
+	#current-action p{ padding: 10px; }
+	
+#actions {
+	bottom: 60px;
+	left: 43px;
+	background: #ed5a7d;
+}
+	#actions p { padding: 5px 10px; cursor: pointer; }
+		#actions p:hover { background: black; }
+	#actions-hide {
+		bottom: 60px;
+		left: 0px;
+		background: #ed5a7d;
+	}
+	
+#status {
+	bottom: 255px;
+	right: 43px;
+	height: 54px;
+	background: #2ebbd1;
+}
+	#status p { padding: 10px; }
+	#status-hide {
+		bottom: 255px;
+		right: 0px;
+		padding: 19px 14px 19px 15px;
+		background: #2ebbd1;
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg); /* IE 9 */
+		-webkit-transform: rotate(180deg); /* Safari and Chrome */
+		-o-transform: rotate(180deg); /* Opera */
+		-moz-transform: rotate(180deg); /* Firefox */
+	}
+	
+#codetrace {
+	bottom: 60px;
+	right: 43px;
+	height: 192px;
+	background: #52bc69;
+	font-family: "Courier New", Courier, monospace;
+}
+	#codetrace p { padding: 5px 10px; }
+		#codetrace p.highlighted { background: black; }
+	#codetrace-hide {
+		bottom: 60px;
+		right: 0px;
+		padding: 88px 14px 88px 15px;
+		background: #52bc69;		
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg); /* IE 9 */
+		-webkit-transform: rotate(180deg); /* Safari and Chrome */
+		-o-transform: rotate(180deg); /* Opera */
+		-moz-transform: rotate(180deg); /* Firefox */
+	}
+	
+.rotateRight {
+	transform: rotate(180deg);
+	-ms-transform: rotate(180deg); /* IE 9 */
+	-webkit-transform: rotate(180deg); /* Safari and Chrome */
+	-o-transform: rotate(180deg); /* Opera */
+	-moz-transform: rotate(180deg); /* Firefox */
+				
+	/* if you want to do this move with animate use transition */
+	transition: .5s;
+	-moz-transition: .5s; /* Firefox 4 */
+	-webkit-transition: .5s; /* Safari and Chrome */
+	-o-transition: .5s; /* Opera */	
+}
+.rotateLeft {
+	transform: rotate(0deg);
+	-ms-transform: rotate(0deg); /* IE 9 */
+	-webkit-transform: rotate(0deg); /* Safari and Chrome */
+	-o-transform: rotate(0deg); /* Opera */
+	-moz-transform: rotate(0deg); /* Firefox */
+				
+	/* if you want to do this move with animate use transition */
+	transition: .5s;
+	-moz-transition: .5s; /* Firefox 4 */
+	-webkit-transition: .5s; /* Safari and Chrome */
+	-o-transition: .5s; /* Opera */	
+}
+
+/*------------end PAGES PAGE ONLY------------*/
+
+@media (min-width: 320px) { /* 320-480px */
+
+}
+
+@media (min-width: 480px) { /* 480-768px */
+
+}
+
+@media (min-width: 768px) { /* 768-1024px */
+
+}
+
+@media (min-width: 1024px) { /* more than 1024px */
+
+}

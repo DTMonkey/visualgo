@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'CreteRoundItalic';
+    src: url('CreteRound-Italic-webfont.eot');
+    src: url('CreteRound-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('CreteRound-Italic-webfont.woff') format('woff'),
+         url('CreteRound-Italic-webfont.ttf') format('truetype'),
+         url('CreteRound-Italic-webfont.svg#CreteRoundItalic') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'CreteRoundRegular';
+    src: url('CreteRound-Regular-webfont.eot');
+    src: url('CreteRound-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('CreteRound-Regular-webfont.woff') format('woff'),
+         url('CreteRound-Regular-webfont.ttf') format('truetype'),
+         url('CreteRound-Regular-webfont.svg#CreteRoundRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}

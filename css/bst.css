@@ -1,0 +1,145 @@
+@charset "utf-8";
+
+#actions { height: 118px; width: 150px; } /*normal line is 27px*/
+	#actions-hide {
+		padding: 51px 15px 51px 14px;
+	}
+	
+#help {
+	width: 450px;
+	height: 300px;
+	margin-left: -225px;
+	margin-top: -150px;
+}
+
+/*all action pullout (input) stuff here*/
+#find-min {
+	position: fixed;
+	bottom: 146px;
+	left: 196px;
+	background: #ed5a7d;
+	width: 0px;
+	color: white;
+	overflow: hidden;
+}
+	#find-min p {
+		padding: 7px 8px 8px;
+	}
+#find-max {
+	position: fixed;
+	bottom: 146px;
+	left: 264px;
+	background: #ed5a7d;
+	width: 0px;
+	color: white;
+	overflow: hidden;
+}
+	#find-max p {
+		padding: 7px 8px 8px;
+	}
+#search-input {
+	position: fixed;
+	bottom: 146px;
+	left: 336px;
+	background: #ed5a7d;
+	width: 0px;
+	overflow: hidden;
+}
+	#search-input input {
+		width: 40px;
+		background: black;
+		color: white;
+		padding: 8px 8px 8px;
+	}
+	#search-go {
+		position: fixed;
+		bottom: 146px;
+		left: 368px;
+		width: 0px;
+		background: #ed5a7d;
+		color: white;
+		overflow: hidden;
+	}
+		#search-go p {
+			padding: 7px 8px 8px;
+		}
+		
+#insert-input {
+	position: fixed;
+	bottom: 119px;
+	left: 196px;
+	background: #ed5a7d;
+	width: 0px;
+	overflow: hidden;
+}
+	#insert-input input {
+		width: 40px;
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#insert-go {
+		position: fixed;
+		bottom: 119px;
+		left: 228px;
+		width: 0px;
+		background: #ed5a7d;
+		color: white;
+		overflow: hidden;
+	}
+		#insert-go p {
+			padding: 5px 8px;
+		}
+		
+#remove-input {
+	position: fixed;
+	bottom: 92px;
+	left: 196px;
+	background: #ed5a7d;
+	width: 0px;
+	overflow: hidden;
+}
+	#remove-input input {
+		width: 40px;
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#remove-go {
+		position: fixed;
+		bottom: 92px;
+		left: 228px;
+		width: 0px;
+		background: #ed5a7d;
+		color: white;
+		overflow: hidden;
+	}
+		#remove-go p {
+			padding: 5px 8px;
+		}
+		
+/*all action pullout (error) stuff here*/
+.err {
+	position: fixed;
+	color: red;
+}
+#search-err { /* currently unused*/
+	bottom: 146px;
+	left: 272px;
+	padding: 5px 0px;
+}
+#insert-err {
+	bottom: 119px;
+	left: 272px;
+	padding: 5px 0px;
+}
+#remove-err { /* currently unused*/
+	bottom: 92px;
+	left: 272px;
+	padding: 5px 0px;
+}
+#inorder-err { /* currently unused*/
+	bottom: 60px;
+	left: 201px;
+	padding: 8px 0px 7px;
+}

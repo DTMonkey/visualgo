@@ -1,0 +1,41 @@
+#actions { height: 145px; }
+	#actions-hide {
+		padding: 64px 15px 65px 14px;
+	}
+	
+#help {
+	width: 450px;
+	height: 220px;
+	margin-left: -225px;
+	margin-top: -110px;
+}
+
+/*old stuff*/
+svg {
+	width: 750px;
+	height: 44px;
+}
+
+	svg rect {
+		fill: #dddddd;
+	}
+	
+	svg text {
+		font-family: "PT Sans";
+		font-weight: bold;
+		font-size: 20px;
+		fill: black;
+	}
+	
+#op {
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: -23px;
+}
+	
+#line {
+	height: 3px;
+	width: 750px;
+	background: black;
+	margin-bottom: 10px;
+}

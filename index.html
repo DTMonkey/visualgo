@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Visualizations - Home</title>
+
+<!--css-->
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/home.css">
+
+<!--js-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="js/home.js"></script>
+<script src="js/common.js"></script>
+
+<!--fonts-->
+<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+<!--facebook login stuff-->
+<div id="fb-root"></div>
+<script>
+  // Load the SDK asynchronously
+  (function(d){
+   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script'); js.id = id; js.async = true;
+   js.src = "//connect.facebook.net/en_US/all.js";
+   ref.parentNode.insertBefore(js, ref);
+  }(document));
+</script>
+<!-- end facebook login stuff-->
+
+<div id="top-bar">
+	<a id="home" href="">we<span class="colour">need</span>a<span class="colour">name</span></a>
+    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
+    <span id="trick">
+		<fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
+    </span>
+</div>
+
+<h1>we<span class="colour">need</span>a<span class="colour">name</span></h1>
+<h2>visualising data structures and algorithms</h2>
+<form id="searchbar">
+	<input id="search" type="text" autocomplete="off" value="Search..."
+    ><div id="show-filters" title="show/hide filters"><img src="img/arrow_white.png"/></div>
+</form>
+<div id="active-tags"></div>
+<div id="emptySearchMsg">No results were found.</div>
+<div id="filters-and-lines">
+    <div class="line" style="margin-top: 20px;"></div>
+    <div id="filters"></div>
+    <div class="line"></div>
+</div>
+
+<div id="main">
+<ul id="list">
+    <li class="viz" id="sorting">
+    	<div class="li-wrapper">
+            <a class="thumbnail">
+                <img src="img/sorting.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Sorting</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    
+    <li class="viz" id="bst">
+    	<div class="li-wrapper">
+            <a class="thumbnail" href="bst.html">
+                <img src="img/bst.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="bst.html">Binary Search Tree, AVL Tree</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="heap">
+    	<div class="li-wrapper">
+            <a class="thumbnail" href="heap.html">
+                <img src="img/heap.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="heap.html">Binary Heap</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="union">
+    	<div class="li-wrapper">
+            <a class="thumbnail">
+                <img src="img/union.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Union Find</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="linked">
+		<div class="li-wrapper">
+            <a class="thumbnail" >
+                <img src="img/list.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Linked List, Stack, Queue</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li  class="viz" id="bitmask">
+    	<div class="li-wrapper">
+            <a class="thumbnail" >
+                <img src="img/bitmask.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Bitmask</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="graphs">
+    	<div class="li-wrapper">
+            <a class="thumbnail" >
+                <img src="img/graphs.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Graphs</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+    <li class="viz" id="mst">
+    	<div class="li-wrapper">
+            <a class="thumbnail" >
+                <img src="img/mst.jpg">
+            </a>
+            <div class="info">
+                <h3><a href="">Minimum Spanning Tree</a></h3>
+                <div class="indv-viz-filters"></div>
+            </div>
+        </div>
+    </li>
+</ul>
+</div>
+
+<div id="temp">
+    <p>We are migrating!</p>
+    <a href="http://www.comp.nus.edu.sg/~stevenha/visualization/index.html">Access the old site here!</a>
+</div>
+
+<div id="bottom-bar">
+	<a id="trigger-about">About</a>
+    <a id="trigger-team">Team</a>
+    <a id="trigger-terms">Terms of use</a>
+</div>
+
+<!-- Bottom bar and overlay popups -->
+<div id="dark-overlay">
+</div>
+
+<div id="about" class="overlays">
+	<h4>About the project</h4>
+    <img class="close-overlay" src="img/cross_white.png" />
+    <div class="content">
+        <p><strong><span style="line-height: 200%;">Motivation</span></strong><br/>
+        	WeNeedAName was conceptualised in 2011 by Dr Steven Halim as a tool to help his students better understand data structures and algorithms, by allowing them to learn the basics on their own and at their own pace. Together with two of his students from the National University of Singapore, a series of visualisations were developed and consolidated, from simple sorting algorithms to complex graph data structures.</p>
+        <p>Though specifically designed for the use of NUS students taking various data structure and algorithm classes (CS1020, CS2010, CS2020, and CS3233), as advocators of online learning, we hope that curious minds around the world will find these visualisations useful as well.</p>
+        <p><strong><span style="line-height: 200%;">Ongoing developments</span></strong><br/>
+        	WeNeedAName is an ongoing project (as is evident from its name!), and more complex visualisations are still being developed. Originally developed using HTML5 Canvas, we are currently redesigning the site to harness the power of Scalable Vector Graphics (SVG) instead. An automated testing system is also in the works.</p>
+        <p><strong><span style="line-height: 200%;">Publications</span></strong><br/>
+        	This work has been presented briefly at the CLI Workshop at the ACM ICPC World Finals 2012 (Poland, Warsaw) and at the <a href="http://www.mii.lt/olympiads_in_informatics/htm/INFOL099.htm" target="_blank">IOI Conference at IOI 2012</a> (Sirmione-Montichiari, Italy).</p>
+    </div>
+</div>
+
+<div id="team" class="overlays">
+	<h4>The team</h4>
+    <img class="close-overlay" src="img/cross_white.png" />
+    <div class="content">
+        <p><strong><span style="line-height: 200%;">Project leader</span></strong><br/><a href="http://www.comp.nus.edu.sg/~stevenha/" target="_blank">Dr Steven Halim</a>, Lecturer, SoC, NUS</p>
+        <p><strong><span style="line-height: 200%;">Initial Programmers</span></strong><br/>
+        	<a href="http://zichun.i-xo.net/" target="_blank">Koh Zi Chun</a><br/>
+            <a href="http://roticv.rantx.com/" target="_blank">Victor Loh Bo Huai</a></p>
+        <p><strong><span style="line-height: 200%;">Past Final Year Project students</span></strong><br/>
+            Phan Thi Quynh Trang<br/>
+            Peter Phandi<br/>
+            Albert Millardo Tjindradinata<br/>
+        <p><strong><span style="line-height: 200%;">Present Final Year Project students</span></strong><br/>
+            Nguyen Hoang Duy<br/>
+            <a href="http://www.rosemarietan.com/" target="_blank">Rose Marie Tan Zhao Yun</a><br/>
+            Ivan Reinaldo</p>
+        <p><strong><span style="line-height: 200%;">Advisor</span></strong><br/><a href="http://felix-halim.net/" target="_blank">Felix Halim</a></p>
+    </div>
+</div>
+
+<div id="termsofuse" class="overlays">
+	<h4>Terms of use</h4>
+    <img class="close-overlay" src="img/cross_white.png" />
+    <div class="content">
+        <p>If you are a data structure and algorithm teacher, you are allowed to use this website for your classes. You can take screen shots from this website and use the screen shots elsewhere as long as you cite this website as a reference.</p><!--I think we need a better copyright/terms of use statement-->
+    </div>
+</div>
+
+</body>
+</html>
