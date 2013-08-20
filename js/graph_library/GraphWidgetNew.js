@@ -275,6 +275,9 @@ var GraphWidget = function(){
 	  highlightLine(animationStateList[currentIteration]["lineNo"]);
 	  if(currentIteration == lastIteration) {
 		  pause(); //in html file
+		  $('#play img').attr('src','img/replay.png').attr('alt','replay').attr('title','replay');
+	  } else {
+		  $('#play img').attr('src','img/play.png').attr('alt','play').attr('title','play');
 	  }
     } catch(error){
       // Status has not been integrated in most of my animation, so leave it like this

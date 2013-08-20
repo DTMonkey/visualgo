@@ -103,10 +103,12 @@
 
 <div id="speed-control">slow<div id="speed-input"></div>fast</div>
 <div id="media-controls">
+	<span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
 	<span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
     <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="img/pause.png" alt="pause" /></span>
     <span id="play" class="media-control-button" title="play" onclick=play()><img src="img/play.png" alt="play" /></span>
     <span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="img/nextFrame.png" alt="next frame" /></span>
+    <span id="go-to-end" class="media-control-button" title="go to end" onclick=goToEnd()><img src="img/goToEnd.png" alt="go to end"/></span>
     <div id="progress-bar" class="media-control-button"></div>
     <span id="stop" class="media-control-button" title="end animation" onclick=stop()><img src="img/stop.png" alt="stop" /></span>
 </div>
@@ -269,6 +271,14 @@
 	function stepBackward() {
 		pause();
 		gw.forcePrevious(250);	
+	}
+	function goToBeginning() {
+		gw.jumpToIteration(0,0);
+		pause();
+	}
+	function goToEnd() {
+		gw.jumpToIteration(gw.getTotalIteration()-1,0);
+		pause();
 	}
 	function stop() {
 		gw.stop();

@@ -92,29 +92,45 @@ html { overflow-y: auto; } /*override common.css*/
 	.media-control-button {
 		cursor: pointer;
 		position: fixed;
+		opacity: 0.75;
 	}
+		.media-control-button:hover {
+			opacity: 1.0;
+		}
 		.media-control-button img {
 			display: inline-block;
 		}
+	#go-to-end {
+		bottom: 10px;
+		left: 50%;
+		margin-left: -205px; /*20px space*/
+	}
 	#next {
 		bottom: 10px;
 		left: 50%;
-		margin-left: -210px; /*23px space*/
+		margin-left: -237px;
 	}
 	#pause, #play {
 		bottom: 8px;
 		left: 50%;
-		margin-left: -249px;
+		margin-left: -273px;
+		opacity: 1.0;
 	}
 	#previous {
 		bottom: 10px;
 		left: 50%;
-		margin-left: -284px;
+		margin-left: -305px;
+	}
+	#go-to-beginning {
+		bottom: 10px;
+		left: 50%;
+		margin-left: -335px;
 	}
 	#stop {
 		bottom: 10px;
 		left: 50%;
-		margin-left: 198px;
+		margin-left: 195px;
+		opacity: 1.0;
 	}
 	#progress-bar.ui-slider {
 		bottom: 17px;
@@ -123,6 +139,7 @@ html { overflow-y: auto; } /*override common.css*/
 		background-color: #666;
 		height: 6px;
 		width: 350px;
+		opacity: 1.0;
 	}
 		#progress-bar .ui-slider-handle {
 			position: absolute;
@@ -252,6 +269,7 @@ html { overflow-y: auto; } /*override common.css*/
 	padding: 12px;
 	border-radius: 3px;
 	display: none;
+	line-height: 150%;
 }
 	.tutorial-dialog:before {
 		content: " ";
@@ -266,7 +284,7 @@ html { overflow-y: auto; } /*override common.css*/
 		position: absolute;
 		bottom: -10px;
 		right: -10px;
-		padding: 5px 8px;
+		padding: 3px 8px;
 		background: #999;
 		color: white;
 		cursor: pointer;
