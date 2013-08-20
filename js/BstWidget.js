@@ -5,7 +5,7 @@
 var BST = function(){
   var self = this;
   var graphWidget = new GraphWidget();
-  var isAVL = false;
+  var isAVL = true;
 
   var valueRange = [1, 100]; // Range of valid values of BST vertexes allowed
   var maxHeightAllowed = 4;
@@ -217,7 +217,7 @@ var BST = function(){
     var currentState = createState(internalBst);
     var currentVertexClass;
     var key;
-	var ans;
+	  var ans;
 
     currentState["status"] = "The current BST";
     currentState["lineNo"] = 0;
@@ -229,8 +229,8 @@ var BST = function(){
       currentState["status"] = "Tree is empty, there is no minimum value.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	  graphWidget.startAnimation(stateList);
-	  return true;
+	    graphWidget.startAnimation(stateList);
+	    return true;
     }
 
     while(currentVertex != null){
@@ -246,7 +246,7 @@ var BST = function(){
         currentState["lineNo"] = 2;
       }
       else{
-		ans = currentVertex;
+		    ans = currentVertex;
         currentState["status"] = "Minimum value found!"
         currentState["lineNo"] = 4;
       }
@@ -275,7 +275,7 @@ var BST = function(){
 
     currentState = createState(internalBst);
     currentState["status"] = "Find Min has ended. The minimum value is "+ans+".";
-	currentState["lineNo"] = 0;
+	  currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);
@@ -291,7 +291,7 @@ var BST = function(){
     var currentState = createState(internalBst);
     var currentVertexClass;
     var key;
-	var ans;
+	  var ans;
 
     currentState["status"] = "The current BST";
     currentState["lineNo"] = 0;
@@ -303,8 +303,8 @@ var BST = function(){
       currentState["status"] = "Tree is empty, there is no maximum value.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	  graphWidget.startAnimation(stateList);
-	  return true;
+	    graphWidget.startAnimation(stateList);
+	    return true;
     }
 
     while(currentVertex != null){
@@ -320,7 +320,7 @@ var BST = function(){
         currentState["lineNo"] = 2;
       }
       else{
-		ans = currentVertex;
+		    ans = currentVertex;
         currentState["status"] = "Maximum value found!"
         currentState["lineNo"] = 4;
       }
@@ -376,7 +376,7 @@ var BST = function(){
       currentState["status"] = "Tree is empty.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	  return true;
+	    return true;
     }
 
     else inorderTraversalRecursion(internalBst["root"]);
@@ -847,37 +847,149 @@ var BST = function(){
 
           if(bf == 2){
             var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
+            var vertexCheckBfLeftClass = internalBst[vertexCheckBfLeft]["vertexClassNumber"];
             var bfLeft = internalBst[vertexCheckBfLeft]["balanceFactor"];
 
             if(bfLeft == 1){
               rotateRight(vertexCheckBf);
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
             }
 
             else if(bfLeft == -1){
+              var vertexCheckBfLeftRight = internalBst[vertexCheckBfLeft]["rightChild"];
+              var vertexCheckBfLeftRightClass = internalBst[vertexCheckBfLeftRight]["vertexClassNumber"];
+
               rotateLeft(vertexCheckBfLeft);
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate left " + vertexCheckBfLeft + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
+
               rotateRight(vertexCheckBf);
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfLeftRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
             }
           }
 
           else if(bf == -2){
             var vertexCheckBfRight = internalBst[vertexCheckBf]["rightChild"];
+            var vertexCheckBfRightClass = internalBst[vertexCheckBfRight]["vertexClassNumber"];
             var bfRight = internalBst[vertexCheckBfRight]["balanceFactor"];
 
             if(bfRight == 1){
+              var vertexCheckBfRightLeft = internalBst[vertexCheckBfRight]["leftChild"];
+              var vertexCheckBfRightLeftClass = internalBst[vertexCheckBfRightLeft]["vertexClassNumber"];
+
               rotateRight(vertexCheckBfRight);
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate right " + vertexCheckBfRight + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
+
               rotateLeft(vertexCheckBf);
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
             }
 
             else if(bfRight == -1){
               rotateLeft(vertexCheckBf);
-            }
-          }
 
-          if(bf == 2 || bf == -2){
-            currentState = createState(internalBst);
-            currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
-            currentState["status"] = "AVL Rotate " + vertexCheckBf + ".";
-            stateList.push(currentState);
+              currentState = createState(internalBst);
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+              stateList.push(currentState);
+
+              recalculatePosition();
+
+              currentState = createState(internalBst);
+
+              currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+              currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+              if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
+              currentState["status"] = "Relayout the tree.";
+              stateList.push(currentState);
+            }
           }
 
           if(vertexCheckBf != internalBst["root"]){
@@ -1793,10 +1905,7 @@ var BST = function(){
 
     if(t == internalBst["root"]) internalBst["root"] = w;
 
-    recalculatePosition();
     recalculateBalanceFactor();
-
-    console.log(internalBst);
   }
 
   function rotateRight(vertexText){
@@ -1823,10 +1932,7 @@ var BST = function(){
 
     if(t == internalBst["root"]) internalBst["root"] = w;
 
-    recalculatePosition();
     recalculateBalanceFactor();
-
-    console.log(internalBst);
   }
 
   /*
