@@ -100,7 +100,11 @@ var BST = function(){
   this.isAVL = function(bool){
     if(typeof bool != boolean) return;
 
-    isAVL = bool;
+    if(bool != isAVL){
+      clearScreen();
+      dummyInit();
+      isAVL = bool;
+    }
   }
 
   this.search = function(vertexText){
@@ -736,7 +740,7 @@ var BST = function(){
         vertexTraversed[currentVertex] = true;
 
         currentState["status"] = "Looking for location to insert " + vertexText + " ...";
-      currentState["lineNo"] = 3;
+        currentState["lineNo"] = 3;
 
         stateList.push(currentState);
 
@@ -757,11 +761,11 @@ var BST = function(){
 
         if(parseInt(vertexText) > parseInt(internalBst[currentVertex]["parent"])){
           currentState["status"] = vertexText + " is larger than " + internalBst[currentVertex]["parent"] + ", so go right.";
-      currentState["lineNo"] = 5;
+          currentState["lineNo"] = 5;
         }
         else{
           currentState["status"] = vertexText + " is smaller than " + internalBst[currentVertex]["parent"] + ", so go left.";
-      currentState["lineNo"] = 4;
+          currentState["lineNo"] = 4;
         }
         
 
@@ -825,6 +829,71 @@ var BST = function(){
       currentState = createState(internalBst);
       currentState["status"] = "Insert " + vertexText + " has been completed."
       stateList.push(currentState);
+
+      if(isAVL){
+        recalculateBalanceFactor();
+
+        var vertexCheckBf = internalBst[vertexText]["parent"];
+
+        while(vertexCheckBf != null){
+          var vertexCheckBfClass = internalBst[vertexCheckBf]["vertexClassNumber"];
+
+          currentState = createState(internalBst);
+          currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+          currentState["status"] = "Check balance factor of " + vertexCheckBf + ".";
+          stateList.push(currentState);
+
+          var bf = internalBst[vertexCheckBf]["balanceFactor"];
+
+          if(bf == 2){
+            var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
+            var bfLeft = internalBst[vertexCheckBfLeft]["balanceFactor"];
+
+            if(bfLeft == 1){
+              rotateRight(vertexCheckBf);
+            }
+
+            else if(bfLeft == -1){
+              rotateLeft(vertexCheckBfLeft);
+              rotateRight(vertexCheckBf);
+            }
+          }
+
+          else if(bf == -2){
+            var vertexCheckBfRight = internalBst[vertexCheckBf]["rightChild"];
+            var bfRight = internalBst[vertexCheckBfRight]["balanceFactor"];
+
+            if(bfRight == 1){
+              rotateRight(vertexCheckBfRight);
+              rotateLeft(vertexCheckBf);
+            }
+
+            else if(bfRight == -1){
+              rotateLeft(vertexCheckBf);
+            }
+          }
+
+          if(bf == 2 || bf == -2){
+            currentState = createState(internalBst);
+            currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+            currentState["status"] = "AVL Rotate " + vertexCheckBf + ".";
+            stateList.push(currentState);
+          }
+
+          if(vertexCheckBf != internalBst["root"]){
+            currentState = createState(internalBst);
+            currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
+            currentState["status"] = "Check the parent vertex...";
+            stateList.push(currentState);
+          }
+
+          vertexCheckBf = internalBst[vertexCheckBf]["parent"];
+        }
+
+        currentState = createState(internalBst);
+        currentState["status"] = "The tree is now balanced.";
+        stateList.push(currentState);
+      }
     }
 
     graphWidget.startAnimation(stateList);
@@ -1611,14 +1680,6 @@ var BST = function(){
     return true;
   }
 
-  this.rotateLeft = function(vertexText){
-
-  }
-
-  this.rotateRight = function(vertexText){
-
-  }
-
   function init(initArr){
     var i;
 
@@ -1693,6 +1754,79 @@ var BST = function(){
     internalBst = {};
     internalBst["root"] = null;
     amountVertex = 0;
+  }
+
+  // Pseudocode for rotateLeft:
+  /*
+   * BSTVertex rotateLeft(BSTVertex T) // pre-req: T.right != null
+   * BSTVertex w = T.right
+   * w.parent = T.parent
+   * T.parent = w
+   * T.right = w.left
+   * if (w.left != null) w.left.parent = T
+   * w.left = T
+   * // Update the height of T and then w
+   * return w
+   */
+
+  function rotateLeft(vertexText){
+    // Refer to pseudocode
+
+    var t = parseInt(vertexText);
+    var w = internalBst[t]["rightChild"];
+
+    internalBst[w]["parent"] = internalBst[t]["parent"];
+    if(internalBst[t]["parent"] < t){
+      var tParent = internalBst[t]["parent"];
+      internalBst[tParent]["rightChild"] = w;
+    }
+
+    else{
+      var tParent = internalBst[t]["parent"];
+      internalBst[tParent]["leftChild"] = w;
+    }
+
+    internalBst[t]["parent"] = w;
+    internalBst[t]["rightChild"] = internalBst[w]["leftChild"];
+    if (internalBst[w]["leftChild"] != null) internalBst[internalBst[w]["leftChild"]]["parent"] = t;
+    internalBst[w]["leftChild"] = t;
+
+    if(t == internalBst["root"]) internalBst["root"] = w;
+
+    recalculatePosition();
+    recalculateBalanceFactor();
+
+    console.log(internalBst);
+  }
+
+  function rotateRight(vertexText){
+    // Refer to pseudocode
+
+    var t = parseInt(vertexText);
+    var w = internalBst[t]["leftChild"];
+
+    internalBst[w]["parent"] = internalBst[t]["parent"];
+    if(internalBst[t]["parent"] < t){
+      var tParent = internalBst[t]["parent"];
+      internalBst[tParent]["rightChild"] = w;
+    }
+
+    else{
+      var tParent = internalBst[t]["parent"];
+      internalBst[tParent]["leftChild"] = w;
+    }
+
+    internalBst[t]["parent"] = w;
+    internalBst[t]["leftChild"] = internalBst[w]["rightChild"];
+    if (internalBst[w]["rightChild"] != null) internalBst[internalBst[w]["rightChild"]]["parent"] = t;
+    internalBst[w]["rightChild"] = t;
+
+    if(t == internalBst["root"]) internalBst["root"] = w;
+
+    recalculatePosition();
+    recalculateBalanceFactor();
+
+    console.log(internalBst);
   }
 
   /*
@@ -1785,6 +1919,22 @@ var BST = function(){
 
       updatePosition(internalBst[currentVertex]["leftChild"]);
       updatePosition(internalBst[currentVertex]["rightChild"]);
+    }
+  }
+
+  function recalculateBalanceFactor(){
+    balanceFactorRecursion(internalBst["root"]);
+
+    function balanceFactorRecursion(vertexText){
+      if(vertexText == null) return -1;
+
+      var balanceFactorHeightLeft = balanceFactorRecursion(internalBst[vertexText]["leftChild"]);
+      var balanceFactorHeightRight = balanceFactorRecursion(internalBst[vertexText]["rightChild"]);
+
+      internalBst[vertexText]["balanceFactorHeight"] = Math.max(balanceFactorHeightLeft, balanceFactorHeightRight) + 1;
+      internalBst[vertexText]["balanceFactor"] = balanceFactorHeightLeft - balanceFactorHeightRight;
+
+      return internalBst[vertexText]["balanceFactorHeight"];
     }
   }
   
