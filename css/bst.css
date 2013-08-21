@@ -73,7 +73,7 @@
 	overflow: hidden;
 }
 	#insert-input input {
-		width: 40px;
+		width: 140px;
 		background: black;
 		color: white;
 		padding: 6px 8px 5px;
@@ -81,7 +81,7 @@
 	#insert-go {
 		position: fixed;
 		bottom: 119px;
-		left: 228px;
+		left: 328px;
 		width: 0px;
 		background: #ed5a7d;
 		color: white;
@@ -100,7 +100,6 @@
 	overflow: hidden;
 }
 	#remove-input input {
-		width: 40px;
 		background: black;
 		color: white;
 		padding: 6px 8px 5px;
@@ -108,7 +107,7 @@
 	#remove-go {
 		position: fixed;
 		bottom: 92px;
-		left: 228px;
+		left: 328px;
 		width: 0px;
 		background: #ed5a7d;
 		color: white;
@@ -130,12 +129,12 @@
 }
 #insert-err {
 	bottom: 119px;
-	left: 272px;
+	left: 372px;
 	padding: 5px 0px;
 }
 #remove-err { /* currently unused*/
 	bottom: 92px;
-	left: 272px;
+	left: 372px;
 	padding: 5px 0px;
 }
 #inorder-err { /* currently unused*/

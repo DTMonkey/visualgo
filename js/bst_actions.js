@@ -53,8 +53,8 @@ function closeSearch() {
 function openInsert() {
 	if(!isInsertOpen) {
 		$('#insert-input').animate({
-			width: "+="+32
-		}, 100, function() {
+			width: "+="+132
+		}, 250, function() {
 			$('#insert-go').animate({
 				width: "+="+34
 			},100);
@@ -69,8 +69,8 @@ function closeInsert() {
 			width: "-="+34
 		}, 100, function() {
 			$('#insert-input').animate({
-				width: "-="+32
-			}, 100);
+				width: "-="+132
+			}, 250);
 		});
 		isInsertOpen = false;
 	}
@@ -78,8 +78,8 @@ function closeInsert() {
 function openRemove() {
 	if(!isRemoveOpen) {
 		$('#remove-input').animate({
-			width: "+="+32
-		}, 100, function() {
+			width: "+="+132
+		}, 250, function() {
 			$('#remove-go').animate({
 				width: "+="+34
 			},100);
@@ -94,8 +94,8 @@ function closeRemove() {
 			width: "-="+34
 		}, 100, function() {
 			$('#remove-input').animate({
-				width: "-="+32
-			}, 100);
+				width: "-="+132
+			}, 250);
 		});
 		isRemoveOpen = false;
 	}
