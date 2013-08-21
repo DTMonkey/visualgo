@@ -36,36 +36,54 @@ var BST = function(){
   }
 
   function dummyInit(){
-    internalBst["root"] = 42;
-    internalBst[42] = {
+    internalBst["root"] = 15;
+	internalBst[15] = {
       "parent": null,
-      "leftChild": 30,
-      "rightChild": 54,
+      "leftChild": 6,
+      "rightChild": 23,
       "vertexClassNumber": 0
     };
-    internalBst[30] = {
-      "parent": 42,
-      "leftChild": null,
-      "rightChild": null,
+	internalBst[6] = {
+      "parent": 15,
+      "leftChild": 4,
+      "rightChild": 7,
       "vertexClassNumber": 1
     };
-    internalBst[54] = {
-      "parent": 42,
-      "leftChild": 48,
-      "rightChild": 65,
+	internalBst[23] = {
+      "parent": 15,
+      "leftChild": null,
+      "rightChild": 71,
       "vertexClassNumber": 2
     };
-    internalBst[48] = {
-      "parent": 54,
+	internalBst[4] = {
+      "parent": 6,
       "leftChild": null,
-      "rightChild": null,
+      "rightChild": 5,
       "vertexClassNumber": 3
     };
-    internalBst[65] = {
-      "parent": 54,
+	internalBst[7] = {
+      "parent": 6,
       "leftChild": null,
       "rightChild": null,
       "vertexClassNumber": 4
+    };
+	internalBst[71] = {
+      "parent": 23,
+      "leftChild": 50,
+      "rightChild": null,
+      "vertexClassNumber": 5
+    };
+	internalBst[5] = {
+      "parent": 4,
+      "leftChild": null,
+      "rightChild": null,
+      "vertexClassNumber": 6
+    };
+	internalBst[50] = {
+      "parent": 71,
+      "leftChild": null,
+      "rightChild": null,
+      "vertexClassNumber": 7
     };
 
     recalculatePosition();
@@ -89,7 +107,7 @@ var BST = function(){
       graphWidget.addEdge(parentVertex["vertexClassNumber"], currentVertex["vertexClassNumber"], currentVertex["vertexClassNumber"], EDGE_TYPE_UDE, 1, true);
     }
 
-    amountVertex = 5;
+    amountVertex = 8;
 
   }
 
@@ -132,13 +150,13 @@ var BST = function(){
 
       vertexTraversed[currentVertex] = true;
 
-      currentState["status"] = "Checking node " + currentVertex;
+      currentState["status"] = "Comparing "+currentVertex+ " with "+vertexText;
       currentState["lineNo"] = 3;
       stateList.push(currentState);
 
       if(parseInt(vertexText) > parseInt(currentVertex)) {
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-        currentState["status"] = vertexText+" is greater than "+currentVertex;
+        currentState["status"] = currentVertex+" is smaller than "+vertexText;
         currentState["lineNo"] = 5;
         stateList.push(currentState);
         
@@ -164,7 +182,7 @@ var BST = function(){
         stateList.push(currentState);
       } else {
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-        currentState["status"] = vertexText+" is less than "+currentVertex;
+        currentState["status"] = currentVertex+" is greater than "+vertexText;
         currentState["lineNo"] = 7;
         stateList.push(currentState);
         
@@ -221,7 +239,7 @@ var BST = function(){
     var currentState = createState(internalBst);
     var currentVertexClass;
     var key;
-	  var ans;
+	var ans;
 
     currentState["status"] = "The current BST";
     currentState["lineNo"] = 0;
@@ -233,8 +251,8 @@ var BST = function(){
       currentState["status"] = "Tree is empty, there is no minimum value.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	    graphWidget.startAnimation(stateList);
-	    return true;
+	  graphWidget.startAnimation(stateList);
+	  return true;
     }
 
     while(currentVertex != null){
@@ -250,7 +268,7 @@ var BST = function(){
         currentState["lineNo"] = 2;
       }
       else{
-		    ans = currentVertex;
+		ans = currentVertex;
         currentState["status"] = "Minimum value found!"
         currentState["lineNo"] = 4;
       }
@@ -279,7 +297,7 @@ var BST = function(){
 
     currentState = createState(internalBst);
     currentState["status"] = "Find Min has ended. The minimum value is "+ans+".";
-	  currentState["lineNo"] = 0;
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);
@@ -380,10 +398,27 @@ var BST = function(){
       currentState["status"] = "Tree is empty.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	    return true;
+	  
+	  currentState = createState(internalBst);
+      currentState["status"] = "Return empty.";
+      currentState["lineNo"] = 2;
+      stateList.push(currentState);
+	  return true;
     }
 
-    else inorderTraversalRecursion(internalBst["root"]);
+    else {
+	  currentState = createState(internalBst);
+      currentState["status"] = "The root "+internalBst["root"]+ " is not null";
+      currentState["lineNo"] = 1;
+      stateList.push(currentState);
+	  
+	  currentState = createState(internalBst);
+      currentState["status"] = "So recurse and check left child of "+internalBst["root"];
+      currentState["lineNo"] = 3;
+      stateList.push(currentState);
+	  
+	  inorderTraversalRecursion(internalBst["root"]);
+	}
 
     currentState = createState(internalBst);
     currentState["status"] = "In-order traversal of the whole BST is complete.";
@@ -397,21 +432,34 @@ var BST = function(){
       var currentVertexRightChild = internalBst[currentVertex]["rightChild"];
       var currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
 
-      if(currentVertexLeftChild != null){
+      if(currentVertexLeftChild == null) {
+		  vertexTraversed[currentVertex] = true;
+		  currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+		  inorderHighlightVertex();
+      	  currentState["status"] = "Left child of "+currentVertex+" is empty";
+		  currentState["lineNo"] = 1;
+		  stateList.push(currentState);
+		  
+		  currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+		  inorderHighlightVertex();
+      	  currentState["status"] = "Return empty";
+		  currentState["lineNo"] = 2;
+		  stateList.push(currentState);
+	  } else {
         var currentVertexLeftChildClass = internalBst[currentVertexLeftChild]["vertexClassNumber"];
 
         vertexTraversed[currentVertex] = true;
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         inorderHighlightVertex();
-        currentState["status"] = "Left child of "+currentVertex+" is not null...";
-        currentState["lineNo"] = 2;
+        currentState["status"] = "Left child of "+currentVertex+" is "+currentVertexLeftChild+" (not null)";
+        currentState["lineNo"] = 1;
         stateList.push(currentState);
         edgeTraversed[currentVertexLeftChildClass] = true;
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         currentState["el"][currentVertexLeftChildClass]["animateHighlighted"] = true;
         inorderHighlightVertex();
-        currentState["status"] = "So in-order traverse left child of "+currentVertex+".";
-        currentState["lineNo"] = 2;
+        currentState["status"] = "So recurse and check left child of "+currentVertexLeftChild;
+        currentState["lineNo"] = 3;
         stateList.push(currentState);
         inorderTraversalRecursion(currentVertexLeftChild);
       }
@@ -423,21 +471,33 @@ var BST = function(){
       currentState["lineNo"] = 3;
       stateList.push(currentState);
 
-      if(currentVertexRightChild != null){
+      if(currentVertexRightChild == null) {
+		  vertexTraversed[currentVertex] = true;
+		  currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+		  inorderHighlightVertex();
+      	  currentState["status"] = "Right child of "+currentVertex+" is empty";
+		  currentState["lineNo"] = 1;
+		  stateList.push(currentState);
+		  
+		  currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+		  inorderHighlightVertex();
+      	  currentState["status"] = "Return empty";
+		  currentState["lineNo"] = 2;
+		  stateList.push(currentState);
+	  } else {
         var currentVertexRightChildClass = internalBst[currentVertexRightChild]["vertexClassNumber"];
 
-        vertexTraversed[currentVertex] = true;
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         inorderHighlightVertex();
-        currentState["status"] = "Right child of "+currentVertex+" is not null...";
-        currentState["lineNo"] = 4;
+        currentState["status"] = "Right child of "+currentVertex+" is "+currentVertexRightChild+" (not null)";
+        currentState["lineNo"] = 1;
         stateList.push(currentState);
         edgeTraversed[currentVertexRightChildClass] = true;
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         currentState["el"][currentVertexRightChildClass]["animateHighlighted"] = true;
         inorderHighlightVertex();
-        currentState["status"] = "So in-order traverse right child of "+currentVertex+".";
-        currentState["lineNo"] = 4;
+        currentState["status"] = "So recurse and check left child of "+currentVertexRightChild;
+        currentState["lineNo"] = 3;
         stateList.push(currentState);
         inorderTraversalRecursion(currentVertexRightChild);
       }
@@ -746,7 +806,7 @@ var BST = function(){
 
         vertexTraversed[currentVertex] = true;
 
-        currentState["status"] = "Looking for location to insert " + vertexText + " ...";
+        currentState["status"] = "Comparing " + vertexText + " with "+currentVertex;
         currentState["lineNo"] = 3;
 
         stateList.push(currentState);
@@ -1450,7 +1510,7 @@ var BST = function(){
 
         vertexTraversed[currentVertex] = true;
         
-        currentState["status"] = "Searching for node to remove";
+        currentState["status"] = "Searching for node "+vertexText+" to remove";
         currentState["lineNo"] = 1;
         stateList.push(currentState);
 
@@ -1467,7 +1527,7 @@ var BST = function(){
         currentState["el"][edgeHighlighted]["animateHighlighted"] = true;
         currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
 
-        currentState["status"] = "Searching for node to remove";
+        currentState["status"] = "Searching for node "+vertexText+" to remove";
         currentState["lineNo"] = 1;
         stateList.push(currentState);
       }
@@ -1478,7 +1538,7 @@ var BST = function(){
 
         currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
 
-        currentState["status"] = "Searching for node to remove";
+        currentState["status"] = "Searching for node "+vertexText+" to remove";
         currentState["lineNo"] = 1;
         stateList.push(currentState);
       }
@@ -1498,7 +1558,7 @@ var BST = function(){
 
       if(internalBst[currentVertex]["leftChild"] == null && internalBst[currentVertex]["rightChild"] == null){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-        currentState["status"] = "The node to be removed has no children";
+        currentState["status"] = "Node "+vertexText+" has no children. It is a leaf.";
         currentState["lineNo"] = 2;
         stateList.push(currentState);
       
@@ -1518,7 +1578,7 @@ var BST = function(){
 
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
 
-        currentState["status"] = "Remove leaf";
+        currentState["status"] = "Remove leaf "+vertexText;
         currentState["lineNo"] = 3;
         stateList.push(currentState);
 
@@ -1531,7 +1591,7 @@ var BST = function(){
 
       else if(internalBst[currentVertex]["leftChild"] == null){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-        currentState["status"] = "The node to be removed has a right child only";
+        currentState["status"] = "Node "+vertexText+" has a right child only";
         currentState["lineNo"] = 4;
         stateList.push(currentState);
       
@@ -1561,7 +1621,7 @@ var BST = function(){
           currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
         }
 
-        currentState["status"] = "Delete the node, and connect parent to right child";
+        currentState["status"] = "Delete node "+vertexText+" and connect its parent to its right child";
         currentState["lineNo"] = 5;
         stateList.push(currentState);
 
@@ -1575,7 +1635,7 @@ var BST = function(){
           currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
         }
 
-        currentState["status"] = "Delete the node, and connect parent to right child";
+        currentState["status"] = "Re-layout the tree";
         currentState["lineNo"] = 5;
         stateList.push(currentState);
 
@@ -1586,7 +1646,7 @@ var BST = function(){
 
       else if(internalBst[currentVertex]["rightChild"] == null){
       currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-      currentState["status"] = "The node to be removed has a left child only";
+      currentState["status"] = "Node "+vertexText+" has a left child only";
       currentState["lineNo"] = 4;
       stateList.push(currentState);
       
@@ -1616,7 +1676,7 @@ var BST = function(){
           currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
         }
 
-        currentState["status"] = "Delete the node, and connect parent to left child";
+        currentState["status"] = "Delete node "+vertexText+" and connect its parent to its left child";
         currentState["lineNo"] = 5;
         stateList.push(currentState);
 
@@ -1630,7 +1690,7 @@ var BST = function(){
           currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
         }
 
-        currentState["status"] = "Delete the node, and connect parent to left child";
+        currentState["status"] = "Re-layout the tree";
         currentState["lineNo"] = 5;
         stateList.push(currentState);
 
@@ -1653,7 +1713,7 @@ var BST = function(){
         currentState["el"][successorVertexClass]["state"] = EDGE_TRAVERSED;
         currentState["el"][successorVertexClass]["animateHighlighted"] = true;
 
-        currentState["status"] = "Finding successor";
+        currentState["status"] = "Finding successor of "+vertexText;
         currentState["lineNo"] = 6;
         stateList.push(currentState);
 
@@ -1665,7 +1725,7 @@ var BST = function(){
         currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
 
-        currentState["status"] = "Finding successor";
+        currentState["status"] = "Finding successor of "+vertexText;
         currentState["lineNo"] = 6;
         stateList.push(currentState);
 
@@ -1680,7 +1740,7 @@ var BST = function(){
           currentState["el"][successorVertexClass]["state"] = EDGE_TRAVERSED;
           currentState["el"][successorVertexClass]["animateHighlighted"] = true;
 
-          currentState["status"] = "Finding successor";
+          currentState["status"] = "Finding successor of "+vertexText;
           currentState["lineNo"] = 6;
           stateList.push(currentState);
 
@@ -1692,7 +1752,7 @@ var BST = function(){
           currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
           currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
 
-          currentState["status"] = "Finding successor";
+          currentState["status"] = "Finding successor of "+vertexText;
           currentState["lineNo"] = 6;
           stateList.push(currentState);
         }
@@ -1761,7 +1821,7 @@ var BST = function(){
           }
         }
 
-        currentState["status"] = "Replace deleted node with successor";
+        currentState["status"] = "Replace node "+vertexText+" with its successor";
         currentState["lineNo"] = 6;
         stateList.push(currentState);
 
@@ -1790,7 +1850,7 @@ var BST = function(){
           }
         }
 
-        currentState["status"] = "Replace deleted node with successor";
+        currentState["status"] = "Re-layout the tree";
         currentState["lineNo"] = 6;
         stateList.push(currentState);
 
@@ -1799,7 +1859,7 @@ var BST = function(){
       }
 
       currentState = createState(internalBst);
-      currentState["status"] = "Removal completed";
+      currentState["status"] = "Removal of "+vertexText+" completed";
       currentState["lineNo"] = 0;
       stateList.push(currentState);
 
@@ -2271,20 +2331,20 @@ var BST = function(){
         document.getElementById('code7').innerHTML = '';
         break;
     case 3: // in-order traversal
-        document.getElementById('code1').innerHTML = 'if this is null return';
-        document.getElementById('code2').innerHTML = 'inOrder(left)';
-        document.getElementById('code3').innerHTML = 'visit this';
-        document.getElementById('code4').innerHTML = 'inOrder(right)';
-        document.getElementById('code5').innerHTML = '';
+        document.getElementById('code1').innerHTML = 'if this is null';
+        document.getElementById('code2').innerHTML = '&nbsp;&nbsp;return';
+        document.getElementById('code3').innerHTML = 'inOrder(left)';
+        document.getElementById('code4').innerHTML = 'visit this';
+        document.getElementById('code5').innerHTML = 'inOrder(right)';
         document.getElementById('code6').innerHTML = '';
         document.getElementById('code7').innerHTML = '';
         break;
     case 4: // search
         document.getElementById('code1').innerHTML = 'if this == null';
         document.getElementById('code2').innerHTML = '&nbsp;&nbsp;return null';
-        document.getElementById('code3').innerHTML = 'else if key == v';
+        document.getElementById('code3').innerHTML = 'else if this key == search value';
         document.getElementById('code4').innerHTML = '&nbsp;&nbsp;return this';
-        document.getElementById('code5').innerHTML = 'else if key < v';
+        document.getElementById('code5').innerHTML = 'else if this key < search value';
         document.getElementById('code6').innerHTML = '&nbsp;&nbsp;search right';
         document.getElementById('code7').innerHTML = 'else search left';
         break;
