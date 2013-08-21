@@ -87,6 +87,12 @@ var GraphWidget = function(){
     delete vertexUpdateList[vertexClassNumber];
   }
 
+  // graphState oject is equivalent to one element of the statelist.
+  // See comments below this function
+  this.updateGraph = function(graphState, duration){
+    updateDisplayNoAnimation(graphState, duration);
+  }
+
   /* 
    * stateList: List of JS object containing the states of the objects in the graph
    * Structure of stateList: List of JS object with the following keys and values:
@@ -386,7 +392,137 @@ var GraphWidget = function(){
     }
   }
 
-  function updatePseudocode(duration, forwardOrBackward){
+  function updateDisplayNoAnimation(graphState, duration){
+    var currentVertexState = graphState["vl"];
+    var currentEdgeState = graphState["el"];
 
+    var key;
+
+    for(key in currentVertexState){
+      if(vertexList[key] == null || vertexList[key] == undefined){
+        self.addVertex(currentVertexState[key]["cx"],currentVertexState[key]["cy"],currentVertexState[key]["text"],key,false);
+      }
+
+      var currentVertex = vertexList[key];
+
+      currentVertex.showVertex();
+
+      switch(currentVertexState[key]["state"]){
+        case OBJ_HIDDEN:
+          currentVertex.hideVertex();
+          break;
+        case VERTEX_DEFAULT:
+          currentVertex.defaultVertex();
+          break;
+        case VERTEX_HIGHLIGHTED:
+          currentVertex.highlightVertex();
+          break;
+        case VERTEX_TRAVERSED:
+          currentVertex.traversedVertex();
+          break;
+        default:
+          break;
+      }
+
+      currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
+      currentVertex.changeText(currentVertexState[key]["text"]);
+      currentVertex.redraw(duration);
+
+      vertexUpdateList[key] = true;
+    }
+
+    for(key in vertexUpdateList){
+      if(vertexUpdateList[key] == false){
+        vertexList[key].hideVertex();
+        vertexList[key].redraw(duration);
+        vertexUpdateList[key] = true;
+      }
+    }
+
+    for(key in currentEdgeState){
+      if(edgeList[key] == null || edgeList[key] == undefined){
+        self.addEdge(currentEdgeState[key]["vertexA"],currentEdgeState[key]["vertexB"],key,currentEdgeState[key]["type"],currentEdgeState[key]["weight"],false);
+      }
+
+      var currentEdge = edgeList[key];
+
+      currentEdge.showEdge();
+
+      switch(currentEdgeState[key]["state"]){
+        case OBJ_HIDDEN:
+          currentEdge.hideEdge();
+          break;
+        case EDGE_DEFAULT:
+          currentEdge.defaultEdge();
+          break;
+        case EDGE_HIGHLIGHTED:
+          currentEdge.highlightEdge();
+          break;
+        case EDGE_TRAVERSED:
+          currentEdge.traversedEdge();
+          break;
+        default:
+          break;
+      }
+
+      currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
+      currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
+      currentEdge.changeType(currentEdgeState[key]["type"]);
+      currentEdge.changeWeight(currentEdgeState[key]["weight"]);
+
+      currentEdge.refreshPath();
+      if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
+      else{
+        currentEdge.animateHighlighted(duration*0.9);
+      }
+
+      edgeUpdateList[key] = true;
+    }
+
+    for(key in edgeUpdateList){
+      if(edgeUpdateList[key] == false){
+        edgeList[key].hideEdge();
+        edgeList[key].redraw(duration);
+        edgeUpdateList[key] = true;
+      }
+    }
+
+    for(key in vertexUpdateList){
+      vertexUpdateList[key] = false;
+    }
+
+    for(key in edgeUpdateList){
+      edgeUpdateList[key] = false;
+    }
+
+    setTimeout(function(){
+      for(key in currentEdgeState){
+        edgeUpdateList[key] = true;
+      }
+
+      for(key in edgeUpdateList){
+        if(edgeUpdateList[key] == false){
+          self.removeEdge(key);
+        }
+      }
+
+      for(key in currentVertexState){
+        vertexUpdateList[key] = true;
+      }
+
+      for(key in vertexUpdateList){
+        if(vertexUpdateList[key] == false){
+          self.removeVertex(key);
+        }
+      }
+
+      for(key in edgeUpdateList){
+        edgeUpdateList[key] = false;
+      }
+
+      for(key in vertexUpdateList){
+        vertexUpdateList[key] = false;
+      }
+    }, duration);
   }
 }

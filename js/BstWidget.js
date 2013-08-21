@@ -10,6 +10,8 @@ var BST = function(){
   var valueRange = [1, 100]; // Range of valid values of BST vertexes allowed
   var maxHeightAllowed = 10;
 
+  var initialArray = [15, 6, 23, 4, 7, 71, 5, 50];
+
   /*
    * internalBst: Internal representation of BST in this object
    * The keys are the text of the nodes, and the value is the attributes of the corresponding node encapsulated in a JS object, which are:
@@ -29,12 +31,15 @@ var BST = function(){
   var amountVertex = 0;
   internalBst["root"] = null;
 
-  dummyInit();
+  init(initialArray);
 
   this.getGraphWidget = function(){
     return graphWidget;
   }
 
+  /*
+   * @deprecated Use init(initArr)
+   */
   function dummyInit(){
     internalBst["root"] = 15;
 	internalBst[15] = {
@@ -120,7 +125,7 @@ var BST = function(){
 
     if(bool != isAVL){
       clearScreen();
-      dummyInit();
+      init(initialArray);
       isAVL = bool;
     }
   }
@@ -239,7 +244,7 @@ var BST = function(){
     var currentState = createState(internalBst);
     var currentVertexClass;
     var key;
-	var ans;
+	  var ans;
 
     currentState["status"] = "The current BST";
     currentState["lineNo"] = 0;
@@ -251,8 +256,8 @@ var BST = function(){
       currentState["status"] = "Tree is empty, there is no minimum value.";
       currentState["lineNo"] = 1;
       stateList.push(currentState);
-	  graphWidget.startAnimation(stateList);
-	  return true;
+      graphWidget.startAnimation(stateList);
+      return true;
     }
 
     while(currentVertex != null){
@@ -268,7 +273,7 @@ var BST = function(){
         currentState["lineNo"] = 2;
       }
       else{
-		ans = currentVertex;
+		    ans = currentVertex;
         currentState["status"] = "Minimum value found!"
         currentState["lineNo"] = 4;
       }
@@ -521,167 +526,6 @@ var BST = function(){
     populatePseudocode(3);
     return true;
   }
-
-  /*
-   * @deprecated Use insertArr
-   */
-  // this.insert = function(vertexText){
-  //   var stateList = [];
-  //   var vertexTraversed = {};
-  //   var edgeTraversed = {};
-  //   var currentVertex = internalBst["root"];
-  //   var currentState = createState(internalBst);
-  //   var currentVertexClass;
-  //   var key;
-  //   var i;
-
-  //   currentState["status"] = "The current BST";
-  //   currentState["lineNo"] = 0;
-  //   stateList.push(currentState);
-
-  //   // Check whether input is number
-  //   if(isNaN(parseInt(vertexText))){
-  //     $('#insert-err').html("Please fill in a number or comma-separated array of numbers!");
-  //     return false;
-  //   }
-
-  //   // No duplicates allowed
-  //   if(internalBst[vertexText] != null){
-  //     $('#insert-err').html("No duplicate vertex allowed!");
-  //     return false;
-  //   }
-
-  //   // Check range
-  //   if(parseInt(vertexText) < valueRange[0] || parseInt(vertexText) > valueRange[1]){
-  //     $('#insert-err').html("Sorry, only values between " + valueRange[0] + " and " + valueRange[1] + " can be inserted.");
-  //     return false;
-  //   }
-
-  //   if(!checkNewHeight()){
-  //     $('#insert-err').html("Sorry, this visualization can only support trees of maximum height " + maxHeightAllowed);
-  //     return false;
-  //   }
-
-  //   function checkNewHeight(){
-  //     var parentVertex = internalBst["root"];
-  //     var heightCounter = 0;
-
-  //     while(parentVertex != null){
-  //       if(parentVertex < parseInt(vertexText)) parentVertex = internalBst[parentVertex]["rightChild"];
-  //       else parentVertex = internalBst[parentVertex]["leftChild"];
-  //       heightCounter++;
-  //     }
-
-  //     heightCounter++; // New vertex added will add new height
-
-  //     if(heightCounter > maxHeightAllowed) return false;
-  //     return true;
-  //   }
-
-  //   // Find parent
-  //   while(currentVertex != vertexText && currentVertex != null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-
-  //     currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     vertexTraversed[currentVertex] = true;
-
-  //     currentState["status"] = "Looking for location to insert " + vertexText + " ...";
-  //   currentState["lineNo"] = 3;
-
-  //     stateList.push(currentState);
-
-  //     var nextVertex;
-  //     if(parseInt(vertexText) > parseInt(currentVertex)) nextVertex = internalBst[currentVertex]["rightChild"];
-  //     else nextVertex = internalBst[currentVertex]["leftChild"];
-
-  //     if(nextVertex == null) break;
-  //     else currentVertex = nextVertex;
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     var edgeHighlighted = internalBst[currentVertex]["vertexClassNumber"];
-  //     edgeTraversed[edgeHighlighted] = true;
-
-  //     currentState["el"][edgeHighlighted]["animateHighlighted"] = true;
-  //     currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
-
-  //     if(parseInt(vertexText) > parseInt(internalBst[currentVertex]["parent"])){
-  //       currentState["status"] = vertexText + " is larger than " + internalBst[currentVertex]["parent"] + ", so go right.";
-  //   currentState["lineNo"] = 5;
-  //     }
-  //     else{
-  //       currentState["status"] = vertexText + " is smaller than " + internalBst[currentVertex]["parent"] + ", so go left.";
-  //   currentState["lineNo"] = 4;
-  //     }
-      
-
-  //     stateList.push(currentState);
-  //   }
-
-  //   // Begin insertion
-
-  //   // First, update internal representation
-
-  //   internalBst[parseInt(vertexText)] = {
-  //     "leftChild": null,
-  //     "rightChild": null,
-  //     "vertexClassNumber": amountVertex
-  //   };
-
-  //   if(currentVertex != null){
-  //     internalBst[parseInt(vertexText)]["parent"] = currentVertex;
-  //     if(currentVertex < parseInt(vertexText)) internalBst[currentVertex]["rightChild"] = parseInt(vertexText);
-  //     else internalBst[currentVertex]["leftChild"] = parseInt(vertexText);
-  //   }
-
-  //   else{
-  //     internalBst[parseInt(vertexText)]["parent"] = null;
-  //     internalBst["root"] = parseInt(vertexText);
-  //   }
-
-  //   amountVertex++;
-
-  //   recalculatePosition();
-
-  //   // Then, draw edge
-  //   var newNodeVertexClass = internalBst[parseInt(vertexText)]["vertexClassNumber"];
-
-  //   if(currentVertex != null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentState["vl"][newNodeVertexClass]["state"] = OBJ_HIDDEN;
-
-  //     currentState["el"][newNodeVertexClass]["state"] = EDGE_TRAVERSED;
-  //     currentState["el"][newNodeVertexClass]["animateHighlighted"] = true;
-
-  //     currentState["status"] = "Location found! Inserting " + vertexText + " ...";
-  //     currentState["lineNo"] = 1;
-
-  //     stateList.push(currentState);
-
-  //     edgeTraversed[newNodeVertexClass] = true;
-  //   }
-
-  //   // Lastly, draw vertex
-
-  //   currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //   currentState["vl"][newNodeVertexClass]["state"] = EDGE_HIGHLIGHTED;
-
-  //   currentState["status"] = vertexText + " has been inserted!"
-  //   currentState["lineNo"] = 2;
-
-  //   stateList.push(currentState);
-
-  //   // End State
-  //   currentState = createState(internalBst);
-  //   currentState["status"] = "Insert " + vertexText + " has been completed."
-  //   stateList.push(currentState);
-
-  //   graphWidget.startAnimation(stateList);
-  //   populatePseudocode(0);
-  //   return true;
-  // }
 
   this.insertArr = function(vertexTextArr){
     var stateList = [];
@@ -1079,384 +923,6 @@ var BST = function(){
     populatePseudocode(0);
     return true;
   }
-
-  /*
-   * @deprecated Use remveArr
-   */
-  // this.remove = function(vertexText){
-  //   var stateList = [];
-  //   var vertexTraversed = {};
-  //   var edgeTraversed = {};
-  //   var currentVertex = internalBst["root"];
-  //   var currentState = createState(internalBst);
-  //   var currentVertexClass;
-  //   var key;
-  //   var i;
-
-  //   currentState["status"] = "The current BST";
-  //   currentState["lineNo"] = 0;
-  //   stateList.push(currentState);
-
-  //   // Find vertex
-  //   while(currentVertex != vertexText && currentVertex != null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-
-  //     currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     vertexTraversed[currentVertex] = true;
-      
-  //     currentState["status"] = "Searching for node to remove";
-  //     currentState["lineNo"] = 1;
-  //     stateList.push(currentState);
-
-  //     if(parseInt(vertexText) > parseInt(currentVertex)) currentVertex = internalBst[currentVertex]["rightChild"];
-  //     else currentVertex = internalBst[currentVertex]["leftChild"];
-
-  //     if(currentVertex == null) break;
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     var edgeHighlighted = internalBst[currentVertex]["vertexClassNumber"];
-  //     edgeTraversed[edgeHighlighted] = true;
-
-  //     currentState["el"][edgeHighlighted]["animateHighlighted"] = true;
-  //     currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
-
-  //     currentState["status"] = "Searching for node to remove";
-  //     currentState["lineNo"] = 1;
-  //     stateList.push(currentState);
-  //   }
-
-  //   if(currentVertex != null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-
-  //     currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     currentState["status"] = "Searching for node to remove";
-  //     currentState["lineNo"] = 1;
-  //     stateList.push(currentState);
-  //   }
-
-  //   // Vertex is not inside the tree
-  //   else{
-  //     currentState = createState(internalBst);
-  //     currentState["status"] = "Node "+ vertexText +" is not in the BST";
-  //     currentState["lineNo"] = 0;
-  //     stateList.push(currentState);
-
-  //     graphWidget.startAnimation(stateList);
-  //     populatePseudocode(5);
-  //     return true;
-  //   }
-
-  //   // Vertex found; begin deletion
-
-  //   // Case 1: no child
-
-  //   if(internalBst[currentVertex]["leftChild"] == null && internalBst[currentVertex]["rightChild"] == null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentState["status"] = "The node to be removed has no children";
-  //     currentState["lineNo"] = 2;
-  //     stateList.push(currentState);
-    
-  //     var parentVertex = internalBst[currentVertex]["parent"];
-
-  //     if(parentVertex != null){
-  //       if(parseInt(parentVertex) < parseInt(currentVertex)) internalBst[parentVertex]["rightChild"] = null;
-  //       else internalBst[parentVertex]["leftChild"] = null;
-  //     }
-
-  //     else internalBst["root"] = null;
-
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-  //     delete internalBst[currentVertex];
-  //     delete vertexTraversed[currentVertex];
-  //     delete edgeTraversed[currentVertexClass];
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["status"] = "Remove leaf";
-  //     currentState["lineNo"] = 3;
-  //     stateList.push(currentState);
-  //   }
-
-  //   // Case 2: One child
-
-  //   // Only right child
-
-  //   else if(internalBst[currentVertex]["leftChild"] == null){
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //     currentState["status"] = "The node to be removed has a right child only";
-  //     currentState["lineNo"] = 4;
-  //     stateList.push(currentState);
-    
-  //     var parentVertex = internalBst[currentVertex]["parent"];
-  //     var rightChildVertex = internalBst[currentVertex]["rightChild"];
-
-  //     if(parentVertex != null){
-  //       if(parseInt(parentVertex) < parseInt(currentVertex)) internalBst[parentVertex]["rightChild"] = rightChildVertex;
-  //       else internalBst[parentVertex]["leftChild"] = rightChildVertex;
-  //     }
-
-  //     else internalBst["root"] = rightChildVertex;
-
-  //     internalBst[rightChildVertex]["parent"] = parentVertex;
-
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-  //     rightChildVertexClass = internalBst[rightChildVertex]["vertexClassNumber"];
-  //     delete internalBst[currentVertex];
-  //     delete vertexTraversed[currentVertex];
-  //     delete edgeTraversed[currentVertexClass];
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     if(parentVertex != null){
-  //       currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     currentState["status"] = "Delete the node, and connect parent to right child";
-  //     currentState["lineNo"] = 5;
-  //     stateList.push(currentState);
-
-  //     recalculatePosition();
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     if(parentVertex != null){
-  //       currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     currentState["status"] = "Delete the node, and connect parent to right child";
-  //     currentState["lineNo"] = 5;
-  //     stateList.push(currentState);
-  //   }
-
-  //   // Only left child
-
-  //   else if(internalBst[currentVertex]["rightChild"] == null){
-  //   currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-  //   currentState["status"] = "The node to be removed has a left child only";
-  //   currentState["lineNo"] = 4;
-  //   stateList.push(currentState);
-    
-  //     var parentVertex = internalBst[currentVertex]["parent"];
-  //     var leftChildVertex = internalBst[currentVertex]["leftChild"];
-
-  //     if(parentVertex != null){
-  //       if(parseInt(parentVertex) < parseInt(currentVertex)) internalBst[parentVertex]["rightChild"] = leftChildVertex;
-  //       else internalBst[parentVertex]["leftChild"] = leftChildVertex;
-  //     }
-
-  //     else internalBst["root"] = leftChildVertex;
-
-  //     internalBst[leftChildVertex]["parent"] = parentVertex;
-
-  //     currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
-  //     leftChildVertexClass = internalBst[leftChildVertex]["vertexClassNumber"];
-  //     delete internalBst[currentVertex];
-  //     delete vertexTraversed[currentVertex];
-  //     delete edgeTraversed[currentVertexClass];
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][leftChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     if(parentVertex != null){
-  //       currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     currentState["status"] = "Delete the node, and connect parent to left child";
-  //     currentState["lineNo"] = 5;
-  //     stateList.push(currentState);
-
-  //     recalculatePosition();
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][leftChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-      
-  //     if(parentVertex != null){
-  //       currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     currentState["status"] = "Delete the node, and connect parent to left child";
-  //     currentState["lineNo"] = 5;
-  //     stateList.push(currentState);
-  //   }
-    
-  //   // Case 3: two children
-
-  //   else{
-  //     var parentVertex = internalBst[currentVertex]["parent"];
-  //     var leftChildVertex = internalBst[currentVertex]["leftChild"];
-  //     var rightChildVertex = internalBst[currentVertex]["rightChild"];
-  //     var successorVertex = internalBst[currentVertex]["rightChild"];
-  //     var successorVertexClass = internalBst[successorVertex]["vertexClassNumber"];
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     currentState["el"][successorVertexClass]["state"] = EDGE_TRAVERSED;
-  //     currentState["el"][successorVertexClass]["animateHighlighted"] = true;
-
-  //     currentState["status"] = "Finding successor";
-  //     currentState["lineNo"] = 6;
-  //     stateList.push(currentState);
-
-  //     edgeTraversed[successorVertexClass] = true;
-  //     vertexTraversed[successorVertex] = true;
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-  //     currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     currentState["status"] = "Finding successor";
-  //     currentState["lineNo"] = 6;
-  //     stateList.push(currentState);
-
-  //     while(internalBst[successorVertex]["leftChild"] != null){
-  //       successorVertex = internalBst[successorVertex]["leftChild"];
-  //       successorVertexClass = internalBst[successorVertex]["vertexClassNumber"];
-
-  //       currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //       currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //       currentState["el"][successorVertexClass]["state"] = EDGE_TRAVERSED;
-  //       currentState["el"][successorVertexClass]["animateHighlighted"] = true;
-
-  //       currentState["status"] = "Finding successor";
-  //       currentState["lineNo"] = 6;
-  //       stateList.push(currentState);
-
-  //       edgeTraversed[successorVertexClass] = true;
-  //       vertexTraversed[successorVertex] = true;
-
-  //       currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //       currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-  //       currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //       currentState["status"] = "Finding successor";
-  //       currentState["lineNo"] = 6;
-  //       stateList.push(currentState);
-  //     }
-
-  //     var successorParentVertex = internalBst[successorVertex]["parent"]
-  //     var successorRightChildVertex = internalBst[successorVertex]["rightChild"];
-
-  //     // Update internal representation
-  //     if(parentVertex != null){
-  //       if(parseInt(parentVertex) < parseInt(currentVertex)) internalBst[parentVertex]["rightChild"] = successorVertex;
-  //       else internalBst[parentVertex]["leftChild"] = successorVertex;
-  //     }
-
-  //     else internalBst["root"] = successorVertex;
-
-  //     internalBst[successorVertex]["parent"] = parentVertex;
-  //     internalBst[successorVertex]["leftChild"] = leftChildVertex;
-
-  //     internalBst[leftChildVertex]["parent"] = successorVertex;
-
-  //     if(successorVertex != rightChildVertex){
-  //       internalBst[successorVertex]["rightChild"] = rightChildVertex;
-  //       internalBst[rightChildVertex]["parent"] = successorVertex;
-
-  //       if(successorRightChildVertex != null){
-  //         if(parseInt(successorParentVertex) < parseInt(successorVertex)) internalBst[successorParentVertex]["rightChild"] = successorRightChildVertex;
-  //         else internalBst[successorParentVertex]["leftChild"] = successorRightChildVertex;
-
-  //         internalBst[successorRightChildVertex]["parent"] = successorParentVertex;
-  //       }
-
-  //       else{
-  //         if(parseInt(successorParentVertex) < parseInt(successorVertex)) internalBst[successorParentVertex]["rightChild"] = null;
-  //         else internalBst[successorParentVertex]["leftChild"] = null;
-  //       }
-  //     }
-
-  //     delete internalBst[currentVertex];
-  //     delete vertexTraversed[currentVertex];
-  //     delete edgeTraversed[currentVertexClass];
-
-  //     if(parentVertex == null){
-  //       delete edgeTraversed[successorVertexClass];
-  //     }
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     var leftChildVertexClass = internalBst[leftChildVertex]["vertexClassNumber"];
-
-  //     currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-
-  //     if(parentVertex != null){
-  //       var parentVertexClass = internalBst[parentVertex]["vertexClassNumber"];
-  //       currentState["el"][successorVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     if(successorVertex != rightChildVertex){
-  //       var rightChildVertexClass = internalBst[rightChildVertex]["vertexClassNumber"];
-  //       currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-
-  //       if(successorRightChildVertex != null){
-  //         var successorRightChildVertexClass = internalBst[successorRightChildVertex]["vertexClassNumber"];
-  //         currentState["el"][successorRightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //       }
-  //     }
-
-  //     currentState["status"] = "Replace deleted node with successor";
-  //     currentState["lineNo"] = 6;
-  //     stateList.push(currentState);
-
-  //     recalculatePosition();
-
-  //     currentState = createState(internalBst, vertexTraversed, edgeTraversed);
-
-  //     leftChildVertexClass = internalBst[leftChildVertex]["vertexClassNumber"];
-
-  //     currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
-
-  //     currentState["el"][leftChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-
-  //     if(parentVertex != null){
-  //       var parentVertexClass = internalBst[parentVertex]["vertexClassNumber"];
-  //       currentState["el"][successorVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //     }
-
-  //     if(successorVertex != rightChildVertex){
-  //       var rightChildVertexClass = internalBst[rightChildVertex]["vertexClassNumber"];
-  //       currentState["el"][rightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-
-  //       if(successorRightChildVertex != null){
-  //         var successorRightChildVertexClass = internalBst[successorRightChildVertex]["vertexClassNumber"];
-  //         currentState["el"][successorRightChildVertexClass]["state"] = EDGE_HIGHLIGHTED;
-  //       }
-  //     }
-
-  //     currentState["status"] = "Replace deleted node with successor";
-  //     currentState["lineNo"] = 6;
-  //     stateList.push(currentState);
-  //   }
-
-  //   currentState = createState(internalBst);
-  //   currentState["status"] = "Removal completed";
-  //   currentState["lineNo"] = 0;
-  //   stateList.push(currentState);
-
-  //   graphWidget.startAnimation(stateList);
-  //   populatePseudocode(5);
-  //   return true;
-  // }
 
   this.removeArr = function(vertexTextArr){
     var stateList = [];
@@ -2092,14 +1558,14 @@ var BST = function(){
 
     for(key in internalBst){
       if(key == "root") continue;
-      gw.addVertex(internalBst[key]["cx"], internalBst[key]["cy"], key, internalBst[key]["vertexClassNumber"], true);
+      graphWidget.addVertex(internalBst[key]["cx"], internalBst[key]["cy"], key, internalBst[key]["vertexClassNumber"], true);
     }
 
     for(key in internalBst){
       if(key == "root") continue;
       if(key == internalBst["root"]) continue;
       var parentVertex = internalBst[key]["parent"];
-      gw.addEdge(internalBst[parentVertex]["vertexClassNumber"], internalBst[key]["vertexClassNumber"], internalBst[key]["vertexClassNumber"], EDGE_TYPE_UDE, 1, true);
+      graphWidget.addEdge(internalBst[parentVertex]["vertexClassNumber"], internalBst[key]["vertexClassNumber"], internalBst[key]["vertexClassNumber"], EDGE_TYPE_UDE, 1, true);
     }
   }
 
@@ -2108,12 +1574,12 @@ var BST = function(){
 
     for(key in internalBst){
       if(key == "root") continue;
-      gw.removeEdge(internalBst[key]["vertexClassNumber"]);
+      graphWidget.removeEdge(internalBst[key]["vertexClassNumber"]);
     }
 
     for(key in internalBst){
       if(key == "root") continue;
-      gw.removeVertex(internalBst[key]["vertexClassNumber"]);
+      graphWidget.removeVertex(internalBst[key]["vertexClassNumber"]);
     }
 
     internalBst = {};
