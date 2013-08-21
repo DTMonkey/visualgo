@@ -11,6 +11,7 @@ var BST = function(){
   var maxHeightAllowed = 10;
 
   var initialArray = [15, 6, 23, 4, 7, 71, 5, 50];
+  var initialAvlArray = [15, 6, 50, 4, 7, 23, 71, 5];
 
   /*
    * internalBst: Internal representation of BST in this object
@@ -31,7 +32,8 @@ var BST = function(){
   var amountVertex = 0;
   internalBst["root"] = null;
 
-  init(initialArray);
+  if(isAVL) init(initialAvlArray);
+  else init(initialArray);
 
   this.getGraphWidget = function(){
     return graphWidget;
@@ -125,7 +127,8 @@ var BST = function(){
 
     if(bool != isAVL){
       clearScreen();
-      init(initialArray);
+      if(bool) init(initialAvlArray);
+      else init(initialArray);
       isAVL = bool;
     }
   }
@@ -376,6 +379,202 @@ var BST = function(){
 
     currentState = createState(internalBst);
     currentState["status"] = "Find Max has ended. The maximum value is "+ans+".";
+    currentState["lineNo"] = 0;
+    stateList.push(currentState);
+
+    graphWidget.startAnimation(stateList);
+    populatePseudocode(1);
+    return true;
+  }
+
+  this.findSuccessor = function(vertexText){
+    vertexText = parseInt(vertexText);
+
+    var stateList = [];
+    var vertexTraversed = {};
+    var edgeTraversed = {};
+    var currentVertex = vertexText;
+    var currentState = createState(internalBst);
+    var currentVertexClass;
+    var vertexTextClass;
+    var key;
+    var ans;
+
+    if(vertexText == null || vertexText == undefined || isNaN(vertexText)){
+      $('#successor-err').html("Please fill in a valid value!");
+      return false;
+    }
+
+    if(internalBst[vertexText] == null){
+      $('#successor-err').html("Please fill in a value present inside the BST!");
+      return false;
+    }
+
+    vertexTextClass = internalBst[vertexText]["vertexClassNumber"];
+
+    currentState["status"] = "The current BST";
+    currentState["lineNo"] = 0;
+
+    stateList.push(currentState);
+
+    if(internalBst[vertexText]["rightChild"] != null){
+      var rightChildVertex = internalBst[vertexText]["rightChild"];
+      var rightChildVertexClass = internalBst[rightChildVertex]["vertexClassNumber"];
+
+      edgeTraversed[rightChildVertexClass] = true;
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["el"][rightChildVertexClass]["animateHighlighted"] = true;
+      currentState["status"] = "Vertex has right child, so go right.";
+      currentState["lineNo"] = 0;
+      stateList.push(currentState);
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["status"] = "Check whether right child has left child..";
+      currentState["lineNo"] = 0;
+      stateList.push(currentState);
+
+      if(internalBst[rightChildVertex]["leftChild"] != null){
+        currentVertex = rightChildVertex;
+        currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Left child found! Go to the left..";
+        currentState["lineNo"] = 0;
+        stateList.push(currentState);
+
+        while(internalBst[currentVertex]["leftChild"] != null){
+          currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+          currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+          currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+
+          vertexTraversed[currentVertex] = true;
+
+          currentState["status"] = currentVertex + " is not the successor vertex as it has a left child."
+          currentState["lineNo"] = 0;
+
+          stateList.push(currentState);
+
+          currentVertex = internalBst[currentVertex]["leftChild"];
+          currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+          currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+          var edgeHighlighted = currentVertexClass;
+          edgeTraversed[edgeHighlighted] = true;
+
+          currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+          currentState["el"][edgeHighlighted]["animateHighlighted"] = true;
+          currentState["el"][edgeHighlighted]["state"] = EDGE_TRAVERSED;
+
+          currentState["status"] = "Go left to check for smaller value..."
+          currentState["lineNo"] = 0;
+
+          stateList.push(currentState);
+        }
+
+        ans = currentVertex;
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Successor found!";
+        currentState["lineNo"] = 0;
+        stateList.push(currentState);
+      }
+
+      else{
+        ans = rightChildVertex;
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][rightChildVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "No left child found, so this vertex is the successor.";
+        currentState["lineNo"] = 0;
+        stateList.push(currentState);
+      }
+    }
+
+    else{
+      currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+      edgeTraversed[currentVertexClass] = true;
+
+      currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+      currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["el"][currentVertexClass]["state"] = EDGE_HIGHLIGHTED;
+      currentState["status"] = "No right child found, so check the parent..";
+      currentState["lineNo"] = 0;
+      stateList.push(currentState);
+
+      currentVertex = internalBst[currentVertex]["parent"];
+      currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+
+      while(currentVertex != null){
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+
+        vertexTraversed[currentVertex] = true;
+
+        if(currentVertex < vertexText){
+          currentState["status"] = currentVertex + " is not the successor vertex as " + vertexText + " is part of the right sub-tree";
+          currentState["lineNo"] = 0;
+          stateList.push(currentState);
+        }
+
+        else{
+          ans = currentVertex;
+
+          currentState["status"] = "Successor found!";
+          currentState["lineNo"] = 0;
+          stateList.push(currentState);
+          break;
+        }
+
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+
+        var edgeHighlighted = currentVertexClass;
+        edgeTraversed[edgeHighlighted] = true;
+
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["el"][edgeHighlighted]["state"] = EDGE_HIGHLIGHTED;
+
+        currentState["status"] = "Go up to check for smaller value..."
+        currentState["lineNo"] = 0;
+
+        stateList.push(currentState);
+
+        currentVertex = internalBst[currentVertex]["parent"];
+        currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
+      }
+
+      if(currentVertex == null){
+        currentState = createState(internalBst, vertexTraversed, edgeTraversed);
+        currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][currentVertexClass]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = currentVertex + " has no parent, so " + vertexText + " has no successor.";
+        currentState["lineNo"] = 0;
+        stateList.push(currentState);
+
+        currentState = createState(internalBst);
+        currentState["status"] = "Find successor has ended. " + vertexText + " has no successor.";
+        currentState["lineNo"] = 0;
+        stateList.push(currentState);
+      }
+    }
+
+    // End state
+
+    currentState = createState(internalBst);
+    currentState["status"] = "Find successor has ended. The successor of " + vertexText + " is " + ans + ".";
     currentState["lineNo"] = 0;
     stateList.push(currentState);
 
