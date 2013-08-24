@@ -1,7 +1,6 @@
 @charset "utf-8";
 
 html { overflow-y: auto; } /*override common.css*/
-#main { padding: 40px; } /*override common.css*/
 
 /*top-bar right*/
 #mode-menu {
@@ -156,7 +155,7 @@ html { overflow-y: auto; } /*override common.css*/
 		}
 
 #viz {
-	margin: 0px 20px;
+	width: 100%;
 	text-align: center;
 	overflow: hidden;
 }

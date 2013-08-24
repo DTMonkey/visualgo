@@ -1,3 +1,4 @@
+//actions panel stuff
 var actionsWidth = 150;
 var statusCodetraceWidth = 370;
 
@@ -100,18 +101,11 @@ function closeRemove() {
 		isRemoveOpen = false;
 	}
 }
-
 function hideEntireActionsPanel() {
-	if(isActionsOpen) {
-		closeSearch();
-		closeInsert();
-		closeRemove();
-		hideActionsPanel();
-	} else {
-		if(isActionsEnabled) {
-			showActionsPanel();
-		}
-	}
+	closeSearch();
+	closeInsert();
+	closeRemove();
+	hideActionsPanel();
 }
 
 $( document ).ready(function() {
@@ -142,13 +136,6 @@ $( document ).ready(function() {
 		closeInsert();
 		closeRemove();
 	});
-		
-	//start by showing help overlay -- change to tutorial mode
-	/*
-	$('#dark-overlay').fadeIn(function(){
-		$('#help').fadeIn();
-	});
-	*/
 	
 	//tutorial mode
 	$('#bst-tutorial-2 .tutorial-next').click(function() {

@@ -88,9 +88,7 @@ function hideEntireActionsPanel() {
 		closeInsert();
 		hideActionsPanel();
 	} else {
-		if(isActionsEnabled) {
-			showActionsPanel();
-		}
+		showActionsPanel();
 	}
 }
 

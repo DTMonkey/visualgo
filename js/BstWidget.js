@@ -123,7 +123,7 @@ var BST = function(){
   }
 
   this.isAVL = function(bool){
-    if(typeof bool != boolean) return;
+    if(typeof bool != 'boolean') return;
 
     if(bool != isAVL){
       clearScreen();

@@ -10,46 +10,7 @@ function highlightLine(lineNumber) { /*lineNumber has to be an integer in [1, 7]
 	}
 }
 
-//disabling certain panels/player controls when user should not press them
-var isActionsEnabled = true;
-var isStatusCodetraceEnabled = true;
-var isPlayerEnabled = false;
-
-function enablePlayer() {
-	isPlayerEnabled = true;
-	$('#speed-control').fadeIn(250);
-	$('#media-controls').fadeIn(250);
-}
-function disablePlayer() {
-	isPlayerEnabled = false;
-	$('#speed-control').fadeOut(250);
-	$('#media-controls').fadeOut(250);
-}
-
-function enableActionsOnly() {
-	$('#current-action').hide();
-	$('#actions-hide').css('background-color','#ed5a7d');
-	$('#status-hide').css('background-color','#666666');
-	$('#codetrace-hide').css('background-color','#666666');
-	disablePlayer();
-	showActionsPanel();
-	hideStatusPanel();
-	hideCodetracePanel();
-	isActionsEnabled = true;
-	isStatusCodetraceEnabled = false;
-}
-function enableStatusCodetraceOnly() {
-	$('#actions-hide').css('background-color','#666666');
-	$('#status-hide').css('background-color','#2ebbd1');
-	$('#codetrace-hide').css('background-color','#52bc69');
-	enablePlayer();
-	hideActionsPanel();
-	showStatusPanel();
-	showCodetracePanel();
-	isActionsEnabled = false;
-	isStatusCodetraceEnabled = true;
-}
-
+var isPlaying = false;
 //Opening and closing panels
 var isActionsOpen = true;
 var isStatusOpen = false;
@@ -110,6 +71,11 @@ function hideCodetracePanel() {
 		isCodetraceOpen = false;
 	}
 }
+function triggerRightPanels() {
+	hideActionsPanel();
+	showStatusPanel();
+	showCodetracePanel();
+}
 
 $( document ).ready(function() {
 	
@@ -122,7 +88,6 @@ $( document ).ready(function() {
 	});
 	
 	//mmode menu
-	
 	$('#mode-button').click(function() {
 		$('#other-modes').toggle();
 	});
@@ -152,7 +117,9 @@ $( document ).ready(function() {
 			$('#codetrace').show();
 			$('#actions').show();
 			$('.tutorial-dialog').hide();
-			enableActionsOnly();
+			hideStatusPanel();
+			hideCodetracePanel();
+			showActionsPanel();
 		/*} else if(newMode=="Training Mode") {
 			mode = "training";
 			$('#status').hide();
@@ -170,18 +137,7 @@ $( document ).ready(function() {
 			$('#status').show();
 			$('#codetrace').show();
 			$('#actions').show();
-			/*$('#dark-overlay').fadeIn(function(){
-				$('#help').fadeIn();
-			});*/
-			if(!isActionsEnabled) { //that means animation is playing
-				stop();
-			}
-			isActionsEnabled = true;
-			isStatusCodetraceEnabled = true;
-			$('#actions-hide').css('background-color','#ed5a7d');
-			$('#status-hide').css('background-color','#2ebbd1');
-			$('#codetrace-hide').css('background-color','#52bc69');
-			enablePlayer();
+			if(isPlaying) {	stop(); }
 			hideEntireActionsPanel();
 			hideStatusPanel();
 			hideCodetracePanel();
@@ -194,22 +150,22 @@ $( document ).ready(function() {
 		if(isStatusOpen) {
 			hideStatusPanel();
 		} else {
-			if(isStatusCodetraceEnabled) {
-				showStatusPanel();
-			}
+			showStatusPanel();
 		}
 	});
 	$('#codetrace-hide').click(function() {
 		if(isCodetraceOpen) {
 			hideCodetracePanel();
 		} else {
-			if(isStatusCodetraceEnabled){
-				showCodetracePanel();
-			}
+			showCodetracePanel();
 		}
 	});
 	$('#actions-hide').click(function() {
-		hideEntireActionsPanel(); //must define hideEntireActionsPanel() function in vizname_actions.js file
+		if(isActionsOpen) {
+			hideEntireActionsPanel(); //must define hideEntireActionsPanel() function in vizname_actions.js file
+		} else {
+			showActionsPanel();
+		}
 	});
 	
 	//tutorial mode
@@ -220,4 +176,5 @@ $( document ).ready(function() {
 			$(nextId).fadeIn(500);
 		});
 	});
+	
 });
