@@ -82,14 +82,10 @@ function closeInsert() {
 }
 
 function hideEntireActionsPanel() {
-	if(isActionsOpen) {
-		closeBuildv1();
-		closeBuildv2();
-		closeInsert();
-		hideActionsPanel();
-	} else {
-		showActionsPanel();
-	}
+	closeBuildv1();
+	closeBuildv2();
+	closeInsert();
+	hideActionsPanel();
 }
 
 $( document ).ready(function() {

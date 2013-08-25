@@ -7,10 +7,6 @@ var MAIN_SVG_HEIGHT = 300;
 var PSEUDOCODE_SVG_WIDTH = 300;
 var PSEUDOCODE_SVG_HEIGHT = 400;
 
-var defaultVertexColor = "#333333";
-var highlightVertexColor = "#52bc69";
-var traversedVertexColor = "#a7d41e";
-
 /*
  * GraphVertexWidget
  */
@@ -18,61 +14,64 @@ var traversedVertexColor = "#a7d41e";
 var graphVertexProperties = {
   "innerCircle":{
     "default":{
-      "fill": defaultVertexColor,
-      "r": 12,
+      "fill": "#eee",
+      "r": 14,
       "stroke": "#fff",
       "stroke-width": 0
     },
     "highlighted":{
-      "fill": highlightVertexColor,
-      "r": 12,
+      "fill": surpriseColour,
+      "r": 14,
       "stroke": "#fff",
       "stroke-width": 0
     },
     "traversed":{
-      "fill": traversedVertexColor,
-      "r": 12,
+      "fill": "#eee",
+      "r": 14,
       "stroke": "#fff",
       "stroke-width": 0
     }
   },
   "outerCircle":{
     "default":{
-      "fill": "#fff",
+      "fill": "#333",
       "r": 16,
-      "stroke": defaultVertexColor,
+      "stroke": "#333",
       "stroke-width": 2
     },
     "highlighted":{
-      "fill": "#fff",
+      "fill": surpriseColour,
       "r": 16,
-      "stroke": highlightVertexColor,
+      "stroke": surpriseColour,
       "stroke-width": 2
     },
     "traversed":{
-      "fill": "#fff",
+      "fill": surpriseColour,
       "r": 16,
-      "stroke": traversedVertexColor,
+      "stroke": surpriseColour,
       "stroke-width": 2
     }
   },
   "text":{
     "default":{
-      "fill": "#fff",
-      "font-family": "sans-serif",
-      "font-size": 12,
+      "fill": "#000",
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+	  "font-weight": "bold",
       "text-anchor": "middle"
     },
     "highlighted":{
       "fill": "#fff",
-      "font-family": "sans-serif",
-      "font-size": 12,
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+	  "font-weight": "bold",
       "text-anchor": "middle"
     },
     "traversed":{
-      "fill": "#fff",
-      "font-family": "sans-serif",
-      "font-size": 12,
+      "fill": surpriseColour,
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+	  "font-weight": "bold",
       "text-anchor": "middle"
     }
   },
@@ -85,15 +84,15 @@ var graphVertexProperties = {
 var graphEdgeProperties = {
   "default":{
     "stroke": "#333",
-    "stroke-width": 2
+    "stroke-width": 3
   },
   "highlighted":{
-    "stroke": highlightVertexColor,
-    "stroke-width": 2
+    "stroke": surpriseColour,
+    "stroke-width": 10
   },
   "traversed":{
-    "stroke": traversedVertexColor,
-    "stroke-width": 2
+    "stroke": surpriseColour,
+    "stroke-width": 3
   }
 }
 

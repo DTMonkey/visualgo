@@ -69,9 +69,9 @@ html { overflow-y: auto; } /*override common.css*/
 		position: relative;
 		display: inline-block;
 		margin: 0px 10px;
-		border-left: 5px solid #666;
-		border-right: 5px solid #666;
-		background-color: #666;
+		border-left: 5px solid #777;
+		border-right: 5px solid #777;
+		background-color: #777;
 		height: 6px;
 		width: 70px;
 	}
@@ -135,7 +135,7 @@ html { overflow-y: auto; } /*override common.css*/
 		bottom: 17px;
 		left: 50%;
 		margin-left: -175px;
-		background-color: #666;
+		background-color: #777;
 		height: 6px;
 		width: 350px;
 		opacity: 1.0;
@@ -144,13 +144,12 @@ html { overflow-y: auto; } /*override common.css*/
 			position: absolute;
 			border: none;
 			outline: none;
-			background-color: #52bc69;
+			background-color: #fff;
 			height: 6px;
 			width: 1px;
 		}
 		#progress-bar .ui-slider-range {
 			position: absolute;
-			background-color: #52bc69;
 			height: 6px;
 		}
 
@@ -158,6 +157,7 @@ html { overflow-y: auto; } /*override common.css*/
 	width: 100%;
 	text-align: center;
 	overflow: hidden;
+	padding-top: 20px;
 }
 
 .execAction { cursor: pointer; }
@@ -168,43 +168,40 @@ html { overflow-y: auto; } /*override common.css*/
 	color: white;
 	width: 0px;
 	overflow: hidden;
+	background: #777;
 }
-	.panel-hide { position: fixed; cursor: pointer; }
+	.panel-hide { position: fixed; cursor: pointer; background: #777; }
 	
 #current-action {
-	top: 60px;
-	left: 60px;
-	background: black;
+	bottom: 320px;
+	right: 60px;
 	width: auto;
 	display: none;
+	background: #eee;
 }
-	#current-action p{ padding: 10px; }
+	#current-action p{ color: black; font-weight: bold; font-size: 20px; }
 	
 #actions {
 	bottom: 60px;
 	left: 43px;
-	background: #ed5a7d;
 }
 	#actions p { padding: 5px 10px; cursor: pointer; }
 		#actions p:hover { background: black; }
 	#actions-hide {
 		bottom: 60px;
 		left: 0px;
-		background: #ed5a7d;
 	}
 	
 #status {
 	bottom: 255px;
 	right: 43px;
 	height: 54px;
-	background: #2ebbd1;
 }
 	#status p { padding: 10px; }
 	#status-hide {
 		bottom: 255px;
 		right: 0px;
 		padding: 19px 14px 19px 15px;
-		background: #2ebbd1;
 		transform: rotate(180deg);
 		-ms-transform: rotate(180deg); /* IE 9 */
 		-webkit-transform: rotate(180deg); /* Safari and Chrome */
@@ -216,7 +213,6 @@ html { overflow-y: auto; } /*override common.css*/
 	bottom: 60px;
 	right: 43px;
 	height: 192px;
-	background: #52bc69;
 	font-family: "Courier New", Courier, monospace;
 }
 	#codetrace p { padding: 5px 10px; }
@@ -225,7 +221,6 @@ html { overflow-y: auto; } /*override common.css*/
 		bottom: 60px;
 		right: 0px;
 		padding: 88px 14px 88px 15px;
-		background: #52bc69;		
 		transform: rotate(180deg);
 		-ms-transform: rotate(180deg); /* IE 9 */
 		-webkit-transform: rotate(180deg); /* Safari and Chrome */
@@ -289,3 +284,8 @@ html { overflow-y: auto; } /*override common.css*/
 		cursor: pointer;
 		border-radius: 2px;
 	}
+		.tutorial-next img {
+			display: inline-block;
+			height: 9px;
+			margin-left: 8px;
+		}

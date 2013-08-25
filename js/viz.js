@@ -80,6 +80,13 @@ function triggerRightPanels() {
 $( document ).ready(function() {
 	
 	$('#current-action').hide();
+	
+	//surpriseColour stuff
+	$('.tutorial-next').css("background-color", surpriseColour);
+	if(surpriseColour == "#fec515") {
+		$('.tutorial-next').css("color", "black");
+	}
+	$('#progress-bar .ui-slider-range').css("background-color", surpriseColour);
 
 	//title
 	$('#title a').click(function() {

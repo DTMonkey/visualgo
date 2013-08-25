@@ -9,7 +9,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   var outerCircle;
   var text;
 
-  var textYaxisOffset = graphVertexProperties["text"]["default"]["font-size"]/4;
+  var textYaxisOffset = graphVertexProperties["text"]["default"]["font-size"]/3;
 
   var attributeList = {
     "innerCircle": {
@@ -38,6 +38,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
       "y": null,
       "fill": null,
       "font-family": null,
+	  "font-weight": null,
       "font-size": null,
       "text-anchor": null,
       "text": null
@@ -216,6 +217,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     attributeList["text"]["fill"] = graphVertexProperties["text"]["default"]["fill"];
     attributeList["text"]["font-family"] = graphVertexProperties["text"]["default"]["font-family"];
     attributeList["text"]["font-size"] = 0;
+	attributeList["text"]["font-weight"] = graphVertexProperties["text"]["default"]["font-weight"];
     attributeList["text"]["text-anchor"] = graphVertexProperties["text"]["default"]["text-anchor"];
     attributeList["text"]["text"] = vertexText;
 
@@ -242,6 +244,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
         .attr("fill", attributeList["text"]["fill"])
         .attr("font-family", attributeList["text"]["font-family"])
         .attr("font-size", attributeList["text"]["font-size"])
+		.attr("font-weight", attributeList["text"]["font-weight"])
         .attr("text-anchor", attributeList["text"]["text-anchor"])
         .text(function(){
           return attributeList["text"]["text"];
@@ -280,6 +283,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
         .attr("fill", attributeList["text"]["fill"])
         .attr("font-family", attributeList["text"]["font-family"])
         .attr("font-size", attributeList["text"]["font-size"])
+		.attr("font-weight", attributeList["text"]["font-weight"])
         .attr("text-anchor", attributeList["text"]["text-anchor"])
         .text(function(){
           return attributeList["text"]["text"];
