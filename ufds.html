@@ -56,8 +56,10 @@
     
     <div id="actions" class="panel">
 		<p id="find" style="padding-top: 10px;">FindSet(i)</p>
+		<p id="issameset">IsSameSet(i,j)</p>
 		<p id="union">UnionSet(i,j)</p>
 		<p id="init">Initialize(N)</p>
+		<p id="sample">Sample(ver)</p>
 		<!--p id="insert">Insert</p>
 		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
 		<p id="heapsort" class="execAction" style="padding-bottom: 10px;" onclick=heapsort()>HeapSort</p-->
@@ -66,10 +68,14 @@
     <!--put all the extra action pullouts (input) and error messages here-->
     	<div id="find-input"><input type="text" id="arrfindi" autocomplete="off" value="0" /></div>
         <div id="find-go" class="execAction" onclick=find()><p>GO</p></div>
+    	<div id="issameset-input"><input type="text" id="arrissameseti" autocomplete="off" value="0" /><input type="text" id="arrissamesetj" autocomplete="off" value="5" /></div>
+        <div id="issameset-go" class="execAction" onclick=issameset()><p>GO</p></div>
     	<div id="union-input"><input type="text" id="arrunioni" autocomplete="off" value="0" /><input type="text" id="arrunionj" autocomplete="off" value="5" /></div>
         <div id="union-go" class="execAction" onclick=union()><p>GO</p></div>
     	<div id="init-input"><input type="text" id="arrn" autocomplete="off" value="10" /></div>
         <div id="init-go" class="execAction" onclick=init()><p>GO</p></div>
+    	<div id="sample-input"><input type="text" id="arrver" autocomplete="off" value="0" /></div>
+        <div id="sample-go" class="execAction" onclick=sample()><p>GO</p></div>
     
     <div id="status" class="panel"><p></p></div>
     <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
@@ -173,7 +179,11 @@
 
 <script type="text/javascript">
 	//start by showing actions panel
-	enableActionsOnly();
+
+	// TO ROSE: quick hack to make this works
+	//enableActionsOnly();
+	isPlayerEnabled = true;
+
 	$('#play').hide();
 
 	var ufdsWidget = new UFDS();
@@ -183,6 +193,16 @@
 		if (ufdsWidget.findSet(document.getElementById("arrfindi").value, true)) {
 			$('#current-action').show();
 			$('#current-action p').html("Find("+ $('#arrfindi').val() + ")");
+			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+			//closeBuildv1(); //in heap_actions.js
+			enableStatusCodetraceOnly(); //in viz.js
+		}
+	}
+
+	function issameset() {
+		if (ufdsWidget.isSameSet(document.getElementById("arrissameseti").value, document.getElementById("arrissamesetj").value, true)) {
+			$('#current-action').show();
+			$('#current-action p').html("Union(" + $('#arrissameseti').val() + "," + $('#arrissamesetj').val() + ")");
 			$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
 			//closeBuildv1(); //in heap_actions.js
 			enableStatusCodetraceOnly(); //in viz.js
@@ -201,8 +221,8 @@
 	
 	function init() {
 		var N = parseInt(document.getElementById("arrn").value);
-		if (N < 0 || N > 10) {
-			alert('The valid range for N is [0..10]');
+		if (N < 0 || N > 12) {
+			alert('The valid range for N is [0..12]');
 		}
 		ufdsWidget.initArray(N);
 /*		if (ufdsWidget.unionSet(document.getElementById("arrunioni").value, document.getElementById("arrunionj").value, true)) {
@@ -212,6 +232,14 @@
 			//closeBuildv1(); //in heap_actions.js
 			enableStatusCodetraceOnly(); //in viz.js
 		}*/
+	}
+
+	function sample() {
+		var ver = parseInt(document.getElementById("arrver").value);
+		if (ver < 0 || ver > 5) {
+			alert('The valid range for ver is [0..5]');
+		}
+		ufdsWidget.sampleArray(ver);
 	}
 
 	//playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidgetNew.js

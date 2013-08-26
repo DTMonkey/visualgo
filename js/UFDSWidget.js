@@ -26,7 +26,7 @@ var UFDS = function() {
 	var drawn = new Array();
 
   //initArray();
-  p = [1, 3, 3, 3, 3, 6, 6, 6, 8]; // Figure 2.7 (left) of CP3 plus vertex 5-6-7 and 8
+  p = [1, 3, 3, 3, 3, 6, 6, 6, 8]; // Figure 2.7 (left) of CP3 plus vertex 5-6-7 and 8-9-10
   rank = [0, 1, 0, 2, 0, 0, 1, 0, 0];
 
   layoutUFDS();
@@ -35,6 +35,39 @@ var UFDS = function() {
   var stateList = [];
 
   this.getGraphWidget = function() { return graphWidget; }
+
+	this.sampleArray = function(ver) {
+		clearScreen();
+		p = new Array();
+		switch (ver) {
+			case 0: // Figure 2.7 (left) of CP3 plus vertex 5-6-7 and 8
+				p    = [1, 3, 3, 3, 3, 6, 6, 6, 8];
+				rank = [0, 1, 0, 2, 0, 0, 1, 0, 0];
+				break;
+			case 1: // two disjoint sets
+				p    = [1, 3, 3, 3, 3, 5, 5, 5, 5, 6];
+				rank = [0, 1, 0, 2, 0, 2, 1, 0, 0, 0];
+				break;
+			case 2: // three disjoint sets
+				p    = [1, 3, 3, 3, 3, 5, 6, 5, 5, 6, 4, 8];
+				rank = [0, 1, 0, 2, 1, 2, 1, 0, 1, 0, 0, 0];
+				break;
+			case 3: // example with rank 1
+				p    = [0, 1, 2, 0, 0, 0, 0, 1, 1, 1, 2, 2];
+				rank = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+				break;
+			case 4: // example with rank 2
+				p    = [0, 1, 0, 0, 0, 1, 1, 0, 5, 5, 5];
+				rank = [1, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0];
+				break;
+			case 5: // example with rank 3
+				p    = [1, 3, 3, 7, 5, 7, 7, 7];
+				rank = [0, 1, 0, 2, 0, 1, 0, 3];
+				break;
+		}
+		layoutUFDS();
+		initUFDS();
+	}
   
 	this.initArray = function(N) {
 		clearScreen();
@@ -143,10 +176,18 @@ var UFDS = function() {
 		currentState["lineNo"] = lineToBeHighlighted;
     stateList.push(currentState);
 
+    var visited = new Array();
+
 	while (p[i] != i) {
 		currentState = createState(p);
-		currentState["vl"][i]["state"] = VERTEX_TRAVERSED;
-		currentState["vl"][p[i]]["state"] = VERTEX_HIGHLIGHTED;
+		visited.push(i);
+
+		for (var j=0; j<visited.length; j++) {
+			var v=visited[j];
+			currentState["vl"][v]["state"] = VERTEX_TRAVERSED;
+			currentState["vl"][p[v]]["state"] = VERTEX_HIGHLIGHTED;
+			currentState["el"][v]["state"] = EDGE_TRAVERSED;
+		}
 		currentState["status"] = 'Vertex ' + i + ' has a parent which is vertex ' + p[i];
         currentState["lineNo"] = 3;
 		if (startAnimationDirectly == false)
@@ -163,23 +204,67 @@ var UFDS = function() {
 		currentState["lineNo"] = lineToBeHighlighted;
     stateList.push(currentState);
 	
-	if (p[parseInt(vtxI)] != i) { // need to do path compression
-		p[parseInt(vtxI)] = i;
+	//if (p[parseInt(vtxI)] != i) { // need to do path compression
+	for (var j=visited.length-1; j>=0; j--) { // path compress all vertices along the path
+		var v=visited[j];
+		p[v] = i;
 		currentState = createState(p);
-		currentState["el"][parseInt(vtxI)]["state"] = EDGE_HIGHLIGHTED;
-		currentState["status"] = 'Path compression, Vertex ' + parseInt(vtxI) + ' now points directly to Vertex ' + i;
+		currentState["el"][v]["state"] = EDGE_HIGHLIGHTED;
+		currentState["status"] = 'Path compression, Vertex ' + v + ' points directly to Vertex ' + i;
 		currentState["lineNo"] = 3;
 		if (startAnimationDirectly == false)
 			currentState["lineNo"] = lineToBeHighlighted;
 		stateList.push(currentState);
 
-		currentState = createState(p);
-		currentState["status"] = 'The new UFDS structure';
+/*		currentState = createState(p);
+		currentState["status"] = 'The current UFDS structure';
 		currentState["lineNo"] = 3;
 		if (startAnimationDirectly == false)
 			currentState["lineNo"] = lineToBeHighlighted;
-		stateList.push(currentState);
+		stateList.push(currentState);*/
 	}
+
+	currentState = createState(p); // final state
+	currentState["status"] = 'The current UFDS structure';
+	stateList.push(currentState);
+
+    if (startAnimationDirectly)
+      graphWidget.startAnimation(stateList);
+
+    return true;
+  }
+
+  this.isSameSet = function(vtxI, vtxJ, startAnimationDirectly) {
+    var i = parseInt(vtxI), j = parseInt(vtxJ), currentState;
+
+    if (i < 0 || i >= p.length) {
+      //$('#find-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
+      alert('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
+      return false;
+    }
+    
+    if (j < 0 || j >= p.length) {
+      //$('#find-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
+      alert('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
+      return false;
+    }
+
+    if (startAnimationDirectly == true) {
+      stateList = [];
+      populatePseudocode(1);
+    }
+
+	this.findSet(i, false, 1);
+	this.findSet(j, false, 2);
+	var x = p[i], y = p[j]; // path compression in action already
+	
+	currentState = createState(p);
+	if (x != y)
+		currentState["status"] = i + ' and ' + j + ' belongs to different set';
+	else
+		currentState["status"] = i + ' and ' + j + ' belongs to the same set';
+	currentState["lineNo"] = 3;
+    stateList.push(currentState);
 
     if (startAnimationDirectly)
       graphWidget.startAnimation(stateList);
@@ -210,42 +295,63 @@ var UFDS = function() {
 
     if (startAnimationDirectly == true) {
       stateList = [];
-      populatePseudocode(1);
+      populatePseudocode(2);
     }
 
 	this.findSet(i, false, 2);
 	this.findSet(j, false, 3);
 	var x = p[i], y = p[j]; // path compression in action already
 	var finalStatus = '';
+	var selected = x;
 	
 	if (x != y) {
+		var linkingStatus = '';
 		currentState = createState(p);
 		currentState["vl"][x]["state"] = VERTEX_HIGHLIGHTED;
 		currentState["vl"][y]["state"] = VERTEX_HIGHLIGHTED;
+		if (rank[x] > rank[y]) {
+			currentState["el"][y] = {};
+			currentState["el"][y]["type"] = EDGE_TYPE_UDE;
+			currentState["el"][y]["weight"] = 1;
+			currentState["el"][y]["animateHighlighted"] = false;
+			currentState["el"][y]["vertexA"] = x;
+			currentState["el"][y]["vertexB"] = y;
+			currentState["el"][y]["state"] = EDGE_TRAVERSED;
+		}
+		else {
+			currentState["el"][x] = {};
+			currentState["el"][x]["type"] = EDGE_TYPE_UDE;
+			currentState["el"][x]["weight"] = 1;
+			currentState["el"][x]["animateHighlighted"] = false;
+			currentState["el"][x]["vertexA"] = y;
+			currentState["el"][x]["vertexB"] = x;
+			currentState["el"][x]["state"] = EDGE_TRAVERSED;
+		}
 		currentState["status"] = 'Now, linking Vertex ' + x + ' with Vertex ' + y;
 		currentState["lineNo"] = 4;
 		stateList.push(currentState);
 		
-		var linkingStatus = '';
 		if (rank[x] > rank[y]) {
 			p[y] = x;
 			linkingStatus = 'Make Vertex ' + x + ' as the new parent of Vertex ' + y;
+			selected = y;
 		}
 		else {
 			p[x] = y;
 			linkingStatus = 'Make Vertex ' + y + ' as the new parent of Vertex ' + x;
+			selected = x;
 			if (rank[x] == rank[y]) rank[y]++;
 		}
-		
+
 		currentState = createState(p);
 		currentState["vl"][x]["state"] = VERTEX_HIGHLIGHTED;
 		currentState["vl"][y]["state"] = VERTEX_HIGHLIGHTED;
-		currentState["el"][x]["state"] = EDGE_HIGHLIGHTED;
+		currentState["el"][selected]["state"] = EDGE_HIGHLIGHTED;
 		currentState["status"] = linkingStatus;
 		currentState["lineNo"] = 4;
 		stateList.push(currentState);
 		
-		finalStatus = 'The new UFDS structure; Done';
+		finalStatus = 'The current UFDS structure; Done';
 	}
 	else {
 		finalStatus = 'x = y = ' + x + ', thus there is no need to do union; Done';
@@ -273,7 +379,16 @@ var UFDS = function() {
         document.getElementById('code6').innerHTML = '';
         document.getElementById('code7').innerHTML = '';
         break;
-      case 1: // UnionSet
+      case 1: // IsSameSet
+        document.getElementById('code1').innerHTML = 'x = findSet(i)';
+        document.getElementById('code2').innerHTML = 'y = findSet(j)';
+        document.getElementById('code3').innerHTML = 'return x == y';
+        document.getElementById('code4').innerHTML = '';
+        document.getElementById('code5').innerHTML = '';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
+        break;
+      case 2: // UnionSet
         document.getElementById('code1').innerHTML = 'if !isSameSet(i,j)';
         document.getElementById('code2').innerHTML = '&nbsp&nbspx = findSet(i)';
         document.getElementById('code3').innerHTML = '&nbsp&nbspy = findSet(j)';
