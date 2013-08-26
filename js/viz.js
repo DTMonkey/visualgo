@@ -38,6 +38,7 @@ function hideActionsPanel() {
 function showStatusPanel() {
 	if(!isStatusOpen) {
 		$('#status-hide img').removeClass('rotateLeft').addClass('rotateRight');
+		$('#current-action').show();
 		$('#status').animate({
 			width: "+="+statusCodetraceWidth,
 		});
@@ -47,6 +48,7 @@ function showStatusPanel() {
 function hideStatusPanel() {
 	if(isStatusOpen) {
 		$('#status-hide img').removeClass('rotateRight').addClass('rotateLeft');
+		$('#current-action').hide();
 		$('#status').animate({
 			width: "-="+statusCodetraceWidth,
 		});
@@ -85,8 +87,16 @@ $( document ).ready(function() {
 	$('.tutorial-next').css("background-color", surpriseColour);
 	if(surpriseColour == "#fec515") {
 		$('.tutorial-next').css("color", "black");
+		$('.tutorial-next img').attr("src", "img/arrow_black_right.png");
 	}
 	$('#progress-bar .ui-slider-range').css("background-color", surpriseColour);
+	$('#actions').css("background-color", colourArray[generatedColours[1]]);
+	$('#actions-hide').css("background-color", colourArray[generatedColours[1]]);
+	$('#actions-extras').children().not('input').not('.err').css("background-color", colourArray[generatedColours[1]]);
+	$('#codetrace').css("background-color", colourArray[generatedColours[2]]);
+	$('#codetrace-hide').css("background-color", colourArray[generatedColours[2]]);
+	$('#status').css("background-color", colourArray[generatedColours[3]]);
+	$('#status-hide').css("background-color", colourArray[generatedColours[3]]);
 
 	//title
 	$('#title a').click(function() {

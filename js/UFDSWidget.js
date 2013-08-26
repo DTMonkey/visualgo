@@ -158,8 +158,7 @@ var UFDS = function() {
   this.findSet = function(vtxI, startAnimationDirectly, lineToBeHighlighted) {
     var i = parseInt(vtxI), currentState;
     if (i < 0 || i >= p.length) {
-      //$('#find-err').html('Sorry, the valid item number is [0..' + (p.length-1) + ']');
-      alert('Sorry, the valid item number is [0..' + (p.length-1) + ']');
+      $('#find-err').html('Sorry, the valid item number is [0..' + (p.length-1) + ']');
       return false;
     }
     
@@ -238,14 +237,12 @@ var UFDS = function() {
     var i = parseInt(vtxI), j = parseInt(vtxJ), currentState;
 
     if (i < 0 || i >= p.length) {
-      //$('#find-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
-      alert('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
+      $('#find-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
       return false;
     }
     
     if (j < 0 || j >= p.length) {
-      //$('#find-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
-      alert('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
+      $('#find-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
       return false;
     }
 
@@ -276,20 +273,17 @@ var UFDS = function() {
     var i = parseInt(vtxI), j = parseInt(vtxJ), currentState;
 
     if (i < 0 || i >= p.length) {
-      //$('#find-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
-      alert('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
+      $('#union-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
       return false;
     }
     
     if (j < 0 || j >= p.length) {
-      //$('#find-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
-      alert('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
+      $('#union-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
       return false;
     }
 
      if (i == j) {
-      //$('#find-err').html('Sorry, i has to be different from j');
-      alert('Sorry, i has to be different from j');
+      $('#union-err').html('Sorry, i has to be different from j');
       return false;
     }
 

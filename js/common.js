@@ -2,8 +2,18 @@
 //Referenced to in  home.js and viz.js also
 var colourArray = ["#52bc69", "#ed5a7d", "#2ebbd1", "#d9513c", "#fec515", "#4b65ba", "#ff8a27", "#a7d41e"];
 					//green, pink, blue, red, yellow, indigo, orange, lime
-var n = (Math.floor(Math.random()*colourArray.length));
-var surpriseColour = colourArray[n];
+function getColours() {
+	var generatedColours = new Array();
+	while(generatedColours.length < 4) {
+		var n = (Math.floor(Math.random()*colourArray.length));
+		if(generatedColours.indexOf(n) == -1) {
+			generatedColours.push(n);
+		}
+	}
+	return generatedColours;
+}
+var generatedColours = getColours();
+var surpriseColour = colourArray[generatedColours[0]];
 
 $( document ).ready(function() {
 	

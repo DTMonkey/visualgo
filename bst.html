@@ -60,9 +60,10 @@
         <p id="inorder" class="execAction" style="padding-bottom: 10px;" onclick=inorderTraversal()>In-order Traversal</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-    	<div id="find-min" class="execAction" onClick=findMin()><p>Find</p></div>
-        <div id="find-max" class="execAction" onClick=findMax()><p>Find</p></div>
+    	<div id="find-min" class="execAction" style="white-space: nowrap;" onClick=findMin()><p>Find Min</p></div>
+        <div id="find-max" class="execAction" style="white-space: nowrap;" onClick=findMax()><p>Find Max</p></div>
     	<div id="search-input"><input type="text" id="v-search" title="Enter an integer" autocomplete="off" value=5 /></div>
         <div id="search-go" class="execAction" onclick=searchVertex()><p>GO</p></div>
         <div id="search-err" class="err"></div>
@@ -73,6 +74,7 @@
         <div id="remove-go" class="execAction" onclick=removeVertex()><p>GO</p></div>
         <div id="remove-err" class="err"></div>
         <div id="inorder-err" class="err"></div>
+    </div>
     
     <div id="status" class="panel"><p></p></div>
     <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>

@@ -169,6 +169,7 @@ html { overflow-y: auto; } /*override common.css*/
 	width: 0px;
 	overflow: hidden;
 	background: #777;
+	white-space: nowrap;
 }
 	.panel-hide { position: fixed; cursor: pointer; background: #777; }
 	
