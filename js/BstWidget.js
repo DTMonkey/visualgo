@@ -516,7 +516,7 @@ var BST = function(){
       currentVertex = internalBst[currentVertex]["parent"];
       currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
 
-      while(currentVertex != null){
+      while(true){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
 
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
@@ -542,10 +542,10 @@ var BST = function(){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
 
         var edgeHighlighted = currentVertexClass;
-        edgeTraversed[edgeHighlighted] = true;
+        if(currentVertex != internalBst["root"]) edgeTraversed[edgeHighlighted] = true;
 
         currentState["vl"][vertexTextClass]["state"] = VERTEX_HIGHLIGHTED;
-        currentState["el"][edgeHighlighted]["state"] = EDGE_HIGHLIGHTED;
+        if(currentVertex != internalBst["root"]) currentState["el"][edgeHighlighted]["state"] = EDGE_HIGHLIGHTED;
 
         currentState["status"] = "Go up to check for smaller value..."
         currentState["lineNo"] = 0;
@@ -553,6 +553,9 @@ var BST = function(){
         stateList.push(currentState);
 
         currentVertex = internalBst[currentVertex]["parent"];
+
+        if(currentVertex == null) break;
+
         currentVertexClass = internalBst[currentVertex]["vertexClassNumber"];
       }
 
@@ -564,17 +567,14 @@ var BST = function(){
         currentState["lineNo"] = 0;
         stateList.push(currentState);
 
-        currentState = createState(internalBst);
-        currentState["status"] = "Find successor has ended. " + vertexText + " has no successor.";
-        currentState["lineNo"] = 0;
-        stateList.push(currentState);
+        ans = null;
       }
     }
 
     // End state
-
     currentState = createState(internalBst);
-    currentState["status"] = "Find successor has ended. The successor of " + vertexText + " is " + ans + ".";
+    if(ans != null) currentState["status"] = "Find successor has ended. The successor of " + vertexText + " is " + ans + ".";
+    else currentState["status"] = "Find successor has ended. " + vertexText + " has no successor.";
     currentState["lineNo"] = 0;
     stateList.push(currentState);
 
