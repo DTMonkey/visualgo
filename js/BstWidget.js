@@ -611,12 +611,17 @@ var BST = function(){
     }
 
     else {
-	  currentState = createState(internalBst);
+      currentVertexClass = internalBst[internalBst["root"]]["vertexClassNumber"];
+
+      currentState = createState(internalBst);
+      currentState["vl"][currentVertexClass]["state"] = VERTEX_TRAVERSED;
       currentState["status"] = "The root "+internalBst["root"]+ " is not null";
       currentState["lineNo"] = 1;
+
       stateList.push(currentState);
 	  
-	  currentState = createState(internalBst);
+      currentState = createState(internalBst);
+      currentState["vl"][currentVertexClass]["state"] = VERTEX_TRAVERSED;
       currentState["status"] = "So recurse and check left child of "+internalBst["root"];
       currentState["lineNo"] = 3;
       stateList.push(currentState);
@@ -672,7 +677,7 @@ var BST = function(){
       vertexHighlighted[currentVertexClass] = true;
       inorderHighlightVertex();
       currentState["status"] = "Visit node "+currentVertex+".";
-      currentState["lineNo"] = 3;
+      currentState["lineNo"] = 4;
       stateList.push(currentState);
 
       if(currentVertexRightChild == null) {
