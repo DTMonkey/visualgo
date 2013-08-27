@@ -855,7 +855,11 @@ var BST = function(){
         vertexTraversed[currentVertex] = true;
 
         currentState["status"] = "Comparing " + vertexText + " with "+currentVertex;
-        currentState["lineNo"] = 3;
+		if(!isAVL) {
+        	currentState["lineNo"] = 3;
+		} else {
+			currentState["lineNo"] = 1;
+		}
 
         stateList.push(currentState);
 
@@ -876,11 +880,19 @@ var BST = function(){
 
         if(parseInt(vertexText) > parseInt(internalBst[currentVertex]["parent"])){
           currentState["status"] = vertexText + " is larger than " + internalBst[currentVertex]["parent"] + ", so go right.";
-          currentState["lineNo"] = 5;
+			if(!isAVL) {
+			  currentState["lineNo"] = 5;
+			} else {
+			  currentState["lineNo"] = 1;
+			}
         }
         else{
           currentState["status"] = vertexText + " is smaller than " + internalBst[currentVertex]["parent"] + ", so go left.";
-          currentState["lineNo"] = 4;
+          if(!isAVL) {
+		  	currentState["lineNo"] = 4;
+		  } else {
+			 currentState["lineNo"] = 1;
+		  }
         }
         
 
@@ -936,13 +948,20 @@ var BST = function(){
       currentState["vl"][newNodeVertexClass]["state"] = EDGE_HIGHLIGHTED;
 
       currentState["status"] = vertexText + " has been inserted!"
-      currentState["lineNo"] = 2;
+	  if (!isAVL) {
+		  currentState["lineNo"] = 2;
+	  } else {
+		  currentState["lineNo"] = 1;
+	  }
 
       stateList.push(currentState);
 
       // End State
       currentState = createState(internalBst);
       currentState["status"] = "Insert " + vertexText + " has been completed."
+	  if(isAVL) {
+	  	currentState["lineNo"] = 1;
+	  }
       stateList.push(currentState);
 
       if(isAVL){
@@ -953,12 +972,13 @@ var BST = function(){
         while(vertexCheckBf != null){
           var vertexCheckBfClass = internalBst[vertexCheckBf]["vertexClassNumber"];
 
+		   var bf = internalBst[vertexCheckBf]["balanceFactor"];
+		
           currentState = createState(internalBst);
           currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
-          currentState["status"] = "Check balance factor of " + vertexCheckBf + ".";
+          currentState["status"] = "Balance factor of " + vertexCheckBf + " is "+bf+".";
+		  currentState["lineNo"] = 2;
           stateList.push(currentState);
-
-          var bf = internalBst[vertexCheckBf]["balanceFactor"];
 
           if(bf == 2){
             var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
@@ -974,6 +994,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 3;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -984,6 +1005,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 3;
               stateList.push(currentState);
             }
 
@@ -999,6 +1021,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBfLeft + ".";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1009,6 +1032,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               rotateRight(vertexCheckBf);
@@ -1019,6 +1043,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1029,6 +1054,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
             }
           }
@@ -1050,6 +1076,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBfRight + ".";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1060,6 +1087,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               rotateLeft(vertexCheckBf);
@@ -1070,6 +1098,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1080,6 +1109,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
             }
 
@@ -1092,6 +1122,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 5;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1103,6 +1134,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 5;
               stateList.push(currentState);
             }
           }
@@ -1111,6 +1143,7 @@ var BST = function(){
             currentState = createState(internalBst);
             currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
             currentState["status"] = "Check the parent vertex...";
+			currentState["lineNo"] = 2;
             stateList.push(currentState);
           }
 
@@ -1119,12 +1152,17 @@ var BST = function(){
 
         currentState = createState(internalBst);
         currentState["status"] = "The tree is now balanced.";
+		currentState["lineNo"] = 7;
         stateList.push(currentState);
       }
     }
 
     graphWidget.startAnimation(stateList);
-    populatePseudocode(0);
+	if(isAVL) {
+    	populatePseudocode(6);
+	} else {
+		populatePseudocode(0);
+	}
     return true;
   }
 
@@ -1229,7 +1267,11 @@ var BST = function(){
       if(internalBst[currentVertex]["leftChild"] == null && internalBst[currentVertex]["rightChild"] == null){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         currentState["status"] = "Node "+vertexText+" has no children. It is a leaf.";
-        currentState["lineNo"] = 2;
+		if(!isAVL) {
+        	currentState["lineNo"] = 2;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
       
         var parentVertex = internalBst[currentVertex]["parent"];
@@ -1249,7 +1291,11 @@ var BST = function(){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
 
         currentState["status"] = "Remove leaf "+vertexText;
-        currentState["lineNo"] = 3;
+		if(!isAVL) {
+        	currentState["lineNo"] = 3;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         vertexCheckBf = parentVertex;
@@ -1262,7 +1308,11 @@ var BST = function(){
       else if(internalBst[currentVertex]["leftChild"] == null){
         currentState = createState(internalBst, vertexTraversed, edgeTraversed);
         currentState["status"] = "Node "+vertexText+" has a right child only";
-        currentState["lineNo"] = 4;
+		if(!isAVL) {
+        	currentState["lineNo"] = 4;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
       
         var parentVertex = internalBst[currentVertex]["parent"];
@@ -1292,7 +1342,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Delete node "+vertexText+" and connect its parent to its right child";
-        currentState["lineNo"] = 5;
+		if(!isAVL) {
+        	currentState["lineNo"] = 5;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         recalculatePosition();
@@ -1306,7 +1360,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Re-layout the tree";
-        currentState["lineNo"] = 5;
+		if(!isAVL) {
+        	currentState["lineNo"] = 5;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         vertexCheckBf = rightChildVertex;
@@ -1317,7 +1375,11 @@ var BST = function(){
       else if(internalBst[currentVertex]["rightChild"] == null){
       currentState = createState(internalBst, vertexTraversed, edgeTraversed);
       currentState["status"] = "Node "+vertexText+" has a left child only";
-      currentState["lineNo"] = 4;
+	  if(!isAVL) {
+      	currentState["lineNo"] = 4;
+	  } else {
+		  currentState["lineNo"] = 1;
+	  }
       stateList.push(currentState);
       
         var parentVertex = internalBst[currentVertex]["parent"];
@@ -1347,7 +1409,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Delete node "+vertexText+" and connect its parent to its left child";
-        currentState["lineNo"] = 5;
+		if(!isAVL) {
+        	currentState["lineNo"] = 5;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         recalculatePosition();
@@ -1361,7 +1427,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Re-layout the tree";
-        currentState["lineNo"] = 5;
+		if(!isAVL) {
+        	currentState["lineNo"] = 5;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         vertexCheckBf = leftChildVertex;
@@ -1384,7 +1454,11 @@ var BST = function(){
         currentState["el"][successorVertexClass]["animateHighlighted"] = true;
 
         currentState["status"] = "Finding successor of "+vertexText;
-        currentState["lineNo"] = 6;
+		if(!isAVL) {
+        	currentState["lineNo"] = 6;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         edgeTraversed[successorVertexClass] = true;
@@ -1396,7 +1470,11 @@ var BST = function(){
         currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
 
         currentState["status"] = "Finding successor of "+vertexText;
-        currentState["lineNo"] = 6;
+		if(!isAVL) {
+        	currentState["lineNo"] = 6;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         while(internalBst[successorVertex]["leftChild"] != null){
@@ -1411,7 +1489,11 @@ var BST = function(){
           currentState["el"][successorVertexClass]["animateHighlighted"] = true;
 
           currentState["status"] = "Finding successor of "+vertexText;
-          currentState["lineNo"] = 6;
+		  if(!isAVL) {
+          	  currentState["lineNo"] = 6;
+		  } else {
+			  currentState["lineNo"] = 1;
+		  }
           stateList.push(currentState);
 
           edgeTraversed[successorVertexClass] = true;
@@ -1423,7 +1505,11 @@ var BST = function(){
           currentState["vl"][successorVertexClass]["state"] = VERTEX_HIGHLIGHTED;
 
           currentState["status"] = "Finding successor of "+vertexText;
-          currentState["lineNo"] = 6;
+		   if(!isAVL) {
+          	  currentState["lineNo"] = 6;
+		  } else {
+			  currentState["lineNo"] = 1;
+		  }
           stateList.push(currentState);
         }
 
@@ -1492,7 +1578,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Replace node "+vertexText+" with its successor";
-        currentState["lineNo"] = 6;
+         if(!isAVL) {
+          	  currentState["lineNo"] = 6;
+		  } else {
+			  currentState["lineNo"] = 1;
+		  }
         stateList.push(currentState);
 
         recalculatePosition();
@@ -1521,7 +1611,11 @@ var BST = function(){
         }
 
         currentState["status"] = "Re-layout the tree";
-        currentState["lineNo"] = 6;
+		if(!isAVL) {
+			currentState["lineNo"] = 6;
+		} else {
+			currentState["lineNo"] = 1;
+		}
         stateList.push(currentState);
 
         vertexCheckBf = successorVertex;
@@ -1530,7 +1624,11 @@ var BST = function(){
 
       currentState = createState(internalBst);
       currentState["status"] = "Removal of "+vertexText+" completed";
-      currentState["lineNo"] = 0;
+	  if(!isAVL) {
+		currentState["lineNo"] = 0;
+	  } else {
+		currentState["lineNo"] = 1;
+	  }
       stateList.push(currentState);
 
       if(isAVL){
@@ -1540,12 +1638,13 @@ var BST = function(){
         while(vertexCheckBf != null){
           var vertexCheckBfClass = internalBst[vertexCheckBf]["vertexClassNumber"];
 
+		  var bf = internalBst[vertexCheckBf]["balanceFactor"];
+
           currentState = createState(internalBst);
           currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
-          currentState["status"] = "Check balance factor of " + vertexCheckBf + ".";
+          currentState["status"] = "Balance factor of " + vertexCheckBf + " is "+bf+".";
+		  currentState["lineNo"] = 2;
           stateList.push(currentState);
-
-          var bf = internalBst[vertexCheckBf]["balanceFactor"];
 
           if(bf == 2){
             var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
@@ -1561,6 +1660,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 3;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1571,6 +1671,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeft) currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 3;
               stateList.push(currentState);
             }
 
@@ -1586,6 +1687,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBfLeft + ".";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1596,6 +1698,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               rotateRight(vertexCheckBf);
@@ -1606,6 +1709,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1616,6 +1720,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfLeftRight) currentState["el"][vertexCheckBfLeftRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 4;
               stateList.push(currentState);
             }
           }
@@ -1637,6 +1742,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate right " + vertexCheckBfRight + ".";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1647,6 +1753,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               rotateLeft(vertexCheckBf);
@@ -1657,6 +1764,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1667,6 +1775,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRightLeft) currentState["el"][vertexCheckBfRightLeftClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 6;
               stateList.push(currentState);
             }
 
@@ -1679,6 +1788,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Rotate left " + vertexCheckBf + ".";
+			  currentState["lineNo"] = 5;
               stateList.push(currentState);
 
               recalculatePosition();
@@ -1690,6 +1800,7 @@ var BST = function(){
               currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
               if(internalBst["root"] != vertexCheckBfRight) currentState["el"][vertexCheckBfRightClass]["state"] = EDGE_HIGHLIGHTED;
               currentState["status"] = "Relayout the tree.";
+			  currentState["lineNo"] = 5;
               stateList.push(currentState);
             }
           }
@@ -1698,6 +1809,7 @@ var BST = function(){
             currentState = createState(internalBst);
             currentState["el"][vertexCheckBfClass]["state"] = EDGE_HIGHLIGHTED;
             currentState["status"] = "Check the parent vertex...";
+			currentState["lineNo"] = 2;
             stateList.push(currentState);
           }
 
@@ -1706,12 +1818,17 @@ var BST = function(){
 
         currentState = createState(internalBst);
         currentState["status"] = "The tree is now balanced.";
+		currentState["lineNo"] = 7;
         stateList.push(currentState);
       }
     }
 
     graphWidget.startAnimation(stateList);
-    populatePseudocode(5);
+	if(isAVL) {
+    	populatePseudocode(7);
+	} else {
+		populatePseudocode(5);
+	}
     return true;
   }
 
@@ -2004,8 +2121,8 @@ var BST = function(){
         document.getElementById('code1').innerHTML = 'if this is null';
         document.getElementById('code2').innerHTML = '&nbsp;&nbsp;return';
         document.getElementById('code3').innerHTML = 'inOrder(left)';
-        document.getElementById('code4').innerHTML = 'visit this';
-        document.getElementById('code5').innerHTML = 'inOrder(right)';
+        document.getElementById('code4').innerHTML = 'visit this, then inOrder(right)';
+        document.getElementById('code5').innerHTML = '';
         document.getElementById('code6').innerHTML = '';
         document.getElementById('code7').innerHTML = '';
         break;
@@ -2027,6 +2144,24 @@ var BST = function(){
         document.getElementById('code6').innerHTML = 'else replace v with successor';
         document.getElementById('code7').innerHTML = '';
         break;
-  }
+	case 6: // insert with rotations
+        document.getElementById('code1').innerHTML = 'insert v';
+        document.getElementById('code2').innerHTML = 'check balance factor of this and its children';
+        document.getElementById('code3').innerHTML = '&nbsp;&nbsp;case1: this.rotateRight';
+        document.getElementById('code4').innerHTML = '&nbsp;&nbsp;case2: this.left.rotateLeft, this.rotateRight';
+        document.getElementById('code5').innerHTML = '&nbsp;&nbsp;case3: this.rotateLeft';
+        document.getElementById('code6').innerHTML = '&nbsp;&nbsp;case4: this.right.rotateRight, this.rotateLeft';
+        document.getElementById('code7').innerHTML = '&nbsp;&nbsp;this is balanced';
+        break;
+	case 7: // remove with rotations
+        document.getElementById('code1').innerHTML = 'remove v';
+        document.getElementById('code2').innerHTML = 'check balance factor of this and its children';
+        document.getElementById('code3').innerHTML = '&nbsp;&nbsp;case1: this.rotateRight';
+        document.getElementById('code4').innerHTML = '&nbsp;&nbsp;case2: this.left.rotateLeft, this.rotateRight';
+        document.getElementById('code5').innerHTML = '&nbsp;&nbsp;case3: this.rotateLeft';
+        document.getElementById('code6').innerHTML = '&nbsp;&nbsp;case4: this.right.rotateRight, this.rotateLeft';
+        document.getElementById('code7').innerHTML = '&nbsp;&nbsp;this is balanced';
+        break;
+	}
   }
 }

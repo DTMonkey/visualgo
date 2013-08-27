@@ -82,10 +82,14 @@ function closeInsert() {
 }
 
 function hideEntireActionsPanel() {
-	closeBuildv1();
-	closeBuildv2();
-	closeInsert();
-	hideActionsPanel();
+	if(isActionsOpen) {
+		closeBuildv1();
+		closeBuildv2();
+		closeInsert();
+		hideActionsPanel();
+	} else {
+		showActionsPanel();
+	}
 }
 
 $( document ).ready(function() {
@@ -128,8 +132,21 @@ $( document ).ready(function() {
 		$('#extractmax-err').html("");
 	});
 		
-	//start by showing help overlay -- later control appearance using cookie?
-	$('#dark-overlay').fadeIn(function(){
-		$('#help').fadeIn();
+	//tutorial mode
+	$('#heap-tutorial-1 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#heap-tutorial-2 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#heap-tutorial-3 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#heap-tutorial-4 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#heap-tutorial-5 .tutorial-next').click(function() {
+		hideCodetracePanel();
 	});
 });

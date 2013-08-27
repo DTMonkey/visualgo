@@ -1,6 +1,6 @@
 //actions panel stuff
 var actionsWidth = 150;
-var statusCodetraceWidth = 370;
+var statusCodetraceWidth = 420;
 
 var isSearchOpen = false;
 var isInsertOpen = false;
@@ -11,11 +11,9 @@ function openSearch() {
 		$('#find-min').animate({
 			width: "+="+65
 		}, 100, function() {
-			$('#find-min p').html("Find min");
 			$('#find-max').animate({
 				width: "+="+69
 			}, 100, function() {
-				$('#find-max p').html("Find max");
 				$('#search-input').animate({
 					width: "+="+32
 				}, 100, function() {
@@ -37,11 +35,9 @@ function closeSearch() {
 			$('#search-input').animate({
 				width: "-="+32
 			}, 100, function() {
-				$('#find-max p').html("Find");
 				$('#find-max').animate({
 					width: "-="+69
 				}, 100, function() {
-					$('#find-min p').html("Find");
 					$('#find-min').animate({
 						width: "-="+65
 					},100);

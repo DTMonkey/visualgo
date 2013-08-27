@@ -53,8 +53,8 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-		<p id="buildv1" style="padding-top: 10px;">Build Heap v1</p>
-		<p id="buildv2">Build Heap v2</p>
+		<p id="buildv1" style="padding-top: 10px;">Build Heap - O(n log n)</p>
+		<p id="buildv2">Build Heap O(n)</p>
 		<p id="insert">Insert</p>
 		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
 		<p id="heapsort" class="execAction" style="padding-bottom: 10px;" onclick=heapsort()>HeapSort</p>
@@ -111,18 +111,41 @@
 </div>
 
 <div id="dark-overlay"></div>
-<div id="help" class="overlays">
-	<h4>Help</h4>
-    <img class="close-overlay" src="img/cross_white.png" />
-    <div class="content">
-        <p>The <strong style="color: #ed5a7d;">ACTIONS</strong> panel on the bottom left displays all available operations on this data structure. Experiment with them!</p>
-        <p>The <strong style="color: #2ebbd1;">STATUS</strong> panel on the right displays the status of the current operation. The <strong style="color: #52bc69;">CODETRACE</strong> panel below it displays the pseudocode for the current operation, and uses code highlighting to show you which step is being carried out.</p>
-        <p>During each action, you can use the playback controls at the bottom of the screen to control the animation. Note that you have to click 'stop' first before you can issue another action.</p>
-    </div>
-</div>
 <div id="about" class="overlays"></div>
 <div id="team" class="overlays"></div>
 <div id="termsofuse" class="overlays"></div>
+
+<!--tutorial dialogs here-->
+<div id="heap-tutorial-1" class="tutorial-dialog">
+	A Binary Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-2" class="tutorial-dialog">
+	All available operations on the Heap will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-3" class="tutorial-dialog">
+	View the visualisation here!
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-4" class="tutorial-dialog">
+	As the action is being carried out, each step will be described in the status panel.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-5" class="tutorial-dialog">
+	You can also follow the psuedocode highlights to trace the algorithm.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-6" class="tutorial-dialog">
+	Control the animation with the player controls! Keyboard shortcuts are:<br/>
+    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
+    <strong>Left/right arrows:</strong> step backward/step forward<br/>
+    <strong>-/+:</strong> decrease/increase speed<br/>
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-7" class="tutorial-dialog">
+	Return to "Exploration Mode" to start exploring!
+</div>
 
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
@@ -146,7 +169,7 @@
 		setTimeout( function() {
 			if ((mode=="exploration")&&heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap version 1: "+ $('#arrv1').val());
+				$('#current-action p').html("Build heap - O(n log n): "+ $('#arrv1').val());
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
 				closeBuildv1(); //in heap_actions.js
 				triggerRightPanels();
@@ -160,7 +183,7 @@
 		setTimeout( function() {
 			if ((mode=="exploration")&&heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
 				$('#current-action').show();
-				$('#current-action p').html("Build heap version 2: "+ $('#arrv2').val());
+				$('#current-action p').html("Build heap - O(n): "+ $('#arrv2').val());
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
 				closeBuildv2();
 				triggerRightPanels();

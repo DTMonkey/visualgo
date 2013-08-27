@@ -132,8 +132,13 @@ var Heap = function() {
     if (A.length > 1) {
       currentState = createState(A);
       currentState["status"] = 'The current Max Heap';
-      stateList.push(currentState); // zero-th frame, the starting point
-    }
+	  if(!startAnimationDirectly) { //buildv1
+		currentState["lineNo"] = 2;
+	  } else {
+		currentState["lineNo"] = 0;
+	  }
+    	stateList.push(currentState); // zero-th frame, the starting point
+      }
 
     A[A.length] = new ObjectPair(parseInt(vertexText), amountVertex);
     amountVertex++;
@@ -143,6 +148,11 @@ var Heap = function() {
     currentState = createState(A);
     currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
     currentState["status"] = 'Insert ' + vertexText + ' as the bottom-most right-most new leaf';
+	if(!startAnimationDirectly) { //buildv1
+		currentState["lineNo"] = 3;
+	} else {
+		currentState["lineNo"] = 1;
+	}
     stateList.push(currentState); // first frame, highlight the newly inserted vertex
 
     while (i > 1 && A[parent(i)].getFirst() < A[i].getFirst()) {
@@ -150,7 +160,12 @@ var Heap = function() {
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["vl"][A[parent(i)].getSecond()]["state"] = VERTEX_TRAVERSED;
       currentState["status"] = 'Swap ' + A[i].getFirst() + ' with ' + A[parent(i)].getFirst();
-      stateList.push(currentState); // before swap
+	  if(!startAnimationDirectly) { //buildv1
+		currentState["lineNo"] = 3;
+	  } else {
+        currentState["lineNo"] = 4;
+	  }
+	  stateList.push(currentState); // before swap
 
       var temp = A[i];
       A[i] = A[parent(i)];
@@ -159,12 +174,22 @@ var Heap = function() {
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_TRAVERSED;
       currentState["vl"][A[parent(i)].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = A[i].getFirst() + ' and ' + A[parent(i)].getFirst() + ' has been swapped';
+	  if(!startAnimationDirectly) { //buildv1
+		currentState["lineNo"] = 3;
+	  } else {
+	    currentState["lineNo"] = 4;
+	  }
       stateList.push(currentState); // record the successive vertex swap animation
       i = parent(i);
     }
 
     currentState = createState(A); // record the final state of the heap after insertion to stop the highlights
     currentState["status"] = 'Insertion of ' + vertexText + ' has been done successfully';
+	if(!startAnimationDirectly) { //buildv1
+		currentState["lineNo"] = 3;
+	} else {
+		currentState["lineNo"] = 0;
+	}
     stateList.push(currentState);
 
     if (startAnimationDirectly)
@@ -173,7 +198,7 @@ var Heap = function() {
     return true;
   }
 
-  this.shiftDown = function(i) {
+  this.shiftDown = function(i, calledFrom) {
     while (i < A.length) {
       var maxV = A[i].getFirst(), max_id = i;
       if (left(i) < A.length && maxV < A[left(i)].getFirst()) {
@@ -190,6 +215,13 @@ var Heap = function() {
         currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][A[max_id].getSecond()]["state"] = VERTEX_TRAVERSED;
         currentState["status"] = 'Swap ' + A[i].getFirst() + ' with ' + A[max_id].getFirst();
+		if(calledFrom == 'extractmax') {
+			 currentState["lineNo"] = 6;
+		} else if(calledFrom == 'buildv2') {
+			currentState["lineNo"] = 3;
+		} else if(calledFrom == 'heapsort') {
+			currentState["lineNo"] = 2;
+		}
         stateList.push(currentState); // deal with affected edges first
 
         var temp = A[i];
@@ -197,6 +229,13 @@ var Heap = function() {
         A[max_id] = temp;
         currentState = createState(A);
         currentState["status"] = A[i].getFirst() + ' and ' + A[max_id].getFirst() + ' has been swapped';
+		if(calledFrom == 'extractmax') {
+			 currentState["lineNo"] = 6;
+		} else if(calledFrom == 'buildv2') {
+			currentState["lineNo"] = 3;
+		} else if(calledFrom == 'heapsort') {
+			currentState["lineNo"] = 2;
+		}
         stateList.push(currentState);
 
         i = max_id;   
@@ -220,6 +259,11 @@ var Heap = function() {
     var currentState = createState(A);
     currentState["vl"][A[1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
     currentState["status"] = 'Root stores the max element';
+	if(!startAnimationDirectly) { //heapsort
+		currentState["lineNo"] = 2;
+	} else {
+		currentState["lineNo"] = 0;
+	}
     stateList.push(currentState); // highlight the root (max element)
 
     currentState = createState(A);
@@ -227,6 +271,11 @@ var Heap = function() {
     // currentState["vl"][A[1].getSecond()]["state"] = OBJ_REMOVED;
     delete currentState["vl"][A[1].getSecond()];
     currentState["status"] = 'Take out the root';
+	if(!startAnimationDirectly) { //heapsort
+		currentState["lineNo"] = 2;
+	} else {
+		currentState["lineNo"] = 1;
+	}
     stateList.push(currentState); // move the root (max element) a bit upwards (to simulate 'extract max')
 
     if (A.length > 2) {
@@ -235,6 +284,7 @@ var Heap = function() {
       // currentState["vl"][A[A.length-1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       delete currentState["vl"][A[1].getSecond()];
       currentState["status"] = 'Replace root with the last leaf';
+	  currentState["lineNo"] = 2;
       stateList.push(currentState); // delete bottom-most right-most leaf (later, also remove its associated edge)
     }
 
@@ -244,13 +294,19 @@ var Heap = function() {
       currentState = createState(A);
       currentState["vl"][A[1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = 'The new root';
+	  currentState["lineNo"] = 2;
       stateList.push(currentState); // highlight the new root
     }
-
-    this.shiftDown(1);
+	
+	if(!startAnimationDirectly) { //heapsort
+		this.shiftDown(1, 'heapsort');
+	} else {
+    	this.shiftDown(1, 'extractmax');
+	}
 
     currentState = createState(A);
     currentState["status"] = 'ExtractMax() has been completed';
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     if (startAnimationDirectly)
@@ -278,6 +334,7 @@ var Heap = function() {
 
     currentState = createState(A);
     currentState["status"] = 'The final sorted order is ' + res;
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);
@@ -309,6 +366,7 @@ var Heap = function() {
     stateList = [];
     var currentState = createState(A);
     currentState["status"] = 'Start by putting ' + arr[0] + ' as the new root';
+	currentState["lineNo"] = 1;
     stateList.push(currentState);
 
     for (i = 1; i < arr.length; i++) // insert one by one
@@ -316,6 +374,7 @@ var Heap = function() {
 
     currentState = createState(A);
     currentState["status"] = 'The Max Heap has been successfully built from input array: ' + arr;
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);
@@ -350,19 +409,22 @@ var Heap = function() {
     stateList = [];
     var currentState = createState(A);
     currentState["status"] = 'First, copy the entire content of arr: {' + arr + '} into a Complete Binary Tree structure';
+	currentState["lineNo"] = 1;
     stateList.push(currentState);
 
     for (i = Math.floor(arr.length/2); i >= 1; i--) { // check heap property one by one
       currentState = createState(A);
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = 'Calling ShiftDown(' + i + ') to fix Max Heap property of subtree rooted at ' + A[i].getFirst() + ', if necessary';
+	  currentState["lineNo"] = 3;
       stateList.push(currentState);
 
-      this.shiftDown(i);
+      this.shiftDown(i, 'buildv2');
     }
 
     currentState = createState(A);
     currentState["status"] = 'The Max Heap has been successfully built from input array: ' + arr;
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);

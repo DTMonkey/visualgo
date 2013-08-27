@@ -14,6 +14,9 @@ function getColours() {
 }
 var generatedColours = getColours();
 var surpriseColour = colourArray[generatedColours[0]];
+var colourTheSecond = colourArray[generatedColours[1]];
+var colourTheThird = colourArray[generatedColours[2]];
+var colourTheFourth = colourArray[generatedColours[3]];
 
 $( document ).ready(function() {
 	

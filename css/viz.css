@@ -161,7 +161,7 @@ html { overflow-y: auto; } /*override common.css*/
 }
 
 .execAction { cursor: pointer; }
-	.execAction p:hover { background: black; }
+	.execAction p:hover { background: black; color: white; }
 
 .panel {
 	position: fixed;
@@ -187,7 +187,7 @@ html { overflow-y: auto; } /*override common.css*/
 	left: 43px;
 }
 	#actions p { padding: 5px 10px; cursor: pointer; }
-		#actions p:hover { background: black; }
+		#actions p:hover { background: black; color: white;}
 	#actions-hide {
 		bottom: 60px;
 		left: 0px;
@@ -197,6 +197,7 @@ html { overflow-y: auto; } /*override common.css*/
 	bottom: 255px;
 	right: 43px;
 	height: 54px;
+	white-space: normal;
 }
 	#status p { padding: 10px; }
 	#status-hide {

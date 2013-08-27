@@ -1,12 +1,16 @@
 var mode="exploration";
+var codetraceColor = 'white';
 
 //codetrace highlight
 function highlightLine(lineNumber) { /*lineNumber has to be an integer in [1, 7]*/
 	if(lineNumber == 0) {
-		$('#codetrace p').removeClass('highlighted')
+		//$('#codetrace p').removeClass('highlighted')
+		$('#codetrace p').css('background-color', colourTheThird).css('color',codetraceColor);
 	} else {
-		$('#codetrace p').removeClass('highlighted');
-		$('#code'+lineNumber).addClass('highlighted');
+		$('#codetrace p').css('background-color', colourTheThird).css('color',codetraceColor);
+		$('#code'+lineNumber).css('background-color', 'black').css('color','white');
+		//$('#codetrace p').removeClass('highlighted');
+		//$('#code'+lineNumber).addClass('highlighted');
 	}
 }
 
@@ -85,18 +89,37 @@ $( document ).ready(function() {
 	
 	//surpriseColour stuff
 	$('.tutorial-next').css("background-color", surpriseColour);
-	if(surpriseColour == "#fec515") {
+	if(surpriseColour == "#fec515" || surpriseColour == '#a7d41e') {
 		$('.tutorial-next').css("color", "black");
 		$('.tutorial-next img').attr("src", "img/arrow_black_right.png");
 	}
 	$('#progress-bar .ui-slider-range').css("background-color", surpriseColour);
-	$('#actions').css("background-color", colourArray[generatedColours[1]]);
-	$('#actions-hide').css("background-color", colourArray[generatedColours[1]]);
-	$('#actions-extras').children().not('input').not('.err').css("background-color", colourArray[generatedColours[1]]);
-	$('#codetrace').css("background-color", colourArray[generatedColours[2]]);
-	$('#codetrace-hide').css("background-color", colourArray[generatedColours[2]]);
-	$('#status').css("background-color", colourArray[generatedColours[3]]);
-	$('#status-hide').css("background-color", colourArray[generatedColours[3]]);
+	
+	$('#actions').css("background-color", colourTheSecond);
+	$('#actions-hide').css("background-color", colourTheSecond);
+	$('#actions-extras').children().not('input').not('.err').css("background-color", colourTheSecond);
+	if(colourTheSecond == '#fec515' || colourTheSecond == '#a7d41e') {
+		$('#actions p').css('color', 'black');
+		$('#actions p').hover(function() { $(this).css('color', 'white');}, function() {$(this).css('color', 'black');});
+		$('.execAction p').css('color', 'black');
+		$('.execAction p').hover(function() { $(this).css('color', 'white');}, function() {$(this).css('color', 'black');});
+		$('#actions-hide img').attr('src', 'img/arrow_black_right.png');
+	}
+	
+	$('#codetrace').css("background-color", colourTheThird);
+	$('#codetrace-hide').css("background-color", colourTheThird);
+	if(colourTheThird == '#fec515' || colourTheThird == '#a7d41e') {
+		$('#codetrace').css('color', 'black');
+		$('#codetrace-hide img').attr('src', 'img/arrow_black_right.png');
+		codetraceColor = 'black';
+	}
+	
+	$('#status').css("background-color", colourTheFourth);
+	$('#status-hide').css("background-color", colourTheFourth);
+	if(colourTheFourth == '#fec515' || colourTheFourth == '#a7d41e') {
+		$('#status').css('color', 'black');
+		$('#status-hide img').attr('src', 'img/arrow_black_right.png');
+	}
 
 	//title
 	$('#title a').click(function() {
@@ -187,10 +210,11 @@ $( document ).ready(function() {
 	
 	//tutorial mode
 	$('.tutorial-dialog .tutorial-next').click(function() {
+		var vizname = $(this).parent().attr('id').split('-')[0];
 		var nextNo = parseInt($(this).parent().attr('id').slice(-1))+1;
-		var nextId = '#bst-tutorial-'+nextNo;
+		var nextId = vizname+'-tutorial-'+nextNo;
 		$(this).parent().fadeOut(500, function() {
-			$(nextId).fadeIn(500);
+			$('#'+nextId).fadeIn(500);
 		});
 	});
 	
