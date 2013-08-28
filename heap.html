@@ -2,7 +2,7 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Visualizations - Heap</title>
+<title>Visualizations - Binary Heap</title>
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
@@ -33,7 +33,7 @@
 <div id="top-bar">
 	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-    	<a class="selected-viz">Heap</a>
+    	<a class="selected-viz">Binary Heap</a>
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
@@ -54,7 +54,7 @@
     
     <div id="actions" class="panel">
 		<p id="buildv1" style="padding-top: 10px;">Build Heap - O(n log n)</p>
-		<p id="buildv2">Build Heap O(n)</p>
+		<p id="buildv2">Build Heap - O(n)</p>
 		<p id="insert">Insert</p>
 		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
 		<p id="heapsort" class="execAction" style="padding-bottom: 10px;" onclick=heapsort()>HeapSort</p>
@@ -117,7 +117,7 @@
 
 <!--tutorial dialogs here-->
 <div id="heap-tutorial-1" class="tutorial-dialog">
-	A Binary Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
+	A Binary Max Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="heap-tutorial-2" class="tutorial-dialog">
@@ -202,9 +202,9 @@
 				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
+				document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
 			}
 		}, 500);
-		document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
 	}
 	
 	function extractmax() {

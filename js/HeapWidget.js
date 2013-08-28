@@ -151,7 +151,7 @@ var Heap = function() {
 	if(!startAnimationDirectly) { //buildv1
 		currentState["lineNo"] = 3;
 	} else {
-		currentState["lineNo"] = 1;
+		currentState["lineNo"] = [1,2];
 	}
     stateList.push(currentState); // first frame, highlight the newly inserted vertex
 
@@ -159,11 +159,11 @@ var Heap = function() {
       currentState = createState(A);
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["vl"][A[parent(i)].getSecond()]["state"] = VERTEX_TRAVERSED;
-      currentState["status"] = 'Swap ' + A[i].getFirst() + ' with ' + A[parent(i)].getFirst();
+	  currentState["status"] = A[parent(i)].getFirst() + ' is smaller than ' + A[i].getFirst() + ', so swap them'
 	  if(!startAnimationDirectly) { //buildv1
 		currentState["lineNo"] = 3;
 	  } else {
-        currentState["lineNo"] = 4;
+        currentState["lineNo"] = 3;
 	  }
 	  stateList.push(currentState); // before swap
 
@@ -173,7 +173,7 @@ var Heap = function() {
       currentState = createState(A);
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_TRAVERSED;
       currentState["vl"][A[parent(i)].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
-      currentState["status"] = A[i].getFirst() + ' and ' + A[parent(i)].getFirst() + ' has been swapped';
+      currentState["status"] = A[i].getFirst() + ' and ' + A[parent(i)].getFirst() + ' have been swapped';
 	  if(!startAnimationDirectly) { //buildv1
 		currentState["lineNo"] = 3;
 	  } else {
@@ -436,7 +436,7 @@ var Heap = function() {
       case 0: // Insert
         document.getElementById('code1').innerHTML = 'A[A.length] = new key;';
         document.getElementById('code2').innerHTML = 'i=A.length-1;';
-        document.getElementById('code3').innerHTML = 'while (i>1 and A[i]&lt;A[parent(i)])';
+        document.getElementById('code3').innerHTML = 'while (i>1 and A[parent(i)]&lt;A[i])';
         document.getElementById('code4').innerHTML = '&nbsp&nbspswap A[i] and A[parent(i)]';
         document.getElementById('code5').innerHTML = '';
         document.getElementById('code6').innerHTML = '';

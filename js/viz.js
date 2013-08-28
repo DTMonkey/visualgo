@@ -2,15 +2,16 @@ var mode="exploration";
 var codetraceColor = 'white';
 
 //codetrace highlight
-function highlightLine(lineNumber) { /*lineNumber has to be an integer in [1, 7]*/
-	if(lineNumber == 0) {
-		//$('#codetrace p').removeClass('highlighted')
-		$('#codetrace p').css('background-color', colourTheThird).css('color',codetraceColor);
+function highlightLine(lineNumbers) {  /* lineNumbers can be an array or a single number. Yay overloading! */
+	$('#codetrace p').css('background-color', colourTheThird).css('color',codetraceColor);
+	if (lineNumbers instanceof Array) {
+		for(var i=0; i<lineNumbers.length; i++) {
+			if(lineNumbers[i] != 0) {
+				$('#code'+lineNumbers[i]).css('background-color', 'black').css('color','white');
+			}
+		}
 	} else {
-		$('#codetrace p').css('background-color', colourTheThird).css('color',codetraceColor);
-		$('#code'+lineNumber).css('background-color', 'black').css('color','white');
-		//$('#codetrace p').removeClass('highlighted');
-		//$('#code'+lineNumber).addClass('highlighted');
+		$('#code'+lineNumbers).css('background-color', 'black').css('color','white');
 	}
 }
 
@@ -174,6 +175,7 @@ $( document ).ready(function() {
 			$('#status-hide').show();
 			$('#codetrace-hide').show();
 			$('#actions-hide').show();
+			$('#current-action').html("");
 			$('#status').show();
 			$('#codetrace').show();
 			$('#actions').show();

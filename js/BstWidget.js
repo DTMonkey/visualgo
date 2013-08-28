@@ -984,8 +984,15 @@ var BST = function(){
             var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
             var vertexCheckBfLeftClass = internalBst[vertexCheckBfLeft]["vertexClassNumber"];
             var bfLeft = internalBst[vertexCheckBfLeft]["balanceFactor"];
+			
+			currentState = createState(internalBst);
+          	currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+			currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+          	currentState["status"] = "And balance factor of " + vertexCheckBfLeft + " is "+bfLeft+".";
+		  	currentState["lineNo"] = 2;
+          	stateList.push(currentState);
 
-            if(bfLeft == 1 || bfLeft == 0){
+            if(bfLeft == 1 || bfLeft == 0){				
               rotateRight(vertexCheckBf);
 
               currentState = createState(internalBst);
@@ -1063,6 +1070,13 @@ var BST = function(){
             var vertexCheckBfRight = internalBst[vertexCheckBf]["rightChild"];
             var vertexCheckBfRightClass = internalBst[vertexCheckBfRight]["vertexClassNumber"];
             var bfRight = internalBst[vertexCheckBfRight]["balanceFactor"];
+			
+			currentState = createState(internalBst);
+          	currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+			currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+          	currentState["status"] = "And balance factor of " + vertexCheckBfRight + " is "+bfRight+".";
+		  	currentState["lineNo"] = 2;
+          	stateList.push(currentState);
 
             if(bfRight == 1){
               var vertexCheckBfRightLeft = internalBst[vertexCheckBfRight]["leftChild"];
@@ -1650,6 +1664,13 @@ var BST = function(){
             var vertexCheckBfLeft = internalBst[vertexCheckBf]["leftChild"];
             var vertexCheckBfLeftClass = internalBst[vertexCheckBfLeft]["vertexClassNumber"];
             var bfLeft = internalBst[vertexCheckBfLeft]["balanceFactor"];
+			
+			currentState = createState(internalBst);
+          	currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+			currentState["vl"][vertexCheckBfLeftClass]["state"] = VERTEX_HIGHLIGHTED;
+          	currentState["status"] = "And balance factor of " + vertexCheckBfLeft + " is "+bfLeft+".";
+		  	currentState["lineNo"] = 2;
+          	stateList.push(currentState);
 
             if(bfLeft == 1 || bfLeft == 0){
               rotateRight(vertexCheckBf);
@@ -1729,6 +1750,13 @@ var BST = function(){
             var vertexCheckBfRight = internalBst[vertexCheckBf]["rightChild"];
             var vertexCheckBfRightClass = internalBst[vertexCheckBfRight]["vertexClassNumber"];
             var bfRight = internalBst[vertexCheckBfRight]["balanceFactor"];
+			
+			currentState = createState(internalBst);
+          	currentState["vl"][vertexCheckBfClass]["state"] = VERTEX_HIGHLIGHTED;
+			currentState["vl"][vertexCheckBfRightClass]["state"] = VERTEX_HIGHLIGHTED;
+          	currentState["status"] = "And balance factor of " + vertexCheckBfRight + " is "+bfRight+".";
+		  	currentState["lineNo"] = 2;
+          	stateList.push(currentState);
 
             if(bfRight == 1){
               var vertexCheckBfRightLeft = internalBst[vertexCheckBfRight]["leftChild"];
