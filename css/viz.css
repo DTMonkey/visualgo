@@ -158,6 +158,11 @@ html { overflow-y: auto; } /*override common.css*/
 	text-align: center;
 	overflow: hidden;
 	padding-top: 20px;
+	-webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 .execAction { cursor: pointer; }
