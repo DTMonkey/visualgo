@@ -51,14 +51,6 @@ var Graph = function() {
    mainSvg.style("cursor", "crosshair");
 
    function addExtraEdge() {
-    addWeightText("#e3", 99);
-    addWeightText("#e9", 99);
-    addWeightText("#e6", 99);
-    addWeightText("#e7", 99);
-    addWeightText("#e1", 10);
-    addWeightText("#e2", 10);
-    addWeightText("#e5", 10);
-    addWeightText("#e8", 10);
     addDirectedEdge(1, 2, ++amountEdge, EDGE_TYPE_UDE, 1, true);
     mainSvg.select("#e" + amountEdge.toString()).style("visibility", "hidden");      
   }
@@ -85,12 +77,28 @@ var Graph = function() {
       var b2 = b1 + 4 + slope*17;
       y_text = (y2 - y1)* 9/10 + y1;
       x_text = (y_text - b2) / slope;
-    }
-    if ((x1 > x2) && (y1 < y2)) {
+    } else if ((x1 > x2) && (y1 < y2)) {
       var b2 = b1 - 4 + slope*17;
       y_text = (y2 - y1)* 1/1.8 + y1;
       x_text = (y_text - b2) / slope; 
+    } else if (x1 == x2) {
+      if (y1 > y2) {
+        x_text = x1 + 10;
+        y_text = (y1 - y2)*1/3 + y2;
+      } else {
+        x_text = x1 - 10;
+        y_text = (y2 - y1)*2/3 + y1;
+      }
+    } else if (y1 == y2) {
+      if (x1 > x2) {
+        y_text = y1 - 10;
+        x_text = x2 + (x1 - x2)* 1/3;
+      } else {
+        y_text = y1 + 10;
+        x_text = x1 + (x2 - x1)* 2/3;
+      }
     }
+    
  
 
     mainSvg
@@ -782,6 +790,14 @@ this.showTree = function(){
     addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
     amountEdge = edgeId;
     addExtraEdge();
+    addWeightText("#e3", 99);
+    addWeightText("#e9", 99);
+    addWeightText("#e6", 99);
+    addWeightText("#e7", 99);
+    addWeightText("#e1", 10);
+    addWeightText("#e2", 10);
+    addWeightText("#e5", 10);
+    addWeightText("#e8", 10);
   }
   
   
@@ -823,6 +839,10 @@ this.showTree = function(){
       addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
       amountEdge = edgeId;
       addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
     }
 
     this.showK5 = function() {
@@ -859,9 +879,17 @@ this.showTree = function(){
       for (i=1; i<6; i++)
         for (j=i+1; j<6; j++)
           addDirectedEdge(i, j, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        amountEdge = edgeId;
-        addExtraEdge();
-      }
+      amountEdge = edgeId;
+      addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e9", 99);
+      addWeightText("#e6", 99);
+      addWeightText("#e7", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
+      addWeightText("#e8", 10);
+    }
 
       this.showCP22 = function() {
         clearScreen();
@@ -906,6 +934,13 @@ this.showTree = function(){
       addDirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
       amountEdge = edgeId;
       addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e6", 99);
+      addWeightText("#e7", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
+      addWeightText("#e8", 10);
     }
 
     this.showCP42 = function() {
@@ -948,7 +983,7 @@ this.showTree = function(){
 
       var edgeId = 0;
       addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(1, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(3, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
@@ -965,6 +1000,14 @@ this.showTree = function(){
       addDirectedEdge(6, 9, ++edgeId, EDGE_TYPE_UDE, 1, true); 
       amountEdge = edgeId;
       addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e9", 99);
+      addWeightText("#e6", 99);
+      addWeightText("#e7", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
+      addWeightText("#e8", 10);
     }
 
     this.showCP45 = function() {
@@ -1008,6 +1051,11 @@ this.showTree = function(){
       addDirectedEdge(2, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
       amountEdge = edgeId;
       addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e6", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
     }
 
     this.showCP48 = function() {
@@ -1057,6 +1105,14 @@ this.showTree = function(){
       addDirectedEdge(7, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
       amountEdge = edgeId;
       addExtraEdge();
+      addWeightText("#e3", 99);
+      addWeightText("#e9", 99);
+      addWeightText("#e6", 99);
+      addWeightText("#e7", 99);
+      addWeightText("#e1", 10);
+      addWeightText("#e2", 10);
+      addWeightText("#e5", 10);
+      addWeightText("#e8", 10);
     }
 
     function clearScreen() {
@@ -1072,6 +1128,7 @@ this.showTree = function(){
       graphWidget.removeVertex(A[i].getSecond());
     }
 
+    mainSvg.selectAll(".edgelabel").remove();
     amountVertex = 0;
   }
 
