@@ -54,7 +54,7 @@ var graphVertexProperties = {
   },
   "text":{
     "default":{
-      "fill": "#000",
+      "fill": "#333",
       "font-family": "'PT Sans', sans-serif",
       "font-size": 16,
       "font-weight": "bold",
@@ -74,7 +74,7 @@ var graphVertexProperties = {
       "font-weight": "bold",
       "text-anchor": "middle"
     }
-  },
+  }
 };
 
 /*
@@ -82,17 +82,45 @@ var graphVertexProperties = {
  */
 
 var graphEdgeProperties = {
-  "default":{
-    "stroke": "#333",
-    "stroke-width": 3
+  "path":{
+    "default":{
+      "stroke": "#333",
+      "stroke-width": 3
+    },
+    "highlighted":{
+      "stroke": surpriseColour,
+      "stroke-width": 10
+    },
+    "traversed":{
+      "stroke": surpriseColour,
+      "stroke-width": 3
+    }
   },
-  "highlighted":{
-    "stroke": surpriseColour,
-    "stroke-width": 10
-  },
-  "traversed":{
-    "stroke": surpriseColour,
-    "stroke-width": 3
+  "weight":{
+    "default":{
+      "startOffset": "50%",
+      "fill": "#333",
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+    "highlighted":{
+      "startOffset": "50%",
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+    "traversed":{
+      "startOffset": "50%",
+      "fill": surpriseColour,
+      "font-family": "'PT Sans', sans-serif",
+      "font-size": 16,
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    }
   }
 }
 

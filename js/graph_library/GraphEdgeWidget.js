@@ -19,6 +19,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   var defaultAnimationDuration = 250; // millisecond
 
   var line;
+  var weightText;
 
   // var vertexA = graphVertexA.getClassNumber();
   // var vertexB = graphVertexB.getClassNumber();
@@ -32,11 +33,23 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   var initCommand = edgeGenerator([calculatePath()[0],calculatePath()[0]]);
 
   var attributeList = {
-    "id": null,
-    "class": null,
-    "d": null,
-    "stroke": null,
-    "stroke-width": null
+    "path":{
+      "id": null,
+      "class": null,
+      "d": null,
+      "stroke": null,
+      "stroke-width": null
+    },
+    "weight":{
+      "id": null,
+      "startOffset": null,
+      "fill": null,
+      "font-family": null,
+      "font-weight": null,
+      "font-size": null,
+      "text-anchor": null,
+      "text": null
+    }
   };
 
   updatePath();
@@ -52,8 +65,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     edgeSvg.append("path")
           .attr("id", "tempEdge" + line.attr("id"))
-          .attr("stroke", graphEdgeProperties["highlighted"]["stroke"])
-          .attr("stroke-width", graphEdgeProperties["highlighted"]["stroke-width"])
+          .attr("stroke", graphEdgeProperties["path"]["highlighted"]["stroke"])
+          .attr("stroke-width", graphEdgeProperties["path"]["highlighted"]["stroke-width"])
           .transition()
           .duration(duration)
           .each("start", function(){
@@ -62,8 +75,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
           })
           .attr("d", lineCommand)
           .each("end", function(){
-            line.attr("stroke", graphEdgeProperties["highlighted"]["stroke"])
-                .attr("stroke-width", graphEdgeProperties["highlighted"]["stroke-width"]);
+            line.attr("stroke", graphEdgeProperties["path"]["highlighted"]["stroke"])
+                .attr("stroke-width", graphEdgeProperties["path"]["highlighted"]["stroke-width"]);
 
             edgeSvg.select("#tempEdge" + line.attr("id"))
                   .remove();
@@ -73,36 +86,44 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   }
 
   this.showEdge = function(){
-    attributeList["d"] = lineCommand;
-    attributeList["stroke-width"] = graphEdgeProperties["default"]["stroke-width"];
+    attributeList["path"]["d"] = lineCommand;
+    attributeList["path"]["stroke-width"] = graphEdgeProperties["path"]["default"]["stroke-width"];
   }
 
   this.hideEdge = function(){
-    // attributeList["stroke-width"] = 0;
-    attributeList["d"] = initCommand;
+    // attributeList["path"]["stroke-width"] = 0;
+    attributeList["path"]["d"] = initCommand;
+  }
+
+  this.showWeight = function(){
+    attributeList["weight"]["font-size"] = 0;
+  }
+
+  this.hideWeight = function(){
+    attributeList["weight"]["font-size"] = 0;
   }
 
   this.defaultEdge = function(){
     var key;
 
-    for(key in graphEdgeProperties["default"]){
-      attributeList[key] = graphEdgeProperties["default"][key];
+    for(key in graphEdgeProperties["path"]["default"]){
+      attributeList["path"][key] = graphEdgeProperties["path"]["default"][key];
     }
   }
 
   this.highlightEdge = function(){
     var key;
 
-    for(key in graphEdgeProperties["highlighted"]){
-      attributeList[key] = graphEdgeProperties["highlighted"][key];
+    for(key in graphEdgeProperties["path"]["highlighted"]){
+      attributeList["path"][key] = graphEdgeProperties["path"]["highlighted"][key];
     }
   }
 
   this.traversedEdge = function(){
     var key;
 
-    for(key in graphEdgeProperties["traversed"]){
-      attributeList[key] = graphEdgeProperties["traversed"][key];
+    for(key in graphEdgeProperties["path"]["traversed"]){
+      attributeList["path"][key] = graphEdgeProperties["path"]["traversed"][key];
     }
   }
 
@@ -118,14 +139,14 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     updatePath();
 
-    if(attributeList["d"] == tempInit) attributeList["d"] = initCommand;
-    else attributeList["d"] = lineCommand;
+    if(attributeList["path"]["d"] == tempInit) attributeList["path"]["d"] = initCommand;
+    else attributeList["path"]["d"] = lineCommand;
   }
 
   this.changeVertexA = function(newGraphVertexA){
     var edgeDrawn = false;
 
-    if(attributeList["d"] == lineCommand) edgeDrawn = true;
+    if(attributeList["path"]["d"] == lineCommand) edgeDrawn = true;
 
     graphVertexA.removeEdge(self);
     graphVertexA = newGraphVertexA;
@@ -136,17 +157,17 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     lineCommand = edgeGenerator(calculatePath());
     initCommand = edgeGenerator([calculatePath()[0]]);
     
-    attributeList["d"] = initCommand;
+    attributeList["path"]["d"] = initCommand;
 
     graphVertexA.addEdge(self);
 
-    if(edgeDrawn) attributeList["d"] = lineCommand;
+    if(edgeDrawn) attributeList["path"]["d"] = lineCommand;
   }
 
   this.changeVertexB = function(newGraphVertexB){
     var edgeDrawn = false;
 
-    if(attributeList["d"] == lineCommand) edgeDrawn = true;
+    if(attributeList["path"]["d"] == lineCommand) edgeDrawn = true;
 
     graphVertexB.removeEdge(self);
     graphVertexB = newGraphVertexB;
@@ -157,11 +178,11 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     lineCommand = edgeGenerator(calculatePath());
     initCommand = edgeGenerator([calculatePath()[0]]);
     
-    attributeList["d"] = initCommand;
+    attributeList["path"]["d"] = initCommand;
 
     graphVertexB.addEdge(self);
 
-    if(edgeDrawn) attributeList["d"] = lineCommand;
+    if(edgeDrawn) attributeList["path"]["d"] = lineCommand;
   }
 
   this.changeType = function(newType){
@@ -169,13 +190,13 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     switch(type){
       case EDGE_TYPE_UDE:
-        attributeList["class"] = "ude";
+        attributeList["path"]["class"] = "ude";
         break;
       case EDGE_TYPE_DE:
-        attributeList["class"] = "de";
+        attributeList["path"]["class"] = "de";
         break;
       case EDGE_TYPE_BDE:
-        attributeList["class"] = "bde";
+        attributeList["path"]["class"] = "bde";
         break;
       default:
         break;
@@ -184,6 +205,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
   this.changeWeight = function(newWeight){
     weight = newWeight;
+    attributeList["weight"]["text"] = weight;
   }
 
   this.getVertex = function(){
@@ -191,7 +213,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   }
 
   this.getAttributes = function(){
-    return deepCopy(attributeList);
+    return deepCopy(attributeList["path"]);
   }
 
   this.getType = function(){
@@ -201,33 +223,62 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   // Helper Functions
 
   function init(){
-    attributeList["id"] = "e" + edgeIdNumber;
-    attributeList["d"] = initCommand;
-    attributeList["stroke"] = graphEdgeProperties["default"]["stroke"];
-    attributeList["stroke-width"] = graphEdgeProperties["default"]["stroke-width"];
+    attributeList["path"]["id"] = "e" + edgeIdNumber;
+    attributeList["path"]["d"] = initCommand;
+    attributeList["path"]["stroke"] = graphEdgeProperties["path"]["default"]["stroke"];
+    attributeList["path"]["stroke-width"] = graphEdgeProperties["path"]["default"]["stroke-width"];
 
     switch(type){
       case EDGE_TYPE_UDE:
-        attributeList["class"] = "ude";
+        attributeList["path"]["class"] = "ude";
         break;
       case EDGE_TYPE_DE:
-        attributeList["class"] = "de";
+        attributeList["path"]["class"] = "de";
         break;
       case EDGE_TYPE_BDE:
-        attributeList["class"] = "bde";
+        attributeList["path"]["class"] = "bde";
         break;
       default:
         break;
     }
 
+    attributeList["weight"]["id"] = "ew" + edgeIdNumber;
+    attributeList["weight"]["startOffset"] = graphEdgeProperties["weight"]["default"]["startOffset"];
+    attributeList["weight"]["fill"] = graphEdgeProperties["weight"]["default"]["fill"];
+    attributeList["weight"]["font-family"] = graphEdgeProperties["weight"]["default"]["font-family"];
+    attributeList["weight"]["font-size"] = 0;
+    attributeList["weight"]["font-weight"] = graphEdgeProperties["weight"]["default"]["font-weight"];
+    attributeList["weight"]["text-anchor"] = graphEdgeProperties["weight"]["default"]["text-anchor"];
+    attributeList["weight"]["text"] = weight;
+
     line = edgeSvg.append("path");
 
-    line.attr("id", attributeList["id"])
-        .attr("class", attributeList["class"]);
+    line.attr("id", attributeList["path"]["id"])
+        .attr("class", attributeList["path"]["class"]);
 
-    line.attr("d", attributeList["d"])
-        .attr("stroke", attributeList["stroke"])
-        .attr("stroke-width", attributeList["stroke-width"]);
+    line.attr("d", attributeList["path"]["d"])
+        .attr("stroke", attributeList["path"]["stroke"])
+        .attr("stroke-width", attributeList["path"]["stroke-width"]);
+
+    weightText = edgeWeightSvg.append("text");
+
+    weightText.attr("id", attributeList["weight"]["weightId"]);
+
+    weightText.attr("fill", attributeList["weight"]["fill"])
+              .attr("font-family", attributeList["weight"]["font-family"])
+              .attr("font-size", attributeList["weight"]["font-size"])
+              //.attr("font-size", 16)
+              .attr("font-weight", attributeList["weight"]["font-weight"])
+              .attr("text-anchor", attributeList["weight"]["text-anchor"]);
+
+    weightText.append("textPath")
+              .attr("xlink:href", function(){
+                return "#" + attributeList["path"]["id"];
+              })
+              .attr("startOffset", attributeList["weight"]["startOffset"])
+              .text(function(d){
+                return attributeList["weight"]["text"];
+              });
   }
 
   function cxA(){
@@ -318,13 +369,13 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     if(dur == null || isNaN(dur)) dur = defaultAnimationDuration;
     if(dur <= 0) dur = 1;
 
-    line.attr("class", attributeList["class"]);
+    line.attr("class", attributeList["path"]["class"]);
 
     line.transition()
         .duration(dur)
-        .attr("d", attributeList["d"])
-        .attr("stroke", attributeList["stroke"])
-        .attr("stroke-width", attributeList["stroke-width"]);
+        .attr("d", attributeList["path"]["d"])
+        .attr("stroke", attributeList["path"]["stroke"])
+        .attr("stroke-width", attributeList["path"]["stroke-width"]);
   }
 
   function updatePath(){
