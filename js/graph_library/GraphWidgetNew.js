@@ -118,7 +118,7 @@ var GraphWidget = function(){
    * Optional contents of "vl":
    * - inner-r  : Customize the vertex's inner radius!
    * - outer-r  : Customize the vertex's outer radius!
-   * - inner-stroke-width : Customize the vertex's inner stroke!
+   * - inner-stroke-width : Customize the vertex's inner stroke width!
    * - outer-stroke-width : Customize the vertex's outer stroke width!
    * - text-font-size : Customize the vertex text's font size!
    */
