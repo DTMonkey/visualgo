@@ -215,7 +215,7 @@ var BitmaskWidget = function(){
 		} else if(opp=="toggle") {
 			logicalOpp = "XOR";
 		}
-		basicState[STATUS] = "Result is "+flags+" "+logicalOpp+" "+mask;
+		basicState[STATUS] = "Result of "+flags+" "+logicalOpp+" "+mask+" is "+result;
 		basicState[LINE] = 2;
 		statelist.push(basicState);
 		
@@ -300,7 +300,7 @@ var BitmaskWidget = function(){
 		basicState[0][basicState[0].length-j-1].highlight = true;
 		basicState[1][basicState[1].length-j-1].highlight = true;
 		basicState[2][basicState[2].length-j-1].highlight = true;
-		basicState[STATUS] = "Result is "+flags+" AND "+mask;
+		basicState[STATUS] = "Result of "+flags+" AND "+mask+" is "+result;
 		basicState[LINE] = 3;
 		statelist.push(basicState);
 		
@@ -327,7 +327,8 @@ var BitmaskWidget = function(){
 				continue;
 			} else { //the 1
 				basicState[2][i].highlight =true;
-				basicState[STATUS] = "Result is "+flags+" AND "+mask+" = "+result;
+				basicState[0][i].highlight =true;
+				basicState[STATUS] = "Result of "+flags+" AND "+mask+" is "+result;
 				basicState[LINE] = 2;
 				statelist.push(basicState);
 			}

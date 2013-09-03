@@ -425,7 +425,7 @@ var Heap = function() {
 
     stateList = [];
     var currentState = createState(A);
-    currentState["status"] = 'First, copy the entire content of arr: {' + arr + '} into a Complete Binary Tree structure';
+    currentState["status"] = 'First, copy the entire content of the input array into a Complete Binary Tree structure';
 	currentState["lineNo"] = 1;
     stateList.push(currentState);
 

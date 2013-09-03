@@ -73,6 +73,19 @@
 		#buildv2-go p {
 			padding: 5px 8px;
 		}
+	#buildv2-sample {
+		position: fixed;
+		bottom: 146px;
+		left: 433px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+		#buildv2-sample p {
+			padding: 5px 8px;
+		}
 	
 #insert-input {
 	position: fixed;
@@ -113,7 +126,7 @@
 }
 #buildv2-err {
 	bottom: 146px;
-	left: 440px;
+	left: 538px;
 	padding: 5px 0px;
 }
 #insert-err {

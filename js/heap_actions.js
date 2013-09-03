@@ -44,7 +44,10 @@ function openBuildv2() {
 		}, 250, function() {
 			$('#buildv2-go').animate({
 				width: "+="+34
-			},100);
+			},100, function() {
+				$('#buildv2-sample').animate({
+				width: "+="+95}, 180);
+			});
 		});
 		isBuildv2Open = true;
 	}
@@ -52,12 +55,16 @@ function openBuildv2() {
 function closeBuildv2() {
 	if(isBuildv2Open){
 		$('#buildv2-err').html("");
-		$('#buildv2-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#buildv2-input').animate({
-				width: "-="+200
-			}, 250);
+		$('#buildv2-sample').animate({
+			width: "-="+95
+		}, 180, function() {
+			$('#buildv2-go').animate({
+				width: "-="+34
+			}, 100, function() {
+				$('#buildv2-input').animate({
+					width: "-="+200
+				}, 250 );
+			});
 		});
 		isBuildv2Open = false;
 	}
