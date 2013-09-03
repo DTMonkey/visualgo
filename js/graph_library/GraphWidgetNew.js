@@ -263,6 +263,11 @@ var GraphWidget = function(){
     return animationDuration;
   }
 
+  // DO NOT CALL THIS FUNCTION WHEN ANIMATION IS NOT STARTED YET
+  this.getCurrentState = function(){
+    return animationStateList[currentIteration];
+  }
+
   this.setAnimationDuration = function(duration){
     animationDuration = duration;
   }
