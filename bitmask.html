@@ -12,13 +12,14 @@
 <link rel="stylesheet" href="css/bitmask.css">
 
 <!--js-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
+<script src="js/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
 <script src="js/bitmask_actions.js"></script>
-<script src="//connect.facebook.net/en_US/all.js"></script>
-<script src="js/d3/d3.v3.js"></script>
-<!-- bitmask scripts are below-->
+<!--script src="//connect.facebook.net/en_US/all.js"></script-->
+<!-- heap scripts are below-->
 
 <!--fonts-->
 <link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
@@ -31,47 +32,53 @@
 <div id="top-bar">
 	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-    	<a class="selected-viz">Bitmask</a>
+    	<a id="title-BST" class="selected-viz">Bitmask</a>&nbsp&nbsp
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
 		<fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
     </span>
     <div id="mode-menu">
-    	<div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
+    	<div id="mode-button">Exploration Mode<img src="img/arrow_white.png"/></div>
         <div id="other-modes">
             <a href="#">Tutorial Mode</a>
-            <a href="#">Training Mode</a>
-            <a href="#">Test Mode</a>
+            <!--<a href="#">Training Mode</a>--> <!--under construction-->
         </div>
     </div>
 </div>
-
-<div id="main">
-
-	 <div id="viz">
-     	<svg id="flags">
-        </svg>
-        <svg id="mask">
-        </svg>
-        <div id="op">OR</div>
-        <div id="line"></div>
-        <svg id="result">
-        </svg>
-     </div>
+    
+    <div id="viz"></div>
     
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-    	<p id="lsone" style="padding-top: 10px;" onClick="bitmaskWidget.setOp('LSOne')">Least Significant Bit</p>
-        <p id="check" onClick="bitmaskWidget.setOp('AND')">Check Bit</p>
-		<p id="set" onClick="bitmaskWidget.setOp('OR')">Set bit</p>
-		<p id="toggle" onClick="bitmaskWidget.setOp('XOR')">Toggle bit</p>
-        <p id="clear" style="padding-bottom: 10px;" onClick="bitmaskWidget.setOp('NAND')">Clear bit</p>
+        <p id="setFlags" style="padding-top: 10px;">Set S</p>
+		<p id="set">Set bit</p>
+		<p id="check">Check bit</p>
+        <p id="toggle">Toggle bit</p>
+        <p id="clear">Clear bit</p>
+        <p id="LSOne" onclick=LSOne() style="padding-bottom: 10px;">Least Significant bit</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
-    <!--put all the extra action pullouts (input) here-->
-		<!--TODO-->
+    <div id="actions-extras">
+    <!--put all the extra action pullouts (input) and error messages here-->
+    	<div id="setFlags-input"><input type="text" id="setS" title="Enter an integer" autocomplete="off" value=75 /></div>
+        <div id="setFlags-go" class="execAction" onclick=setFlags()><p>GO</p></div>
+        <div id="setFlags-err" class="err"></div>
+        <div id="set-input"><input type="text" id="set-j" title="Enter an integer" autocomplete="off" value=3 /></div>
+        <div id="set-go" class="execAction" onclick=set()><p>GO</p></div>
+        <div id="set-err" class="err"></div>
+        <div id="check-input"><input type="text" id="check-j" title="Enter an integer" autocomplete="off" value=3 /></div>
+        <div id="check-go" class="execAction" onclick=check()><p>GO</p></div>
+        <div id="check-err" class="err"></div>
+        <div id="toggle-input"><input type="text" id="toggle-j" title="Enter an integer" autocomplete="off" value=3 /></div>
+        <div id="toggle-go" class="execAction" onclick=toggle()><p>GO</p></div>
+        <div id="toggle-err" class="err"></div>
+        <div id="clear-input"><input type="text" id="clear-j" title="Enter an integer" autocomplete="off" value=3 /></div>
+        <div id="clear-go" class="execAction" onclick=clearBit()><p>GO</p></div>
+        <div id="clear-err" class="err"></div>
+        <div id="lsone-err" class="err"></div>
+    </div>
     
     <div id="status" class="panel"><p></p></div>
     <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
@@ -88,8 +95,6 @@
     </div>
     <div id="codetrace-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide codetrace panel"/></div>
     
-</div>
-
 <div id="left-bar"></div>
 <div id="right-bar"></div>
 <!-- Bottom bar and overlay popups -->
@@ -99,85 +104,222 @@
     <a id="trigger-terms">Terms of use</a>
 </div>
 
+<div id="media-controls">
+	<div id="speed-control">slow<div id="speed-input"></div>fast</div>
+	<span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
+	<span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
+    <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="img/pause.png" alt="pause" /></span>
+    <span id="play" class="media-control-button" title="play" onclick=play()><img src="img/play.png" alt="play" /></span>
+    <span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="img/nextFrame.png" alt="next frame" /></span>
+    <span id="go-to-end" class="media-control-button" title="go to end" onclick=goToEnd()><img src="img/goToEnd.png" alt="go to end"/></span>
+    <div id="progress-bar" class="media-control-button"></div>
+</div>
+
 <div id="dark-overlay"></div>
+<div id="about" class="overlays"></div>
+<div id="team" class="overlays"></div>
+<div id="termsofuse" class="overlays"></div>
 
-<div id="help" class="overlays">
-	<h4>Help</h4>
-    <img class="close-overlay" src="img/cross_white.png" />
-    <div class="content">
-        <p>The <strong style="color: #ed5a7d;">ACTIONS</strong> panel on the bottom left displays all available operations on this data structure. Experiment with them!</p>
-        <p>The <strong style="color: #2ebbd1;">STATUS</strong> panel on the right displays the status of the current operation. The <strong style="color: #52bc69;">CODETRACE</strong> panel below it displays the pseudocode for the current operation, and uses code highlighting to show you which step is being carried out.</p>
-    </div>
-</div>
+<!--tutorial dialogs here-->
 
-<div id="about" class="overlays">
-	<h4>About the project</h4>
-    <img class="close-overlay" src="img/cross_white.png" />
-    <div class="content">
-        <p><strong><span style="line-height: 200%;">Motivation</span></strong><br/>
-        	WeNeedAName was conceptualised in 2011 by Dr Steven Halim as a tool to help his students better understand data structures and algorithms, by allowing them to learn the basics on their own and at their own pace. Together with two of his students from the National University of Singapore, a series of visualisations were developed and consolidated, from simple sorting algorithms to complex graph data structures.</p>
-        <p>Though specifically designed for the use of NUS students taking various data structure and algorithm classes (CS1020, CS2010, CS2020, and CS3233), as advocators of online learning, we hope that curious minds around the world will find these visualisations useful as well.</p>
-        <p><strong><span style="line-height: 200%;">Ongoing developments</span></strong><br/>
-        	WeNeedAName is an ongoing project (as is evident from its name!), and more complex visualisations are still being developed. Originally developed using HTML5 Canvas, we are currently redesigning the site to harness the power of Scalable Vector Graphics (SVG) instead. An automated testing system is also in the works.</p>
-        <p><strong><span style="line-height: 200%;">Publications</span></strong><br/>
-        	This work has been presented briefly at the CLI Workshop at the ACM ICPC World Finals 2012 (Poland, Warsaw) and at the <a href="http://www.mii.lt/olympiads_in_informatics/htm/INFOL099.htm" target="_blank">IOI Conference at IOI 2012</a> (Sirmione-Montichiari, Italy).</p>
-    </div>
-</div>
+<script src="js/BitmaskWidget.js"></script>
 
-<div id="team" class="overlays">
-	<h4>The team</h4>
-    <img class="close-overlay" src="img/cross_white.png" />
-    <div class="content">
-        <p><strong><span style="line-height: 200%;">Project leader</span></strong><br/><a href="http://www.comp.nus.edu.sg/~stevenha/" target="_blank">Dr Steven Halim</a>, Lecturer, SoC, NUS</p>
-        <p><strong><span style="line-height: 200%;">Initial Programmers</span></strong><br/>
-        	<a href="http://zichun.i-xo.net/" target="_blank">Koh Zi Chun</a><br/>
-            <a href="http://roticv.rantx.com/" target="_blank">Victor Loh Bo Huai</a></p>
-        <p><strong><span style="line-height: 200%;">Final Year Project students</span></strong><br/>
-            Phan Thi Quynh Trang<br/>
-            Peter Phandi<br/>
-            Albert Millardo Tjindradinata<br/>
-            Nguyen Hoang Duy<br/>
-            <a href="http://www.rosemarietan.com/" target="_blank">Rose Marie Tan Zhao Yun</a><br/>
-            Ivan Reinaldo</p>
-        <p><strong><span style="line-height: 200%;">Advisor</span></strong><br/><a href="http://felix-halim.net/" target="_blank">Felix Halim</a></p>
-    </div>
-</div>
-
-<div id="termsofuse" class="overlays">
-	<h4>Terms of use</h4>
-    <img class="close-overlay" src="img/cross_white.png" />
-    <div class="content">
-        <p>If you are a data structure and algorithm teacher, you are allowed to use this website for your classes. You can take screen shots from this website and use the screen shots elsewhere as long as you cite this website as a reference.</p><!--I think we need a better copyright/terms of use statement-->
-    </div>
-
-<!--
-        <div id="actions">
-            <div class="action" style="background: #CCC;">Set flags</div>
-            <form class="action-input">
-            	<input type="text" autocomplete="off" />
-            </form>
-            <div class="action" style="background: #aaaaaa;" onClick="bitmaskWidget.setOp('LSOne')">Least Significant Bit</div>
-            <div class="action" style="background: #2ebbd1;" onClick="bitmaskWidget.setOp('AND')">Check bit</div>
-			<div class="action" style="background: #2ebbd1;" onClick="bitmaskWidget.setOp('OR')">Set bit</div>
-			<div class="action" style="background: #2ebbd1;" onClick="bitmaskWidget.setOp('XOR')">Toggle bit</div>
-            <div class="action" style="background: #2ebbd1;" onClick="bitmaskWidget.setOp('NAND')">Clear bit</div>
-			<div class="action" onClick="bitmaskWidget.shiftMaskLeft()">Shift Left</div>
-			<div class="action" onClick="bitmaskWidget.shiftMaskRight()">Shift Right</div>
-        </div>
-
-    -->
-    
-</div>
-
-<script src="js/bitmask/bitmaskWidget.js"></script>
-<script src="js/bitmask/bitWidget.js"></script>
-    
 <script type="text/javascript">
-	//start by showing actions panel
-	showActionsPanel();
+	$('#play').hide();
+	
+	//sliders
+	$("#speed-input").slider({
+		min: 200,
+		max: 2000,
+		value: 1700,
+		change: function(event, ui) {
+			bw.setAnimationDuration(2200-ui.value);
+		}
+	});
+	$("#progress-bar").slider({
+		range: "min",
+		min: 0,
+		value: 0,
+		slide: function(event, ui) {
+			bw.pause();
+			bw.jumpToIteration(ui.value,0);
+		},
+		stop: function(event, ui) {
+			if(!isPaused) { setTimeout( function(){bw.play();}, 500) }
+		}
+	});
 
-	bitmaskWidget = new BitmaskWidget();
-	bitmaskWidget.init();
+	//this viz-specific code
+	var bw = new BitmaskWidget();
+	bw.init();
+
+	function setFlags() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.setFlags($('#setS').val())) {
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				closeSetFlags();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	function set() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.checkSetToggle($('#set-j').val(),"set")) {
+				$('#current-action').show();
+				$('#current-action p').html("Set bit "+ $('#set-j').val());
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				closeSet();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	function check() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.checkSetToggle($('#check-j').val(),"check")) {
+				$('#current-action').show();
+				$('#current-action p').html("Check bit "+ $('#check-j').val());
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				closeCheck();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	function toggle() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.checkSetToggle($('#toggle-j').val(),"toggle")) {
+				$('#current-action').show();
+				$('#current-action p').html("Toggle bit "+ $('#toggle-j').val());
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				closeToggle();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	function clearBit() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.clear($('#clear-j').val())) {
+				$('#current-action').show();
+				$('#current-action p').html("Clear bit "+ $('#clear-j').val());
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				closeClear();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	function LSOne() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if((mode=="exploration")&&bw.LSOne()) {
+				$('#current-action').show();
+				$('#current-action p').html("Find least significant bit");
+				$('#progress-bar').slider( "option", "max", bw.getTotalIteration()-1);
+				$('#lsone-err').html("");
+				closeSetFlags();
+				closeSet();
+				closeCheck();
+				closeToggle();
+				closeClear();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500)
+	}
+	
+	//playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidgetNew.js
+	var isPaused = false;
+	function isAtEnd() {
+		return (bw.getCurrentIteration()==(bw.getTotalIteration()-1));
+	}
+	
+	function pause() {
+		if(isPlaying) {
+			isPaused = true;
+			bw.pause();
+			$('#play').show();
+			$('#pause').hide();
+		}
+	}
+	function play() {
+		if(isPlaying) {
+			isPaused = false;
+			$('#pause').show();
+			$('#play').hide();
+			if(isAtEnd()) {
+				bw.replay();
+			} else {
+				bw.play();
+			}
+		}
+	}
+	function stepForward() {
+		if(isPlaying) {
+			pause();
+			bw.forceNext();
+		}
+	}
+	function stepBackward() {
+		if(isPlaying) {
+			pause();
+			bw.forcePrevious();	
+		}
+	}
+	function goToBeginning() {
+		if(isPlaying) {
+			bw.jumpToIteration(0);
+			pause();
+		}
+	}
+	function goToEnd() {
+		if(isPlaying) {
+			bw.jumpToIteration(bw.getTotalIteration()-1);
+			pause();
+		}
+	}
+	function stop() {
+		bw.stop();
+		isPaused = false;
+		isPlaying = false;
+		$('#pause').show();
+		$('#play').hide();
+		$('#current-action').hide();
+	}
+	
+	//shortcut keys for playback controls
+	$(document).keydown( function(event) {
+		if(event.which == 32) { //spacebar
+			if(isPaused) { play(); } else { pause(); }
+		} else if(event.which == 37) { //left arrow
+			stepBackward();
+		} else if(event.which == 39) { //right arrow
+			stepForward();
+		} else if(event.which == 35) { //end
+			stop();
+		} else if (event.which == 189) { //minus
+			var d = (2200-bw.getAnimationDuration())-100;
+			if(d > 0) {
+				$("#speed-input").slider("value", d);
+			} else {
+				$("#speed-input").slider("value", 0);
+			}
+		} else if (event.which == 187) { //plus
+			var d = (2200-bw.getAnimationDuration())+100;
+			if(d <= 2000) {
+				$("#speed-input").slider("value", d);
+			} else {
+				$("#speed-input").slider("value", 2000);
+			}
+		}
+	});
+	
 </script>
 
 </body>
