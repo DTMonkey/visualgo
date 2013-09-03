@@ -38,7 +38,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
       "y": null,
       "fill": null,
       "font-family": null,
-	  "font-weight": null,
+      "font-weight": null,
       "font-size": null,
       "text-anchor": null,
       "text": null
@@ -98,6 +98,25 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.changeText = function(newVertexText){
     vertexText = newVertexText;
     attributeList["text"]["text"] = newVertexText;
+  }
+
+  this.changeTextFontSize = function(newFontSize){
+    if(newTextSize == null || isNaN(newTextSize)) return;
+    attributeList["text"]["font-size"] = newTextSize;
+  }
+
+  this.changeRadius = function(newRadiusInner, newRadiusOuter){
+    if(newRadiusInner == null || isNaN(newRadiusInner)) return;
+    attributeList["innerCircle"]["r"] = newRadiusInner;
+    if(newRadiusOuter == null || isNaN(newRadiusOuter)) return;
+    attributeList["outerCircle"]["r"] = newRadiusOuter;
+  }
+
+  this.changeStrokeWidth = function(newStrokeWidthInner, newStrokeWidthOuter){
+    if(newStrokeWidthInner == null || isNaN(newStrokeWidthInner)) return;
+    attributeList["innerCircle"]["stroke-width"] = newStrokeWidthInner;
+    if(newStrokeWidthOuter == null || isNaN(newStrokeWidthOuter)) return;
+    attributeList["outerCircle"]["stroke-width"] = newStrokeWidthOuter;
   }
 
   // Removes the vertex (no animation)
@@ -217,7 +236,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     attributeList["text"]["fill"] = graphVertexProperties["text"]["default"]["fill"];
     attributeList["text"]["font-family"] = graphVertexProperties["text"]["default"]["font-family"];
     attributeList["text"]["font-size"] = 0;
-	attributeList["text"]["font-weight"] = graphVertexProperties["text"]["default"]["font-weight"];
+    attributeList["text"]["font-weight"] = graphVertexProperties["text"]["default"]["font-weight"];
     attributeList["text"]["text-anchor"] = graphVertexProperties["text"]["default"]["text-anchor"];
     attributeList["text"]["text"] = vertexText;
 
@@ -244,11 +263,11 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
         .attr("fill", attributeList["text"]["fill"])
         .attr("font-family", attributeList["text"]["font-family"])
         .attr("font-size", attributeList["text"]["font-size"])
-		.attr("font-weight", attributeList["text"]["font-weight"])
+        .attr("font-weight", attributeList["text"]["font-weight"])
         .attr("text-anchor", attributeList["text"]["text-anchor"])
         .text(function(){
           return attributeList["text"]["text"];
-      });
+        });
   }
 
   // Refreshes the vertex image
@@ -283,7 +302,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
         .attr("fill", attributeList["text"]["fill"])
         .attr("font-family", attributeList["text"]["font-family"])
         .attr("font-size", attributeList["text"]["font-size"])
-		.attr("font-weight", attributeList["text"]["font-weight"])
+        .attr("font-weight", attributeList["text"]["font-weight"])
         .attr("text-anchor", attributeList["text"]["text-anchor"])
         .text(function(){
           return attributeList["text"]["text"];

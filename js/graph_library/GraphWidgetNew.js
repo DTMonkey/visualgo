@@ -111,6 +111,13 @@ var GraphWidget = function(){
    * - cy
    * - text
    * - state
+   *
+   * Optional contents of "vl":
+   * - inner-r
+   * - outer-r
+   * - inner-stroke-width
+   * - outer-stroke-width
+   * - text-font-size
    */
 
   /*
@@ -431,6 +438,17 @@ var GraphWidget = function(){
 
       currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
       currentVertex.changeText(currentVertexState[key]["text"]);
+
+      if(currentVertexState[key]["text-font-size"] != null){
+         currentVertex.changeTextFontSize(currentVertexState[key]["text-font-size"]);
+      }
+      if(currentVertexState[key]["inner-r"] != null && currentVertexState[key]["outer-r"] != null){
+         currentVertex.changeRadius(currentVertexState[key]["inner-r"], currentVertexState[key]["outer-r"]);
+      }
+      if(currentVertexState[key]["inner-stroke-width"] != null && currentVertexState[key]["outer-stroke-width"] != null){
+         currentVertex.changeStrokeWidth(currentVertexState[key]["inner-stroke-width"], currentVertexState[key]["outer-stroke-width"]);
+      }
+
       currentVertex.redraw(duration);
 
       vertexUpdateList[key] = true;

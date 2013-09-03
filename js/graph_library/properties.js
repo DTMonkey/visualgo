@@ -57,21 +57,21 @@ var graphVertexProperties = {
       "fill": "#000",
       "font-family": "'PT Sans', sans-serif",
       "font-size": 16,
-	  "font-weight": "bold",
+      "font-weight": "bold",
       "text-anchor": "middle"
     },
     "highlighted":{
       "fill": "#fff",
       "font-family": "'PT Sans', sans-serif",
       "font-size": 16,
-	  "font-weight": "bold",
+      "font-weight": "bold",
       "text-anchor": "middle"
     },
     "traversed":{
       "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
       "font-size": 16,
-	  "font-weight": "bold",
+      "font-weight": "bold",
       "text-anchor": "middle"
     }
   },
