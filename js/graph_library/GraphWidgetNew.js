@@ -51,8 +51,9 @@ var GraphWidget = function(){
   }
 
   // Default for weight is 1 and for type is EDGE_TYPE_UDE
-  this.addEdge = function(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show){
+  this.addEdge = function(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show, showWeight){
     if(show != false) show = true;
+    if(showWeight != true) showWeight = false;
     if(type == null || isNaN(type)) type = EDGE_TYPE_UDE;
     if(weight == null || isNaN(weight)) weight = 1;
 
@@ -69,6 +70,7 @@ var GraphWidget = function(){
 
     if(show == true){
       edgeList[edgeIdNumber].showEdge();
+      if(showWeight == true) edgeList[edgeIdNumber].showWeight();
       edgeList[edgeIdNumber].redraw();
     }
   }
@@ -114,11 +116,11 @@ var GraphWidget = function(){
    * - state
    *
    * Optional contents of "vl":
-   * - inner-r
-   * - outer-r
-   * - inner-stroke-width
-   * - outer-stroke-width
-   * - text-font-size
+   * - inner-r  : Customize the vertex's inner radius!
+   * - outer-r  : Customize the vertex's outer radius!
+   * - inner-stroke-width : Customize the vertex's inner stroke!
+   * - outer-stroke-width : Customize the vertex's outer stroke width!
+   * - text-font-size : Customize the vertex text's font size!
    */
 
   /*
@@ -129,6 +131,9 @@ var GraphWidget = function(){
    * - weight
    * - state  : Display state
    * - animateHighlighted : Determines whether highlighted animation should be played. True or false
+   *
+   * Optional contents of "el":
+   * - displayWeight  : Determines whether weight should be shown. True or false
    */
 
   this.startAnimation = function(stateList){
@@ -374,6 +379,11 @@ var GraphWidget = function(){
           break;
       }
 
+      currentEdge.hideWeight();
+      if(!OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+        currentEdge.showWeight();
+      }
+
       currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
       currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
       currentEdge.changeType(currentEdgeState[key]["type"]);
@@ -487,6 +497,11 @@ var GraphWidget = function(){
           break;
         default:
           break;
+      }
+
+      currentEdge.hideWeight();
+      if(!OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+        currentEdge.showWeight();
       }
 
       currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);

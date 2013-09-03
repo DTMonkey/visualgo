@@ -13,64 +13,54 @@ var PSEUDOCODE_SVG_HEIGHT = 400;
 
 var graphVertexProperties = {
   "innerCircle":{
+    "r": 14,
+    "stroke-width": 0,
     "default":{
       "fill": "#eee",
-      "r": 14,
-      "stroke": "#fff",
-      "stroke-width": 0
+      "stroke": "#fff"
     },
     "highlighted":{
       "fill": surpriseColour,
-      "r": 14,
-      "stroke": "#fff",
-      "stroke-width": 0
+      "stroke": "#fff"
     },
     "traversed":{
       "fill": "#eee",
-      "r": 14,
-      "stroke": "#fff",
-      "stroke-width": 0
+      "stroke": "#fff"
     }
   },
   "outerCircle":{
+    "r": 16,
+    "stroke-width": 2,
     "default":{
       "fill": "#333",
-      "r": 16,
-      "stroke": "#333",
-      "stroke-width": 2
+      "stroke": "#333"
     },
     "highlighted":{
       "fill": surpriseColour,
-      "r": 16,
-      "stroke": surpriseColour,
-      "stroke-width": 2
+      "stroke": surpriseColour
     },
     "traversed":{
       "fill": surpriseColour,
-      "r": 16,
-      "stroke": surpriseColour,
-      "stroke-width": 2
+      "stroke": surpriseColour
     }
   },
   "text":{
+    "font-size": 16,
     "default":{
       "fill": "#333",
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     },
     "highlighted":{
       "fill": "#fff",
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     },
     "traversed":{
       "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     }
@@ -83,33 +73,30 @@ var graphVertexProperties = {
 
 var graphEdgeProperties = {
   "path":{
+    "stroke-width": 3,
     "default":{
-      "stroke": "#333",
-      "stroke-width": 3
+      "stroke": "#333"
     },
     "highlighted":{
-      "stroke": surpriseColour,
-      "stroke-width": 10
+      "stroke": surpriseColour
     },
     "traversed":{
-      "stroke": surpriseColour,
-      "stroke-width": 3
+      "stroke": surpriseColour
     }
   },
   "weight":{
+    "font-size": 16,
     "default":{
       "startOffset": "50%",
       "fill": "#333",
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     },
     "highlighted":{
       "startOffset": "50%",
-      "fill": "#fff",
+      "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     },
@@ -117,7 +104,6 @@ var graphEdgeProperties = {
       "startOffset": "50%",
       "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
-      "font-size": 16,
       "font-weight": "bold",
       "text-anchor": "middle"
     }

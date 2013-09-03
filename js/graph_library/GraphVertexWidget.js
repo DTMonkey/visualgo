@@ -9,7 +9,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   var outerCircle;
   var text;
 
-  var textYaxisOffset = graphVertexProperties["text"]["default"]["font-size"]/3;
+  var textYaxisOffset = graphVertexProperties["text"]["font-size"]/3;
 
   var attributeList = {
     "innerCircle": {
@@ -59,13 +59,13 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   // Specifies the duration of the animation in milliseconds
   // If unspecified or illegal value, default duration applies. 
   this.showVertex = function(){
-    attributeList["outerCircle"]["r"] = graphVertexProperties["outerCircle"]["default"]["r"];
-    attributeList["outerCircle"]["stroke-width"] = graphVertexProperties["outerCircle"]["default"]["stroke-width"];
+    attributeList["outerCircle"]["r"] = graphVertexProperties["outerCircle"]["r"];
+    attributeList["outerCircle"]["stroke-width"] = graphVertexProperties["outerCircle"]["stroke-width"];
 
-    attributeList["innerCircle"]["r"] = graphVertexProperties["innerCircle"]["default"]["r"];
-    attributeList["innerCircle"]["stroke-width"] = graphVertexProperties["innerCircle"]["default"]["stroke-width"];
+    attributeList["innerCircle"]["r"] = graphVertexProperties["innerCircle"]["r"];
+    attributeList["innerCircle"]["stroke-width"] = graphVertexProperties["innerCircle"]["stroke-width"];
 
-    attributeList["text"]["font-size"] = graphVertexProperties["text"]["default"]["font-size"];
+    attributeList["text"]["font-size"] = graphVertexProperties["text"]["font-size"];
   }
 
   this.hideVertex = function(){

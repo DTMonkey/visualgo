@@ -87,7 +87,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
   this.showEdge = function(){
     attributeList["path"]["d"] = lineCommand;
-    attributeList["path"]["stroke-width"] = graphEdgeProperties["path"]["default"]["stroke-width"];
+    attributeList["path"]["stroke-width"] = graphEdgeProperties["path"]["stroke-width"];
   }
 
   this.hideEdge = function(){
@@ -96,7 +96,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   }
 
   this.showWeight = function(){
-    attributeList["weight"]["font-size"] = 0;
+    attributeList["weight"]["font-size"] = graphEdgeProperties["weight"]["font-size"];
   }
 
   this.hideWeight = function(){
@@ -109,6 +109,10 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     for(key in graphEdgeProperties["path"]["default"]){
       attributeList["path"][key] = graphEdgeProperties["path"]["default"][key];
     }
+
+    for(key in graphEdgeProperties["weight"]["default"]){
+      attributeList["weight"][key] = graphEdgeProperties["weight"]["default"][key];
+    }
   }
 
   this.highlightEdge = function(){
@@ -116,6 +120,10 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     for(key in graphEdgeProperties["path"]["highlighted"]){
       attributeList["path"][key] = graphEdgeProperties["path"]["highlighted"][key];
+    }
+
+     for(key in graphEdgeProperties["weight"]["default"]){
+      attributeList["weight"][key] = graphEdgeProperties["weight"]["highlighted"][key];
     }
   }
 
@@ -125,6 +133,10 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     for(key in graphEdgeProperties["path"]["traversed"]){
       attributeList["path"][key] = graphEdgeProperties["path"]["traversed"][key];
     }
+
+     for(key in graphEdgeProperties["weight"]["default"]){
+      attributeList["weight"][key] = graphEdgeProperties["weight"]["traversed"][key];
+    }
   }
 
   this.removeEdge = function(){
@@ -132,6 +144,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     graphVertexB.removeEdge(self);
 
     line.remove();
+    weightText.remove();
   }
 
   this.refreshPath = function(){
@@ -276,7 +289,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
                 return "#" + attributeList["path"]["id"];
               })
               .attr("startOffset", attributeList["weight"]["startOffset"])
-              .text(function(d){
+              .text(function(){
                 return attributeList["weight"]["text"];
               });
   }
@@ -308,7 +321,6 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   function calculatePath(){
     var x1 = cxA(), y1 = cyA();
     var x2 = cxB(), y2 = cyB();
-    
     
     var pts = getCircleLineIntersectionPoint(x1, y1, x2, y2, rA(), x1, y1);
     var pts2 = getCircleLineIntersectionPoint(x1, y1, x2, y2, rB(), x2, y2);
@@ -376,6 +388,22 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
         .attr("d", attributeList["path"]["d"])
         .attr("stroke", attributeList["path"]["stroke"])
         .attr("stroke-width", attributeList["path"]["stroke-width"]);
+
+    weightText.transition()
+              .duration(dur)
+              .attr("fill", attributeList["weight"]["fill"])
+              .attr("font-family", attributeList["weight"]["font-family"])
+              .attr("font-size", attributeList["weight"]["font-size"])
+              //.attr("font-size", 16)
+              .attr("font-weight", attributeList["weight"]["font-weight"])
+              .attr("text-anchor", attributeList["weight"]["text-anchor"]);
+              
+    weightText.select("textPath")
+              .transition()
+              .duration(dur)
+              .text(function(){
+                return attributeList["weight"]["text"];
+              });
   }
 
   function updatePath(){
