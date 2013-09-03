@@ -36,6 +36,7 @@ var Graph = function() {
    var mousedown_event = null, mousemove_event = null, mouseup_event = null;
    var deleted_vertex_list = [];
    var used_alt = -1;
+   var adjMatrix = [], adjList = [];
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -49,6 +50,29 @@ var Graph = function() {
    .attr('d', 'M0,-5L10,0L0,5')
    .attr('fill', '#000');
    mainSvg.style("cursor", "crosshair");
+
+  function resetEverything() {
+
+    coord = new Array();
+    A = new Array();
+    amountVertex = 0;
+    amountEdge = 0;
+
+    stateList = [];
+    edgeGenerator = d3.svg.line()
+    .x(function(d){return d.x;})
+    .y(function(d){return d.y;})
+    .interpolate("linear");
+    mousedown_node = null;
+    mousemove_coor = null;
+    edgeList = [];
+    mousedown_in_progress = false, mousemove_in_progress = false, mouseup_in_progress = false;
+    mousedown_event = null, mousemove_event = null, mouseup_event = null;
+    deleted_vertex_list = [];
+    used_alt = -1;
+    adjMatrix = [];
+    adjList = [];
+  }
 
    function addExtraEdge() {
     addDirectedEdge(1, 2, ++amountEdge, EDGE_TYPE_UDE, 1, true);
@@ -81,6 +105,14 @@ var Graph = function() {
       var b2 = b1 - 4 + slope*17;
       y_text = (y2 - y1)* 1/1.8 + y1;
       x_text = (y_text - b2) / slope; 
+    } else if ((x1 > x2) && (y1 > y2)) {
+      var b2 = b1 - 10 + slope*15;
+      y_text = (y1 - y2)* 1/8 + y2;
+      x_text = (y_text - b2) / slope; 
+    } else if ((x1 < x2) && (y1 > y2)) {
+      var b2 = b1 + 15 + slope*17;
+      y_text = (y2 - y1)* 1/2.5 + y1;
+      x_text = (y_text - b2) / slope; 
     } else if (x1 == x2) {
       if (y1 > y2) {
         x_text = x1 + 10;
@@ -99,17 +131,75 @@ var Graph = function() {
       }
     }
     
- 
-
+    e = e.replace("#","");
     mainSvg
      .append("text")
+     .attr("id", "w_" + e)
      .attr("class", "edgelabel")
      .attr("x", x_text)
      .attr("y", y_text)
      .attr("dx", 1)
      .attr("dy", ".35em")
-     .attr("text-anchor", "middle")
+     .attr("text-anchor", "middle")     
      .text(function(d) { return value.toString() });
+  }
+
+  // move weight text on a path with id e
+  function moveWeightedText(e) {
+    var edge = edgeList["#e" + e];
+    if (typeof(edge)== "undefined") return;
+    var Pt = calculateEdge(
+              coord[edge[0]][0],
+              coord[edge[0]][1],
+              coord[edge[1]][0],
+              coord[edge[1]][1]
+            );
+    var x1, y1, x2, y2;
+    x1 = Pt[0].x; y1 = Pt[0].y;
+    x2 = Pt[1].x; y2 = Pt[1].y;
+    var slope = (y1 - y2)/ (x1 - x2);
+    var b1  = y1 - slope*x1;
+    // y = slope * x + b1
+    // y = slope * x + b2
+
+    var x_text, y_text;
+    if ((x1 < x2) && (y1 < y2)) {
+      var b2 = b1 + 4 + slope*17;
+      y_text = (y2 - y1)* 9/10 + y1;
+      x_text = (y_text - b2) / slope;
+    } else if ((x1 > x2) && (y1 < y2)) {
+      var b2 = b1 - 4 + slope*17;
+      y_text = (y2 - y1)* 1/1.8 + y1;
+      x_text = (y_text - b2) / slope; 
+    } else if ((x1 > x2) && (y1 > y2)) {
+      var b2 = b1 - 10 + slope*15;
+      y_text = (y1 - y2)* 1/8 + y2;
+      x_text = (y_text - b2) / slope; 
+    } else if ((x1 < x2) && (y1 > y2)) {
+      var b2 = b1 + 15 + slope*17;
+      y_text = (y2 - y1)* 1/2.5 + y1;
+      x_text = (y_text - b2) / slope; 
+    } else if (x1 == x2) {
+      if (y1 > y2) {
+        x_text = x1 + 10;
+        y_text = (y1 - y2)*1/3 + y2;
+      } else {
+        x_text = x1 - 10;
+        y_text = (y2 - y1)*2/3 + y1;
+      }
+    } else if (y1 == y2) {
+      if (x1 > x2) {
+        y_text = y1 - 10;
+        x_text = x2 + (x1 - x2)* 1/3;
+      } else {
+        y_text = y1 + 10;
+        x_text = x1 + (x2 - x1)* 2/3;
+      }
+    }
+   
+    mainSvg.selectAll("#w_e" + e)
+     .attr("x", x_text)
+     .attr("y", y_text);
   }
 
   function doclick(cur) {
@@ -185,6 +275,7 @@ var Graph = function() {
   }
 
   function doclick2(cur) {
+    //createAdjMatrix();
     //document.getElementById("adj_matrix_table").rows[1].cells[0].innerHTML = "changed";
     //row = document.getElementById('myTable').rows[row_no+1];
     if (isUsed(cur[0],cur[1]) == -1) {
@@ -335,10 +426,10 @@ var Graph = function() {
       if (d3.event.altKey) {
         //if (current_coor_is_used == -1) {
           used_alt = is_used;
-          moveCircle(cur[0], cur[1], (is_used).toString());
-          // update coord[][]
           coord[is_used][0] = cur[0];
           coord[is_used][1] = cur[1];
+          moveCircle(cur[0], cur[1], (is_used).toString());
+          // update coord[][]
           mousedown_node = cur;
           var tmp_e = "#e";
           for (var i=1; i <= Object.size(edgeList); i++) {
@@ -376,6 +467,8 @@ var Graph = function() {
           mainSvg.select("#e" + amountEdge.toString())
           .attr("d",lineCommand);
 
+          edgeList["#e" + amountEdge.toString()][0] = is_used;
+          edgeList["#e" + amountEdge.toString()][1] = current_coor_is_used;
           move1 = true;
           var x = 0;
         }
@@ -387,7 +480,10 @@ var Graph = function() {
         move1 = false;
         //return;
       }
+      coord[amountVertex-1][0] = cur[0];
+      coord[amountVertex-1][1] = cur[1];
       moveCircle(cur[0], cur[1], (amountVertex-1).toString());
+      
 
       var lineCommand = edgeGenerator(calculateEdge(parseInt(prev_circle1.attr("cx")), parseInt(prev_circle1.attr("cy")), cur[0], cur[1]));
       mainSvg.select("#e" + amountEdge.toString())
@@ -481,6 +577,7 @@ var Graph = function() {
     mouseup_event = this;
     doMouseUp();
     mouseup_in_progress = false;
+    createAdjMatrix();
   }); 
 
 
@@ -525,6 +622,14 @@ var Graph = function() {
     .attr("cy", y)
     .attr("x", x)
     .attr("y", y+3);
+
+    for (var i=1; i <= Object.size(edgeList); i++) {
+      var e = edgeList["#e" + i.toString()];
+      if (typeof(e) == "undefined") continue;
+      if (e[0] == class_id || e[1] == class_id)
+        moveWeightedText(i);
+    }
+    
   }
 
   function calculateEdge(x1, y1, x2, y2) {
@@ -781,12 +886,12 @@ this.showTree = function(){
     //addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(1, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
+    addDirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true);
+    addDirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
     addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
     amountEdge = edgeId;
     addExtraEdge();
@@ -798,6 +903,7 @@ this.showTree = function(){
     addWeightText("#e2", 10);
     addWeightText("#e5", 10);
     addWeightText("#e8", 10);
+    createAdjMatrix();
   }
   
   
@@ -843,6 +949,7 @@ this.showTree = function(){
       addWeightText("#e1", 10);
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
+      createAdjMatrix();
     }
 
     this.showK5 = function() {
@@ -889,6 +996,7 @@ this.showTree = function(){
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
       addWeightText("#e8", 10);
+      createAdjMatrix();
     }
 
       this.showCP22 = function() {
@@ -941,6 +1049,7 @@ this.showTree = function(){
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
       addWeightText("#e8", 10);
+      createAdjMatrix();
     }
 
     this.showCP42 = function() {
@@ -1008,6 +1117,7 @@ this.showTree = function(){
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
       addWeightText("#e8", 10);
+      createAdjMatrix();
     }
 
     this.showCP45 = function() {
@@ -1056,6 +1166,7 @@ this.showTree = function(){
       addWeightText("#e1", 10);
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
+      createAdjMatrix();
     }
 
     this.showCP48 = function() {
@@ -1113,6 +1224,7 @@ this.showTree = function(){
       addWeightText("#e2", 10);
       addWeightText("#e5", 10);
       addWeightText("#e8", 10);
+      createAdjMatrix();
     }
 
     function clearScreen() {
@@ -1130,6 +1242,7 @@ this.showTree = function(){
 
     mainSvg.selectAll(".edgelabel").remove();
     amountVertex = 0;
+    resetEverything();
   }
 
   this.insert = function(vertexText, startAnimationDirectly) {
@@ -1499,5 +1612,207 @@ this.showTree = function(){
     console.log(vertexClassA + " " + vertexClassB);
   }
 
+  function createAdjMatrix() {
+    var vertex_count = amountVertex - deleted_vertex_list.length;
+    adjMatrix = new Array(vertex_count);
+    for (var i = 0; i < vertex_count; i++) {
+      adjMatrix[i] = new Array(vertex_count);
+      for (var j=0; j < vertex_count; j++)
+        adjMatrix[i][j] = 0;
+    }
 
+    var tmp = "#e";
+    for (var i=1; i <= Object.size(edgeList); i++) {
+      var edge_id = tmp + i.toString();
+      var from_vertex_id = edgeList[edge_id][0];
+      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
+      var from_vertex_content = target[0][2].textContent;
+
+      var to_vertex_id = edgeList[edge_id][1];
+      target = mainSvg.selectAll(".v" + to_vertex_id.toString());
+      var to_vertex_content = target[0][2].textContent;            
+      adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = 1;
+    }
+    var xv = 1;
+    drawAdjMatrix();
+  }
+
+  function drawAdjMatrix() {
+    var table = document.getElementById("adj_matrix_table");
+    table.innerHTML = "";
+
+    for (var i=0; i < adjMatrix.length; i++) {
+      var row = table.insertRow(-1);
+      for (var j=0; j < adjMatrix.length; j++) {
+        var cell = row.insertCell(-1);
+        cell.innerHTML = adjMatrix[i][j];
+      }
+    }
+    var row = table.insertRow(0);
+    var c = row.insertCell(-1);
+    c.innerHTML = " ";
+    for (var i=0; i < adjMatrix.length; i++) {
+      var cell = row.insertCell(-1);;
+      cell.innerHTML = i;
+      if (i>0) {
+        cell = table.rows[i].insertCell(0);
+        cell.innerHTML = i-1;
+      }
+    }
+    c = table.rows[adjMatrix.length].insertCell(0);
+    c.innerHTML = adjMatrix.length-1;
+
+    createAdjList();
+    drawAdjList();
+  }
+
+  function createAdjList() {
+    var vertex_count = adjMatrix.length;
+    for (var i = 0; i < vertex_count; i++) {
+      adjList[i] = new Array();
+    }
+
+    for (var i=0; i < adjMatrix.length; i++) 
+      for (j = 0; j < adjMatrix.length; j++) {
+        if (adjMatrix[i][j] != 0) {
+          adjList[i].push(j);
+        }
+      }
+     for (var i=0; i < adjMatrix.length; i++) 
+        if (adjList[i].length == 0) {
+          adjList[i].push(0);
+        }
+      
+  }
+
+  function drawAdjList() {
+    var table = document.getElementById("adj_list_table");
+    table.innerHTML = "";
+
+    for (var i=0; i < adjList.length; i++) {
+      var row = table.insertRow(-1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = i.toString() + ":";
+    }
+
+    for (var i=0; i < adjList.length; i++) {
+      var row = table.rows[i];
+      for (var j=0; j < adjList[i].length; j++) {
+
+        var cell = row.insertCell(-1);
+        cell.innerHTML = adjList[i][j];
+      }
+    }
+    drawEdgeList();
+  }
+
+  function drawEdgeList() {
+    var table = document.getElementById("edge_list_table");
+    table.innerHTML = "";
+
+    for (var i=1; i <= Object.size(edgeList); i++) {
+      var row = table.insertRow(-1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = (i-1).toString() + ":";
+    }
+
+    var tmp = "#e";
+    for (var i=1; i <= Object.size(edgeList); i++) {
+      var edge_id = tmp + i.toString();
+      var from_vertex_id = edgeList[edge_id][0];
+      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
+      var from_vertex_content = target[0][2].textContent;
+
+      var to_vertex_id = edgeList[edge_id][1];
+      var row = table.rows[i-1];
+      var cell = row.insertCell(-1);
+      cell.innerHTML = from_vertex_content;
+      cell = row.insertCell(-1);
+      cell.innerHTML = to_vertex_id;
+    }
+    
+    graphTest();
+  }
+
+  function graphTest() {
+    var adj = [];
+    var N, M, vertices = [];
+
+    N = M = 0; // set vertices and edges to 0
+    for (var i=0;i<adjMatrix.length;++i) {
+      adj[i] = [];
+      var exist = false;
+      for (var j=0;j<adjMatrix[i].length;++j) {
+        if (adjMatrix[i][j]) {
+          adj[i].push(j);
+          M++;
+        }
+        if (adjMatrix[i][j] !== null) {
+          exist = true;
+        }
+      }
+      if (exist) {
+        N++;
+        vertices.push(i);
+      }
+    }
+    function set(c, yesno) {
+      document.getElementById(c).innerHTML = yesno ? ": Yes": ": No";
+    }
+
+    if (N === 0) {
+      set('isTree', true);
+      set('isBipartite', true);
+      set('isComplete', true);
+      //set('euler', true);
+    } else {
+      (function checkTree(v) {
+        var vis = {};
+        for (var i=0;i<vertices.length;++i) {
+          vis[vertices[i]] = false;
+        }
+        function dfs(v, p) {
+          if (vis[v]) return true;
+          vis[v] = true;
+          for (var i=0;i<adj[v].length;++i) {
+            if (adj[v][i] === p) continue;
+            if (dfs(adj[v][i],v)) return true;
+          }
+          return false;
+        }
+        var istree = !dfs(v);
+        for (var i=0;i<vertices.length;++i) {
+          istree = istree && vis[vertices[i]];
+        }
+        set('isTree', istree);
+      })(vertices[0]);
+
+      (function checkBipartite(v) {
+        var vis = {};
+        for (var i=0;i<vertices.length;++i) {
+          vis[vertices[i]] = false;
+        }
+        function dfs(v, p, c) {
+          if (vis[v] !== false) {
+            return vis[v] !== c;
+          }
+          vis[v] = c;
+          for (var i=0;i<adj[v].length;++i) {
+            if (adj[v][i] === p) continue;
+            if (dfs(adj[v][i], v, 1-c)) return true;
+          }
+          return false;
+        }
+        set('isBipartite', !dfs(v, false, 0));      
+      })(vertices[0]);
+
+      var KM;
+      if ($('#directed-cb').is(':checked')) {
+        KM = (N * (N-1));
+      } else {
+        KM = N * (N-1);
+      }
+      set('isComplete', M===KM);
+    }
+  }
 }
