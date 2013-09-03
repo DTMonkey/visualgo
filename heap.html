@@ -64,6 +64,7 @@
     <!--put all the extra action pullouts (input) and error messages here-->
     	<div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
         <div id="buildv1-go" class="execAction" onclick=buildv1()><p>GO</p></div>
+        <div id="buildv1-sample" class="execAction" onclick=buildv1Sample()><p>Sorted sample</p></div>
         <div id="buildv1-err" class="err"></div>
         <div id="buildv2-input"><input type="text" id="arrv2" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
         <div id="buildv2-go" class="execAction" onclick=buildv2()><p>GO</p></div>
@@ -170,6 +171,21 @@
 			if ((mode=="exploration")&&heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
 				$('#current-action').show();
 				$('#current-action p').html("Build heap - O(n log n): "+ $('#arrv1').val());
+				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+				closeBuildv1(); //in heap_actions.js
+				triggerRightPanels();
+				isPlaying = true; //in viz.js
+			}
+		}, 500);
+	}
+	
+	function buildv1Sample() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
+			if ((mode=="exploration")&&heapWidget.buildV1(stringArr.split(","))) {
+				$('#current-action').show();
+				$('#current-action p').html("Build heap - O(n log n): sorted sample");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
 				closeBuildv1(); //in heap_actions.js
 				triggerRightPanels();

@@ -214,11 +214,11 @@ var Heap = function() {
         var currentState = createState(A);
         currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
         currentState["vl"][A[max_id].getSecond()]["state"] = VERTEX_TRAVERSED;
-        currentState["status"] = 'Swap ' + A[i].getFirst() + ' with ' + A[max_id].getFirst();
+        currentState["status"] = A[i].getFirst() + ' and ' + A[max_id].getFirst()+' need to be swapped';
 		if(calledFrom == 'extractmax') {
-			 currentState["lineNo"] = 6;
+			 currentState["lineNo"] = [4,5];
 		} else if(calledFrom == 'buildv2') {
-			currentState["lineNo"] = 3;
+			currentState["lineNo"] = [2,3];
 		} else if(calledFrom == 'heapsort') {
 			currentState["lineNo"] = 2;
 		}
@@ -228,11 +228,11 @@ var Heap = function() {
         A[i] = A[max_id];
         A[max_id] = temp;
         currentState = createState(A);
-        currentState["status"] = A[i].getFirst() + ' and ' + A[max_id].getFirst() + ' has been swapped';
+        currentState["status"] = A[i].getFirst() + ' and ' + A[max_id].getFirst() + ' have been swapped';
 		if(calledFrom == 'extractmax') {
 			 currentState["lineNo"] = 6;
 		} else if(calledFrom == 'buildv2') {
-			currentState["lineNo"] = 3;
+			currentState["lineNo"] = [2,3];
 		} else if(calledFrom == 'heapsort') {
 			currentState["lineNo"] = 2;
 		}
@@ -284,7 +284,11 @@ var Heap = function() {
       // currentState["vl"][A[A.length-1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       delete currentState["vl"][A[1].getSecond()];
       currentState["status"] = 'Replace root with the last leaf';
-	  currentState["lineNo"] = 2;
+	  if(!startAnimationDirectly) { //heapsort
+	  	currentState["lineNo"] = 2;
+	  } else {
+	  	currentState["lineNo"] = [2,3];
+	  }
       stateList.push(currentState); // delete bottom-most right-most leaf (later, also remove its associated edge)
     }
 
@@ -294,7 +298,11 @@ var Heap = function() {
       currentState = createState(A);
       currentState["vl"][A[1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = 'The new root';
-	  currentState["lineNo"] = 2;
+	  if(!startAnimationDirectly) { //heapsort
+	  	currentState["lineNo"] = 2;
+	  } else {
+	  	currentState["lineNo"] = [2,3];
+	  }
       stateList.push(currentState); // highlight the new root
     }
 	
@@ -306,7 +314,11 @@ var Heap = function() {
 
     currentState = createState(A);
     currentState["status"] = 'ExtractMax() has been completed';
-	currentState["lineNo"] = 0;
+	if(!startAnimationDirectly) { //heapsort
+	  	currentState["lineNo"] = 1;
+	  } else {
+	  	currentState["lineNo"] = 0;
+	  }
     stateList.push(currentState);
 
     if (startAnimationDirectly)
@@ -356,6 +368,12 @@ var Heap = function() {
     var initValue = [999999, parseInt(arr[0])];
 
     A = []; // destroy old A, create new one
+	stateList = [];
+	
+	var currentState = createState(A);
+    currentState["status"] = 'Start from an empty heap';
+	currentState["lineNo"] = 1;
+    stateList.push(currentState);
 
     for (i = 0; i < initValue.length; i++){
       A[i] = new ObjectPair(initValue[i], amountVertex);
@@ -363,10 +381,9 @@ var Heap = function() {
     }
     init();
 
-    stateList = [];
-    var currentState = createState(A);
-    currentState["status"] = 'Start by putting ' + arr[0] + ' as the new root';
-	currentState["lineNo"] = 1;
+    currentState = createState(A);
+    currentState["status"] = 'Insert ' + arr[0] + '. It becomes the new root';
+	currentState["lineNo"] = [2,3];
     stateList.push(currentState);
 
     for (i = 1; i < arr.length; i++) // insert one by one
@@ -416,7 +433,7 @@ var Heap = function() {
       currentState = createState(A);
       currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
       currentState["status"] = 'Calling ShiftDown(' + i + ') to fix Max Heap property of subtree rooted at ' + A[i].getFirst() + ', if necessary';
-	  currentState["lineNo"] = 3;
+	  currentState["lineNo"] = [2,3];
       stateList.push(currentState);
 
       this.shiftDown(i, 'buildv2');
@@ -434,8 +451,8 @@ var Heap = function() {
   function populatePseudocode(act) {
     switch (act) {
       case 0: // Insert
-        document.getElementById('code1').innerHTML = 'A[A.length] = new key;';
-        document.getElementById('code2').innerHTML = 'i=A.length-1;';
+        document.getElementById('code1').innerHTML = 'A[A.length] = new key';
+        document.getElementById('code2').innerHTML = 'i=A.length-1';
         document.getElementById('code3').innerHTML = 'while (i>1 and A[parent(i)]&lt;A[i])';
         document.getElementById('code4').innerHTML = '&nbsp&nbspswap A[i] and A[parent(i)]';
         document.getElementById('code5').innerHTML = '';
@@ -443,9 +460,9 @@ var Heap = function() {
         document.getElementById('code7').innerHTML = '';
         break;
       case 1: // ExtractMax
-        document.getElementById('code1').innerHTML = 'take out A[1];'
-        document.getElementById('code2').innerHTML = 'A[1] = A[A.length-1];'
-        document.getElementById('code3').innerHTML = 'i=1 and A.length--;';
+        document.getElementById('code1').innerHTML = 'take out A[1]'
+        document.getElementById('code2').innerHTML = 'A[1] = A[A.length-1]'
+        document.getElementById('code3').innerHTML = 'i=1 and A.length--';
         document.getElementById('code4').innerHTML = 'while (i&lt;A.length)';
         document.getElementById('code5').innerHTML = '&nbsp&nbspif A[i] smaller than any of its children';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbspswap A[i] with that children';

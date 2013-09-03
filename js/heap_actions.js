@@ -12,7 +12,10 @@ function openBuildv1() {
 		}, 250, function() {
 			$('#buildv1-go').animate({
 				width: "+="+34
-			},100);
+			},100, function() {
+				$('#buildv1-sample').animate({
+				width: "+="+95}, 180);
+			});
 		});
 		isBuildv1Open = true;
 	}
@@ -20,12 +23,16 @@ function openBuildv1() {
 function closeBuildv1() {
 	if(isBuildv1Open){
 		$('#buildv1-err').html("");
-		$('#buildv1-go').animate({
-			width: "-="+34
-		}, 100, function() {
-			$('#buildv1-input').animate({
-				width: "-="+200
-			}, 250 );
+		$('#buildv1-sample').animate({
+			width: "-="+95
+		}, 180, function() {
+			$('#buildv1-go').animate({
+				width: "-="+34
+			}, 100, function() {
+				$('#buildv1-input').animate({
+					width: "-="+200
+				}, 250 );
+			});
 		});
 		isBuildv1Open = false;
 	}
