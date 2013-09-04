@@ -147,7 +147,7 @@ var Heap = function() {
 
     currentState = createState(A);
     currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
-    currentState["status"] = 'Insert ' + vertexText + ' as the bottom-most right-most new leaf';
+    currentState["status"] = 'Insert ' + vertexText + ' at the back of compact array A';
 	if(!startAnimationDirectly) { //buildv1
 		currentState["lineNo"] = 3;
 	} else {
@@ -313,10 +313,11 @@ var Heap = function() {
 	}
 
     currentState = createState(A);
-    currentState["status"] = 'ExtractMax() has been completed';
 	if(!startAnimationDirectly) { //heapsort
+		currentState["status"] = 'ExtractMax() has been completed';
 	  	currentState["lineNo"] = 1;
 	  } else {
+		currentState["status"] = 'ExtractMax() has been completed';
 	  	currentState["lineNo"] = 0;
 	  }
     stateList.push(currentState);
@@ -464,8 +465,8 @@ var Heap = function() {
         document.getElementById('code2').innerHTML = 'A[1] = A[A.length-1]'
         document.getElementById('code3').innerHTML = 'i=1 and A.length--';
         document.getElementById('code4').innerHTML = 'while (i&lt;A.length)';
-        document.getElementById('code5').innerHTML = '&nbsp&nbspif A[i] smaller than any of its children';
-        document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbspswap A[i] with that children';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspif A[i] < than the larger of its children';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbspswap A[i] with that child';
         document.getElementById('code7').innerHTML = '';
         break;
       case 2: // HeapSort
