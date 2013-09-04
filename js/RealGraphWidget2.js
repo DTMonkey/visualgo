@@ -214,63 +214,6 @@ var Graph = function() {
      .attr("y", y_text);
   }
 
-  function doclick(cur) {
-    if (isUsed(cur[0],cur[1]) == -1) {
-      coord[amountVertex] = new Array();
-      coord[amountVertex][0] = cur[0];
-      coord[amountVertex][1] = cur[1];
-      A[amountVertex] = new ObjectPair(amountVertex-1, amountVertex);
-      graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);       
-
-      circle = mainSvg.selectAll(".v" + (amountVertex-1).toString());
-      circle.style("cursor", "pointer");
-
-      var text = mainSvg.selectAll("text").selectAll(".v" + (amountVertex-1).toString());
-      text.style("pointer-events", "none");
-
-      console.log("v"+(amountVertex-1).toString());      
-      circle[0] = circle[0].splice(1,1);
-      //console.log(circle[0]);
-      //console.log(circle);
-      circle.on("mouseover", function () { 
-        d3.select(this).style("fill", "blue");
-        console.log(graphWidget.getEdgeList());
-      })
-      .on("mouseout", function () { 
-        d3.select(this).style("fill", "#333333");
-      })
-      .on("mousedown", function() {
-        mousedown_node = d3.mouse(this);              
-      })
-      .on("click", function() {
-              // hold ctrl to delete node
-              if (d3.event.ctrlKey) {
-                //alert("click + ctrl");
-                // TODO: delete node and associated edges
-                console.log(d3.select(this).attr("class"));
-                console.log(d3.selectAll(d3.select(this).attr("class")));
-                mainSvg.selectAll("." + d3.select(this).attr("class")).style("visibility", "hidden");
-                var current_id = d3.select(this).attr("class");
-                var current_id_num = "";
-                for (var i=1; i < current_id.length; i++) {
-                  current_id_num += current_id[i];
-                }
-                current_id_num = parseInt(current_id_num);
-                var tmp_e = "#e";
-                for (var i=1; i <= Object.size(edgeList); i++) {
-                  var tmp_edge_id = tmp_e + i.toString();
-                  console.log(edgeList[tmp_edge_id]);
-                  if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
-                    mainSvg.select(tmp_edge_id).style("visibility", "hidden");
-                  }
-                }                
-                return;
-              }                 
-            });
-  }
-    //}); 
-  }
-
   function getNextVertexId() {
     var circles = mainSvg.selectAll("text");
     var max = 0;
@@ -345,8 +288,10 @@ var Graph = function() {
                     console.log(edgeList[tmp_edge_id]);
                     if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
                       mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                      mainSvg.select("#w_e" + i.toString()).remove();
                     }
-                  }                
+                  }  
+                  createAdjMatrix();              
                   return;
                 }                 
               });
@@ -801,8 +746,10 @@ var Graph = function() {
                   console.log(edgeList[tmp_edge_id]);
                   if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
                     mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                    mainSvg.select("#w_e" + i.toString()).remove();
                   }
-                }                
+                }            
+                createAdjMatrix();    
                 return;
               }      
             });
@@ -857,8 +804,10 @@ circle.on("mouseover", function () {
                   console.log(edgeList[tmp_edge_id]);
                   if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
                     mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                    mainSvg.select("#w_e" + i.toString()).remove();
                   }
-                }                
+                }              
+                createAdjMatrix();  
                 return;
               }      
             });
@@ -1660,6 +1609,7 @@ this.showTree = function(){
     var tmp = "#e";
     for (var i=1; i <= Object.size(edgeList); i++) {
       var edge_id = tmp + i.toString();
+      if (mainSvg.select(edge_id).attr("style").indexOf("hidden") != -1) continue;
       var from_vertex_id = edgeList[edge_id][0];
       var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
       var from_vertex_content = target[0][2].textContent;

@@ -302,124 +302,46 @@
 	$('#play').hide();
 	$("#fb-login").css("display", "block");
 
-	var heapWidget = new Graph();
-	var gw = heapWidget.getGraphWidget();
+	var GraphDTWidget = new Graph();
+	var gw = GraphDTWidget.getGraphWidget();
 		
 	showTree();
 
 	function switchDirectIndirect() {
-		heapWidget.switchDirectIndirect();
+		GraphDTWidget.switchDirectIndirect();
 	}
 
 	function convertDirectIndirectGraph() {
-		heapWidget.convertDirectIndirectGraph();
+		GraphDTWidget.convertDirectIndirectGraph();
 	}
 
 	function showTree() {
-		heapWidget.showTree();
+		GraphDTWidget.showTree();
 	}
 	
 	function showStar() {
-		heapWidget.showStar();
+		GraphDTWidget.showStar();
 	}
 
 	function showK5() {
-		heapWidget.showK5();
+		GraphDTWidget.showK5();
 	}
 
 	function showCP22() {
-		heapWidget.showCP22();
+		GraphDTWidget.showCP22();
 	}
 
 	function showCP42() {
-		heapWidget.showCP42();
+		GraphDTWidget.showCP42();
 	}
 
 	function showCP45() {
-		heapWidget.showCP45();
+		GraphDTWidget.showCP45();
 	}
 
 	function showCP48() {
-		heapWidget.showCP48();
-	}
-	
-	function buildv1() {
-		if (heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
-			$('#current-action').html("");
-			$('#current-action p').html("Build heap version 1: "+ $('#arrv1').val());
-			closeBuildv1(); //in heap_actions.js
-			enableStatusCodetraceOnly(); //in viz.js
-		}
-	}
-	
-	function buildv3() {
-		if (heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
-			$('#current-action').html("");
-			$('#current-action p').html("Build heap version 1: "+ $('#arrv1').val());
-			closeBuildv1(); //in heap_actions.js
-			enableStatusCodetraceOnly(); //in viz.js
-		}
-	}
-	
-	function buildv2() {
-		if (heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
-			$('#current-action').show();
-			$('#current-action p').html("Build heap version 2: "+ $('#arrv2').val());
-			closeBuildv2();
-			enableStatusCodetraceOnly();
-		}
-	}
-		
-	function insert() {
-		if (heapWidget.insert(parseInt(document.getElementById("v").value), true)) {
-			$('#current-action').show();
-			$('#current-action p').html("Insert "+ $('#v').val());
-			closeInsert();
-			enableStatusCodetraceOnly();
-		}
-		document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
-	}
-	
-	function extractmax() {
-		if (heapWidget.extractMax(true)) {
-			$('#current-action').show();
-			$('#current-action p').html("Extract max");
-			$('#extractmax-err').html("");
-			closeBuildv1();
-			closeBuildv2();
-			closeInsert();
-			enableStatusCodetraceOnly();
-		}
-	}
-	
-	function heapsort() {
-		if (heapWidget.heapSort()) {
-			$('#current-action').show();
-			$('#current-action p').html("Heapsort");
-			$('#heapsort-err').html("");
-			closeBuildv1();
-			closeBuildv2();
-			closeInsert();
-			enableStatusCodetraceOnly();
-		}
-	}
-	
-	function pause() {
-		gw.pause();
-		$('#play').show();
-		$('#pause').hide();
-	}
-	
-	function play() {
-		gw.play();
-		$('#pause').show();
-		$('#play').hide();
-	}
-	
-	function stop() {
-		gw.stop();
-		enableActionsOnly();
-	}
+		GraphDTWidget.showCP48();
+	}	
 </script>
 
 </body>
