@@ -43,8 +43,8 @@ var Graph = function() {
    .attr('id', 'end-arrow')
    .attr('viewBox', '0 -5 10 10')
    .attr('refX', 9)
-   .attr('markerWidth', 5)
-   .attr('markerHeight', 4)
+   .attr('markerWidth', 4)
+   .attr('markerHeight', 3)
    .attr('orient', 'auto')
    .append('svg:path')
    .attr('d', 'M0,-5L10,0L0,5')
@@ -220,7 +220,8 @@ var Graph = function() {
     var x =  Object.size(circles[0]);
     for (var i=0; i < Object.size(circles[0]) - 1; i++) {
       var y = circles[0][i].attributes.class;
-      console.log(y.nodeValue.toString());
+//      console.log(y.nodeValue.toString());
+    if (y)
       if ((y.nodeValue.toString()!="edgelabel")) {
         var cur = parseInt(circles[0][i].textContent);
         if (cur > max) max = cur;
@@ -263,7 +264,7 @@ var Graph = function() {
           console.log(graphWidget.getEdgeList());
         })
         .on("mouseout", function () { 
-          d3.select(this).style("fill", "#333333");
+          d3.select(this).style("fill", "#eeeeee");
         })
         .on("mousedown", function() {
           mousedown_node = d3.mouse(this);              
@@ -341,7 +342,7 @@ var Graph = function() {
     if (mousemove_coor == null) {
       mousemove_coor = cur;
       console.log("0");
-      if (dist2P(mousedown_node[0], mousedown_node[1], cur[0],cur[1]) <= 50) { mousemove_coor = null; return;}//do nothing
+      if (dist2P(mousedown_node[0], mousedown_node[1], cur[0],cur[1]) <= 40) { mousemove_coor = null; return;}//do nothing
       else {
         var used = isUsed(cur[0], cur[1]);
         if (used == -1) {
@@ -722,7 +723,7 @@ var Graph = function() {
       circle2[0][2].value = circle2[0][2].value;
     })
     .on("mouseout", function () { 
-      circle.style("fill", "#333333");
+      circle.style("fill", "#eeeeee");
     })
     .on("click", function () {
               // hold ctrl to delete node
@@ -761,7 +762,7 @@ circle.on("mouseover", function () {
   circle2[0][2].value = circle2[0][2].value;
 })
 .on("mouseout", function () { 
-  d3.select(this).style("fill", "#333333");
+  d3.select(this).style("fill", "#eeeeee");
 })
 .on("click", function () {
               // hold ctrl to delete node
