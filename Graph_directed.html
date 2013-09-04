@@ -59,6 +59,7 @@
 					<table id="myTablefake" border="1" width="180px" border-collapse:collapse style="visibility:hidden">
 					</table>
 				</div> 
+    	</div>
     </div>
     <div id="isTree0" style="float:left">Is tree</div>
     <div id="isTree" style="float:left"></div>
@@ -80,7 +81,24 @@
 				</div> 
     </div>
     <div id="isBipartite0" style="float:left">Is bipartite</div>
-    <div id="isBipartite"></div>
+    <div id="isBipartite" style="float:left"></div>
+    <div id="fake" width="20px">
+    	<div > 
+				<div style="float:left" left="100px"> 
+					<table id="myTablefake" border="1" width="200px" border-collapse:collapse style="visibility:hidden">
+					</table>
+				</div> 
+    </div>
+    <div style="float:left">
+    	<input id="direct_checkbox" type="checkbox" value="Submit" style="vertical-align: middle" checked="true" onclick="switchDirectIndirect()" >Directed </input>
+    </div>
+	<div > 
+			<div style="float:left" left="100px"> 
+				<table id="myTablefake" border="1" width="30px" border-collapse:collapse style="visibility:hidden">
+				</table>
+			</div> 
+    </div>
+	<input id="weighted_checkbox" type="checkbox" value="Submit" style="vertical-align: middle" checked="true" onclick="convertDirectIndirectGraph()">Weighted </input>
     <div id="fake" width="100px">
     	<div > 
 				<div style="float:left" left="100px"> 
@@ -92,7 +110,7 @@
     <div id="adj_matrix" > 
     	<div style="float:left; border:1px solid; max-height: 200px; max-width:300px; overflow: auto" left="100px"> 
     		<div style="float:left" > Adjacency matrix </div>
-    		<table id="adj_matrix_table" border="0" width="300px" border-collapse:collapse style="border-top:1px solid">
+    		<table id="adj_matrix_table" border="0" width="300px" border-collapse:collapse style="border-top:1px solid; table-layout:fixed">
     			<tbody class="tb1">
     				<TR>
     					<td height="150px"> Content </td>
@@ -111,9 +129,9 @@
     </div>
 
     <div id="adj_list"> 
-    	<div style="float:left; border:1px solid; max-height: 200px; max-width:300px; overflow: auto"> 
-    		<div style="float:left" > Adjacency matrix </div>
-    		<table id="adj_list_table" border="0" width="300px" border-collapse:collapse style="border-top:1px solid">
+    	<div style="float:left; border:1px solid; max-height: 200px; max-width:250px; overflow-y: scroll; overflow-x:hidden"> 
+    		<div style="float:left" > Adjacency list </div>
+    		<table id="adj_list_table" border="0" width="250px" border-collapse:collapse style="border-top:1px solid; table-layout:fixed; overflow-x: hidden">
     			<tbody class="tb1">
     				<TR>
     					<td height="150px"> Content </td>
@@ -132,9 +150,9 @@
     </div>
 
     <div id="edge_list"> 
-    	<div style="float:left; border:1px solid; max-height: 200px; max-width:300px; overflow: auto"> 
-    		<div style="float:left" > Adjacency matrix </div>
-    		<table id="edge_list_table" border="0" width="300px" border-collapse:collapse style="border-top:1px solid">
+    	<div style="float:left; border:1px solid; max-height: 200px; max-width:200px; overflow: auto"> 
+    		<div style="float:left" > Edge list </div>
+    		<table id="edge_list_table" border="0" width="200px" border-collapse:collapse style="border-top:1px solid; table-layout:fixed; overflow-x: hidden">
     			<tbody class="tb1">
     				<TR>
     					<td height="150px"> Content </td>
@@ -145,7 +163,14 @@
     	</div> 
     </div>
 
-    
+    <div id="fake3" width="2px">
+    	<div > 
+				<div style="float:left" left="1px"> 
+					<table id="myTablefake" border="1" width="1px" border-collapse:collapse style="visibility:hidden">
+					</table>
+				</div> 
+    </div>
+
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
@@ -281,6 +306,15 @@
 	var gw = heapWidget.getGraphWidget();
 		
 	showTree();
+
+	function switchDirectIndirect() {
+		heapWidget.switchDirectIndirect();
+	}
+
+	function convertDirectIndirectGraph() {
+		heapWidget.convertDirectIndirectGraph();
+	}
+
 	function showTree() {
 		heapWidget.showTree();
 	}

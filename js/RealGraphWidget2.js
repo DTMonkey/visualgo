@@ -75,7 +75,7 @@ var Graph = function() {
   }
 
    function addExtraEdge() {
-    addDirectedEdge(1, 2, ++amountEdge, EDGE_TYPE_UDE, 1, true);
+    addDirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
     mainSvg.select("#e" + amountEdge.toString()).style("visibility", "hidden");      
   }
 
@@ -106,13 +106,19 @@ var Graph = function() {
       y_text = (y2 - y1)* 1/1.8 + y1;
       x_text = (y_text - b2) / slope; 
     } else if ((x1 > x2) && (y1 > y2)) {
-      var b2 = b1 - 10 + slope*15;
-      y_text = (y1 - y2)* 1/8 + y2;
+      var b2 = b1 + 4 + slope*17;
+      y_text = (y1 - y2)* 9/10 + y2;
       x_text = (y_text - b2) / slope; 
+      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+      y_text = 2*y_mid - y_text;
+      x_text = 2*x_mid - x_text;
     } else if ((x1 < x2) && (y1 > y2)) {
-      var b2 = b1 + 15 + slope*17;
-      y_text = (y2 - y1)* 1/2.5 + y1;
-      x_text = (y_text - b2) / slope; 
+      var b2 = b1 - 4 + slope*17;
+      y_text0 = (y1 - y2)* 1/1.8 + y2;
+      x_text0 = (y_text0 - b2) / slope; 
+      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+      y_text = 2*y_mid - y_text0;
+      x_text = 2*x_mid - x_text0;
     } else if (x1 == x2) {
       if (y1 > y2) {
         x_text = x1 + 10;
@@ -172,13 +178,19 @@ var Graph = function() {
       y_text = (y2 - y1)* 1/1.8 + y1;
       x_text = (y_text - b2) / slope; 
     } else if ((x1 > x2) && (y1 > y2)) {
-      var b2 = b1 - 10 + slope*15;
-      y_text = (y1 - y2)* 1/8 + y2;
+      var b2 = b1 + 4 + slope*17;
+      y_text = (y1 - y2)* 9/10 + y2;
       x_text = (y_text - b2) / slope; 
+      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+      y_text = 2*y_mid - y_text;
+      x_text = 2*x_mid - x_text;
     } else if ((x1 < x2) && (y1 > y2)) {
-      var b2 = b1 + 15 + slope*17;
-      y_text = (y2 - y1)* 1/2.5 + y1;
-      x_text = (y_text - b2) / slope; 
+      var b2 = b1 - 4 + slope*17;
+      y_text0 = (y1 - y2)* 1/1.8 + y2;
+      x_text0 = (y_text0 - b2) / slope; 
+      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+      y_text = 2*y_mid - y_text0;
+      x_text = 2*x_mid - x_text0;
     } else if (x1 == x2) {
       if (y1 > y2) {
         x_text = x1 + 10;
@@ -564,6 +576,13 @@ var Graph = function() {
     var used = amountVertex-1;
     var cur_circle = mainSvg.selectAll(".v" + used.toString());
     addExtraEdge();
+    if (document.getElementById("weighted_checkbox").checked) {
+      var w = window.prompt("Please enter edge weight:");
+      while (w>=100) {
+        w = window.prompt("Please enter edge weight from [-9;99] again:");
+      }
+      addWeightText("#e" + (amountEdge-1).toString(), w);
+    }
     /*
     addDirectedEdge(parseInt(prev_circle1[0][2].textContent)+1,
       parseInt(cur_circle[0][2].textContent)+1,
@@ -884,15 +903,28 @@ this.showTree = function(){
 
       var edgeId = 0;
     //addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
+    if (document.getElementById("direct_checkbox").checked) {
+      addDirectedEdge(2, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(3, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(5, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
+    } else {
+      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
+    }
+
     amountEdge = edgeId;
     addExtraEdge();
     addWeightText("#e3", 99);
@@ -1604,12 +1636,16 @@ this.showTree = function(){
 
   function addDirectedEdge(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show) {
     graphWidget.addEdge(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show);
-    console.log(edgeIdNumber);
     var edgeId = "#e" + edgeIdNumber.toString();
     mainSvg.select(edgeId).style('marker-end', 'url(#end-arrow)');
-
+    //mainSvg.select(edgeId).style('marker-end', '');
     edgeList[edgeId.toString()] = [vertexClassA, vertexClassB];
-    console.log(vertexClassA + " " + vertexClassB);
+  }
+
+  function addIndirectedEdge(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show) {
+    graphWidget.addEdge(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show);
+    var edgeId = "#e" + edgeIdNumber.toString();
+    edgeList[edgeId.toString()] = [vertexClassA, vertexClassB];
   }
 
   function createAdjMatrix() {
@@ -1629,9 +1665,21 @@ this.showTree = function(){
       var from_vertex_content = target[0][2].textContent;
 
       var to_vertex_id = edgeList[edge_id][1];
+      if (from_vertex_id == to_vertex_id) continue;
+
       target = mainSvg.selectAll(".v" + to_vertex_id.toString());
-      var to_vertex_content = target[0][2].textContent;            
-      adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = 1;
+      var to_vertex_content = target[0][2].textContent;       
+
+      if (document.getElementById("weighted_checkbox").checked) {
+        var weight = document.getElementById("w_e"+ i.toString());
+        adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = (weight == null) ? 1 : weight.textContent;
+        if (!document.getElementById("direct_checkbox").checked) 
+          adjMatrix[parseInt(to_vertex_content)][parseInt(from_vertex_content)] = (weight == null) ? 1 : weight.textContent;       
+      } else {
+        adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = 1;        
+        if (!document.getElementById("direct_checkbox").checked) 
+          adjMatrix[parseInt(to_vertex_content)][parseInt(from_vertex_content)] = 1;           
+      }
     }
     var xv = 1;
     drawAdjMatrix();
@@ -1663,7 +1711,9 @@ this.showTree = function(){
     c.innerHTML = adjMatrix.length-1;
 
     createAdjList();
-    drawAdjList();
+    if (document.getElementById("weighted_checkbox").checked) {
+      drawAdjList_directed();
+    } else drawAdjList();
   }
 
   function createAdjList() {
@@ -1675,14 +1725,11 @@ this.showTree = function(){
     for (var i=0; i < adjMatrix.length; i++) 
       for (j = 0; j < adjMatrix.length; j++) {
         if (adjMatrix[i][j] != 0) {
+          if (document.getElementById("weighted_checkbox").checked)
+            adjList[i].push(adjMatrix[i][j]);
           adjList[i].push(j);
         }
       }
-     for (var i=0; i < adjMatrix.length; i++) 
-        if (adjList[i].length == 0) {
-          adjList[i].push(0);
-        }
-      
   }
 
   function drawAdjList() {
@@ -1698,12 +1745,31 @@ this.showTree = function(){
     for (var i=0; i < adjList.length; i++) {
       var row = table.rows[i];
       for (var j=0; j < adjList[i].length; j++) {
-
         var cell = row.insertCell(-1);
         cell.innerHTML = adjList[i][j];
       }
     }
     drawEdgeList();
+  }
+
+  function drawAdjList_directed() {
+    var table = document.getElementById("adj_list_table");
+    table.innerHTML = "";
+
+    for (var i=0; i < adjList.length; i++) {
+      var row = table.insertRow(-1);
+      var cell = row.insertCell(-1);
+      cell.innerHTML = i.toString() + ":";
+    }
+
+    for (var i=0; i < adjList.length; i++) {
+      var row = table.rows[i];
+      for (var j=0; j < adjList[i].length; j+=2) {
+        var cell = row.insertCell(-1);
+        cell.innerHTML = "(" + adjList[i][j] + "," + adjList[i][j+1] + ")";
+      }
+    }
+    drawEdgeList_directed();
   }
 
   function drawEdgeList() {
@@ -1731,6 +1797,37 @@ this.showTree = function(){
       cell.innerHTML = to_vertex_id;
     }
     
+    graphTest();
+  }
+
+  function drawEdgeList_directed() {
+    var table = document.getElementById("edge_list_table");
+    table.innerHTML = "";
+
+     for (var i=0; i <=  Object.size(edgeList); i++) {
+      var row = table.insertRow(-1);
+      var cell = row.insertCell(0);
+      cell.innerHTML = (i).toString() + ":";
+    }
+
+    var tmp = "#e", count = 0;
+    for (var i=1; i <= Object.size(edgeList); i++) {
+      var edge_id = tmp + i.toString();
+      var from_vertex_id = edgeList[edge_id][0];
+      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
+      var from_vertex_content = target[0][2].textContent;
+      var to_vertex_id = edgeList[edge_id][1];
+      if (from_vertex_content == to_vertex_id-1) continue;
+      count++;
+      var row = table.rows[i-1];
+      var cell = row.insertCell(-1);
+      cell.innerHTML = adjMatrix[from_vertex_content][to_vertex_id-1];
+      cell = row.insertCell(-1);
+      cell.innerHTML = from_vertex_content;
+      cell = row.insertCell(-1);
+      cell.innerHTML = to_vertex_id-1;
+    }
+   
     graphTest();
   }
 
@@ -1815,4 +1912,86 @@ this.showTree = function(){
       set('isComplete', M===KM);
     }
   }
+
+  this.switchDirectIndirect = function () {
+    //showTree();
+    convertDirectIndirectGraph();
+    //alert(document.getElementById("direct_checkbox").checked);
+  }
+
+  function convertDirectIndirectGraph() {
+    if (!document.getElementById("direct_checkbox").checked) {
+      // convert from direct to indirect
+      // 1. remove marker
+      for (var i=1; i <= Object.size(edgeList); i++) {
+        var edgeId = "#e" + i.toString();
+        mainSvg.select(edgeId).style('marker-end', '');
+        // 2. remove/hide weight
+        /*
+        var weight = document.getElementById("w_e" + i.toString());
+        if (weight) {
+          weight.style.visibility = "hidden";
+        }*/
+      }
+      // 3. update tables
+      createAdjMatrix();
+    } else {
+      // convert from indirect to direct
+      // 1. add marker
+      for (var i=1; i <= Object.size(edgeList); i++) {
+        var edgeId = "#e" + i.toString();
+        mainSvg.select(edgeId).style('marker-end', 'url(#end-arrow)');
+        // 2. add/show weight
+        /*
+        var weight = document.getElementById("w_e" + i.toString());
+        if (weight) {
+          weight.style.visibility = "visible";
+        }
+        */
+      }
+      // 3. update tables
+      createAdjMatrix();
+    }
+
+  }
+
+  this.convertDirectIndirectGraph = function() {
+    if (!document.getElementById("weighted_checkbox").checked) {
+      // convert from weight to unweight
+      // 1. remove marker
+      for (var i=1; i <= Object.size(edgeList); i++) {
+       
+        // 2. remove/hide weight
+        
+        var weight = document.getElementById("w_e" + i.toString());
+        if (weight) {
+          weight.style.visibility = "hidden";
+        }
+      }
+      // 3. update tables
+      createAdjMatrix();
+    } else {
+      // convert from indirect to direct
+      for (var i=1; i <= Object.size(edgeList); i++) {
+          // 2. add/show weight
+        
+        var weight = document.getElementById("w_e" + i.toString());
+        if (weight) {
+          weight.style.visibility = "visible";
+        } else {
+          // add random weight
+          var edgeId = "#e" + i.toString();
+          var w = dist2P(
+            coord[edgeList[edgeId][0]][0], 
+            coord[edgeList[edgeId][0]][1],
+            coord[edgeList[edgeId][1]][0],
+            coord[edgeList[edgeId][1]][1])
+          addWeightText(edgeId, parseInt(w));
+        }
+      }
+      // 3. update tables
+      createAdjMatrix();
+    }
+  }
+
 }
