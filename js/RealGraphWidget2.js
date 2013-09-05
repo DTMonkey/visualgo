@@ -247,6 +247,54 @@ var Graph = function() {
       A[amountVertex] = new ObjectPair(new_vertex_id -1, amountVertex);
       graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);       
 
+      var text = mainSvg.selectAll("text").selectAll(".v" + (new_vertex_id).toString());
+  text = mainSvg.selectAll(".v" + ((new_vertex_id)).toString());
+
+  text[0] = text[0].splice(2,1);
+    //text.style("pointer-events", "none");
+    text.on("mouseover", function () { 
+      //circle.style("fill", "blue");
+      var cc = d3.mouse(this);
+      var ii = isUsed(cc[0], cc[1]);
+      var circle2 = mainSvg.selectAll(".v" + ii.toString());
+      circle2[0][2].value = circle2[0][2].value;
+      circle2[0] = circle2[0].splice(1,1);
+      circle2.style("fill", "blue");
+      
+    })
+    .on("mouseout", function () { 
+      //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
+      circle.style("fill", "#eeeeee");
+    })
+    .on("click", function () {
+              // hold ctrl to delete node
+              if (d3.event.ctrlKey) {
+                //alert("click + ctrl");
+                // TODO: delete node and associated edges
+                console.log(d3.select(this).attr("class"));
+                console.log(d3.selectAll(d3.select(this).attr("class")));
+                mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
+                var current_id = d3.select(this).attr("class");
+                var current_id_num = "";
+                for (var i=1; i < current_id.length; i++) {
+                  current_id_num += current_id[i];
+                }
+                current_id_num = parseInt(current_id_num);
+                coord[current_id_num][0] = -1;
+                coord[current_id_num][1] = -1;
+                var tmp_e = "#e";
+                for (var i=1; i <= Object.size(edgeList); i++) {
+                  var tmp_edge_id = tmp_e + i.toString();
+                  console.log(edgeList[tmp_edge_id]);
+                  if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
+                    mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                    mainSvg.select("#w_e" + i.toString()).remove();
+                  }
+                }            
+                createAdjMatrix();    
+                return;
+              }      
+            });
       circle = mainSvg.selectAll(".v" + (amountVertex-1).toString());
       circle.style("cursor", "pointer");
       console.log(circle[0][2].textContent);
@@ -261,7 +309,7 @@ var Graph = function() {
         //console.log(circle);
         circle.on("mouseover", function () { 
           d3.select(this).style("fill", "blue");
-          console.log(graphWidget.getEdgeList());
+          //console.log(graphWidget.getEdgeList());
         })
         .on("mouseout", function () { 
           d3.select(this).style("fill", "#eeeeee");
@@ -276,7 +324,7 @@ var Graph = function() {
                   // TODO: delete node and associated edges
                   console.log(d3.select(this).attr("class"));
                   console.log(d3.selectAll(d3.select(this).attr("class")));
-                  mainSvg.selectAll("." + d3.select(this).attr("class")).style("visibility", "hidden");
+                  mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
                   var current_id = d3.select(this).attr("class");
                   var current_id_num = "";
                   for (var i=1; i < current_id.length; i++) {
@@ -501,6 +549,14 @@ var Graph = function() {
       used_alt = -1;
       return;
     }
+    if (!move1) {
+      // move1 == false, new vertex is created
+      var iu = isUsed(cur[0], cur[1]);
+      var b = mainSvg.selectAll(".v" + iu.toString());
+      b[0] = b[0].splice(2,1);
+      b.attr("y", coord[iu][1] + 3);
+    }
+
     var used = amountVertex-1;
     var cur_circle = mainSvg.selectAll(".v" + used.toString());
     //addDirectedEdge(parseInt(prev_circle1[0][2].textContent)+1,
@@ -584,16 +640,21 @@ var Graph = function() {
   function moveCircle(x, y, class_id) {
     mainSvg.selectAll(".v" + class_id)
     .attr("cx", x)
-    .attr("cy", y)
-    .attr("x", x)
-    .attr("y", y+3);
-
+    .attr("cy", y);
+    
+    
+    var b = mainSvg.selectAll(".v" + class_id);
+    b[0] = b[0].splice(2,1);
+    b.attr("y", y + 3);
+    b.attr("x", x);
+  
     for (var i=1; i <= Object.size(edgeList); i++) {
       var e = edgeList["#e" + i.toString()];
       if (typeof(e) == "undefined") continue;
       if (e[0] == class_id || e[1] == class_id)
         moveWeightedText(i);
-    }
+
+    } 
     
   }
 
@@ -732,7 +793,7 @@ var Graph = function() {
                 // TODO: delete node and associated edges
                 console.log(d3.select(this).attr("class"));
                 console.log(d3.selectAll(d3.select(this).attr("class")));
-                //mainSvg.selectAll("." + d3.select(this).attr("class")).style("visibility", "hidden");
+                mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
                 var current_id = d3.select(this).attr("class");
                 var current_id_num = "";
                 for (var i=1; i < current_id.length; i++) {
@@ -854,24 +915,24 @@ this.showTree = function(){
       var edgeId = 0;
     //addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
     if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(2, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(3, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(1, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(5, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
     } else {
       addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(8, 1, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(1, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(9, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
+      addIndirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true);
       addIndirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
     }
 
@@ -1599,11 +1660,11 @@ this.showTree = function(){
   }
 
   function createAdjMatrix() {
-    var vertex_count = amountVertex - deleted_vertex_list.length;
+    var vertex_count = amountVertex - deleted_vertex_list.length - 1;
     adjMatrix = new Array(vertex_count);
-    for (var i = 0; i < vertex_count; i++) {
-      adjMatrix[i] = new Array(vertex_count);
-      for (var j=0; j < vertex_count; j++)
+    for (var i = 0; i < amountVertex; i++) {
+      adjMatrix[i] = new Array(amountVertex);
+      for (var j=0; j < amountVertex; j++)
         adjMatrix[i][j] = 0;
     }
 
@@ -1766,6 +1827,7 @@ this.showTree = function(){
       var edge_id = tmp + i.toString();
       var from_vertex_id = edgeList[edge_id][0];
       var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
+      if (typeof(target[0][2]) == "undefined") continue;
       var from_vertex_content = target[0][2].textContent;
       var to_vertex_id = edgeList[edge_id][1];
       if (from_vertex_content == to_vertex_id-1) continue;
