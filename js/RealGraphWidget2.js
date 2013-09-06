@@ -75,7 +75,9 @@ var Graph = function() {
   }
 
    function addExtraEdge() {
-    addDirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
+    if (document.getElementById("direct_checkbox").checked)
+      addDirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
+    else addIndirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
     mainSvg.select("#e" + amountEdge.toString()).style("visibility", "hidden");      
   }
 
@@ -425,6 +427,7 @@ var Graph = function() {
       }
     } else {
       // press shift key to straighten line
+      /*
       if (d3.event.shiftKey) {
         var used = isUsed(cur[0], cur[1]);
         var straight_coor = getStraightLineCoordinate(mousedown_node[0], mousedown_node[1], cur[0], cur[1]);
@@ -443,7 +446,7 @@ var Graph = function() {
 
         return;
       }
-
+      */
       // press alt to move current circle and assoc edge
       var current_coor_is_used = isUsed(cur[0], cur[1]);
       if (d3.event.altKey) {
@@ -496,7 +499,18 @@ var Graph = function() {
           var x = 0;
         }
         return;
+      } 
+      if (current_coor_is_used == is_used) {
+        /*
+        if (!move1) {
+          mainSvg.selectAll(".v" + (amountVertex-1).toString()).remove();
+          mainSvg.selectAll("#e" + amountEdge.toString()).attr("style" ,"visibility:hidden");
+          move1 = true;
+        }
+        */
+        return;
       }
+
 
       if (move1) {
         doclick2(cur);  
