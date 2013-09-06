@@ -251,20 +251,23 @@ var Graph = function() {
   text = mainSvg.selectAll(".v" + ((new_vertex_id)).toString());
 
   text[0] = text[0].splice(2,1);
+  var ii = isUsed(cur[0], cur[1]);
     //text.style("pointer-events", "none");
     text.on("mouseover", function () { 
       //circle.style("fill", "blue");
       var cc = d3.mouse(this);
-      var ii = isUsed(cc[0], cc[1]);
+      
       var circle2 = mainSvg.selectAll(".v" + ii.toString());
       circle2[0][2].value = circle2[0][2].value;
-      circle2[0] = circle2[0].splice(1,1);
+      circle2[0] = circle2[0].splice(0,2);
       circle2.style("fill", "blue");
       
     })
     .on("mouseout", function () { 
       //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
-      circle.style("fill", "#eeeeee");
+      var circle2 = mainSvg.selectAll(".v" + ii.toString());
+      circle2[0] = circle2[0].splice(0,2);
+      circle2.style("fill", "#eeeeee");
     })
     .on("click", function () {
               // hold ctrl to delete node
@@ -304,15 +307,21 @@ var Graph = function() {
         text.style("pointer-events", "none");
 
         console.log("v"+(amountVertex-1).toString());      
-        circle[0] = circle[0].splice(1,1);
+        circle[0] = circle[0].splice(0,2);
         //console.log(circle[0]);
         //console.log(circle);
         circle.on("mouseover", function () { 
-          d3.select(this).style("fill", "blue");
-          //console.log(graphWidget.getEdgeList());
+          var cc = d3.mouse(this);
+      
+          var circle2 = mainSvg.selectAll(".v" + ii.toString());
+          circle2[0][2].value = circle2[0][2].value;
+          circle2[0] = circle2[0].splice(0,2);
+          circle2.style("fill", "blue");
         })
         .on("mouseout", function () { 
-          d3.select(this).style("fill", "#eeeeee");
+          var circle2 = mainSvg.selectAll(".v" + ii.toString());
+          circle2[0] = circle2[0].splice(0,2);
+          circle2.style("fill", "#eeeeee");
         })
         .on("mousedown", function() {
           mousedown_node = d3.mouse(this);              
@@ -583,7 +592,13 @@ var Graph = function() {
       while (w>=100) {
         w = window.prompt("Please enter edge weight from [-9;99] again:");
       }
-      addWeightText("#e" + (amountEdge-1).toString(), w);
+      if (w)
+        addWeightText("#e" + (amountEdge-1).toString(), w);
+      else {
+        addWeightText("#e" + (amountEdge-1).toString(), 1);
+        //document.getElementById("#e" +(amountEdge-1).toString()).
+        //mainSvg.selectAll("#e" + (amountEdge-1).toString()).style("visibility", "hidden");
+      }
     }
     /*
     addDirectedEdge(parseInt(prev_circle1[0][2].textContent)+1,
@@ -777,14 +792,21 @@ var Graph = function() {
   text = mainSvg.selectAll(".v" + (class_id).toString());
 
   text[0] = text[0].splice(2,1);
+  var ii = isUsed(x, y);
     //text.style("pointer-events", "none");
     text.on("mouseover", function () { 
-      circle.style("fill", "blue");
-      var circle2 = mainSvg.selectAll(".v" + (class_id).toString());
+      var cc = d3.mouse(this);      
+      var circle2 = mainSvg.selectAll(".v" + ii.toString());
       circle2[0][2].value = circle2[0][2].value;
+      circle2[0] = circle2[0].splice(0,2);
+      circle2.style("fill", "blue");
+      
     })
     .on("mouseout", function () { 
-      circle.style("fill", "#eeeeee");
+      //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
+      var circle2 = mainSvg.selectAll(".v" + ii.toString());
+      circle2[0] = circle2[0].splice(0,2);
+      circle2.style("fill", "#eeeeee");
     })
     .on("click", function () {
               // hold ctrl to delete node
@@ -818,13 +840,19 @@ var Graph = function() {
 
 circle[0] = circle[0].splice(1,1);
 circle.on("mouseover", function () { 
-  d3.select(this).style("fill", "blue");
-  var circle2 = mainSvg.selectAll(".v" + (class_id).toString());
-  circle2[0][2].value = circle2[0][2].value;
+ var cc = d3.mouse(this);      
+ var circle2 = mainSvg.selectAll(".v" + ii.toString());
+ circle2[0][2].value = circle2[0][2].value;
+ circle2[0] = circle2[0].splice(0,2);
+ circle2.style("fill", "blue");
+
 })
 .on("mouseout", function () { 
-  d3.select(this).style("fill", "#eeeeee");
-})
+      //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
+      var circle2 = mainSvg.selectAll(".v" + ii.toString());
+      circle2[0] = circle2[0].splice(0,2);
+      circle2.style("fill", "#eeeeee");
+    })
 .on("click", function () {
               // hold ctrl to delete node
               if (d3.event.ctrlKey) {
@@ -1844,15 +1872,23 @@ this.showTree = function(){
     graphTest();
   }
 
+  function isShowOnGraph(vertex_id) {
+    var a = mainSvg.selectAll(".v" + (vertex_id + 1).toString());
+    if (a[0].length) return true;
+    return false;
+  }
+
   function graphTest() {
     var adj = [];
     var N, M, vertices = [];
 
     N = M = 0; // set vertices and edges to 0
     for (var i=0;i<adjMatrix.length;++i) {
+      if (!isShowOnGraph(i)) continue;
       adj[i] = [];
       var exist = false;
       for (var j=0;j<adjMatrix[i].length;++j) {
+        if (!isShowOnGraph(j)) continue;
         if (adjMatrix[i][j]) {
           adj[i].push(j);
           M++;

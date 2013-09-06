@@ -13,7 +13,7 @@ var PSEUDOCODE_SVG_HEIGHT = 400;
 var graphVertexProperties = {
   "innerCircle":{
     "default":{
-      "fill": "#333",
+      "fill": "#eee",
       "r": 12,
       "stroke": "#fff",
       "stroke-width": 0
@@ -53,8 +53,8 @@ var graphVertexProperties = {
   },
   "text":{
     "default":{
-      "fill": "#f00",
-      "font-family": "sans-serif",
+      "fill": "#333",
+      "font-family": "'PT Sans', sans-serif",
       "font-size": 12,
       "text-anchor": "middle"
     },
@@ -80,7 +80,7 @@ var graphVertexProperties = {
 var graphEdgeProperties = {
   "default":{
     "stroke": "#333",
-    "stroke-width": 2
+    "stroke-width": 3
   },
   "highlighted":{
     "stroke": "#f00",
