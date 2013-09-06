@@ -355,6 +355,7 @@ var Graph = function() {
               });
   }
     //}); 
+    return new_vertex_id;
   }
 
 
@@ -425,7 +426,14 @@ var Graph = function() {
     } else {
       // press shift key to straighten line
       if (d3.event.shiftKey) {
+        var used = isUsed(cur[0], cur[1]);
         var straight_coor = getStraightLineCoordinate(mousedown_node[0], mousedown_node[1], cur[0], cur[1]);
+        if (move1 && used==-1) {
+          doclick2(cur);  
+          move1 = false;
+          return;
+        }
+
         moveCircle(straight_coor[0], straight_coor[1], (amountVertex-1).toString());
         var prev_circle1 = mainSvg.selectAll(".v" + (is_used).toString());
         var lineCommand = edgeGenerator(calculateEdge(parseInt(prev_circle1.attr("cx")), parseInt(prev_circle1.attr("cy")), straight_coor[0], straight_coor[1]));
