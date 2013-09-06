@@ -37,6 +37,10 @@ var UFDS = function() {
   this.getGraphWidget = function() { return graphWidget; }
 
 	this.sampleArray = function(ver) {
+		if (ver < 0 || ver > 5) {
+			$('#sample-err').html('The valid range for ver is [0..5]');
+			return false;
+		}
 		clearScreen();
 		p = new Array();
 		switch (ver) {
@@ -67,6 +71,7 @@ var UFDS = function() {
 		}
 		layoutUFDS();
 		initUFDS();
+		return true;
 	}
   
 	this.initArray = function(N) {
@@ -237,12 +242,12 @@ var UFDS = function() {
     var i = parseInt(vtxI), j = parseInt(vtxJ), currentState;
 
     if (i < 0 || i >= p.length) {
-      $('#find-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
+      $('#isSameSet-err').html('Sorry, the valid value for i is [0..' + (p.length-1) + ']');
       return false;
     }
     
     if (j < 0 || j >= p.length) {
-      $('#find-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
+      $('#isSameSet-err').html('Sorry, the valid value for j is [0..' + (p.length-1) + ']');
       return false;
     }
 
@@ -257,9 +262,9 @@ var UFDS = function() {
 	
 	currentState = createState(p);
 	if (x != y)
-		currentState["status"] = i + ' and ' + j + ' belongs to different set';
+		currentState["status"] = i + ' and ' + j + ' belong to different sets';
 	else
-		currentState["status"] = i + ' and ' + j + ' belongs to the same set';
+		currentState["status"] = i + ' and ' + j + ' belong to the same set';
 	currentState["lineNo"] = 3;
     stateList.push(currentState);
 

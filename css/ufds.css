@@ -1,68 +1,19 @@
 @charset "utf-8";
 
-#actions { height: 91px; width: 120px; }
+#actions { height: 145px; width: 120px; }
 	#actions-hide {
-		padding: 37px 15px 38px 14px;
+		padding: 64px 15px 65px 14px;
 	}
+	
+#viz {
+	padding-top: 60px;
+}
 
 /*all action pullout (input) stuff here*/
 
-#find-input {
-	position: fixed;
-	bottom: 119px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
-	#find-input input {
-		background: black;
-		color: white;
-		padding: 8px;
-	}
-	#find-go {
-		position: fixed;
-		bottom: 119px;
-		left: 198px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#find-go p {
-			padding: 8px 8px 7px;
-		}
-	
-#union-input {
-	position: fixed;
-	bottom: 92px;
-	left: 166px;
-	background: #777;
-	width: 0px;
-	overflow: hidden;
-}
-	#union-input input {
-		background: black;
-		color: white;
-		padding: 6px 8px 5px;
-		width: 16px;
-	}
-	#union-go {
-		position: fixed;
-		bottom: 92px;
-		left: 231px;
-		width: 0px;
-		background: #777;
-		color: white;
-		overflow: hidden;
-	}
-		#union-go p {
-			padding: 5px 8px;
-		}
-	
 #init-input {
 	position: fixed;
-	bottom: 60px;
+	bottom: 173px;
 	left: 166px;
 	background: #777;
 	width: 0px;
@@ -75,7 +26,7 @@
 	}
 	#init-go {
 		position: fixed;
-		bottom: 60px;
+		bottom: 173px;
 		left: 198px;
 		width: 0px;
 		background: #777;
@@ -85,24 +36,140 @@
 		#init-go p {
 			padding: 8px 8px 7px;
 		}
+
+#sample-input {
+	position: fixed;
+	bottom: 146px;
+	left: 166px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#sample-input input {
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#sample-go {
+		position: fixed;
+		bottom: 146px;
+		left: 198px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#sample-go p {
+			padding: 5px 8px;
+		}
+
+#find-input {
+	position: fixed;
+	bottom: 119px;
+	left: 166px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#find-input input {
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#find-go {
+		position: fixed;
+		bottom: 119px;
+		left: 198px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#find-go p {
+			padding: 5px 8px;
+		}
+	
+#isSameSet-input {
+	position: fixed;
+	bottom: 92px;
+	left: 166px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#isSameSet-input input {
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+		width: 16px;
+	}
+	#isSameSet-go {
+		position: fixed;
+		bottom: 92px;
+		left: 231px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#isSameSet-go p {
+			padding: 5px 8px;
+		}
+	
+#union-input {
+	position: fixed;
+	bottom: 60px;
+	left: 166px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#union-input input {
+		background: black;
+		color: white;
+		padding: 8px;
+		width: 16px;
+	}
+	#union-go {
+		position: fixed;
+		bottom: 60px;
+		left: 231px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#union-go p {
+			padding: 8px 8px 7px;
+		}
 		
 /*all action pullout (error) stuff here*/
 .err {
 	position: fixed;
 	color: red;
 }
-#find-err {
-	bottom: 119px;
+#init-err {
+	bottom: 173px;
 	left: 242px;
 	padding: 8px 0px 7px;
 }
-#union-err {
+#sample-err {
+	bottom: 146px;
+	left: 242px;
+	padding: 5px 0px;
+}
+#find-err {
+	bottom: 119px;
+	left: 242px;
+	padding: 5px 0px;
+}
+#isSameSet-err {
 	bottom: 92px;
 	left: 276px;
 	padding: 5px 0px;
 }
-#init-err {
+#union-err {
 	bottom: 60px;
-	left: 242px;
+	left: 276px;
 	padding: 8px 0px 7px;
 }
