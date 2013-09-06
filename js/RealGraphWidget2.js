@@ -610,6 +610,7 @@ var Graph = function() {
     var cur_circle = mainSvg.selectAll(".v" + used.toString());
     addExtraEdge();
     if (document.getElementById("weighted_checkbox").checked) {
+      /*
       var w = window.prompt("Please enter edge weight:");
       while (w>=100) {
         w = window.prompt("Please enter edge weight from [-9;99] again:");
@@ -621,6 +622,16 @@ var Graph = function() {
         //document.getElementById("#e" +(amountEdge-1).toString()).
         //mainSvg.selectAll("#e" + (amountEdge-1).toString()).style("visibility", "hidden");
       }
+      */
+      var edgeId = "#e" + (amountEdge-1).toString();
+      var w = dist2P(
+            coord[edgeList[edgeId][0]][0], 
+            coord[edgeList[edgeId][0]][1],
+            coord[edgeList[edgeId][1]][0],
+            coord[edgeList[edgeId][1]][1]);
+          if (w > 100) w-=100*(parseInt(w/100));
+          addWeightText(edgeId, parseInt(w));
+
     }
     /*
     addDirectedEdge(parseInt(prev_circle1[0][2].textContent)+1,
