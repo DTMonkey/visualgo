@@ -380,7 +380,7 @@ var GraphWidget = function(){
       }
 
       currentEdge.hideWeight();
-      if(!OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+      if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
         currentEdge.showWeight();
       }
 
