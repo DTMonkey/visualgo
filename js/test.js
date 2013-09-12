@@ -1,3 +1,5 @@
+var studentid = "rose";
+
 var easyQnTotal = 10;
 var easyQnChoose = easyQnTotal/2;
 var medQnTotal = 6;
@@ -66,11 +68,16 @@ function showQn(q) {
 	localQnNo = questionList.indexOf(q)+1;
 	
 	/*------question input, for now only: to change when using graph input------*/
-	$('#answer').val(answerList[currentQn]);
+	var currentQnAns = answerList[currentQn];
+	if(currentQnAns == -100) {
+		$('#answer').val("");
+	} else {
+		$('#answer').val(answerList[currentQn]);
+	}
 	
 	/*------question text------*/
 	$.ajax({
-		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid=rose&mode=1&id="+q
+		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=1&id="+q
 	}).done(function(data) {
 		qnText = data;
 	});
@@ -94,7 +101,7 @@ function showQn(q) {
 	
 	/*------question graph------*/
 	$.ajax({
-		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid=rose&mode=2&id="+q
+		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=2&id="+q
 	}).done(function(data) {
 		jsondata = jQuery.parseJSON(data);  
 		gw.updateGraph(jsondata, 100);  
@@ -133,7 +140,7 @@ function changeQnBgColour(colour) {
 
 function checkAns() {
 	var ansStr = answerList.join('&ans[]=');
-	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid=rose&mode=3&ans[]="+ansStr;
+	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=3&ans[]="+ansStr;
 	console.log(queryStr);
 	$.ajax({
 		url: queryStr
