@@ -278,9 +278,11 @@ var Graph = function() {
 
   // create new node on graph
   function doclick2(cur) {
+    var is_deleted = 0;
     if (isUsed(cur[0],cur[1]) == -1) {
       var new_vertex_id = getNextVertexId();
       if (deleted_vertex_list.length > 0) {
+        is_deleted = 1;
         new_vertex_id = deleted_vertex_list[0];
         deleted_vertex_list.splice(0, 1);
       }
@@ -292,7 +294,7 @@ var Graph = function() {
     graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);       
 
     var text = mainSvg.selectAll("text").selectAll(".v" + (new_vertex_id).toString());
-    text = mainSvg.selectAll(".v" + ((new_vertex_id)).toString());
+    text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
 
     text[0] = text[0].splice(2,1);
     var ii = isUsed(cur[0], cur[1]);
@@ -868,7 +870,21 @@ var Graph = function() {
                     mainSvg.select(tmp_edge_id).style("visibility", "hidden");
                     mainSvg.select("#w_e" + i.toString()).remove();
                   }
-                }            
+                }  
+                var islast = true;
+                for (var i=0; i < deleted_vertex_list.length; i++) {
+                  if (deleted_vertex_list[i] > current_id_num) {
+                    // insert 
+                    deleted_vertex_list.splice(i, 0, current_id_num);
+                    islast = false;
+                    break;
+                  }
+                }
+                if (islast) deleted_vertex_list.push(current_id_num);
+
+                if (deleted_vertex_list.length == 0) {
+                  deleted_vertex_list.push(current_id_num);
+                }          
                 createAdjMatrix();    
                 return;
               }      
@@ -1477,11 +1493,11 @@ var Graph = function() {
   }
 
   function createAdjMatrix() {
-    var vertex_count = amountVertex - deleted_vertex_list.length - 1;
+    var vertex_count = getNextVertexId() - 1;
     adjMatrix = new Array(vertex_count);
-    for (var i = 0; i < amountVertex; i++) {
-      adjMatrix[i] = new Array(amountVertex);
-      for (var j=0; j < amountVertex; j++)
+    for (var i = 0; i < vertex_count; i++) {
+      adjMatrix[i] = new Array(vertex_count);
+      for (var j=0; j < vertex_count; j++)
         adjMatrix[i][j] = 0;
     }
 
