@@ -99,27 +99,73 @@ var Graph = function() {
 
     var x_text, y_text;
     if ((x1 < x2) && (y1 < y2)) {
-      var b2 = b1 + 4 + slope*17;
-      y_text = (y2 - y1)* 9/10 + y1;
-      x_text = (y_text - b2) / slope;
+      if (y2 - y1 > 15) {
+        var b2 = b1 + 4 + slope*17;
+        y_text = (y2 - y1)* 9/10 + y1;
+        x_text = (y_text - b2) / slope;
+      } else {
+        // treat as equal
+        if (x1 > x2) {
+          y_text = y1 - 10;
+          x_text = x2 + (x1 - x2)* 1/3;
+        } else {
+          y_text = y1 + 10;
+          x_text = x1 + (x2 - x1)* 2/3;
+        }
+        y_text += 4;
+      }
     } else if ((x1 > x2) && (y1 < y2)) {
-      var b2 = b1 - 4 + slope*17;
-      y_text = (y2 - y1)* 1/1.8 + y1;
-      x_text = (y_text - b2) / slope; 
+      if (y2 - y1 > 15) {
+        var b2 = b1 - 4 + slope*17;
+        y_text = (y2 - y1)* 1/1.8 + y1;
+        x_text = (y_text - b2) / slope; 
+      } else {
+        // treat as equal
+        if (x1 > x2) {
+          y_text = y1 - 10;
+          x_text = x2 + (x1 - x2)* 1/3;
+        } else {
+          y_text = y1 + 10;
+          x_text = x1 + (x2 - x1)* 2/3;
+        }
+      }
     } else if ((x1 > x2) && (y1 > y2)) {
-      var b2 = b1 + 4 + slope*17;
-      y_text = (y1 - y2)* 9/10 + y2;
-      x_text = (y_text - b2) / slope; 
-      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
-      y_text = 2*y_mid - y_text;
-      x_text = 2*x_mid - x_text;
+      if (y1 - y2 > 15) {
+        var b2 = b1 + 4 + slope*17;
+        y_text = (y1 - y2)* 9/10 + y2;
+        x_text = (y_text - b2) / slope; 
+        var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+        y_text = 2*y_mid - y_text;
+        x_text = 2*x_mid - x_text;
+      } else {
+        // treat as equal
+        if (x1 > x2) {
+          y_text = y1 - 10;
+          x_text = x2 + (x1 - x2)* 1/3;
+        } else {
+          y_text = y1 + 10;
+          x_text = x1 + (x2 - x1)* 2/3;
+        }
+        y_text-=3;
+      }
     } else if ((x1 < x2) && (y1 > y2)) {
-      var b2 = b1 - 4 + slope*17;
-      y_text0 = (y1 - y2)* 1/1.8 + y2;
-      x_text0 = (y_text0 - b2) / slope; 
-      var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
-      y_text = 2*y_mid - y_text0;
-      x_text = 2*x_mid - x_text0;
+      if (y1 - y2 > 15) {
+        var b2 = b1 - 4 + slope*17;
+        y_text0 = (y1 - y2)* 1/1.8 + y2;
+        x_text0 = (y_text0 - b2) / slope; 
+        var x_mid = (x1 + x2)/2, y_mid = (y1 + y2)/2;
+        y_text = 2*y_mid - y_text0;
+        x_text = 2*x_mid - x_text0;
+      } else {
+        // treat as equal
+        if (x1 > x2) {
+          y_text = y1 - 10;
+          x_text = x2 + (x1 - x2)* 1/3;
+        } else {
+          y_text = y1 + 10;
+          x_text = x1 + (x2 - x1)* 2/3;
+        }
+      }
     } else if (x1 == x2) {
       if (y1 > y2) {
         x_text = x1 + 10;
