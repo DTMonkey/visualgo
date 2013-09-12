@@ -93,7 +93,7 @@ var GraphWidget = function(){
   // graphState oject is equivalent to one element of the statelist.
   // See comments below this function
   this.updateGraph = function(graphState, duration){
-    updateDisplayNoAnimation(graphState, duration);
+    updateDisplay(graphState, duration);
   }
 
   /* 
@@ -161,7 +161,7 @@ var GraphWidget = function(){
 
     if(animationStatus == ANIMATION_STOP){
       animationStatus = ANIMATION_PLAY;
-      updateDisplay(animationDuration, UPDATE_FORWARD);
+      updateDisplay(animationStateList[currentIteration], animationDuration);
       setTimeout(function(){
         self.animate();
       }, animationDuration);
@@ -231,14 +231,14 @@ var GraphWidget = function(){
 		currentIteration = animationStateList.length-1;
 		return;
 	}
-    updateDisplay(duration);
+    updateDisplay(animationStateList[currentIteration], duration);
   }
 
   this.previous = function(duration){
     if(currentIteration >= animationStateList.length) currentIteration = animationStateList.length - 1;
     currentIteration--;
     if(currentIteration < 0) return;
-    updateDisplay(duration);
+    updateDisplay(animationStateList[currentIteration], duration);
   }
 
   this.forceNext = function(duration){
@@ -256,7 +256,7 @@ var GraphWidget = function(){
     currentIteration = iteration;
     if(currentIteration >= animationStateList.length) currentIteration = animationStateList.length - 1;
     if(currentIteration < 0) currentIteration = 0;
-    updateDisplay(duration);
+    updateDisplay(animationStateList[currentIteration], duration);
   }
 
   this.replay = function(){
@@ -285,14 +285,14 @@ var GraphWidget = function(){
     animationDuration = duration;
   }
 
-  function updateDisplay(duration){
+  function updateDisplay(graphState, duration){
     // Add boolean flag for vertexes and edges that exists in the current visualization
     // Check the boolean flags each time this function is called
     // If there are objects that are not updated, it means that the object is removed
     // If there are new objects that currently not in the flags, it means the object is created this turn
 
     console.log("iteration " + currentIteration);
-	var lastIteration = Object.keys(animationStateList).length-1;
+    var lastIteration = Object.keys(animationStateList).length-1;
     try{
 	  $('#progress-bar').slider("value", currentIteration);
       $('#status p').html(/*"iteration " + currentIteration + ": " + */animationStateList[currentIteration]["status"]);
@@ -307,115 +307,6 @@ var GraphWidget = function(){
       // Status has not been integrated in most of my animation, so leave it like this
     }
 
-    var currentVertexState = animationStateList[currentIteration]["vl"];
-    var currentEdgeState = animationStateList[currentIteration]["el"];
-
-    var key;
-
-    for(key in currentVertexState){
-      if(vertexList[key] == null || vertexList[key] == undefined){
-        self.addVertex(currentVertexState[key]["cx"],currentVertexState[key]["cy"],currentVertexState[key]["text"],key,false);
-      }
-
-      var currentVertex = vertexList[key];
-
-      currentVertex.showVertex();
-
-      switch(currentVertexState[key]["state"]){
-        case OBJ_HIDDEN:
-          currentVertex.hideVertex();
-          break;
-        case VERTEX_DEFAULT:
-          currentVertex.defaultVertex();
-          break;
-        case VERTEX_HIGHLIGHTED:
-          currentVertex.highlightVertex();
-          break;
-        case VERTEX_TRAVERSED:
-          currentVertex.traversedVertex();
-          break;
-        default:
-          break;
-      }
-
-      currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
-      currentVertex.changeText(currentVertexState[key]["text"]);
-      currentVertex.redraw(duration);
-
-      vertexUpdateList[key] = true;
-    }
-
-    for(key in vertexUpdateList){
-      if(vertexUpdateList[key] == false){
-        vertexList[key].hideVertex();
-        vertexList[key].redraw(duration);
-        vertexUpdateList[key] = true;
-      }
-    }
-
-    for(key in currentEdgeState){
-      if(edgeList[key] == null || edgeList[key] == undefined){
-        self.addEdge(currentEdgeState[key]["vertexA"],currentEdgeState[key]["vertexB"],key,currentEdgeState[key]["type"],currentEdgeState[key]["weight"],false);
-      }
-
-      var currentEdge = edgeList[key];
-
-      currentEdge.showEdge();
-
-      switch(currentEdgeState[key]["state"]){
-        case OBJ_HIDDEN:
-          currentEdge.hideEdge();
-          break;
-        case EDGE_DEFAULT:
-          currentEdge.defaultEdge();
-          break;
-        case EDGE_HIGHLIGHTED:
-          currentEdge.highlightEdge();
-          break;
-        case EDGE_TRAVERSED:
-          currentEdge.traversedEdge();
-          break;
-        default:
-          break;
-      }
-
-      currentEdge.hideWeight();
-      if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
-        currentEdge.showWeight();
-      }
-
-      currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
-      currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
-      currentEdge.changeType(currentEdgeState[key]["type"]);
-      currentEdge.changeWeight(currentEdgeState[key]["weight"]);
-
-      currentEdge.refreshPath();
-      if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
-      else{
-        currentEdge.animateHighlighted(duration*0.9);
-      }
-
-      edgeUpdateList[key] = true;
-    }
-
-    for(key in edgeUpdateList){
-      if(edgeUpdateList[key] == false){
-        edgeList[key].hideEdge();
-        edgeList[key].redraw(duration);
-        edgeUpdateList[key] = true;
-      }
-    }
-
-    for(key in vertexUpdateList){
-      vertexUpdateList[key] = false;
-    }
-
-    for(key in edgeUpdateList){
-      edgeUpdateList[key] = false;
-    }
-  }
-
-  function updateDisplayNoAnimation(graphState, duration){
     var currentVertexState = graphState["vl"];
     var currentEdgeState = graphState["el"];
 
@@ -500,7 +391,7 @@ var GraphWidget = function(){
       }
 
       currentEdge.hideWeight();
-      if(!OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+      if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
         currentEdge.showWeight();
       }
 
@@ -533,35 +424,155 @@ var GraphWidget = function(){
     for(key in edgeUpdateList){
       edgeUpdateList[key] = false;
     }
-
-    setTimeout(function(){
-      for(key in currentEdgeState){
-        edgeUpdateList[key] = true;
-      }
-
-      for(key in edgeUpdateList){
-        if(edgeUpdateList[key] == false){
-          self.removeEdge(key);
-        }
-      }
-
-      for(key in currentVertexState){
-        vertexUpdateList[key] = true;
-      }
-
-      for(key in vertexUpdateList){
-        if(vertexUpdateList[key] == false){
-          self.removeVertex(key);
-        }
-      }
-
-      for(key in edgeUpdateList){
-        edgeUpdateList[key] = false;
-      }
-
-      for(key in vertexUpdateList){
-        vertexUpdateList[key] = false;
-      }
-    }, duration);
   }
+
+  // function updateDisplayNoAnimation(graphState, duration){
+  //   var currentVertexState = graphState["vl"];
+  //   var currentEdgeState = graphState["el"];
+
+  //   var key;
+
+  //   for(key in currentVertexState){
+  //     if(vertexList[key] == null || vertexList[key] == undefined){
+  //       self.addVertex(currentVertexState[key]["cx"],currentVertexState[key]["cy"],currentVertexState[key]["text"],key,false);
+  //     }
+
+  //     var currentVertex = vertexList[key];
+
+  //     currentVertex.showVertex();
+
+  //     switch(currentVertexState[key]["state"]){
+  //       case OBJ_HIDDEN:
+  //         currentVertex.hideVertex();
+  //         break;
+  //       case VERTEX_DEFAULT:
+  //         currentVertex.defaultVertex();
+  //         break;
+  //       case VERTEX_HIGHLIGHTED:
+  //         currentVertex.highlightVertex();
+  //         break;
+  //       case VERTEX_TRAVERSED:
+  //         currentVertex.traversedVertex();
+  //         break;
+  //       default:
+  //         break;
+  //     }
+
+  //     currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
+  //     currentVertex.changeText(currentVertexState[key]["text"]);
+
+  //     if(currentVertexState[key]["text-font-size"] != null){
+  //        currentVertex.changeTextFontSize(currentVertexState[key]["text-font-size"]);
+  //     }
+  //     if(currentVertexState[key]["inner-r"] != null && currentVertexState[key]["outer-r"] != null){
+  //        currentVertex.changeRadius(currentVertexState[key]["inner-r"], currentVertexState[key]["outer-r"]);
+  //     }
+  //     if(currentVertexState[key]["inner-stroke-width"] != null && currentVertexState[key]["outer-stroke-width"] != null){
+  //        currentVertex.changeStrokeWidth(currentVertexState[key]["inner-stroke-width"], currentVertexState[key]["outer-stroke-width"]);
+  //     }
+
+  //     currentVertex.redraw(duration);
+
+  //     vertexUpdateList[key] = true;
+  //   }
+
+  //   for(key in vertexUpdateList){
+  //     if(vertexUpdateList[key] == false){
+  //       vertexList[key].hideVertex();
+  //       vertexList[key].redraw(duration);
+  //       vertexUpdateList[key] = true;
+  //     }
+  //   }
+
+  //   for(key in currentEdgeState){
+  //     if(edgeList[key] == null || edgeList[key] == undefined){
+  //       self.addEdge(currentEdgeState[key]["vertexA"],currentEdgeState[key]["vertexB"],key,currentEdgeState[key]["type"],currentEdgeState[key]["weight"],false);
+  //     }
+
+  //     var currentEdge = edgeList[key];
+
+  //     currentEdge.showEdge();
+
+  //     switch(currentEdgeState[key]["state"]){
+  //       case OBJ_HIDDEN:
+  //         currentEdge.hideEdge();
+  //         break;
+  //       case EDGE_DEFAULT:
+  //         currentEdge.defaultEdge();
+  //         break;
+  //       case EDGE_HIGHLIGHTED:
+  //         currentEdge.highlightEdge();
+  //         break;
+  //       case EDGE_TRAVERSED:
+  //         currentEdge.traversedEdge();
+  //         break;
+  //       default:
+  //         break;
+  //     }
+
+  //     currentEdge.hideWeight();
+  //     if(!OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+  //       currentEdge.showWeight();
+  //     }
+
+  //     currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
+  //     currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
+  //     currentEdge.changeType(currentEdgeState[key]["type"]);
+  //     currentEdge.changeWeight(currentEdgeState[key]["weight"]);
+
+  //     currentEdge.refreshPath();
+  //     if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
+  //     else{
+  //       currentEdge.animateHighlighted(duration*0.9);
+  //     }
+
+  //     edgeUpdateList[key] = true;
+  //   }
+
+  //   for(key in edgeUpdateList){
+  //     if(edgeUpdateList[key] == false){
+  //       edgeList[key].hideEdge();
+  //       edgeList[key].redraw(duration);
+  //       edgeUpdateList[key] = true;
+  //     }
+  //   }
+
+  //   for(key in vertexUpdateList){
+  //     vertexUpdateList[key] = false;
+  //   }
+
+  //   for(key in edgeUpdateList){
+  //     edgeUpdateList[key] = false;
+  //   }
+
+  //   setTimeout(function(){
+  //     for(key in currentEdgeState){
+  //       edgeUpdateList[key] = true;
+  //     }
+
+  //     for(key in edgeUpdateList){
+  //       if(edgeUpdateList[key] == false){
+  //         self.removeEdge(key);
+  //       }
+  //     }
+
+  //     for(key in currentVertexState){
+  //       vertexUpdateList[key] = true;
+  //     }
+
+  //     for(key in vertexUpdateList){
+  //       if(vertexUpdateList[key] == false){
+  //         self.removeVertex(key);
+  //       }
+  //     }
+
+  //     for(key in edgeUpdateList){
+  //       edgeUpdateList[key] = false;
+  //     }
+
+  //     for(key in vertexUpdateList){
+  //       vertexUpdateList[key] = false;
+  //     }
+  //   }, duration);
+  // }
 }
