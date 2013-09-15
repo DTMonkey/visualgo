@@ -1,0 +1,52 @@
+@charset "utf-8";
+
+#actions { height: 145px; width: 150px; }
+	#actions-hide {
+		padding: 64px 15px 65px 14px;
+	}
+
+/*all action pullout (input) stuff here*/
+
+#buildv1-input {
+	position: fixed;
+	bottom: 173px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#buildv1-input input {
+		width: 200px;
+		background: black;
+		color: white;
+		padding: 8px;
+	}
+	#buildv1-go {
+		position: fixed;
+		bottom: 173px;
+		left: 396px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#buildv1-go p {
+			padding: 8px 8px 7px;
+		}
+
+	
+/*all action pullout (error) stuff here*/
+.err {
+	position: fixed;
+	color: red;
+}
+#buildv1-err {
+	bottom: 173px;
+	left: 538px;
+	padding: 8px 0px 7px;
+}
+
+.background {
+  fill: none;
+  pointer-events: all;
+}

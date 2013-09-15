@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Visualizations - Suffix Tree</title>
+
+<!--css-->
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/viz.css">
+
+<link rel="stylesheet" href="css/suffix_tree.css">
+
+<!--js-->
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
+<script src="js/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/viz.js"></script>
+<script src="js/common.js"></script>
+<script src="js/suffix_tree_actions.js"></script>
+<script src="//connect.facebook.net/en_US/all.js"></script>
+<script src="js/d3/d3.v3.js"></script>
+<!-- heap scripts are below-->
+
+<!--fonts-->
+<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+<div id="top-bar">
+    <a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+    <span id="title">
+        <a class="selected-viz">Binary Heap</a>
+    </span>
+    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
+    <span id="trick">
+        <fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
+    </span>
+    <div id="mode-menu">
+        <div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
+        <div id="other-modes">
+            <a href="#">Tutorial Mode</a>
+            <!--<a href="#">Training Mode</a>--> <!--under construction-->
+        </div>
+    </div>
+</div>
+    
+    <div id="viz"></div>
+    
+    <div id="current-action" class="panel"><p></p></div>
+    
+    <div id="actions" class="panel">
+        <p id="buildv1" style="padding-top: 10px;">Build Suffix Tree</p>
+    </div>
+    <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-extras">
+    <!--put all the extra action pullouts (input) and error messages here-->
+        <div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="GATAGACA$" /></div>
+        <div id="buildv1-go" class="execAction" onclick=buildSuffixTree()><p>GO</p></div>
+        <div id="buildv1-err" class="err"></div>
+    </div>
+    
+    <div id="status" class="panel"><p></p></div>
+    <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
+    
+    <div id="codetrace" class="panel">
+        <!--can add class "highlighed" to hightlight one line-->
+        <p id="code1" style="padding-top: 10px;"></p>
+        <p id="code2"></p>
+        <p id="code3"></p>
+        <p id="code4"></p>
+        <p id="code5"></p>
+        <p id="code6"></p>
+        <p id="code7" style="padding-bottom: 10px;"></p>
+    </div>
+    <div id="codetrace-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide codetrace panel"/></div>
+    
+<div id="left-bar"></div>
+<div id="right-bar"></div>
+<!-- Bottom bar and overlay popups -->
+<div id="bottom-bar">
+    <a id="trigger-about">About</a>
+    <a id="trigger-team">Team</a>
+    <a id="trigger-terms">Terms of use</a>
+</div>
+
+<div id="media-controls">
+    <div id="speed-control">slow<div id="speed-input"></div>fast</div>
+    <span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
+    <span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
+    <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="img/pause.png" alt="pause" /></span>
+    <span id="play" class="media-control-button" title="play" onclick=play()><img src="img/play.png" alt="play" /></span>
+    <span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="img/nextFrame.png" alt="next frame" /></span>
+    <span id="go-to-end" class="media-control-button" title="go to end" onclick=goToEnd()><img src="img/goToEnd.png" alt="go to end"/></span>
+    <div id="progress-bar" class="media-control-button"></div>
+</div>
+
+<div id="dark-overlay"></div>
+<div id="about" class="overlays"></div>
+<div id="team" class="overlays"></div>
+<div id="termsofuse" class="overlays"></div>
+
+<!--tutorial dialogs here-->
+<div id="heap-tutorial-1" class="tutorial-dialog">
+    A Binary Max Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-2" class="tutorial-dialog">
+    All available operations on the Heap will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-3" class="tutorial-dialog">
+    View the visualisation here!
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-4" class="tutorial-dialog">
+    As the action is being carried out, each step will be described in the status panel.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-5" class="tutorial-dialog">
+    You can also follow the psuedocode highlights to trace the algorithm.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-6" class="tutorial-dialog">
+    Control the animation with the player controls! Keyboard shortcuts are:<br/>
+    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
+    <strong>Left/right arrows:</strong> step backward/step forward<br/>
+    <strong>-/+:</strong> decrease/increase speed<br/>
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-7" class="tutorial-dialog">
+    Return to "Exploration Mode" to start exploring!
+</div>
+
+<script src="js/graph_library/constant.js"></script>
+<script src="js/graph_library/properties.js"></script>
+<script src="js/graph_library/helperObjects.js"></script>
+<script src="js/graph_library/misc.js"></script>
+<script src="js/graph_library/Widget.js"></script>
+<script src="js/graph_library/GraphWidget.js"></script>
+<script src="js/graph_library/GraphVertexWidget.js"></script>
+<script src="js/graph_library/GraphEdgeWidget.js"></script>
+<script src="js/SuffixTreeWidget.js"></script>
+
+<script type="text/javascript">
+    //start by showing actions panel
+    $('#play').hide();
+
+    var stWidget = new SuffixTreeWidget();
+    var gw = stWidget.getGraphWidget();
+    
+    stWidget.buildSuffixTree(document.getElementById("arrv1").value);
+    function buildSuffixTree() {
+        stWidget.buildSuffixTree(document.getElementById("arrv1").value);
+    }
+    
+</script>
+
+</body>
+</html>
