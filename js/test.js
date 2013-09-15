@@ -1,4 +1,6 @@
-var studentid = "rose";
+var studentid;
+var studentpw;
+var gw = new GraphWidget();
 
 var easyQnTotal = 10;
 var easyQnChoose = easyQnTotal/2;
@@ -7,13 +9,24 @@ var medQnChoose = medQnTotal/2;
 var diffQnTotal = 4;
 var diffQnChoose = diffQnTotal/2;
 
-var questionList = new Array();
-var answerList = new Array();
+var questionList = new Array(); //of real (jumbled 10 from 20) question numbers - maps 0-10 to the real qn nos.
+var qnTextArr = new Array(); //of question text for each qn - from mode 1
+var qnJSONArr = new Array; //of JSON objects for each qn - from mode 2
+var answerList = new Array(); //of all 20 questions
+var firstLoad = true;
 var currentQn;
-var localQnNo;
+var localQnNo; //1-based
+
+//initialising functions
+function startTest() {
+	generateQns();
+	scrambleQns();
+	initAns();
+	getQnData(0); //all showing/hiding and setting the graph widget state are inside here
+}
 
 function initAns() {
-	for(var i=0; i<20; i++) {
+	for(var i=0; i<(easyQnChoose+medQnChoose+diffQnChoose); i++) {
 		answerList[i] = -100;
 	}
 }
@@ -54,15 +67,37 @@ function scrambleQns() {
     }
 }
 
-var firstLoad = true;
-var qnText = "";
+function getQnData(n) {
+	//for text
+	$.ajax({
+		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=1&id="+questionList[n]
+	}).done(function(data) {
+		qnTextArr[n] = data;
+		//for JSON
+		$.ajax({
+			url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=2&id="+questionList[n]
+		}).done(function(data) {
+			qnJSONArr[n] = jQuery.parseJSON(data);  
+			if((n+1)<questionList.length) {
+				getQnData(n+1);
+			} else { // finished getting all qn data
+				$('#login-screen').hide();
+				$('#answer-form').show();
+				$('#submit-test').show();
+				$('#time-left').show();
+				$('#question-nav').show();
+				$('#question-text').show();
+				$('#viz').show();
+				//load first question
+				gw.startAnimation(qnJSONArr);
+				gw.pause();
+				showQn(questionList[0]);
+			}
+		});
+	});
+}
 
-/*
-mode 1 gives question text
-mode 2 gives JSON object for drawing question graph
-mode 3 gives the total score for the 20 qns
-*/
-
+//update display functions
 function showQn(q) {
 	currentQn = q;
 	localQnNo = questionList.indexOf(q)+1;
@@ -76,13 +111,7 @@ function showQn(q) {
 	}
 	
 	/*------question text------*/
-	$.ajax({
-		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=1&id="+q
-	}).done(function(data) {
-		qnText = data;
-	});
-	//qnText = "Given the normal Binary Search Tree (not AVL tree) shown below, which leaf vertex should be deleted to decrease the overall height of the tree?"; //to remove
-
+	qnText = qnTextArr[localQnNo-1];
 	if(!firstLoad) {
 		$('#question-text').animate({
 			top: "-=200"
@@ -100,12 +129,7 @@ function showQn(q) {
 	}
 	
 	/*------question graph------*/
-	$.ajax({
-		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=2&id="+q
-	}).done(function(data) {
-		jsondata = jQuery.parseJSON(data);  
-		gw.updateGraph(jsondata, 100);  
-	});
+	gw.jumpToIteration(localQnNo-1,300);
 }
 
 function changeQnBgColour(colour) {
@@ -138,30 +162,88 @@ function changeQnBgColour(colour) {
 	}
 }
 
-function checkAns() {
+//after submit functions
+function endTest() {
+	//get score
 	var ansStr = answerList.join('&ans[]=');
-	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&mode=3&ans[]="+ansStr;
-	console.log(queryStr);
+	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=3&ans[]="+ansStr;
 	$.ajax({
 		url: queryStr
-	}).done(function(data) {
-		if (data >= 0) {
-			alert('Number of correct answers = ' + data); // correct
-		} else if (data == -1) {
-			alert('You have already used up your 2 attempts'); // wrong
+	}).done(function(score) {
+		if(score >= 0) {
+			//get attempt number to determine text to show
+			$.ajax({
+				url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=5"
+			}).done(function(attemptNo) {
+				if(attemptNo==1) {
+					$('#try-again').css('display','inline-block');
+					$('#result').html("You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
+					$('#result-note').html("(The score from your final attempt will be recorded.)");
+				} else if(attemptNo==2){
+					$('#try-again').css('display','none');
+					$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<div>");
+					$('#result-note').html("");
+				}
+				goToResultScreen();
+			});
+		} else if(score == -1) {
+			$('#result').html("<div style='padding-top:80px;'>You have already attempted this quiz twice. This submission will not be recorded.</div>");
+			goToResultScreen();
 		}
 	});
 }
 
+function goToResultScreen() {
+	//hide test stuff
+	$('#answer-form').hide();
+	$('#submit-test').hide();
+	$('#time-left').hide();
+	$('#question-nav').hide();
+	$('#question-text').hide();
+	$('#viz').hide();
+	//show results screen
+	$('#result-screen').show();
+}
+
 $(document).ready (function() {
-	var gw = new GraphWidget();
-	var jsondata = "";
+	//login
+	$('#login').css('background-color',surpriseColour).hover(function() {
+		$('#login').css('background-color','black');
+	}, function() {
+		$('#login').css('background-color',surpriseColour);
+	});
 	
-	//load first question
-	generateQns();
-	scrambleQns();
-	initAns();
-	showQn(questionList[0]);
+	$('#login-id').focusin(function() {
+		if ($(this).val() == "user id") {
+			$(this).css('color','black');
+			$(this).val("");
+		}
+	}).focusout(function() {
+		if ($(this).val() == "") {
+			$(this).css('color','#888');
+			$(this).val("user id");
+		}
+	});
+	$('#login-pw').focusin(function() {
+		if ($(this).val() == "password") {
+			$(this).css('color','black');
+			$(this).val("");
+		}
+	}).focusout(function() {
+		if ($(this).val() == "") {
+			$(this).css('color','#888');
+			$(this).val("password");
+		}
+	});
+	
+	$('#login').click(function() {
+		studentid = $('#login-id').val();
+		studentpw = $('#login-pw').val();
+		if(true) { //needs to change to some value from the server
+			startTest();
+		}
+		return false; //to prevent page reload
+	});
 	
 	//question navigation stuff
 	$('#question-nav .qnno').click(function() {
@@ -189,9 +271,27 @@ $(document).ready (function() {
 		}
 	});
 	
-	//answer stuff
+	//answer stuff: to remove after input by point and click
 	$('#answer-go').click(function() {
 		answerList[currentQn] = $('#answer').val();
-		return false;
+		$('#question-nav .qnno').eq(localQnNo-1).addClass('answered');
+		return false; // prevents page reload
+	});
+	
+	//results stuff
+	$('#submit-test').click(function() {
+		endTest();
+	});
+	$('#try-again').css('background-color',surpriseColour).hover(function() {
+		$('#try-again').css('background-color','black');
+	}, function() {
+		$('#try-again').css('background-color',surpriseColour);
+	});
+	$('#try-again').click(function() {
+		$('#result-screen').hide();
+		$('#question-nav .qnno').removeClass('selected');
+		$('#question-nav .qnno').eq(0).addClass('selected');
+		firstLoad = true;
+		startTest();
 	});
 });
