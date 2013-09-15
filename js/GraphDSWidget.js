@@ -37,6 +37,8 @@ var Graph = function() {
    var deleted_vertex_list = [];
    var used_alt = -1;
    var adjMatrix = [], adjList = [];
+   var aborted_mousedown = false;
+   var move1 = true;
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -71,6 +73,7 @@ var Graph = function() {
     used_alt = -1;
     adjMatrix = [];
     adjList = [];
+    aborted_mousedown = false;
   }
 
   function addExtraEdge() {
@@ -291,10 +294,9 @@ var Graph = function() {
     coord[amountVertex][0] = cur[0];
     coord[amountVertex][1] = cur[1];
     A[amountVertex] = new ObjectPair(new_vertex_id -1, amountVertex);
-    graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);       
+    graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
 
-    var text = mainSvg.selectAll("text").selectAll(".v" + (new_vertex_id).toString());
-    text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
+    var text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
 
     text[0] = text[0].splice(2,1);
     var ii = isUsed(cur[0], cur[1]);
@@ -340,6 +342,19 @@ var Graph = function() {
                     mainSvg.select("#w_e" + i.toString()).remove();
                   }
                 }            
+                var islast = true;
+                var temp = d3.select(this);
+                temp = temp[0][0].textContent;
+                var current_id_num1 = parseInt(temp) + 1;
+                for (var i=0; i < deleted_vertex_list.length; i++) {
+                  if (deleted_vertex_list[i] > current_id_num1) {
+                    // insert 
+                    deleted_vertex_list.splice(i, 0, current_id_num1);
+                    islast = false;
+                    break;
+                  }
+                }
+                if (islast) deleted_vertex_list.push(current_id_num1);
                 createAdjMatrix();    
                 return;
               }      
@@ -370,7 +385,7 @@ var Graph = function() {
           circle2.style("fill", "#eeeeee");
         })
         .on("mousedown", function() {
-          mousedown_node = d3.mouse(this);              
+          //mousedown_node = d3.mouse(this);              
         })
         .on("click", function() {
                 // hold ctrl to delete node
@@ -379,8 +394,10 @@ var Graph = function() {
                   // TODO: delete node and associated edges
                   console.log(d3.select(this).attr("class"));
                   console.log(d3.selectAll(d3.select(this).attr("class")));
+                  var temp = mainSvg.selectAll("." + d3.select(this).attr("class"));
+                  temp = temp[0][2].textContent;
                   mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
-                  var current_id = d3.select(this).attr("class");
+                  var current_id = d3.select(this).attr("class");                  
                   var current_id_num = "";
                   for (var i=1; i < current_id.length; i++) {
                     current_id_num += current_id[i];
@@ -395,6 +412,19 @@ var Graph = function() {
                       mainSvg.select("#w_e" + i.toString()).remove();
                     }
                   }  
+                  coord[current_id_num][0] = -1;
+                  coord[current_id_num][1] = -1;
+                  var islast = true;                  
+                  var current_id_num1 = parseInt(temp) + 1;
+                  for (var i=0; i < deleted_vertex_list.length; i++) {
+                    if (deleted_vertex_list[i] > current_id_num1) {
+                      // insert 
+                      deleted_vertex_list.splice(i, 0, current_id_num1);
+                      islast = false;
+                      break;
+                    }
+                  }
+                  if (islast) deleted_vertex_list.push(current_id_num1);
                   createAdjMatrix();              
                   return;
                 }                 
@@ -411,6 +441,11 @@ var Graph = function() {
     var is_used = isUsed(prev[0], prev[1]);
     mousedown_node = prev;
     if (is_used == -1) {
+      if (amountVertex - deleted_vertex_list.length > 20) {
+        //alert("Amount vertex exceeded");
+        //aborted_mousedown = true;
+        //return;
+      }
       doclick2(prev);
       is_used = amountVertex-1;
     } else {
@@ -424,12 +459,12 @@ var Graph = function() {
     }
   }
 
-  var move1 = true;
   function doMouseMove() {
     if (mousedown_in_progress) {
       doMouseDown();
       return;
     }
+    if (aborted_mousedown) return;
 
     if (mousedown_node == null) return;
     mousemove_in_progress = true;
@@ -583,6 +618,10 @@ var Graph = function() {
 
   function doMouseUp() {    
     //alert("up");
+    //if (aborted_mousedown) {
+     // mousedown_node = null;
+      //return;
+    //  }
     var is_used = isUsed(mousedown_node[0], mousedown_node[1]);
     var prev_circle1 = mainSvg.selectAll(".v" + (is_used).toString());
     var cur = d3.mouse(mouseup_event);
@@ -608,8 +647,8 @@ var Graph = function() {
       var cx = b.attr("x"), cy = b.attr("y");
 
       b.remove();
-      var text = mainSvg.append("text");
-      text.attr("x", cx)
+      var text2 = mainSvg.append("text");
+      text2.attr("x", cx)
       .attr("y", cy)
       .attr("fill", "#333")
       .attr("font-family", "'PT Sans', sans-serif")
@@ -621,6 +660,69 @@ var Graph = function() {
         return text_content;
       });
 
+      var text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
+      text.style("cursor", "pointer");
+      text[0] = text[0].splice(2,1);
+      var ii = isUsed(cur[0], cur[1]);
+        //text.style("pointer-events", "none");
+      text.on("mouseover", function () { 
+        //circle.style("fill", "blue");
+        var cc = d3.mouse(this);
+        
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0][2].value = circle2[0][2].value;
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", "blue");
+        
+      })
+      .on("mouseout", function () { 
+        //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", "#eeeeee");
+      })
+      .on("click", function () {
+                // hold ctrl to delete node
+                if (d3.event.ctrlKey) {
+                  //alert("click + ctrl");
+                  // TODO: delete node and associated edges
+                  console.log(d3.select(this).attr("class"));
+                  console.log(d3.selectAll(d3.select(this).attr("class")));
+                  mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
+                  var current_id = d3.select(this).attr("class");
+                  var current_id_num = "";
+                  for (var i=1; i < current_id.length; i++) {
+                    current_id_num += current_id[i];
+                  }
+                  current_id_num = parseInt(current_id_num);
+                  coord[current_id_num][0] = -1;
+                  coord[current_id_num][1] = -1;
+                  var tmp_e = "#e";
+                  for (var i=1; i <= Object.size(edgeList); i++) {
+                    var tmp_edge_id = tmp_e + i.toString();
+                    console.log(edgeList[tmp_edge_id]);
+                    if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
+                      mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                      mainSvg.select("#w_e" + i.toString()).remove();
+                    }
+                  }            
+                  var islast = true;
+                  var temp = d3.select(this);
+                  temp = temp[0][0].textContent;
+                  var current_id_num1 = parseInt(temp) + 1;
+                  for (var i=0; i < deleted_vertex_list.length; i++) {
+                    if (deleted_vertex_list[i] > current_id_num1) {
+                      // insert 
+                      deleted_vertex_list.splice(i, 0, current_id_num1);
+                      islast = false;
+                      break;
+                    }
+                  }
+                  if (islast) deleted_vertex_list.push(current_id_num1);
+                  createAdjMatrix();    
+                  return;
+                }      
+              });
 
     }
 
@@ -670,7 +772,13 @@ var Graph = function() {
   }
 
   mainSvg.on("mouseup", function () {
-    if (d3.event.ctrlKey) return;
+    if (d3.event.ctrlKey) {
+      var is_used = isUsed(mousedown_node[0], mousedown_node[1]);
+      if (is_used != -1) {
+        coord[is_used][0] = -1;
+        coord[is_used][1] = -1;
+      }
+    };
     mouseup_event = this;
     doMouseUp();
     mouseup_in_progress = false;
@@ -871,20 +979,21 @@ var Graph = function() {
                     mainSvg.select("#w_e" + i.toString()).remove();
                   }
                 }  
+                coord[current_id_num][0] = -1;
+                coord[current_id_num][1] = -1;
                 var islast = true;
+                var temp = d3.select(this);
+                temp = temp[0][0].textContent;
+                var current_id_num1 = parseInt(temp) + 1;
                 for (var i=0; i < deleted_vertex_list.length; i++) {
-                  if (deleted_vertex_list[i] > current_id_num) {
+                  if (deleted_vertex_list[i] > current_id_num1) {
                     // insert 
-                    deleted_vertex_list.splice(i, 0, current_id_num);
+                    deleted_vertex_list.splice(i, 0, current_id_num1);
                     islast = false;
                     break;
                   }
                 }
-                if (islast) deleted_vertex_list.push(current_id_num);
-
-                if (deleted_vertex_list.length == 0) {
-                  deleted_vertex_list.push(current_id_num);
-                }          
+                if (islast) deleted_vertex_list.push(current_id_num1);     
                 createAdjMatrix();    
                 return;
               }      
@@ -923,21 +1032,19 @@ var Graph = function() {
                     coord[current_id_num][0] = -1;
                     coord[current_id_num][1] = -1;
                     // modify deleted_list
+                    var temp = d3.select(this);
+                    temp = temp[0][0].textContent;
+                    var current_id_num1 = parseInt(temp) + 1;
                     var islast = true;
                     for (var i=0; i < deleted_vertex_list.length; i++) {
-                      if (deleted_vertex_list[i] > current_id_num) {
+                      if (deleted_vertex_list[i] > current_id_num1) {
                         // insert 
-                        deleted_vertex_list.splice(i, 0, current_id_num);
+                        deleted_vertex_list.splice(i, 0, current_id_num1);
                         islast = false;
                         break;
                       }
                     }
-                    if (islast) deleted_vertex_list.push(current_id_num);
-
-                    if (deleted_vertex_list.length == 0) {
-                      deleted_vertex_list.push(current_id_num);
-                    }
-
+                    if (islast) deleted_vertex_list.push(current_id_num1);
                     //d3.select(this).remove();
                     mainSvg.selectAll(".v" + (class_id).toString()).remove();
                     var tmp_e = "#e";
