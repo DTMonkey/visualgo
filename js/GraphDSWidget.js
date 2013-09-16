@@ -187,17 +187,19 @@ var Graph = function() {
       }
     }
     
-    e = e.replace("#","");
-    mainSvg
-     .append("text")
-     .attr("id", "w_" + e)
-     .attr("class", "edgelabel")
-     .attr("x", x_text)
-     .attr("y", y_text)
-     .attr("dx", 1)
-     .attr("dy", ".35em")
-     .attr("text-anchor", "middle")     
-     .text(function(d) { return value.toString() });
+    if (x_text && y_text) {
+      e = e.replace("#","");
+      mainSvg
+       .append("text")
+       .attr("id", "w_" + e)
+       .attr("class", "edgelabel")
+       .attr("x", x_text)
+       .attr("y", y_text)
+       .attr("dx", 1)
+       .attr("dy", ".35em")
+       .attr("text-anchor", "middle")     
+       .text(function(d) { return value.toString() });
+    }
   }
 
   // move weight text on a path with id e
@@ -626,7 +628,7 @@ var Graph = function() {
     var prev_circle1 = mainSvg.selectAll(".v" + (is_used).toString());
     var cur = d3.mouse(mouseup_event);
     var iu = isUsed(cur[0], cur[1]);
-    if ((cur[0] == mousedown_node[0]) && (cur[1] == mousedown_node[1])) {
+    if (iu == is_used) {
       mousedown_node = null;
       mousemove_coor = null;
       mouseup_in_progress = false;
@@ -1744,10 +1746,13 @@ var Graph = function() {
 
       var to_vertex_id = edgeList[edge_id][1];
       var row = table.rows[i-1];
-      var cell = row.insertCell(-1);
-      cell.innerHTML = from_vertex_content;
-      cell = row.insertCell(-1);
-      cell.innerHTML = to_vertex_id;
+      if (!(from_vertex_content == 0 && to_vertex_id == 1)) {
+        var cell = row.insertCell(-1);
+        cell.innerHTML = from_vertex_content;
+        cell = row.insertCell(-1);
+        cell.innerHTML = to_vertex_id-1;
+      }
+
     }
     
     graphTest();
