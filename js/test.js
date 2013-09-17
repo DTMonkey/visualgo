@@ -4,9 +4,10 @@ var studentpw;
 var gw = new GraphWidget();
 
 var questionList = new Array(); //of real (jumbled 10 from 20) question numbers - maps 0-9 to the real qn nos.
-var qnTextArr = new Array(); //of question text for each qn - from mode 1
-var qnJSONArr = new Array; //of JSON objects for each qn - from mode 2
+var qnTextArr = new Array(); //of question text for each of the 10 qns - from mode 1
+var qnJSONArr = new Array; //of JSON objects for each of the 10 qns - from mode 2
 var answerList = new Array(); //of all 20 questions
+var answerClassList = new Array(); //of the vertex class for the 10 local qns
 var currentQn;
 var localQnNo; //1-based
 
@@ -14,7 +15,7 @@ var infoRefresh;
 var clientsideTimeRefresh;
 var timeLeft; //in seconds
 
-//initialising functions
+/***** initialising functions *****/
 function startTest() {
 	generateQns();
 	scrambleQns();
@@ -65,17 +66,16 @@ function scrambleQns() {
 }
 
 function getQnData(n) {
-	/*
+	/* //FLIPFLOP
 	for(var i=0; i<20; i++) {
 		qnTextArr[i]="Why did the chicken cross the road? Actual question is qn "+questionList[i];
 		if(questionList[i]<10) {
-			qnJSONArr[i] = jQuery.parseJSON('{"vl":{"0":{"cx":450,"cy":50,"text":"21","state":0},"1":{"cx":225,"cy":100,"text":"18","state":0},"2":{"cx":675,"cy":100,"text":"50","state":0},"3":{"cx":112.5,"cy":150,"text":"4","state":0},"4":{"cx":337.5,"cy":150,"text":"19","state":0},"5":{"cx":562.5,"cy":150,"text":"23","state":0},"6":{"cx":787.5,"cy":150,"text":"71","state":0},"7":{"cx":168.75,"cy":200,"text":"17","state":0}},"el":{"1":{"vertexA":0,"vertexB":1,"type":0,"weight":1,"state":0,"animateHighlighted":false},"2":{"vertexA":0,"vertexB":2,"type":0,"weight":1,"state":0,"animateHighlighted":false},"3":{"vertexA":1,"vertexB":3,"type":0,"weight":1,"state":0,"animateHighlighted":false},"4":{"vertexA":1,"vertexB":4,"type":0,"weight":1,"state":0,"animateHighlighted":false},"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"6":{"vertexA":2,"vertexB":6,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":3,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"The current BST","lineNo":0}')
+			qnJSONArr[i] = jQuery.parseJSON('{"vl":{"0":{"cx":450,"cy":50,"text":"21","state":0},"1":{"cx":225,"cy":100,"text":"18","state":0},"2":{"cx":675,"cy":100,"text":"50","state":0},"3":{"cx":112.5,"cy":150,"text":"4","state":0},"4":{"cx":337.5,"cy":150,"text":"19","state":0},"5":{"cx":562.5,"cy":150,"text":"23","state":0},"6":{"cx":787.5,"cy":150,"text":"71","state":1},"7":{"cx":168.75,"cy":200,"text":"17","state":0}},"el":{"1":{"vertexA":0,"vertexB":1,"type":0,"weight":1,"state":0,"animateHighlighted":false},"2":{"vertexA":0,"vertexB":2,"type":0,"weight":1,"state":0,"animateHighlighted":false},"3":{"vertexA":1,"vertexB":3,"type":0,"weight":1,"state":0,"animateHighlighted":false},"4":{"vertexA":1,"vertexB":4,"type":0,"weight":1,"state":0,"animateHighlighted":false},"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"6":{"vertexA":2,"vertexB":6,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":3,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"The current BST","lineNo":0}')
 		} else {
 			qnJSONArr[i] = jQuery.parseJSON('{"vl":{"2":{"cx":450,"cy":50,"text":"23","state":0},"5":{"cx":675,"cy":100,"text":"71","state":0},"7":{"cx":562.5,"cy":150,"text":"50","state":0},"8":{"cx":618.75,"cy":200,"text":"60","state":0},"9":{"cx":590.625,"cy":250,"text":"55","state":0}},"el":{"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":5,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false},"8":{"vertexA":7,"vertexB":8,"type":0,"weight":1,"state":0,"animateHighlighted":false},"9":{"vertexA":8,"vertexB":9,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"Removal of 57 completed","lineNo":0}');
 		}
 	}
 	$('#login-screen').hide();
-	$('#answer-form').show();
 	$('#info').show();
 	$('#question-nav').show();
 	$('#question-text').show();
@@ -84,9 +84,10 @@ function getQnData(n) {
 	gw.startAnimation(qnJSONArr);
 	gw.pause();
 	showQn(questionList[0]);
+	//time, attempt no, and date update
 	updateInfo();
 	infoRefresh = setInterval(function(){updateInfo()}, 10000);
-	timeLeft = 10;
+	timeLeft = 1000;
 	clientsideTimeUpdate();
 	clientsideTimeRefresh = setInterval(function() {
 		clientsideTimeUpdate();
@@ -109,7 +110,6 @@ function getQnData(n) {
 					url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=8"
 				}).done(function() {});
 				$('#login-screen').hide();
-				$('#answer-form').show();
 				$('#info').show();
 				$('#question-nav').show();
 				$('#question-text').show();
@@ -128,28 +128,63 @@ function getQnData(n) {
 	});
 }
 
-//update display functions
-function showQn(q) {
+/***** update display functions *****/
+function showQn(q) { //answer recording stuff also in here
 	currentQn = q;
 	localQnNo = questionList.indexOf(q)+1;
-	
-	/*------question input, for now only: to change when using graph input------*/
-	var currentQnAns = answerList[currentQn-1];
-	if(currentQnAns == -100) {
-		$('#answer').val("");
-	} else {
-		$('#answer').val(currentQnAns);
-	}
 	
 	/*------question text------*/
 	qnText = qnTextArr[localQnNo-1];
 	$('#question-text').html(localQnNo+".&nbsp;&nbsp;&nbsp;"+qnText);
 	
 	/*------question graph------*/
-	gw.jumpToIteration(localQnNo-1,300);
+	gw.jumpToIteration(localQnNo-1,250);
+	
+	/*------bind click events for answer input------*/
+	$('#vertexText text').unbind('click');
+	
+	$('#vertexText text').click( function() {
+		//record answer class (vertex number) in answerClassList
+		var thisClass = $(this).attr('class');
+		answerClassList[localQnNo-1] = thisClass;
+		
+		//record answer in answerList
+		var serializer = new XMLSerializer();
+		var thisString = serializer.serializeToString($(this)[0]);
+		var val = thisString.split('>')[1].split('</text')[0];
+		answerList[currentQn-1] = val;
+		
+		//use colour to indicate selected
+		gw.jumpToIteration(localQnNo-1,1);
+		setTimeout(function(){colourCircle(thisClass);}, 2);
+		
+		//mark as answered
+		$('#question-nav .qnno').eq(localQnNo-1).addClass('answered');
+	});
+	
+	/*------answer highlight------*/
+	var currentQnAns = answerList[currentQn-1];
+	if(currentQnAns != -100) {
+		//highlight vertex
+		setTimeout(function(){colourCircle(answerClassList[localQnNo-1]);}, 251);
+	}
+}
+
+function colourCircle(vertexClass) { //helper function for showQn
+	//add colour to the right one
+	$('.'+vertexClass).each(function() {
+		if($(this).prop('tagName')=='circle') { //paint both inner and outer circles black
+			$(this).attr('fill','black');
+			$(this).attr('stroke','black');
+		}
+		if($(this).prop('tagName')=='text') { //paint text label white
+			$(this).attr('fill','white');
+		}
+	});
 }
 
 function updateInfo() {
+	///* //FLIPFLOP
 	$.ajax({//update timer
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=6"
 	}).done(function(timeElapsed) {
@@ -171,11 +206,14 @@ function updateInfo() {
 	/*
 	$('#student-name').html("ROSE MARIE TAN");
 	$('#attempt-count').html("Attempt 1");
-	*/
+	//*/
 }
 
 function clientsideTimeUpdate() {
-	$('#time-left').html(timeLeft+" s");
+	var m = Math.floor(timeLeft/60).toString();
+	var s = (timeLeft%60).toString();
+	if(s.length <2){ s = "0"+s; }
+	$('#time-left').html(m+": "+s);
 	if(timeLeft <=0) {
 		endTest();
 	} else {
@@ -183,19 +221,21 @@ function clientsideTimeUpdate() {
 	}
 }
 
-//after submit functions
+/***** after submit functions *****/
 function endTest() {
 	/*
-	var score = 8;
+	var score = -1;
 	if(score>=0) {
 		var attemptNo = 1;
 		if(attemptNo == 1) {
 			$('#try-again').css('display','inline-block');
+			$('#nope').css('display','inline-block');
 			$('#result').html("You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
 			$('#result-note').html("(The score from your final attempt will be recorded.)");
 		} else if(attemptNo==2) {
 			$('#try-again').css('display','none');
-			$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<div>");
+			$('#nope').css('display','none');
+			$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br/>Please show your TA this screen before you leave.<div>");
 			$('#result-note').html("");
 		}
 		clearInterval(infoRefresh);
@@ -207,7 +247,7 @@ function endTest() {
 		clearInterval(clientsideTimeRefresh);
 		goToResultScreen();
 	}
-	*/
+	*/ //FLIPFLOP
 	//get score
 	var ansStr = answerList.join('&ans[]=');
 	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=3&ans[]="+ansStr;
@@ -243,7 +283,6 @@ function endTest() {
 
 function goToResultScreen() {
 	//hide test stuff
-	$('#answer-form').hide();
 	$('#info').hide();
 	$('#question-nav').hide();
 	$('#question-text').hide();
@@ -253,7 +292,7 @@ function goToResultScreen() {
 }
 
 $(document).ready (function() {
-	//login	
+	/***** login functions *****/
 	$('#login-id').focusin(function() {
 		$(this).css('box-shadow','0px 0px 3px #00a594 inset');
 		if ($(this).val() == "user id") {
@@ -286,14 +325,23 @@ $(document).ready (function() {
 	$('#login').click(function() {
 		studentid = $('#login-id').val();
 		studentpw = $('#login-pw').val();
+		///* //FLIPFLOP
 		$.ajax({
 			url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=0"
 		}).done(function(data) {
-			if(data == 0) {
+			if(data == 0) { //not in database
 				$('#login-err').html('Incorrect user id or password');
-			} else if(data ==0) {
-				$('#login-err').html("");
-				startTest();
+			} else if(data ==1) { //in database
+				$.ajax({ //get no. of attempts
+					url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=5"
+				}).done(function(data) {
+					if(data < 2) { //ok login
+						$('#login-err').html("");
+						startTest();
+					}
+					else //no more attempts - don't log in
+						$('#login-err').html('You have exhausted your 2 attempts.');
+				});
 			}
 		});
 		/*
@@ -303,11 +351,11 @@ $(document).ready (function() {
 		} else {
 			$('#login-err').html('Incorrect user id or password');
 		}
-		*/
+		//*/
 		return false; //to prevent page reload //can put here because it doesn't depend on the ajax call
 	});
 	
-	//question navigation stuff
+	/***** question navigation *****/
 	$('#question-nav .qnno').click(function() {
 		$('#question-nav .qnno').removeClass('selected');
 		$(this).addClass('selected');
@@ -333,14 +381,7 @@ $(document).ready (function() {
 		}
 	});
 	
-	//answer stuff: to remove after input by point and click
-	$('#answer-go').click(function() {
-		answerList[currentQn-1] = $('#answer').val();
-		$('#question-nav .qnno').eq(localQnNo-1).addClass('answered');
-		return false; // prevents page reload
-	});
-	
-	//results stuff
+	/***** results stuff *****/
 	$('#submit-test').click(function() {
 		endTest();
 	});
@@ -349,5 +390,12 @@ $(document).ready (function() {
 		$('#question-nav .qnno').removeClass('selected').removeClass('answered');
 		$('#question-nav .qnno').eq(0).addClass('selected');
 		startTest();
+	});
+	$('#nope').click(function() {
+		$('#try-again').hide();
+		$(this).hide();
+		$('#result-note').html("");
+		var tempArr = $('#result').html().split('</div>');
+		$('#result').html(tempArr[0]+"</div>Please show your TA this screen before you leave.");
 	});
 });

@@ -79,8 +79,24 @@
 		cursor: pointer;
 		border-radius: 2px;
 		background: #00a594;
+		margin: 0px 5px;
 	}
 		#try-again:hover {
+			background: black;
+		}
+	#nope {
+		display: inline-block;
+		display: none;
+		padding: 7px 10px;
+		color: white;
+		font-size: 16px;
+		font-weight: bold;
+		cursor: pointer;
+		border-radius: 2px;
+		background: #00a594;
+		margin: 0px 5px;
+	}
+		#nope:hover {
 			background: black;
 		}
 	#result-note {
@@ -200,24 +216,7 @@
 				border-color: transparent;
 				border-top-color: #eee;
 			}
-
-#answer-form {
-	text-align: center;
-	width: 100%;
-	position: fixed;
-	bottom: 120px;
-	display: none;
+	
+#vertexText text {
+	cursor: pointer;
 }
-	#answer {
-		text-align: center;
-		box-shadow: 0px 0px 3px #929292 inset;
-		padding: 7px 10px;
-		font-size: 14px;
-	}
-	#answer-go {
-		color: white;
-		padding: 7px 10px;
-		margin-left: -1px;
-		cursor: pointer;
-		background: #00a594;
-	}
