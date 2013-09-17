@@ -41,8 +41,12 @@
     	<input id="answer" type="text" min=0 max=99 value="" size=2 autocomplete="off"></input
         ><input id="answer-go" type="submit" value="Confirm!"/>
     </form>
-    <div id="time-left">02:18</div>
-    <div id="submit-test">Submit Quiz</div>
+    <div id="info">
+        <div id="student-name"></div>
+        <div id="attempt-count"></div>
+        <div id="time-left"></div>
+        <div id="submit-test">Submit Quiz</div>
+    </div>
     
 <div id="left-bar"></div>
 <div id="right-bar"></div>
@@ -69,10 +73,25 @@
 </div>
 
 <div id="login-screen">
+	<div style="background: #00a594;">
+        <ul id="instructions">
+            <div style="padding-bottom: 20px; text-align: center; font-size: 20px; font-weight: bold;">Instructions</div>
+            <li>Log in with your matric number (uppercase, with final letter) as the user id, and the password given to you during your online quiz session.</li>
+            <li>You are given 2 attempts. The result from your final attempt will be recorded.</li>
+            <li>You are given 10 minutes for each attempt.</li>
+            <li>Your first attempt begins when you log in.</li>
+            <li>If you choose to make a second attempt, you may get a different set of questions.</li>
+            <li>Do not refresh your browser, go back, or close the window while taking the test.</li>
+            <li>Your score is only valid if you are physically present in the lab.</li>
+            <li>You are not allowed to discuss the questions or answers until 4pm today, even with your fellow lab group mates.</li>
+            <li>In the case of any disputes, the decision of the lecturer is final.</li>
+        </ul>
+    </div>
 	<form>
     	<input id="login-id" type="text" value="user id"/><br/>
         <input id="login-pw" type="text" value="password"/><br/><br/>
         <input id="login" type="submit" value="LOG IN" />
+        <div id="login-err"></div>
     </form>
 </div>
 
@@ -96,16 +115,6 @@
 <script src="js/graph_library/GraphVertexWidget.js"></script>
 <script src="js/graph_library/GraphEdgeWidget.js"></script>
 <script src="js/test.js"></script>
-
-<!--following script for testing purposes-->
-<!--
-<script src="js/BstWidget.js"></script>
-<script type="text/javascript">
-	//this viz-specific code
-	var bstWidget = new BST();
-    var gw = bstWidget.getGraphWidget();
-</script>
--->
 
 </body>
 </html>
