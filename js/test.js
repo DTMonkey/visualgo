@@ -164,7 +164,7 @@ function updateInfo() {
 		$('#student-name').html(name);
 	});
 	$.ajax({//update attempt no
-		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=7"
+		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=5"
 	}).done(function(n) {
 		$('#attempt-count').html("Attempt "+n);
 	});
