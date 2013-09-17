@@ -13,7 +13,7 @@ var localQnNo; //1-based
 
 var infoRefresh;
 var clientsideTimeRefresh;
-var timeLeft; //in seconds
+var timeLeft=30; //in seconds
 
 /***** initialising functions *****/
 function startTest() {
