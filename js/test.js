@@ -166,7 +166,7 @@ function showQn(q) { //answer recording stuff also in here
 	var currentQnAns = answerList[currentQn-1];
 	if(currentQnAns != -100) {
 		//highlight vertex
-		setTimeout(function(){colourCircle(answerClassList[localQnNo-1]);}, 251);
+		setTimeout(function(){colourCircle(answerClassList[localQnNo-1]);}, 300);
 	}
 }
 
@@ -261,10 +261,12 @@ function endTest() {
 			}).done(function(attemptNo) {
 				if(attemptNo==1) {
 					$('#try-again').css('display','inline-block');
+					$('#nope').css('display','inline-block');
 					$('#result').html("You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
 					$('#result-note').html("(The score from your final attempt will be recorded.)");
 				} else if(attemptNo==2){
 					$('#try-again').css('display','none');
+					$('#nope').css('display','none');
 					$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<div>");
 					$('#result-note').html("");
 				}
