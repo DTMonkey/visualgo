@@ -120,6 +120,7 @@
 	position: fixed;
 	top: 40px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	width: 100%;
 	padding: 40px 80px;
 	z-index: -10;
