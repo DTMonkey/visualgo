@@ -93,6 +93,7 @@ var GraphWidget = function(){
   // graphState oject is equivalent to one element of the statelist.
   // See comments below this function
   this.updateGraph = function(graphState, duration){
+    if(duration == null || isNaN(duration)) duration = animationDuration;
     updateDisplay(graphState, duration);
   }
 
