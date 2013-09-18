@@ -221,3 +221,7 @@
 #vertexText text {
 	cursor: pointer;
 }
+
+#vertex circle {
+	cursor: pointer;
+}

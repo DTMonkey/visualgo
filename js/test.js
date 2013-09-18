@@ -1,6 +1,7 @@
 surpriseColour = '#00a594'; //override: IT WILL ALWAYS BE DARK TURQUOISE
 var studentid;
 var studentpw;
+var studentname;
 var gw = new GraphWidget();
 
 var questionList = new Array(); //of real (jumbled 10 from 20) question numbers - maps 0-9 to the real qn nos.
@@ -13,13 +14,15 @@ var localQnNo; //1-based
 
 var infoRefresh;
 var clientsideTimeRefresh;
-var timeLeft=30; //in seconds
+var availableTime=30; //in seconds
+var timeLeft=availableTime;
 
 /***** initialising functions *****/
 function startTest() {
 	generateQns();
 	scrambleQns();
 	initAns();
+	timeLeft=availableTime;
 	getQnData(0); //all showing/hiding and setting the graph widget state are inside here
 }
 
@@ -66,7 +69,7 @@ function scrambleQns() {
 }
 
 function getQnData(n) {
-	/* //FLIPFLOP
+	///* //FLIPFLOP
 	for(var i=0; i<20; i++) {
 		qnTextArr[i]="Why did the chicken cross the road? Actual question is qn "+questionList[i];
 		if(questionList[i]<10) {
@@ -92,7 +95,7 @@ function getQnData(n) {
 	clientsideTimeRefresh = setInterval(function() {
 		clientsideTimeUpdate();
 	},1000);
-	*/
+	/*
 	//for text
 	$.ajax({
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=1&id="+questionList[n]
@@ -126,6 +129,7 @@ function getQnData(n) {
 			}
 		});
 	});
+	//*/
 }
 
 /***** update display functions *****/
@@ -162,6 +166,30 @@ function showQn(q) { //answer recording stuff also in here
 		$('#question-nav .qnno').eq(localQnNo-1).addClass('answered');
 	});
 	
+	$('#vertex circle').unbind('click');
+	
+	$('#vertex circle').click( function() {
+		//record answer class (vertex number) in answerClassList
+		var thisClass = $(this).attr('class');
+		answerClassList[localQnNo-1] = thisClass;
+		
+		//find text with this class
+		var temp = $('#vertexText text.'+thisClass);
+		
+		//record answer in answerList
+		var serializer = new XMLSerializer();
+		var thisString = serializer.serializeToString(temp[0]);
+		var val = thisString.split('>')[1].split('</text')[0];
+		answerList[currentQn-1] = val;
+		
+		//use colour to indicate selected
+		gw.jumpToIteration(localQnNo-1,1);
+		setTimeout(function(){colourCircle(thisClass);}, 2);
+		
+		//mark as answered
+		$('#question-nav .qnno').eq(localQnNo-1).addClass('answered');
+	});
+	
 	/*------answer highlight------*/
 	var currentQnAns = answerList[currentQn-1];
 	if(currentQnAns != -100) {
@@ -184,11 +212,11 @@ function colourCircle(vertexClass) { //helper function for showQn
 }
 
 function updateInfo() {
-	///* //FLIPFLOP
+	/* //FLIPFLOP
 	$.ajax({//update timer
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=6"
 	}).done(function(timeElapsed) {
-		timeLeft = 600-timeElapsed;
+		timeLeft = availableTime-timeElapsed;
 		if(timeLeft <=0) {
 			endTest();
 		}
@@ -197,13 +225,14 @@ function updateInfo() {
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=7"
 	}).done(function(name) {
 		$('#student-name').html(name);
+		studentname = name;
 	});
 	$.ajax({//update attempt no
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=5"
 	}).done(function(n) {
 		$('#attempt-count').html("Attempt "+n);
 	});
-	/*
+	*/
 	$('#student-name').html("ROSE MARIE TAN");
 	$('#attempt-count').html("Attempt 1");
 	//*/
@@ -223,31 +252,31 @@ function clientsideTimeUpdate() {
 
 /***** after submit functions *****/
 function endTest() {
-	/*
+	///*
 	var score = -1;
 	if(score>=0) {
 		var attemptNo = 1;
 		if(attemptNo == 1) {
 			$('#try-again').css('display','inline-block');
 			$('#nope').css('display','inline-block');
-			$('#result').html("You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
+			$('#result').html(studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
 			$('#result-note').html("(The score from your final attempt will be recorded.)");
 		} else if(attemptNo==2) {
 			$('#try-again').css('display','none');
 			$('#nope').css('display','none');
-			$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br/>Please show your TA this screen before you leave.<div>");
+			$('#result').html("<div style='padding-top:50px;'>" + studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br/>Please show your TA this screen before you leave.<div>");
 			$('#result-note').html("");
 		}
 		clearInterval(infoRefresh);
 		clearInterval(clientsideTimeRefresh);
 		goToResultScreen();
 	} else {
-		$('#result').html("<div style='padding-top:80px;'>You have already attempted this quiz twice. This submission will not be recorded.</div>");
+		$('#result').html("<div style='padding-top:80px;'>" + studentname + ", you have already attempted this quiz twice. This submission will not be recorded.</div>");
 		clearInterval(infoRefresh);
 		clearInterval(clientsideTimeRefresh);
 		goToResultScreen();
 	}
-	*/ //FLIPFLOP
+	/* //FLIPFLOP
 	//get score
 	var ansStr = answerList.join('&ans[]=');
 	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=3&ans[]="+ansStr;
@@ -262,12 +291,12 @@ function endTest() {
 				if(attemptNo==1) {
 					$('#try-again').css('display','inline-block');
 					$('#nope').css('display','inline-block');
-					$('#result').html("You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
+					$('#result').html(studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
 					$('#result-note').html("(The score from your final attempt will be recorded.)");
 				} else if(attemptNo==2){
 					$('#try-again').css('display','none');
 					$('#nope').css('display','none');
-					$('#result').html("<div style='padding-top:50px;'>You scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<div>");
+					$('#result').html("<div style='padding-top:50px;'>" + studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br>Please show your TA this screen before you leave.");
 					$('#result-note').html("");
 				}
 				clearInterval(infoRefresh);
@@ -275,12 +304,13 @@ function endTest() {
 				goToResultScreen();
 			});
 		} else if(score == -1) {
-			$('#result').html("<div style='padding-top:80px;'>You have already attempted this quiz twice. This submission will not be recorded.</div>");
+			$('#result').html("<div style='padding-top:80px;'>" + studentname + ", you have already attempted this quiz twice. This submission will not be recorded.</div>");
 			clearInterval(infoRefresh);
 			clearInterval(clientsideTimeRefresh);
 			goToResultScreen();
 		}
 	});
+	//*/
 }
 
 function goToResultScreen() {
@@ -327,7 +357,7 @@ $(document).ready (function() {
 	$('#login').click(function() {
 		studentid = $('#login-id').val();
 		studentpw = $('#login-pw').val();
-		///* //FLIPFLOP
+		/* //FLIPFLOP
 		$.ajax({
 			url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=0"
 		}).done(function(data) {
@@ -346,7 +376,7 @@ $(document).ready (function() {
 				});
 			}
 		});
-		/*
+		*/
 		if(true) {
 			$('#login-err').html("");
 			startTest();
@@ -385,7 +415,12 @@ $(document).ready (function() {
 	
 	/***** results stuff *****/
 	$('#submit-test').click(function() {
-		endTest();
+		var r=confirm("Are you sure you want to submit the test?");
+		if (r==true)
+			endTest();
+		else {
+			updateInfo();
+		}
 	});
 	$('#try-again').click(function() {
 		$('#result-screen').hide();
