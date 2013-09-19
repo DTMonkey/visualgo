@@ -18,9 +18,28 @@ var MST = function(){
 
   var valueRange = [1, 100]; // Range of valid values of BST vertexes allowed
 
+  /*
+   *  Structure of internalAdjList: JS object with
+   *  - key: vertex number
+   *  - value: JS object with
+   *           - key: the other vertex number that is connected by the edge
+   *           - value: ID of the edge, NOT THE WEIGHT OF THE EDGE
+   *
+   *  The reason why the adjList didn't store edge weight is because it will be easier to create bugs
+   *  on information consistency between the adjList and edgeList
+   *
+   *  Structure of internalEdgeList: JS object with
+   *  - key: edge ID
+   *  - value: JS object with the following keys:
+   *           - vertexA
+   *           - vertexB
+   *           - weight
+   */
+
   var internalAdjList = {};
   var internalEdgeList = {};
   var amountVertex = 0;
+  var amountEdge = 0;
 
   this.getGraphWidget = function(){
     return graphWidget;
@@ -56,9 +75,70 @@ var MST = function(){
         break;
       case MST_EXAMPLE_CP4P9:
         internalAdjList = {
+          0:{
+            1:0,
+            2:1,
+            3:2,
+            4:3
+          },
+          1:{
+            0:0,
+            2:4
+          },
+          2:{
+            0:1,
+            1:4,
+            3:5
+          },
+          3:{
+            0:2,
+            2:5,
+            4:6
+          },
+          4:{
+            0:3,
+            3:6
+          }
         };
         internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 4
+          },
+          1:{
+              "vertexA": 0,
+              "vertexB": 2,
+              "weight": 4
+          },
+          2:{
+              "vertexA": 0,
+              "vertexB": 3,
+              "weight": 6
+          },
+          3:{
+              "vertexA": 0,
+              "vertexB": 4,
+              "weight": 6
+          },
+          4:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 2
+          },
+          5:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 8
+          ,
+          6:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 9
+          }
         };
+        amountVertex = 5;
+        amountEdge = 7;
         break;
       case MST_EXAMPLE_CP4P13:
         internalAdjList = {
