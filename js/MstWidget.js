@@ -46,11 +46,109 @@ var MST = function(){
   }
 
   this.prim = function(startVertexText, mstTypeConstant){
+    var key;
+    var i;
+    var notVisited = {};
+    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
+    var stateList = [];
+    var currentState;
 
+    for(key in internalAdjList){
+      if(key != startVertexText) notVisited[key] = true;
+    }
+
+    currentState = createState(internalAdjList, internalEdgeList);
+    stateList.push(currentState);
+
+    vertexHighlighted[startVertexText] = true;
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    stateList.push(currentState);
+
+    delete vertexHighlighted[startVertexText];
+    vertexTreaversed[startVertexText] = true;
+
+    if(mstTypeConstant == MST_MAX){
+
+    }
+
+    else{
+      var minPriorityQueue = [];
+      
+      for(key in internalAdjList[startVertexText]){
+        var enqueuedEdgeId = internalAdjList[startVertexText][key];
+        var enqueuedEdge = ObjectTriple(internalEdgeList[edgeId]["weight"], key, enqueuedEdgeId);
+        edgeTraversed[enqueuedEdgeId] = true;
+        minPriorityQueue.push(enqueuedEdge);
+      }
+
+      minPriorityQueue.sort();
+
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
+
+      while(Object.keys(notVisited).length > 0){
+        var dequeuedEdge = minPriorityQueue.pop();
+        var otherVertex = dequeuedEdge.getSecond();
+        var edgeId = dequeuedEdge.getThird();
+        if(notVisited[otherVertex] != null){
+          delete edgeTraversed[edgeId];
+          edgeHighlighted[edgeId] = true;
+          vertexHighlighted[otherVertex] = true;
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          currentState["el"][edgeId]["animateHighlighted"] = true;
+          stateList.push(currentState);
+
+          delete notVisited[otherVertex];
+
+          delete vertexHighlighted[otherVertex];
+          vertexTraversed[otherVertex] = true;
+
+          for(key in internalAdjList[otherVertex]){
+            var enqueuedEdgeId = internalAdjList[otherVertex][key];
+            var enqueuedEdge = ObjectTriple(internalEdgeList[edgeId]["weight"], key, enqueuedEdgeId);
+            if(edgeHighlighted[enqueuedEdgeId] == null){
+              edgeTraversed[enqueuedEdgeId] = true;
+              minPriorityQueue.push(enqueuedEdge);
+            }
+          }
+
+          minPriorityQueue.sort();
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          stateList.push(currentState);
+        }
+
+        else{
+          delete edgeTraversed[edgeId];
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          stateList.push(currentState);
+        }
+      }
+
+      edgeTraversed = {};
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
+    }
+
+    /* For MST, I'm considering of NOT using the original graph as the final state
+     * This is because:
+     * 1. The current GraphWidget doesn't break down if the final state is not the original graph
+     * 2. It's less intuitive for the students to NOT display the MST at the final state of the animation
+     */
+
+     graphWidget.startAnimation(stateList);
   }
 
   this.kruskal = function(mstTypeConstant){
+    if(mstTypeConstant == MST_MAX){
 
+    }
+
+    else{
+      
+    }
   }
 
   this.examples = function(mstExampleConstant){
@@ -153,7 +251,7 @@ var MST = function(){
     gw.updateGraph(newState, 500);
   }
 
-  function createState(internalAdjListObject, internalEdgeListObject){
+  function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
   	var key;
 
   	var state = {
@@ -181,6 +279,22 @@ var MST = function(){
       state["el"][key]["displayWeight"] = true;
       state["el"][key]["animateHighlighted"] = false;
   	}
+
+    for(key in vertexHighlighted){
+      state["vl"][key]["state"] = VERTEX_HIGHLIGHTED;
+    }
+
+    for(key in edgeHighlighted){
+      state["el"][key]["state"] = EDGE_HIGHLIGHTED;
+    }
+
+    for(key in vertexTraversed){
+      state["vl"][key]["state"] = VERTEX_TRAVERSED;
+    }
+
+    for(key in edgeTraversed){
+      state["el"][key]["state"] = EDGE_TRAVERSED;
+    }
 
   	return state;
   }
