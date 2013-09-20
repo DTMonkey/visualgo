@@ -15,7 +15,7 @@ var EDGE_TYPE_DE = 1;
 var EDGE_TYPE_BDE = 2;
 
 var NO_ITERATION = -1;
-var NO_STATELIST = -1;
+var NO_STATELIST = {};
 
 var ANIMATION_PLAY = 1;
 var ANIMATION_PAUSE = 0;

@@ -54,6 +54,7 @@ var MST = function(){
     var currentState;
 
     for(key in internalAdjList){
+      if(key == "cx" || key == "cy") continue;
       if(key != startVertexText) notVisited[key] = true;
     }
 
@@ -65,7 +66,7 @@ var MST = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[startVertexText];
-    vertexTreaversed[startVertexText] = true;
+    vertexTraversed[startVertexText] = true;
 
     if(mstTypeConstant == MST_MAX){
 
@@ -75,8 +76,10 @@ var MST = function(){
       var minPriorityQueue = [];
       
       for(key in internalAdjList[startVertexText]){
+        if(key == "cx" || key == "cy") continue;
+
         var enqueuedEdgeId = internalAdjList[startVertexText][key];
-        var enqueuedEdge = ObjectTriple(internalEdgeList[edgeId]["weight"], key, enqueuedEdgeId);
+        var enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
         edgeTraversed[enqueuedEdgeId] = true;
         minPriorityQueue.push(enqueuedEdge);
       }
@@ -105,8 +108,10 @@ var MST = function(){
           vertexTraversed[otherVertex] = true;
 
           for(key in internalAdjList[otherVertex]){
+            if(key == "cx" || key == "cy") continue;
+
             var enqueuedEdgeId = internalAdjList[otherVertex][key];
-            var enqueuedEdge = ObjectTriple(internalEdgeList[edgeId]["weight"], key, enqueuedEdgeId);
+            var enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
             if(edgeHighlighted[enqueuedEdgeId] == null){
               edgeTraversed[enqueuedEdgeId] = true;
               minPriorityQueue.push(enqueuedEdge);
@@ -174,26 +179,36 @@ var MST = function(){
       case MST_EXAMPLE_CP4P9:
         internalAdjList = {
           0:{
+            "cx": 150,
+            "cy": 150,
             1:0,
             2:1,
             3:2,
             4:3
           },
           1:{
+            "cx": 200,
+            "cy": 100,
             0:0,
             2:4
           },
           2:{
+            "cx": 250,
+            "cy": 150,
             0:1,
             1:4,
             3:5
           },
           3:{
+            "cx": 200,
+            "cy": 200,
             0:2,
             2:5,
             4:6
           },
           4:{
+            "cx": 150,
+            "cy": 250,
             0:3,
             3:6
           }
@@ -228,6 +243,7 @@ var MST = function(){
               "vertexA": 2,
               "vertexB": 3,
               "weight": 8
+          }
           ,
           6:{
               "vertexA": 3,
@@ -248,7 +264,7 @@ var MST = function(){
 
     var newState = createState(internalAdjList, internalEdgeList);
 
-    gw.updateGraph(newState, 500);
+    graphWidget.updateGraph(newState, 500);
   }
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
