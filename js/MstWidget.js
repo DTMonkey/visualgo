@@ -68,134 +68,69 @@ var MST = function(){
     delete vertexHighlighted[startVertexText];
     vertexTraversed[startVertexText] = true;
 
-    if(mstTypeConstant == MST_MAX){
-      var maxPriorityQueue = [];
-      
-      for(key in internalAdjList[startVertexText]){
-        if(key == "cx" || key == "cy") continue;
+    var sortedArray = [];
+    
+    for(key in internalAdjList[startVertexText]){
+      if(key == "cx" || key == "cy") continue;
 
-        var enqueuedEdgeId = internalAdjList[startVertexText][key];
-        var enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-        edgeTraversed[enqueuedEdgeId] = true;
-        maxPriorityQueue.push(enqueuedEdge);
-      }
-
-      maxPriorityQueue.sort(ObjectTriple.compare);
-
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      stateList.push(currentState);
-
-      while(Object.keys(notVisited).length > 0){
-        var dequeuedEdge = maxPriorityQueue.shift();
-        var otherVertex = dequeuedEdge.getSecond();
-        var edgeId = dequeuedEdge.getThird();
-        if(notVisited[otherVertex] != null){
-          delete edgeTraversed[edgeId];
-          edgeHighlighted[edgeId] = true;
-          vertexHighlighted[otherVertex] = true;
-
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          currentState["el"][edgeId]["animateHighlighted"] = true;
-          stateList.push(currentState);
-
-          delete notVisited[otherVertex];
-
-          delete vertexHighlighted[otherVertex];
-          vertexTraversed[otherVertex] = true;
-
-          for(key in internalAdjList[otherVertex]){
-            if(key == "cx" || key == "cy") continue;
-
-            var enqueuedEdgeId = internalAdjList[otherVertex][key];
-            var enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-            if(edgeHighlighted[enqueuedEdgeId] == null){
-              edgeTraversed[enqueuedEdgeId] = true;
-              maxPriorityQueue.push(enqueuedEdge);
-            }
-          }
-
-          maxPriorityQueue.sort(ObjectTriple.compare);
-
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          stateList.push(currentState);
-        }
-
-        else{
-          delete edgeTraversed[edgeId];
-
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          stateList.push(currentState);
-        }
-      }
-
-      edgeTraversed = {};
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      stateList.push(currentState);
+      var enqueuedEdgeId = internalAdjList[startVertexText][key];
+      var enqueuedEdge;
+      if(mstTypeConstant == MST_MAX)
+        enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+      else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+      edgeTraversed[enqueuedEdgeId] = true;
+      sortedArray.push(enqueuedEdge);
     }
 
-    else{
-      var minPriorityQueue = [];
-      
-      for(key in internalAdjList[startVertexText]){
-        if(key == "cx" || key == "cy") continue;
+    sortedArray.sort(ObjectTriple.compare);
 
-        var enqueuedEdgeId = internalAdjList[startVertexText][key];
-        var enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-        edgeTraversed[enqueuedEdgeId] = true;
-        minPriorityQueue.push(enqueuedEdge);
-      }
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    stateList.push(currentState);
 
-      minPriorityQueue.sort(ObjectTriple.compare);
+    while(Object.keys(notVisited).length > 0){
+      var dequeuedEdge = sortedArray.shift();
+      var otherVertex = dequeuedEdge.getSecond();
+      var edgeId = dequeuedEdge.getThird();
+      if(notVisited[otherVertex] != null){
+        delete edgeTraversed[edgeId];
+        edgeHighlighted[edgeId] = true;
+        vertexHighlighted[otherVertex] = true;
 
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      stateList.push(currentState);
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+        currentState["el"][edgeId]["animateHighlighted"] = true;
+        stateList.push(currentState);
 
-      while(Object.keys(notVisited).length > 0){
-        var dequeuedEdge = minPriorityQueue.shift();
-        var otherVertex = dequeuedEdge.getSecond();
-        var edgeId = dequeuedEdge.getThird();
-        if(notVisited[otherVertex] != null){
-          delete edgeTraversed[edgeId];
-          edgeHighlighted[edgeId] = true;
-          vertexHighlighted[otherVertex] = true;
+        delete notVisited[otherVertex];
 
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          currentState["el"][edgeId]["animateHighlighted"] = true;
-          stateList.push(currentState);
+        delete vertexHighlighted[otherVertex];
+        vertexTraversed[otherVertex] = true;
 
-          delete notVisited[otherVertex];
+        for(key in internalAdjList[otherVertex]){
+          if(key == "cx" || key == "cy") continue;
 
-          delete vertexHighlighted[otherVertex];
-          vertexTraversed[otherVertex] = true;
-
-          for(key in internalAdjList[otherVertex]){
-            if(key == "cx" || key == "cy") continue;
-
-            var enqueuedEdgeId = internalAdjList[otherVertex][key];
-            var enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-            if(edgeHighlighted[enqueuedEdgeId] == null){
-              edgeTraversed[enqueuedEdgeId] = true;
-              minPriorityQueue.push(enqueuedEdge);
-            }
+          var enqueuedEdgeId = internalAdjList[otherVertex][key];
+          var enqueuedEdge;
+          if(mstTypeConstant == MST_MAX)
+            enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+          else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+          if(edgeHighlighted[enqueuedEdgeId] == null){
+            edgeTraversed[enqueuedEdgeId] = true;
+            sortedArray.push(enqueuedEdge);
           }
-
-          minPriorityQueue.sort(ObjectTriple.compare);
-
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          stateList.push(currentState);
         }
 
-        else{
-          delete edgeTraversed[edgeId];
+        sortedArray.sort(ObjectTriple.compare);
 
-          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-          stateList.push(currentState);
-        }
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+        stateList.push(currentState);
       }
 
-      edgeTraversed = {};
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      stateList.push(currentState);
+      else{
+        delete edgeTraversed[edgeId];
+
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+        stateList.push(currentState);
+      }
     }
 
     /* For MST, I'm considering of NOT using the original graph as the final state
@@ -204,7 +139,13 @@ var MST = function(){
      * 2. It's less intuitive for the students to NOT display the MST at the final state of the animation
      */
 
-     graphWidget.startAnimation(stateList);
+    edgeTraversed = {};
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    stateList.push(currentState);
+
+    console.log(stateList);
+
+    graphWidget.startAnimation(stateList);
   }
 
   this.kruskal = function(mstTypeConstant){
