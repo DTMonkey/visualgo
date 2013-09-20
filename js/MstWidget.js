@@ -69,7 +69,68 @@ var MST = function(){
     vertexTraversed[startVertexText] = true;
 
     if(mstTypeConstant == MST_MAX){
+      var maxPriorityQueue = [];
+      
+      for(key in internalAdjList[startVertexText]){
+        if(key == "cx" || key == "cy") continue;
 
+        var enqueuedEdgeId = internalAdjList[startVertexText][key];
+        var enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+        edgeTraversed[enqueuedEdgeId] = true;
+        maxPriorityQueue.push(enqueuedEdge);
+      }
+
+      maxPriorityQueue.sort(ObjectTriple.compare);
+
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
+
+      while(Object.keys(notVisited).length > 0){
+        var dequeuedEdge = maxPriorityQueue.shift();
+        var otherVertex = dequeuedEdge.getSecond();
+        var edgeId = dequeuedEdge.getThird();
+        if(notVisited[otherVertex] != null){
+          delete edgeTraversed[edgeId];
+          edgeHighlighted[edgeId] = true;
+          vertexHighlighted[otherVertex] = true;
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          currentState["el"][edgeId]["animateHighlighted"] = true;
+          stateList.push(currentState);
+
+          delete notVisited[otherVertex];
+
+          delete vertexHighlighted[otherVertex];
+          vertexTraversed[otherVertex] = true;
+
+          for(key in internalAdjList[otherVertex]){
+            if(key == "cx" || key == "cy") continue;
+
+            var enqueuedEdgeId = internalAdjList[otherVertex][key];
+            var enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
+            if(edgeHighlighted[enqueuedEdgeId] == null){
+              edgeTraversed[enqueuedEdgeId] = true;
+              maxPriorityQueue.push(enqueuedEdge);
+            }
+          }
+
+          maxPriorityQueue.sort(ObjectTriple.compare);
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          stateList.push(currentState);
+        }
+
+        else{
+          delete edgeTraversed[edgeId];
+
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          stateList.push(currentState);
+        }
+      }
+
+      edgeTraversed = {};
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
     }
 
     else{
@@ -90,12 +151,6 @@ var MST = function(){
       stateList.push(currentState);
 
       while(Object.keys(notVisited).length > 0){
-        // for(i = 0; i < minPriorityQueue.length; i++){
-        //   var dequeuedEdge = minPriorityQueue[i];
-        //   console.log(dequeuedEdge.getFirst() + " " + dequeuedEdge.getSecond() + " " + dequeuedEdge.getThird());
-        // }
-        // console.log("---")
-
         var dequeuedEdge = minPriorityQueue.shift();
         var otherVertex = dequeuedEdge.getSecond();
         var edgeId = dequeuedEdge.getThird();
@@ -275,7 +330,6 @@ var MST = function(){
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
   	var key;
-
   	var state = {
       "vl":{},
       "el":{}

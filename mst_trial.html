@@ -224,7 +224,7 @@
   function insert() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.prim(parseInt(document.getElementById("v").value), MST_MIN)) {
+      if ((mode=="exploration")&&heapWidget.prim(parseInt(document.getElementById("v").value), MST_MAX)) {
         $('#current-action').show();
         $('#current-action p').html("Insert "+ $('#v').val());
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
