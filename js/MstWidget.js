@@ -84,13 +84,19 @@ var MST = function(){
         minPriorityQueue.push(enqueuedEdge);
       }
 
-      minPriorityQueue.sort();
+      minPriorityQueue.sort(ObjectTriple.compare);
 
       currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
       stateList.push(currentState);
 
       while(Object.keys(notVisited).length > 0){
-        var dequeuedEdge = minPriorityQueue.pop();
+        // for(i = 0; i < minPriorityQueue.length; i++){
+        //   var dequeuedEdge = minPriorityQueue[i];
+        //   console.log(dequeuedEdge.getFirst() + " " + dequeuedEdge.getSecond() + " " + dequeuedEdge.getThird());
+        // }
+        // console.log("---")
+
+        var dequeuedEdge = minPriorityQueue.shift();
         var otherVertex = dequeuedEdge.getSecond();
         var edgeId = dequeuedEdge.getThird();
         if(notVisited[otherVertex] != null){
@@ -118,7 +124,7 @@ var MST = function(){
             }
           }
 
-          minPriorityQueue.sort();
+          minPriorityQueue.sort(ObjectTriple.compare);
 
           currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
           stateList.push(currentState);
