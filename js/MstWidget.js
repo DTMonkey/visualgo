@@ -149,12 +149,33 @@ var MST = function(){
   }
 
   this.kruskal = function(mstTypeConstant){
-    if(mstTypeConstant == MST_MAX){
+    var key;
+    var i;
+    var sortedArray = [];
+    var tempUfds = new UfdsHelper();
 
+    for(key in internalAdjList){
+      tempUfds.insert(key);
     }
 
-    else{
-      
+    for(key in internalEdgeList){
+      var enqueuedEdge;
+      if(mstTypeConstant == MST_MAX) enqueuedEdge = new ObjectPair(-1*internalEdgeList[key]["weight"], key);
+      else enqueuedEdge = new ObjectPair(internalEdgeList[key]["weight"], key);
+      sortedArray.push(enqueuedEdge);
+    }
+
+    sortedArray.sort(ObjectPair.sort);
+
+    while(sortedArray.length > 0){
+      var dequeuedEdge = sortedArray.shift();
+      var dequeuedEdgeId = dequeuedEdge.getSecond();
+      var vertexA = internalEdgeList[dequeuedEdgeId]["vertexA"];
+      var vertexB = internalEdgeList[dequeuedEdgeId]["vertexB"];
+
+      if(!tempUfds.isSameSet(vertexA, vertexB)){
+        tempUfds.unionSet(vertexA, vertexB);
+      }
     }
   }
 
