@@ -151,8 +151,14 @@ var MST = function(){
   this.kruskal = function(mstTypeConstant){
     var key;
     var i;
+    var stateList = [];
+    var currentState;
+    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
     var sortedArray = [];
     var tempUfds = new UfdsHelper();
+
+    currentState = createState(internalAdjList, internalEdgeList);
+    stateList.push(currentState);
 
     for(key in internalAdjList){
       tempUfds.insert(key);
@@ -173,10 +179,29 @@ var MST = function(){
       var vertexA = internalEdgeList[dequeuedEdgeId]["vertexA"];
       var vertexB = internalEdgeList[dequeuedEdgeId]["vertexB"];
 
+      edgeTraversed[dequeuedEdgeId] = true;
+      vertexHighlighted[vertexA] = true;
+      vertexHighlighted[vertexB] = true;
+
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
+
       if(!tempUfds.isSameSet(vertexA, vertexB)){
         tempUfds.unionSet(vertexA, vertexB);
+        edgeHighlighted[dequeuedEdgeId] = true;
+        vertexTraversed[vertexA] = true;
+        vertexTraversed[vertexB] = true;
       }
+
+      delete edgeTraversed[dequeuedEdgeId];
+      delete vertexHighlighted[vertexA];
+      delete vertexHighlighted[vertexB];
+
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      stateList.push(currentState);
     }
+
+    graphWidget.startAnimation(stateList);
   }
 
   this.examples = function(mstExampleConstant){
@@ -291,6 +316,11 @@ var MST = function(){
   }
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
+    if(vertexHighlighted == null) vertexHighlighted = {};
+    if(edgeHighlighted == null) edgeHighlighted = {};
+    if(vertexTraversed == null) vertexTraversed = {};
+    if(edgeTraversed == null) edgeTraversed = {};
+
   	var key;
   	var state = {
       "vl":{},

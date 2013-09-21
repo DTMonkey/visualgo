@@ -88,7 +88,7 @@ var UfdsHelper = function(){
 	}
 
 	this.findSet = function(key){
-		if(internalUfds[insertedKey] == null) return false;
+		if(internalUfds[key] == null) return false;
 
 		var currentParent = internalUfds[key]["parent"];
 		var currentElement = key;
@@ -103,10 +103,10 @@ var UfdsHelper = function(){
 
 	this.unionSet = function(firstKey, secondKey){
 		if(internalUfds[firstKey] == null || internalUfds[secondKey] == null) return false;
-		if(isSameSet(firstKey,secondKey)) return true;
+		if(self.isSameSet(firstKey,secondKey)) return true;
 
-		var firstSet = findSet(firstKey);
-		var secondSet = findSet(secondKey);
+		var firstSet = self.findSet(firstKey);
+		var secondSet = self.findSet(secondKey);
 
 		if(internalUfds[firstSet]["rank"] > internalUfds[secondSet]["rank"]){
 			internalUfds[firstSet]["parent"] = secondSet;

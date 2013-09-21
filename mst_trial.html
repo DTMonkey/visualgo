@@ -54,7 +54,7 @@
     
     <div id="actions" class="panel">
     <p id="extractmax" class="execAction" style="padding-top: 10px;" onclick="buildv1()">CP4.9</p>
-    <p id="insert" class="execAction" style="padding-bottom: 10px;">Prim</p>
+    <p id="insert" class="execAction" style="padding-bottom: 10px;">Kruskal</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -224,7 +224,7 @@
   function insert() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.prim(parseInt(document.getElementById("v").value), MST_MIN)) {
+      if ((mode=="exploration")&&heapWidget.kruskal(MST_MIN)) {
         $('#current-action').show();
         $('#current-action p').html("Insert "+ $('#v').val());
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
