@@ -65,3 +65,63 @@ ObjectTriple.compare = function(objTripleOne, objTripleTwo){
 		}
 	}
 }
+
+var UfdsHelper = function(){
+	/*
+	 * Structure of internalUfds:
+	 * - key: inserted key
+	 * - value: JS object with:
+	 *          - "parent"
+	 *          - "rank"
+	 */
+	var self = this;
+	var internalUfds = {};
+
+	this.insert = function(insertedKey){
+		if(internalUfds[insertedKey] != null) return false;
+
+		var newElement = {};
+		newElement["parent"] = insertedKey;
+		newElement["rank"] = 0;
+
+		internalUfds[insertedKey] = newElement;
+	}
+
+	this.findSet = function(key){
+		if(internalUfds[insertedKey] == null) return false;
+
+		var currentParent = internalUfds[key]["parent"];
+		var currentElement = key;
+		while(currentParent != currentElement){
+			currentElement = currentParent;
+			currentParent = internalUfds[currentElement]["parent"];
+		}
+		internalUfds[key]["parent"] = currentParent;
+
+		return currentParent;
+	}
+
+	this.unionSet = function(firstKey, secondKey){
+		if(internalUfds[firstKey] == null || internalUfds[secondKey] == null) return false;
+		if(isSameSet(firstKey,secondKey)) return true;
+
+		var firstSet = findSet(firstKey);
+		var secondSet = findSet(secondKey);
+
+		if(internalUfds[firstSet]["rank"] > internalUfds[secondSet]["rank"]){
+			internalUfds[firstSet]["parent"] = secondSet;
+			internalUfds[secondSet]["rank"]++;
+		}
+
+		else{
+			internalUfds[secondSet]["parent"] = firstSet;
+			internalUfds[firstSet]["rank"]++;
+		}
+	}
+
+	this.isSameSet = function(firstKey, secondKey){
+		if(internalUfds[firstKey] == null || internalUfds[secondKey] == null) return false;
+
+		return self.findSet(firstKey) == self.findSet(secondKey);
+	}
+}
