@@ -173,14 +173,14 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
+        <p id="tree_graph" class="execAction" onclick=clearScreen()>Clear</p>
 		<p id="tree_graph" class="execAction" onclick=showTree()>Tree</p>
 		<p id="tree_graph" class="execAction" onclick=showStar()>Star</p>
 		<p id="tree_graph" class="execAction" onclick=showCP45()>CP4.5</p>	
 		<p id="tree_graph" class="execAction" onclick=showCP48()>CP4.8</p>	
 		<p id="tree_graph" class="execAction" onclick=showCP22()>CP2.2</p>	
 		<p id="tree_graph" class="execAction" onclick=showCP42()>CP4.2</p>	
-		<p id="tree_graph" class="execAction" onclick=showK5()>K5</p>	
-		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
+		<p id="tree_graph" class="execAction" onclick=showK5()>K5</p>
 
 	</div>
     <div id="actions-hide" class="panel-hide"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide actions panel"/></div>
@@ -330,6 +330,10 @@
 	function showCP48() {
 		GraphDTWidget.showCP48();
 	}	
+
+    function clearScreen() {
+        GraphDTWidget.clrscr();
+    }
 </script>
 
 </body>

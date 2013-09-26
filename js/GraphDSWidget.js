@@ -1559,6 +1559,11 @@ var Graph = function() {
     createAdjMatrix();
   }
 
+  this.clrscr = function() {
+    clearScreen();
+    createAdjMatrix();
+  }
+  
   function clearScreen() {
     var i;
 
