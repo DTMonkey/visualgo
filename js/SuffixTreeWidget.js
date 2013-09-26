@@ -573,6 +573,7 @@ var SuffixTreeWidget = function() {
   function stDriver(second)
   { //Txt = document.theForm.inp.value;
     //Txt = "GATAGACA$";
+    //resetEverything();
     if (Txt.length == 0) {
       alert("Please enter a non-empty string");
       return
@@ -614,6 +615,24 @@ var SuffixTreeWidget = function() {
     drawSuffixTree(root, 0, 70, '');
     // TODO:
     drawAllLabel();
+    
+
+    // update coord
+    var count = 1;
+    for (var i in draw_data) {
+      //var st = Txt.substring(i);
+      var node = draw_data[i];
+      var idx = parseInt(node.class_id) + 1;
+      coord[idx] = new Array();
+      coord[idx][0] = node.x;
+      coord[idx][1] = node.y;
+      //draw_data[i].class_id = count++;
+    }
+   // coord[1] = new Array();
+    //coord[1][0] = draw_data[""].x;
+    //coord[1][1] = draw_data[""].y;
+
+
   }//stDriver
 
   function drawSuffixTree(T, level, prev_x, text) {
@@ -684,7 +703,7 @@ var SuffixTreeWidget = function() {
     } else {
       draw_data[T_idx].x = update_prev_x;
       draw_data[T_idx].y = height;
-      draw_data[T_idx].class_id = amountVertex -1;
+      draw_data[T_idx].class_id = amountVertex - 1;
     }
     iter = 0;
     for (var i=0; i < used.length; i++) 
@@ -749,6 +768,9 @@ var SuffixTreeWidget = function() {
 
   function drawLabel(from_class_id, to_class_id, xA, yA, xB, yB, text, color) {
     graphWidget.addEdge(from_class_id, to_class_id, ++amountEdge, EDGE_TYPE_UDE, 1, true);
+    edgeList["#e" + amountEdge.toString()] = new Array();
+    edgeList["#e" + amountEdge.toString()][0] = from_class_id;
+    edgeList["#e" + amountEdge.toString()][1] = to_class_id;
     mainSvg.select("#e" + (amountEdge).toString()).attr("style", "stroke-width:0.5");
     var slope = (yA - yB)/(xA - xB);
     var x0 = xA, y0 = 0;
@@ -799,6 +821,193 @@ var SuffixTreeWidget = function() {
   g.selectAll("path").transition()
       .duration(750)
       .attr("d", path);
+  }
+
+
+  function createState(internalHeapObject) {
+    var state = {
+      "vl":{},
+      "el":{},
+      "status":{}
+    };
+
+    for (var i = 0; i < internalHeapObject.length; i++) {
+      var key = internalHeapObject[i].getSecond();
+      //var key = i;
+      state["vl"][key] = {};
+
+      state["vl"][key]["cx"] = coord[key+1][0];
+      state["vl"][key]["cy"] = coord[key+1][1];
+      state["vl"][key]["text"] = internalHeapObject[i].getFirst();
+      state["vl"][key]["state"] = VERTEX_DEFAULT;
+    }
+
+    for (var i = 1; i < internalHeapObject.length; i++){
+      var edgeId = i;
+
+      state["el"][edgeId] = {};
+
+      state["el"][edgeId]["vertexA"] = edgeList["#e" + i.toString()][0]; //internalHeapObject[parent(i)].getSecond();
+      state["el"][edgeId]["vertexB"] = edgeList["#e" + i.toString()][1];//internalHeapObject[i].getSecond();
+      state["el"][edgeId]["type"] = EDGE_TYPE_UDE;
+      state["el"][edgeId]["weight"] = 1;
+      state["el"][edgeId]["state"] = EDGE_DEFAULT;
+      state["el"][edgeId]["animateHighlighted"] = false;
+    }
+
+    return state;
+  }
+
+  this.testAnimation = function() {
+    var currentState = createState(A);
+    currentState["vl"][A[4].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["status"] = 'animate1 animate';
+    currentState["lineNo"] = 0;
+    stateList.push(currentState);
+    //graphWidget.startAnimation(stateList);
+    
+    currentState = createState(A);
+    currentState["vl"][A[4].getSecond()]["state"] = VERTEX_TRAVERSED;
+    currentState["vl"][A[1].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["status"] = 'animate123';
+    //currentState["lineNo"] = 1;
+    //currentState["status"] = 'animate_2';
+    stateList.push(currentState);
+    //graphWidget.startAnimation(stateList);
+    for (var i=0; i < 10; i++) {
+      currentState = createState(A);
+      currentState["vl"][A[i+1].getSecond()]["state"] = VERTEX_TRAVERSED;
+      currentState["vl"][A[i].getSecond()]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["status"] = 'animate' + i.toString();
+      currentState["lineNo"] = 2;
+      stateList.push(currentState);
+     //graphWidget.startAnimation(stateList);
+    }
+
+    var s2 = createState(A);
+    currentState["vl"][A[4].getSecond()]["state"] = VERTEX_TRAVERSED;
+    stateList.push(currentState);
+    
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
+
+  this.goSearch = function() {
+    var input = document.getElementById("search_inp").value;
+    buildSuffixTree(input);
+    //(path_label, node_label, x, y, match_flag)
+    var stateList = new Array();
+    foundResult = false;
+    processQueue = new Array();
+    processQueue.push(new Node4('', '', draw_data[''].x, draw_data[''].y, -1));
+    processTree(root, '', '', '', input, 0);
+    if (!foundResult) {
+      processQueue.push(-1);
+    }
+    var prev = new Array();
+    for (var i in processQueue) {
+      var currentState = createState(A);
+      if (processQueue[i]==-1) {
+        currentState["status"] = "No match found."
+        for (var j=0; j < prev.length; j++) {
+          currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+        }
+        stateList.push(currentState);
+        break;
+      }
+      var node = processQueue[i];      
+      var node_idx = null;
+      node_idx = parseInt(draw_data[node.path_label].class_id);
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      
+      for (var j=0; j < prev.length; j++) {
+        currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+      prev.push(node_idx);
+      if (node.match_flag == -2) {
+        currentState["status"] = "Path label: " + node.path_label + ". Match found";
+      } else if (node.match_flag == -1) {
+        if (i=="0") currentState["status"] = "Start from root";
+        else currentState["status"] = "Path label: " + node.path_label + ". No match, going back";
+      } else {
+        currentState["status"] = "Path label: " + node.path_label + ". Partial match found, going deeper";;
+      }
+      stateList.push(currentState);
+    }
+    graphWidget.startAnimation(stateList);  
+    return true;  
+  }
+
+  function processTree(T, str, arc, node_label, input, input_idx ) {
+    if(T.isLeaf)
+    { 
+      return;
+    }
+    var attr, iter = 0, i;
+    //spaces += '|';   // |spaces|==|arc|
+    //var str2 = str+spaces;//nosilla l
+
+    var used = new Array(); 
+    var min = '';
+    
+    for (attr in T) 
+      if (attr.length == 1) {
+        var wAndT2 = T[attr];
+        var w = wAndT2.fst;
+        var myStr = Txt.substring(w.left, w.right+1);
+        used.push(new Node2(myStr, attr));
+      }
+      for (var i=0; i<used.length-1; i++)
+        for (var j=i+1; j<used.length; j++) {
+          if (stringCmp(used[i].index, used[j].index) == -1 ) {
+            var tmp = used[i];
+            used[i] = used[j];
+            used[j] = tmp;
+          }       
+          else if (stringCmp(used[i].index, used[j].index) == 0) {
+            if (stringCmp(used[i].word, used[j].word) == -1) {
+              var tmp = used[i];
+              used[i] = used[j];
+              used[j] = tmp;
+            }         
+          }
+        }
+      for (var i=0; i < used.length; i++) {
+        attr = used[i];
+        var wAndT2 = T[attr.index];
+        var w = wAndT2.fst, T2 = wAndT2.snd;
+        var node_label_cur = Txt.substring(w.left, w.right+1);
+        var myStr = '('+(w.left)+':'+ node_label_cur +')|';
+        var is_prefix = isPrefix(input, input_idx, node_label_cur);
+        //(path_label, node_label, x, y, match_flag)
+        processQueue.push(new Node4(node_label + node_label_cur, node_label_cur, draw_data[node_label + node_label_cur].x, draw_data[node_label + node_label_cur].y, is_prefix));
+        if (is_prefix >= 0) {
+          processTree(T2, "", myStr, Txt.substring(w.left, w.right+1), input, is_prefix+1);
+          return;
+        }
+        else if (is_prefix == -2) {
+          fromResultNode = T;
+          toResultNode = T2;
+          foundResult = true;
+          return;
+        }
+      }
+    }
+  // return values:
+  // .index of input that will be used to match later (>0)
+  // .-1 when not match from the beginning
+  // .-2 when match
+  // .-3 when match at the beginning but not match all
+  function isPrefix(input, input_idx, node_label) {
+    if (node_label=='') return 0;
+    var j = 0, i;
+    for (i= input_idx; i < input.length; i++) {
+      if (input[i] != node_label[j]) return -1;
+      j++;
+      if (j == node_label.length) break;
+    } 
+    if (input.length - input_idx > node_label.length) return i;
+    if (input.length - input_idx <= node_label.length) return -2;
   }
 
 }

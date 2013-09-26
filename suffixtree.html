@@ -33,7 +33,7 @@
 <div id="top-bar">
     <a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-        <a class="selected-viz">Binary Heap</a>
+        <a class="selected-viz">Suffix Tree</a>
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
@@ -54,6 +54,8 @@
     
     <div id="actions" class="panel">
         <p id="buildv1" style="padding-top: 10px;">Build Suffix Tree</p>
+
+        <p id="search" style="padding-top: 10px;">Search</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -61,6 +63,9 @@
         <div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="GATAGACA$" /></div>
         <div id="buildv1-go" class="execAction" onclick=buildSuffixTree()><p>GO</p></div>
         <div id="buildv1-err" class="err"></div>
+        <div id="search-input"><input type="text" id="search_inp" autocomplete="off" value="GA" /></div>
+        <div id="search-go" class="execAction" onclick=goSearch()><p>GO</p></div>        
+        <div id="search-err" class="err"></div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -104,36 +109,6 @@
 <div id="termsofuse" class="overlays"></div>
 
 <!--tutorial dialogs here-->
-<div id="heap-tutorial-1" class="tutorial-dialog">
-    A Binary Max Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-2" class="tutorial-dialog">
-    All available operations on the Heap will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-3" class="tutorial-dialog">
-    View the visualisation here!
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-4" class="tutorial-dialog">
-    As the action is being carried out, each step will be described in the status panel.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-5" class="tutorial-dialog">
-    You can also follow the psuedocode highlights to trace the algorithm.
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-6" class="tutorial-dialog">
-    Control the animation with the player controls! Keyboard shortcuts are:<br/>
-    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
-    <strong>Left/right arrows:</strong> step backward/step forward<br/>
-    <strong>-/+:</strong> decrease/increase speed<br/>
-    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
-</div>
-<div id="heap-tutorial-7" class="tutorial-dialog">
-    Return to "Exploration Mode" to start exploring!
-</div>
 
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
@@ -156,6 +131,135 @@
     function buildSuffixTree() {
         stWidget.buildSuffixTree(document.getElementById("arrv1").value);
     }
+
+    function test1() {
+        isPlaying = true;
+        stWidget.testAnimation();
+    }
+
+    function goSearch() {
+        if(isPlaying) { stop(); }
+        isPlaying = true;
+        
+        setTimeout( function() {
+            if ((mode=="exploration")&&stWidget.goSearch()) {
+                $('#current-action').show();
+                $('#current-action p').html("Search "+ $('#search_inp').val());
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+                //document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
+            }
+        }, 500);   
+    }
+
+
+    var isPaused = false;
+    function isAtEnd() {
+        return (gw.getCurrentIteration()==(gw.getTotalIteration()-1));
+    }
+    
+    function pause() {
+        if(isPlaying) {
+            isPaused = true;
+            gw.pause();
+            $('#play').show();
+            $('#pause').hide();
+        }
+    }
+    function play() {
+        if(isPlaying) {
+            isPaused = false;
+            $('#pause').show();
+            $('#play').hide();
+            if(isAtEnd()) {
+                gw.replay();
+            } else {
+                gw.play();
+            }
+        }
+    }
+    function stepForward() {
+        if(isPlaying) {
+            pause();
+            gw.forceNext(250);
+        }
+    }
+    function stepBackward() {
+        if(isPlaying) {
+            pause();
+            gw.forcePrevious(250);  
+        }
+    }
+    function goToBeginning() {
+        if(isPlaying) {
+            gw.jumpToIteration(0,0);
+            pause();
+        }
+    }
+    function goToEnd() {
+        if(isPlaying) {
+            gw.jumpToIteration(gw.getTotalIteration()-1,0);
+            pause();
+        }
+    }
+    function stop() {
+        gw.stop();
+        isPaused = false;
+        isPlaying = false;
+        $('#pause').show();
+        $('#play').hide();
+    }
+
+    //shortcut keys for playback controls
+    $(document).keydown( function(event) {
+        if(event.which == 32) { //spacebar
+            if(isPaused) { play(); } else { pause(); }
+        } else if(event.which == 37) { //left arrow
+            stepBackward();
+        } else if(event.which == 39) { //right arrow
+            stepForward();
+        } else if(event.which == 35) { //end
+            stop();
+        } else if (event.which == 189) { //minus
+            var d = (2200-gw.getAnimationDuration())-100;
+            if(d > 0) {
+                $("#speed-input").slider("value", d);
+            } else {
+                $("#speed-input").slider("value", 0);
+            }
+        } else if (event.which == 187) { //plus
+            var d = (2200-gw.getAnimationDuration())+100;
+            if(d <= 2000) {
+                $("#speed-input").slider("value", d);
+            } else {
+                $("#speed-input").slider("value", 2000);
+            }
+        }
+    });
+    
+    //sliders
+    $("#speed-input").slider({
+        min: 200,
+        max: 2000,
+        value: 1700,
+        change: function(event, ui) {
+            gw.setAnimationDuration(2200-ui.value);
+        }
+    });
+    $("#progress-bar").slider({
+        range: "min",
+        min: 0,
+        value: 0,
+        slide: function(event, ui) {
+            gw.pause();
+            gw.jumpToIteration(ui.value,0);
+        },
+        stop: function(event, ui) {
+            if(!isPaused) { setTimeout( function(){gw.play();}, 500) }
+        }
+    });
     
 </script>
 

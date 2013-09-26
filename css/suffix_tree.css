@@ -34,6 +34,33 @@
 			padding: 8px 8px 7px;
 		}
 
+#search-input {
+	position: fixed;
+	bottom: 144px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#search-input input {
+		width: 200px;
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#search-go {
+		position: fixed;
+		bottom: 144px;
+		left: 396px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#search-go p {
+			padding: 5px 8px;
+		}		
+
 	
 /*all action pullout (error) stuff here*/
 .err {
