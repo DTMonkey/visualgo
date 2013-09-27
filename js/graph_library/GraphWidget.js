@@ -335,6 +335,8 @@ var GraphWidget = function(){
         case VERTEX_TRAVERSED:
           currentVertex.traversedVertex();
           break;
+        case VERTEX_RESULT:
+          currentVertex.resultVertex();
         default:
           break;
       }

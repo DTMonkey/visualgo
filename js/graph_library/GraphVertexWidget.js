@@ -159,6 +159,23 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     }
   }
 
+  this.resultVertex = function(){
+    var key;
+
+    for(key in graphVertexProperties["innerCircle"]["result"]){
+      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"]["result"][key];
+    }
+
+    for(key in graphVertexProperties["outerCircle"]["result"]){
+      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"]["result"][key];
+    }
+
+    for(key in graphVertexProperties["text"]["result"]){
+      attributeList["text"][key] = graphVertexProperties["text"]["result"][key];
+    }
+  }
+
+
   this.defaultVertex = function(){
     var key;
 

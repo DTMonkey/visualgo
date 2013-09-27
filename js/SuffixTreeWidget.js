@@ -570,6 +570,23 @@ var SuffixTreeWidget = function() {
     stDriver();
   }
 
+  // return values:
+  // .index of input that will be used to match later (>0)
+  // .-1 when not match from the beginning
+  // .-2 when match
+  // .-3 when match at the beginning but not match all
+  function isPrefix(input, input_idx, node_label) {
+    if (node_label=='') return 0;
+    var j = 0, i;
+    for (i= input_idx; i < input.length; i++) {
+      if (input[i] != node_label[j]) return -1;
+      j++;
+      if (j == node_label.length) break;
+    } 
+    if (input.length - input_idx > node_label.length) return i;
+    if (input.length - input_idx <= node_label.length) return -2;
+  }
+
   function stDriver(second)
   { //Txt = document.theForm.inp.value;
     //Txt = "GATAGACA$";
@@ -900,7 +917,7 @@ var SuffixTreeWidget = function() {
     foundResult = false;
     processQueue = new Array();
     processQueue.push(new Node4('', '', draw_data[''].x, draw_data[''].y, -1));
-    processTree(root, '', '', '', input, 0);
+    processTreeForSearch(root, '', '', '', input, 0);
     if (!foundResult) {
       processQueue.push(-1);
     }
@@ -938,7 +955,7 @@ var SuffixTreeWidget = function() {
     return true;  
   }
 
-  function processTree(T, str, arc, node_label, input, input_idx ) {
+  function processTreeForSearch(T, str, arc, node_label, input, input_idx ) {
     if(T.isLeaf)
     { 
       return;
@@ -957,57 +974,209 @@ var SuffixTreeWidget = function() {
         var myStr = Txt.substring(w.left, w.right+1);
         used.push(new Node2(myStr, attr));
       }
-      for (var i=0; i<used.length-1; i++)
-        for (var j=i+1; j<used.length; j++) {
-          if (stringCmp(used[i].index, used[j].index) == -1 ) {
+    for (var i=0; i<used.length-1; i++)
+      for (var j=i+1; j<used.length; j++) {
+        if (stringCmp(used[i].index, used[j].index) == -1 ) {
+          var tmp = used[i];
+          used[i] = used[j];
+          used[j] = tmp;
+        }       
+        else if (stringCmp(used[i].index, used[j].index) == 0) {
+          if (stringCmp(used[i].word, used[j].word) == -1) {
             var tmp = used[i];
             used[i] = used[j];
             used[j] = tmp;
-          }       
-          else if (stringCmp(used[i].index, used[j].index) == 0) {
-            if (stringCmp(used[i].word, used[j].word) == -1) {
-              var tmp = used[i];
-              used[i] = used[j];
-              used[j] = tmp;
-            }         
+          }         
+        }
+      }
+    for (var i=0; i < used.length; i++) {
+      attr = used[i];
+      var wAndT2 = T[attr.index];
+      var w = wAndT2.fst, T2 = wAndT2.snd;
+      var node_label_cur = Txt.substring(w.left, w.right+1);
+      var myStr = '('+(w.left)+':'+ node_label_cur +')|';
+      var is_prefix = isPrefix(input, input_idx, node_label_cur);
+      //(path_label, node_label, x, y, match_flag)
+      processQueue.push(new Node4(node_label + node_label_cur, node_label_cur, draw_data[node_label + node_label_cur].x, draw_data[node_label + node_label_cur].y, is_prefix));
+      if (is_prefix >= 0) {
+        processTreeForSearch(T2, "", myStr, Txt.substring(w.left, w.right+1), input, is_prefix+1);
+        return;
+      }
+      else if (is_prefix == -2) {
+        fromResultNode = T;
+        toResultNode = T2;
+        foundResult = true;
+        return;
+      }
+    }
+  }
+
+  function addTraversedNode(state_list, prevs, current_state) {
+    var stateList = state_list;
+    for (var j=0; j < prevs.length; j++) {
+          current_state["vl"][prevs[j]]["state"]= VERTEX_TRAVERSED;
+    } 
+    stateList.push(currentState);
+    return stateList;
+  }
+
+  this.goLRS = function(isitLCS) {
+    var input = document.getElementById("search_inp").value;
+    buildSuffixTree(input);    
+
+    var is_LCS = false;
+    if (typeof(isitLCS)!='undefined') {
+      if (isitLCS === true)
+        is_LCS = true;
+    }
+    processQueueLRS = new Array();
+    processQueueLRS.push(new NodeLRS('', draw_data[''].x, draw_data[''].y, false));
+    processTreeForLRS(root, '', is_LCS);
+
+    var stateList = new Array();
+    var currentState = createState(A);
+    currentState["status"] = "Start from root.";
+    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    stateList.push(currentState);
+
+    var stack = new Array(), prev = new Array();
+    var tmpProcessQ = new Array();
+    var isGoingUp = new Array();
+    tmpProcessQ[0] = processQueueLRS[0];
+    stack.push(processQueueLRS[0]);
+    var is_popping = false;
+    for (var i=1; i < processQueueLRS.length; i++) {
+      var top = stack[stack.length-1];
+      var next_node = processQueueLRS[i];
+      if ((draw_data[next_node.path_label].parent_index == top.path_label) && !is_popping) {
+        stack.push(next_node);
+        is_popping = false;
+        tmpProcessQ.push(next_node);
+      } else {
+        while (true) {
+          stack.pop();
+          is_popping = true;
+          top = stack[stack.length-1];
+          if (draw_data[next_node.path_label].parent_index == top.path_label) {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+            tmpProcessQ.push(next_node);
+            stack.push(next_node);
+            is_popping = false;
+            break;
+          } else {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
           }
-        }
-      for (var i=0; i < used.length; i++) {
-        attr = used[i];
-        var wAndT2 = T[attr.index];
-        var w = wAndT2.fst, T2 = wAndT2.snd;
-        var node_label_cur = Txt.substring(w.left, w.right+1);
-        var myStr = '('+(w.left)+':'+ node_label_cur +')|';
-        var is_prefix = isPrefix(input, input_idx, node_label_cur);
-        //(path_label, node_label, x, y, match_flag)
-        processQueue.push(new Node4(node_label + node_label_cur, node_label_cur, draw_data[node_label + node_label_cur].x, draw_data[node_label + node_label_cur].y, is_prefix));
-        if (is_prefix >= 0) {
-          processTree(T2, "", myStr, Txt.substring(w.left, w.right+1), input, is_prefix+1);
-          return;
-        }
-        else if (is_prefix == -2) {
-          fromResultNode = T;
-          toResultNode = T2;
-          foundResult = true;
-          return;
         }
       }
     }
-  // return values:
-  // .index of input that will be used to match later (>0)
-  // .-1 when not match from the beginning
-  // .-2 when match
-  // .-3 when match at the beginning but not match all
-  function isPrefix(input, input_idx, node_label) {
-    if (node_label=='') return 0;
-    var j = 0, i;
-    for (i= input_idx; i < input.length; i++) {
-      if (input[i] != node_label[j]) return -1;
-      j++;
-      if (j == node_label.length) break;
-    } 
-    if (input.length - input_idx > node_label.length) return i;
-    if (input.length - input_idx <= node_label.length) return -2;
+
+    processQueueLRS = tmpProcessQ;
+    var results = new Array();
+    var max = "";
+    // the animation starts here
+    var prev = new Array();
+    for (var i in processQueueLRS) {
+      var currentState = createState(A);
+      var node = processQueueLRS[i];      
+      var node_idx = null;
+      node_idx = parseInt(draw_data[node.path_label].class_id);
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      
+      for (var j=0; j < prev.length; j++) {
+        currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+      prev.push(node_idx);
+
+      if (isGoingUp[i]) {
+        currentState["status"] = "Going back."
+      } else if (node.is_leaf) {
+        currentState["status"] = "This is a leaf node, going back.";
+      } else {
+        currentState["status"] = "Path label: " + node.path_label + ". ";
+        if (node.path_label.length > max.length) {
+          max = node.path_label;
+          results = [];
+          results.push(node.path_label);
+          currentState["status"]+= "Longer than current max. Updating max";
+        } else if (node.path_label.length == max.length) {
+          results.push(node.path_label);
+          currentState["status"]+= "Equal to current max. Updating max";
+        } else {
+          currentState["status"]+= "Smaller than current max.";
+        }
+      }
+      for (var j=0; j<results.length; j++) {
+        var tmp_idx = parseInt(draw_data[results[j]].class_id);
+        currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+      }
+      if (isGoingUp[i]) currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      stateList.push(currentState);
+    }
+    currentState = createState(A);
+    currentState["status"] = "LRS ";
+    if (results.length > 1) currentState["status"]+= "are ";
+    else currentState["status"]+= "is ";
+    for (var i=0; i < results.length; i++) {
+      if (i>0) currentState["status"]+= ", ";
+      currentState["status"]+= results[i] + " ";
+    }
+    for (var j=0; j < prev.length; j++) {
+      currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+    }
+    for (var j=0; j<results.length; j++) {
+      var tmp_idx = parseInt(draw_data[results[j]].class_id);
+      currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+    }
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+    return true;
   }
+
+  function processTreeForLRS(T, path_label, isLCS) {
+    if(T.isLeaf)
+    { 
+      return;
+    }
+    var attr, iter = 0;
+    var spaces = '';  var i;
+
+    var used = new Array(); 
+    var min = '';
+    //if (isLCS && draw_data[path_label].color!='darkorchid') return;
+    for (attr in T) 
+      if (attr.length == 1) {
+        var wAndT2 = T[attr];
+        var w = wAndT2.fst;
+        var myStr = Txt.substring(w.left, w.right+1);
+        used.push(new Node2(myStr, attr));
+      }
+    for (var i=0; i<used.length-1; i++)
+      for (var j=i+1; j<used.length; j++) {
+        if (stringCmp(used[i].index, used[j].index) == -1 ) {
+          var tmp = used[i];
+          used[i] = used[j];
+          used[j] = tmp;
+        }       
+        else if (stringCmp(used[i].index, used[j].index) == 0) {
+          if (stringCmp(used[i].word, used[j].word) == -1) {
+            var tmp = used[i];
+            used[i] = used[j];
+            used[j] = tmp;
+          }         
+        }
+      }
+    for (var i=0; i < used.length; i++) {
+      attr = used[i];
+      var wAndT2 = T[attr.index];
+      var w = wAndT2.fst, T2 = wAndT2.snd;
+      var node_label_cur = Txt.substring(w.left, w.right+1);
+      var path_lb = path_label + node_label_cur;
+      processQueueLRS.push(new NodeLRS(path_lb, draw_data[path_lb].x, draw_data[path_lb].y, T2.isLeaf));
+      processTreeForLRS(T2, path_lb, isLCS);       
+    }
+  }
+  
 
 }

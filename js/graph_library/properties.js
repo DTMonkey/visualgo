@@ -26,6 +26,10 @@ var graphVertexProperties = {
     "traversed":{
       "fill": "#eee",
       "stroke": "#fff"
+    },    
+    "result":{
+      "fill": "#f7e81e",
+      "stroke": "#fff"
     }
   },
   "outerCircle":{
@@ -42,6 +46,10 @@ var graphVertexProperties = {
     "traversed":{
       "fill": surpriseColour,
       "stroke": surpriseColour
+    },
+    "result":{
+      "fill": "#f7e81e",
+      "stroke": "#f7e81e"
     }
   },
   "text":{
@@ -60,6 +68,12 @@ var graphVertexProperties = {
     },
     "traversed":{
       "fill": surpriseColour,
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+    "result":{
+      "fill": "#fff",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"

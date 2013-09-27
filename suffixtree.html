@@ -54,8 +54,8 @@
     
     <div id="actions" class="panel">
         <p id="buildv1" style="padding-top: 10px;">Build Suffix Tree</p>
-
         <p id="search" style="padding-top: 10px;">Search</p>
+        <p id="search" class="execAction" style="padding-top: 10px;" onclick=buildLRS()>LRS</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -128,10 +128,27 @@
     var gw = stWidget.getGraphWidget();
     
     stWidget.buildSuffixTree(document.getElementById("arrv1").value);
+
     function buildSuffixTree() {
         stWidget.buildSuffixTree(document.getElementById("arrv1").value);
     }
 
+    function buildLRS() {
+        if(isPlaying) { stop(); }
+        isPlaying = true;
+        
+        setTimeout( function() {
+            if ((mode=="exploration")&&stWidget.goLRS()) {
+                $('#current-action').show();
+                $('#current-action p').html("Search "+ $('#search_inp').val());
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                //closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+                //document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
+            }
+        }, 500);
+    }
     function test1() {
         isPlaying = true;
         stWidget.testAnimation();
