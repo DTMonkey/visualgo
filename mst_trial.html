@@ -2,14 +2,14 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Visualizations - Binary Heap</title>
+<title>Visualizations - Minimum Spanning Tree</title>
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/viz.css">
 
-<link rel="stylesheet" href="css/heap.css">
+<link rel="stylesheet" href="css/mst.css">
 
 <!--js-->
 <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
@@ -17,7 +17,7 @@
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
-<script src="js/heap_actions.js"></script>
+<script src="js/mst_actions.js"></script>
 <script src="//connect.facebook.net/en_US/all.js"></script>
 <script src="js/d3/d3.v3.js"></script>
 <!-- heap scripts are below-->
@@ -33,7 +33,7 @@
 <div id="top-bar">
   <a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-      <a class="selected-viz">Binary Heap</a>
+      <a class="selected-viz">Minimum Spanning Tree</a>
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
@@ -53,35 +53,24 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-    <p id="extractmax" class="execAction" style="padding-top: 10px;" onclick="buildv1()">CP4.9</p>
-    <p id="insert" class="execAction" style="padding-bottom: 10px;">Kruskal</p>
+        <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.9)</p>
+        <p id="kruskals" class="execAction" style="padding-bottom: 10px;" onclick=kruskals()>Kruskal's Algo</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-      <div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
-        <div id="buildv1-go" class="execAction" onclick=buildv1()><p>GO</p></div>
-        <div id="buildv1-sample" class="execAction" onclick=buildv1Sample()><p>Sorted sample</p></div>
-        <div id="buildv1-err" class="err"></div>
-        <div id="buildv2-input"><input type="text" id="arrv2" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
-        <div id="buildv2-go" class="execAction" onclick=buildv2()><p>GO</p></div>
-        <div id="buildv2-sample" class="execAction" onclick=buildv2Sample()><p>Sorted sample</p></div>
-        <div id="buildv2-err" class="err"></div>
-        <div id="insert-input"><input type="text" id="v" autocomplete="off" value=26 /></div>
-        <div id="insert-go" class="execAction" onclick=insert()><p>GO</p></div>
-        <div id="insert-err" class="err"></div>
-        <div id="extractmax-err" class="err"></div>
-        <div id="heapsort-err" class="err"></div>
+    	<div id="sample1-err" class="err"></div>
+        <div id="kruskals-err" class="err"></div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
     <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
     
     <div id="codetrace" class="panel">
-      <!--can add class "highlighed" to hightlight one line-->
-      <p id="code1" style="padding-top: 10px;"></p>
-        <p id="code2"></p>
-        <p id="code3"></p>
+    <!--can add class "highlighed" to hightlight one line-->
+    <p id="code1" style="padding-top: 10px;"></p>
+    <p id="code2"></p>
+    <p id="code3"></p>
     <p id="code4"></p>
     <p id="code5"></p>
     <p id="code6"></p>
@@ -93,15 +82,15 @@
 <div id="right-bar"></div>
 <!-- Bottom bar and overlay popups -->
 <div id="bottom-bar">
-  <a id="trigger-about">About</a>
+	<a id="trigger-about">About</a>
     <a id="trigger-team">Team</a>
     <a id="trigger-terms">Terms of use</a>
 </div>
 
 <div id="media-controls">
-  <div id="speed-control">slow<div id="speed-input"></div>fast</div>
-  <span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
-  <span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
+	<div id="speed-control">slow<div id="speed-input"></div>fast</div>
+	<span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
+	<span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
     <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="img/pause.png" alt="pause" /></span>
     <span id="play" class="media-control-button" title="play" onclick=play()><img src="img/play.png" alt="play" /></span>
     <span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="img/nextFrame.png" alt="next frame" /></span>
@@ -160,117 +149,33 @@
   //start by showing actions panel
   $('#play').hide();
 
-  var heapWidget = new MST();
-  var gw = heapWidget.getGraphWidget();
+  var mstWidget = new MST();
+  var gw = mstWidget.getGraphWidget();
     
-  function buildv1() {
+  function sample1() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.examples(MST_EXAMPLE_CP4P9)) {
-        $('#current-action').show();
-        $('#current-action p').html("Build heap - O(n log n): "+ $('#arrv1').val());
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        closeBuildv1(); //in heap_actions.js
-        triggerRightPanels();
-        isPlaying = true; //in viz.js
-      }
-    }, 500);
-  }
-  
-  function buildv1Sample() {
-    if(isPlaying) { stop(); }
-    setTimeout( function() {
-      var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
-      if ((mode=="exploration")&&heapWidget.buildV1(stringArr.split(","))) {
-        $('#current-action').show();
-        $('#current-action p').html("Build heap - O(n log n): sorted sample 1 - 31");
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        closeBuildv1(); //in heap_actions.js
-        triggerRightPanels();
-        isPlaying = true; //in viz.js
-      }
-    }, 500);
-  }
-  
-  function buildv2() {
-    if(isPlaying) { stop(); }
-    setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
-        $('#current-action').show();
-        $('#current-action p').html("Build heap - O(n): "+ $('#arrv2').val());
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        closeBuildv2();
-        triggerRightPanels();
-        isPlaying = true;
-      }
-    }, 500);
-  }
-  
-  function buildv2Sample() {
-    if(isPlaying) { stop(); }
-    setTimeout( function() {
-      var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
-      if ((mode=="exploration")&&heapWidget.buildV2(stringArr.split(","))) {
-        $('#current-action').show();
-        $('#current-action p').html("Build heap - O(n): sorted sample 1 - 31");
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        closeBuildv2(); //in heap_actions.js
-        triggerRightPanels();
-        isPlaying = true; //in viz.js
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P9)) {
+        $('#progress-bar').slider( "option", "max", 0);
+        isPlaying = false;
       }
     }, 500);
   }
     
-  function insert() {
+  function kruskals() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.kruskal(MST_MIN)) {
+      if ((mode=="exploration")&&mstWidget.kruskal(MST_MIN)) {
         $('#current-action').show();
-        $('#current-action p').html("Insert "+ $('#v').val());
+        $('#current-action p').html("Kruskal's Algorithm to find MST");
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        closeInsert();
-        triggerRightPanels();
-        isPlaying = true;
-        document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
-      }
-    }, 500);
-  }
-  
-  function extractmax() {
-    if(isPlaying) { stop(); }
-    setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.extractMax(true)) {
-        $('#current-action').show();
-        $('#current-action p').html("Extract max");
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        $('#extractmax-err').html("");
-        closeBuildv1();
-        closeBuildv2();
-        closeInsert();
         triggerRightPanels();
         isPlaying = true;
       }
     }, 500);
   }
   
-  function heapsort() {
-    if(isPlaying) { stop(); }
-    setTimeout( function() {
-      if ((mode=="exploration")&&heapWidget.heapSort()) {
-        $('#current-action').show();
-        $('#current-action p').html("Heapsort");
-        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-        $('#heapsort-err').html("");
-        closeBuildv1();
-        closeBuildv2();
-        closeInsert();
-        triggerRightPanels();
-        isPlaying = true;
-      }
-    }, 500);
-  }
-  
-  //playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidgetNew.js
+  //playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidget.js
   var isPaused = false;
   function isAtEnd() {
     return (gw.getCurrentIteration()==(gw.getTotalIteration()-1));

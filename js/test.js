@@ -69,7 +69,7 @@ function scrambleQns() {
 }
 
 function getQnData(n) {
-	/* //FLIPFLOP
+	///* //FLIPFLOP
 	for(var i=0; i<20; i++) {
 		qnTextArr[i]="Why did the chicken cross the road? Actual question is qn "+questionList[i];
 		if(questionList[i]<10) {
@@ -95,7 +95,7 @@ function getQnData(n) {
 	clientsideTimeRefresh = setInterval(function() {
 		clientsideTimeUpdate();
 	},1000);
-	*/
+	/*
 	//for text
 	$.ajax({
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=1&id="+questionList[n]
@@ -212,7 +212,7 @@ function colourCircle(vertexClass) { //helper function for showQn
 }
 
 function updateInfo() {
-	///* //FLIPFLOP
+	/* //FLIPFLOP
 	$.ajax({//update timer
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=6"
 	}).done(function(timeElapsed) {
@@ -232,7 +232,7 @@ function updateInfo() {
 	}).done(function(n) {
 		$('#attempt-count').html("Attempt "+n);
 	});
-	/*
+	*/
 	$('#student-name').html("ROSE MARIE TAN");
 	$('#attempt-count').html("Attempt 1");
 	//*/
@@ -252,7 +252,7 @@ function clientsideTimeUpdate() {
 
 /***** after submit functions *****/
 function endTest() {
-	/*
+	///*
 	var score = -1;
 	if(score>=0) {
 		var attemptNo = 1;
@@ -276,7 +276,7 @@ function endTest() {
 		clearInterval(clientsideTimeRefresh);
 		goToResultScreen();
 	}
-	*/ //FLIPFLOP
+	/* //FLIPFLOP
 	//get score
 	var ansStr = answerList.join('&ans[]=');
 	var queryStr = "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=3&ans[]="+ansStr;
@@ -357,7 +357,7 @@ $(document).ready (function() {
 	$('#login').click(function() {
 		studentid = $('#login-id').val();
 		studentpw = $('#login-pw').val();
-		///* //FLIPFLOP
+		/* //FLIPFLOP
 		$.ajax({
 			url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=0"
 		}).done(function(data) {
@@ -376,7 +376,7 @@ $(document).ready (function() {
 				});
 			}
 		});
-		/*
+		*/
 		if(true) {
 			$('#login-err').html("");
 			startTest();

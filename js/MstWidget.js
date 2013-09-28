@@ -202,6 +202,7 @@ var MST = function(){
     }
 
     graphWidget.startAnimation(stateList);
+	return true;
   }
 
   this.examples = function(mstExampleConstant){
@@ -313,6 +314,7 @@ var MST = function(){
     var newState = createState(internalAdjList, internalEdgeList);
 
     graphWidget.updateGraph(newState, 500);
+	return true;
   }
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){

@@ -21,13 +21,11 @@ function startTest() {
 	getQnData(0); //all showing/hiding and setting the graph widget state are inside here
 }
 
-function initAns() { //to  be changed to the answer key - just define answerList to be an array of strings
-	for(var i=0; i<20; i++) {
-		if(i<10) {
-			answerList[i] = "17";
-		} else {
-			answerList[i] = "55";
-		}
+function initAns() {
+	answerList = [17, 55, 3, 15, 6, 53, 4, 43, 45, 89, 44, 40, 20, 42, 45, -42, 3, -7, 7, 35];
+	//also init answerClassList
+	for(var i=0;i<20;i++) {
+		answerClassList[i] = "unknown";
 	}
 }
 
@@ -38,25 +36,6 @@ function generateQns() {
 }
 
 function getQnData(n) {
-	/* //FLIPFLOP
-	for(var i=0; i<20; i++) {
-		qnTextArr[i]="Why did the chicken cross the road? Actual question is qn "+questionList[i];
-		if(questionList[i]<=10) {
-			qnJSONArr[i] = jQuery.parseJSON('{"vl":{"0":{"cx":450,"cy":50,"text":"21","state":0},"1":{"cx":225,"cy":100,"text":"18","state":0},"2":{"cx":675,"cy":100,"text":"50","state":0},"3":{"cx":112.5,"cy":150,"text":"4","state":0},"4":{"cx":337.5,"cy":150,"text":"19","state":0},"5":{"cx":562.5,"cy":150,"text":"23","state":0},"6":{"cx":787.5,"cy":150,"text":"71","state":1},"7":{"cx":168.75,"cy":200,"text":"17","state":0}},"el":{"1":{"vertexA":0,"vertexB":1,"type":0,"weight":1,"state":0,"animateHighlighted":false},"2":{"vertexA":0,"vertexB":2,"type":0,"weight":1,"state":0,"animateHighlighted":false},"3":{"vertexA":1,"vertexB":3,"type":0,"weight":1,"state":0,"animateHighlighted":false},"4":{"vertexA":1,"vertexB":4,"type":0,"weight":1,"state":0,"animateHighlighted":false},"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"6":{"vertexA":2,"vertexB":6,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":3,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"The current BST","lineNo":0}')
-		} else {
-			qnJSONArr[i] = jQuery.parseJSON('{"vl":{"2":{"cx":450,"cy":50,"text":"23","state":0},"5":{"cx":675,"cy":100,"text":"71","state":0},"7":{"cx":562.5,"cy":150,"text":"50","state":0},"8":{"cx":618.75,"cy":200,"text":"60","state":0},"9":{"cx":590.625,"cy":250,"text":"55","state":0}},"el":{"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":5,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false},"8":{"vertexA":7,"vertexB":8,"type":0,"weight":1,"state":0,"animateHighlighted":false},"9":{"vertexA":8,"vertexB":9,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"Removal of 57 completed","lineNo":0}');
-		}
-	}
-	$('#login-screen').hide();
-	$('#info').show();
-	$('#question-nav').show();
-	$('#question-text').show();
-	$('#viz').show();
-	//load first question
-	gw.startAnimation(qnJSONArr);
-	gw.pause();
-	showQn(questionList[0]);
-	*/
 	//for text
 	$.ajax({
 		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=1&id="+questionList[n]
@@ -87,8 +66,23 @@ function getQnData(n) {
 
 function getStudentAns() {
 	//do ajax here with new mode
-	//for now, dummy set:
-	studentAnsList = ["4","18","19","17","21","23","50","71","-100","-100"]; //TODO: add 10 more for 11-20
+	///*
+	$.ajax({
+		url: "http://algorithmics.comp.nus.edu.sg/realtest.php?uid="+studentid+"&pwd="+studentpw+"&mode=9"
+	}).done(function(data) { //assume data is a string of comma-separated values
+		var tempArr = data.toString().split(",");
+		for(var i=0;i<20;i++) {
+			studentAnsList[i]=tempArr[i];
+		}
+	});
+	/*
+	//testing set:
+	var data = "-100,-100,3,15,6,-100,-100,-100,45,89,44,40,-100,-100,45,-100,-100,-100,7,12";
+	var tempArr = data.toString().split(",");
+	for(var i=0;i<20;i++) {
+		studentAnsList[i]=parseInt(tempArr[i]);
+	}
+	//*/
 }
 
 /***** update display functions *****/
@@ -105,46 +99,52 @@ function showQn(q) { //answer recording stuff also in here
 	
 	/*------overwrite css pointer cursor------*/
 	$('#vertexText text').css('cursor','default');
+	$('#vertexText circle').css('cursor','default');
 	
-	/*------answer key highlight------*/
-	var currentQnAns = answerList[currentQn-1];
-	if(currentQnAns != -100) {
-		//get vertex number if not already known
-		if(answerClassList[localQnNo-1] == null) {
+	setTimeout(function(){
+		/*------answer key highlight------*/
+		var currentQnAns = answerList[currentQn-1];
+		if(currentQnAns != -100) {
+			//get vertex number if not already known
+			if(answerClassList[localQnNo-1] == "unknown") {
+				$('#vertexText text').each(function() {
+					var serializer = new XMLSerializer();
+					var thisString = serializer.serializeToString($(this)[0]);
+					val = parseInt(thisString.split('>')[1].split('</text')[0]);
+					if((val == currentQnAns) && ($(this).attr('font-size')=="16")) { //font-size check because of some graph-drawing artifacts
+						answerClassList[localQnNo-1] = $(this).attr('class');
+					}
+				});
+			}
+			//highlight vertex
+			colourCircle(answerClassList[localQnNo-1]);
+		}
+		/*------student answer highlight------*/
+		var studentAns = studentAnsList[currentQn-1];
+		if(studentAns != -100) { // student answered this question
 			$('#vertexText text').each(function() {
 				var serializer = new XMLSerializer();
 				var thisString = serializer.serializeToString($(this)[0]);
 				val = thisString.split('>')[1].split('</text')[0];
-				if(val == currentQnAns) {
-					answerClassList[localQnNo-1] = $(this).attr('class');
+				if((val == studentAns) && ($(this).attr('font-size')=="16")) { //found the right vertex-text text object
+					//highlight vertex
+					var c = $(this).attr('class'); //get its class
+					if(studentAns==currentQnAns) {
+						colourStudentCircle(c, "#52bc69");
+						$('#question-text').append("<br/><br/>You answered this correctly :)");
+					} else {
+						colourStudentCircle(c, "#d9513c");
+						$('#question-text').append("<br/><br/>You got this question wrong :(");
+					}
 				}
 			});
 		}
-		//highlight vertex
-		setTimeout(function(){colourCircle(answerClassList[localQnNo-1]);}, 350);
-	}
-	/*------student answer highlight------*/
-	var studentAns = studentAnsList[currentQn-1];
-	if(studentAns != "-100") {
-		$('#vertexText text').each(function() {
-			var serializer = new XMLSerializer();
-			var thisString = serializer.serializeToString($(this)[0]);
-			val = thisString.split('>')[1].split('</text')[0];
-			if(val == studentAns) { //found the right vertex-text text object
-				//highlight vertex
-				var c = $(this).attr('class'); //get its class
-				if(studentAns==currentQnAns) {
-					setTimeout(function(){colourStudentCircle(c, "#52bc69");}, 350);
-				} else {
-					setTimeout(function(){colourStudentCircle(c, "#d9513c");}, 350);
-				}
-			}
-		});
-	}
+	}, 350);
 }
 
 function colourCircle(vertexClass) { //helper function for showQn
 	//add colour to the right one
+	console.log("highlighting answer class "+vertexClass);
 	$('.'+vertexClass).each(function() {
 		if($(this).prop('tagName')=='circle') { //paint both inner and outer circles black
 			$(this).attr('fill','black');
