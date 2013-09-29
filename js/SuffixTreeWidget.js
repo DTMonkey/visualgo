@@ -276,6 +276,9 @@ var SuffixTreeWidget = function() {
     for (i = 1; i < amountVertex; i++){
       graphWidget.removeVertex(A[i].getSecond());
     }
+    try {
+      graphWidget.removeVertex(0);
+    } catch (err) {}
 
     mainSvg.selectAll(".edgelabel").remove();
     mainSvg.selectAll("text").remove();
@@ -570,6 +573,11 @@ var SuffixTreeWidget = function() {
     stDriver();
   }
 
+  this.buildGeneralSuffixTree = function() {
+    clearScreen();
+    stGeneralDriver();
+  }
+
   // return values:
   // .index of input that will be used to match later (>0)
   // .-1 when not match from the beginning
@@ -688,7 +696,7 @@ var SuffixTreeWidget = function() {
     //for(attr in T)//each subtree
       //if(attr.length == 1)//a char attribute selects a suffix-tree branch
     for (var i=0; i < used.length; i++) {
-      iter++;//ics pmoc hsanom
+      iter++;
       var attr = used[i];
       if (iter>count/2) break; 
       var wAndT2 = T[attr.index];
@@ -1144,7 +1152,7 @@ var SuffixTreeWidget = function() {
 
     var used = new Array(); 
     var min = '';
-    //if (isLCS && draw_data[path_label].color!='darkorchid') return;
+    if (isLCS && draw_data[path_label].color!='black') return;
     for (attr in T) 
       if (attr.length == 1) {
         var wAndT2 = T[attr];
@@ -1177,6 +1185,378 @@ var SuffixTreeWidget = function() {
       processTreeForLRS(T2, path_lb, isLCS);       
     }
   }
+
+
+  this.coloring = function() {
+    for (var j=0; j < 100; j++)
+    for (var i in draw_data) {
+      var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
+      tmp_vertex[0] = tmp_vertex[0].splice(0,2);
+      tmp_vertex.attr("fill", "yellow !important");
+      tmp_vertex.attr("class", "comeon");
+    }
+  }
+
+  this.goLCS = function() {
+    clearScreen();
+    stGeneralDriver();
+    processQueueLRS = new Array();
+    processQueueLRS.push(new NodeLRS('', draw_data[''].x, draw_data[''].y, false));
+    processTreeForLRS(root, '', true);
+
+
+    var stateList = new Array();
+    var currentState = createState(A);
+    currentState["status"] = "Start from root.";
+    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    stateList.push(currentState);
+
+    var stack = new Array(), prev = new Array();
+    var tmpProcessQ = new Array();
+    var isGoingUp = new Array();
+    tmpProcessQ[0] = processQueueLRS[0];
+    stack.push(processQueueLRS[0]);
+    var is_popping = false;
+    for (var i=1; i < processQueueLRS.length; i++) {
+      var top = stack[stack.length-1];
+      var next_node = processQueueLRS[i];
+      if ((draw_data[next_node.path_label].parent_index == top.path_label) && !is_popping) {
+        stack.push(next_node);
+        is_popping = false;
+        tmpProcessQ.push(next_node);
+      } else {
+        while (true) {
+          stack.pop();
+          is_popping = true;
+          top = stack[stack.length-1];
+          if (draw_data[next_node.path_label].parent_index == top.path_label) {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+            tmpProcessQ.push(next_node);
+            stack.push(next_node);
+            is_popping = false;
+            break;
+          } else {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+          }
+        }
+      }
+    }
+
+    processQueueLRS = tmpProcessQ;
+    var results = new Array();
+    var max = "";
+    // the animation starts here
+    var prev = new Array();
+    for (var i in processQueueLRS) {
+      var currentState = createState(A);
+      var node = processQueueLRS[i];      
+      var node_idx = null;
+      node_idx = parseInt(draw_data[node.path_label].class_id);
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      
+      for (var j=0; j < prev.length; j++) {
+        currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+      prev.push(node_idx);
+
+      if (isGoingUp[i]) {
+        currentState["status"] = "Going back."
+      } else if (node.is_leaf) {
+        currentState["status"] = "This is a leaf node, going back.";
+      } else if (draw_data[node.path_label].color != 'black') {
+        currentState["status"] = "This is not a common node, going back.";
+      } else {
+        currentState["status"] = "Path label: " + node.path_label + ". ";
+        if (node.path_label.length > max.length) {
+          max = node.path_label;
+          results = [];
+          results.push(node.path_label);
+          currentState["status"]+= "Longer than current max. Updating max";
+        } else if (node.path_label.length == max.length) {
+          results.push(node.path_label);
+          currentState["status"]+= "Equal to current max. Updating max";
+        } else {
+          currentState["status"]+= "Smaller than current max.";
+        }
+      }
+      for (var j=0; j<results.length; j++) {
+        var tmp_idx = parseInt(draw_data[results[j]].class_id);
+        currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+      }
+      if (isGoingUp[i]) currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      stateList.push(currentState);
+    }
+    currentState = createState(A);
+    currentState["status"] = "LCS ";
+    if (results.length > 1) currentState["status"]+= "are ";
+    else currentState["status"]+= "is ";
+    for (var i=0; i < results.length; i++) {
+      if (i>0) currentState["status"]+= ", ";
+      currentState["status"]+= results[i] + " ";
+    }
+    for (var j=0; j < prev.length; j++) {
+      currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+    }
+    for (var j=0; j<results.length; j++) {
+      var tmp_idx = parseInt(draw_data[results[j]].class_id);
+      currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+    }
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
+
+  function stGeneralDriver() { 
+   //Txt = document.getElementById("s1").value;
+    var s1 = document.getElementById("s1").value, s2 = document.getElementById("s2").value;
+    //var s1 = "GATAGACA$", s2 = "CATA#";
+    if (s1.length == 0 || s2.length == 0) {
+      alert("Please enter non-empty strings");
+      return;
+    }
+    if (s1[s1.length-1] != '$') {
+      alert("$ has been appended to your first string");
+      s1 += '$';
+      document.getElementById("s").value = s1;
+    }
+    if (s2[s2.length-1] != '#') {
+      alert("# has been appended to your second string");
+      s2 += '#';
+      document.getElementById("s2").value = s2;
+    }
+    Txt =  s1 + s2;
+
+    infinity = Txt.length + 1000; 
+    nForks = 0;
+    draw_data = new Array();
+    suffix_table = new Array();
+    reverse_suffix_table = new Array();
+    insertionSort(s1);
+    insertionSort(s2);
+
+    algorithm2();  // ------------ the business
+    height_level = new Array();
+    for (var i=0; i < Txt.length; i++) height_level[i] = 0;
+    show2(root, '', 'tree:|', 0, '');
+    height = Txt.length*32;
+    height_level[0] = height_offset;
+    for (var i=1; i < Txt.length; i++) {
+      height_level[i] = height_level[0]*i*5.5;
+    }   
+    drawGeneralSuffixTree(root, 0, 70, '');
+    drawAllLabel();
+    // update coord
+    var count = 1;
+    for (var i in draw_data) {
+      //var st = Txt.substring(i);
+      var node = draw_data[i];
+      var idx = parseInt(node.class_id) + 1;
+      coord[idx] = new Array();
+      coord[idx][0] = node.x;
+      coord[idx][1] = node.y;
+      //draw_data[i].class_id = count++;
+    }
+
+    // coloring
+    for (var i in draw_data) {
+      var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
+      tmp_vertex[0] = tmp_vertex[0].splice(0,2);
+      if (draw_data[i].color == "black") continue;
+      if (draw_data[i].color == "orchid")
+        tmp_vertex.attr("class", "lcs_first");
+      else tmp_vertex.attr("class", "lcs_second");
+    }
+  }//stGeneralDriver
+
+  function drawGeneralSuffixTree(T, level, prev_x, text) {
+    var count = 0, iter=0;
+    for (attr in T) {
+      if (attr.length == 1) count++;
+    }   
+    
+    var used = new Array(), min = '';
+    for (attr in T) 
+      if (attr.length == 1) {
+        var wAndT2 = T[attr];
+        var w = wAndT2.fst;
+        var myStr = Txt.substring(w.left, w.right+1);
+        used.push(new Node2(myStr, attr));
+      }
+    for (var i=0; i<used.length-1; i++)
+      for (var j=i+1; j<used.length; j++) {
+        if (stringCmp(used[i].index, used[j].index) == -1 ) {
+          var tmp = used[i];
+          used[i] = used[j];
+          used[j] = tmp;
+        }       
+        else if (stringCmp(used[i].index, used[j].index) == 0) {
+          if (stringCmp(used[i].word, used[j].word) == -1) {
+            var tmp = used[i];
+            used[i] = used[j];
+            used[j] = tmp;
+          }         
+        }
+      }
+    
+    var update_prev_x = prev_x;
+    var tmp_store = text.split(":");
+    var T_idx = text, T_string = text;
+    var currentIs1 = false, currentIs2 = false;
+    //for(attr in T)//each subtree
+      //if(attr.length == 1)//a char attribute selects a suffix-tree branch
+    for (var i=0; i < used.length; i++) {
+      iter++;
+      var attr = used[i];
+      if (iter>count/2) break; 
+      var wAndT2 = T[attr.index];
+      var w = wAndT2.fst, T2 = wAndT2.snd;
+      var Str_idx = Txt.substring(w.left, w.right+1);
+      var myStr = T_string+ Str_idx ;
+      //height = height_level[level];
+      var y = (level+1)*height + height_offset;
+      //drawVertex(update_prev_x,y,myStr,'black');
+      var suffix_idx = -1;
+      if (reverse_suffix_table[T_string + Str_idx]) {
+        suffix_idx = reverse_suffix_table[T_string + Str_idx];
+      }
+      draw_data[T_string + Str_idx] = new Node3(T_string + Str_idx, suffix_idx, T_idx, 0, 0, T_string + Str_idx);
+      //update_prev_x = Math.max(update_prev_x, drawSuffixTree(T2, level+1, update_prev_x, myStr));
+      var tmpNode = drawGeneralSuffixTree(T2, level+1, update_prev_x, myStr);
+      currentIs1 = currentIs1 || tmpNode.isString1; currentIs2 = currentIs2 || tmpNode.isString2;
+      update_prev_x = Math.max(update_prev_x, tmpNode.prev_x);
+    }    
+    update_prev_x += width;
+    var vertex_name = "";
+    var current_x = update_prev_x;
+    if (reverse_suffix_table[text] || reverse_suffix_table[text] === 0) vertex_name = reverse_suffix_table[text];
+    height = height_level[level];
+    if (maxX < update_prev_x) maxX = update_prev_x;
+    if (maxY < height) maxY = height;
+
+    var current_height = height;
+    A[amountVertex] = new ObjectPair(vertex_name, amountVertex);
+    graphWidget.addVertex(update_prev_x, height, A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+
+    //drawVertex(update_prev_x, height, vertex_name, 'black');
+    if (T_idx == "") {
+      draw_data[""] = new Node3(T_string, -1, -2, update_prev_x, level*height + height_offset, "");
+      draw_data[T_idx].class_id = amountVertex - 1;
+    } else {
+      draw_data[T_idx].x = update_prev_x;
+      draw_data[T_idx].y = height;
+      draw_data[T_idx].class_id = amountVertex - 1;
+    }
+    iter = 0;
+    for (var i=0; i < used.length; i++) 
+     { iter++;
+       if (iter>count/2) {
+         var attr = used[i];
+         var wAndT2 = T[attr.index];
+         var w = wAndT2.fst, T2 = wAndT2.snd;
+         var Str_idx = Txt.substring(w.left, w.right+1);
+
+         var myStr = T_string + Str_idx;
+         //show(T2, str2, myStr);
+         var y = (level+1)*height + height_offset;
+         //drawVertex(update_prev_x,y,myStr,'black');
+         var suffix_idx = -1;
+         if (reverse_suffix_table[T_string + Str_idx]) {
+            suffix_idx = reverse_suffix_table[T_string + Str_idx];
+         }
+         draw_data[T_string + Str_idx] = new Node3(T_string + Str_idx, suffix_idx, T_idx, 0, 0, T_string + Str_idx);
+         //update_prev_x = Math.max(update_prev_x, drawSuffixTree(T2, level+1, update_prev_x, myStr));
+         var tmpNode = drawGeneralSuffixTree(T2, level+1, update_prev_x, myStr);
+         if (!currentIs1) currentIs1 = tmpNode.isString1; 
+         if (!currentIs2) currentIs2 = tmpNode.isString2;
+         update_prev_x = Math.max(update_prev_x, tmpNode.prev_x);
+       }
+     }   
+ 
+    if (T.isLeaf) {
+        if (text[text.length-1] == '$') currentIs1 = true;
+        else currentIs2 = true;       
+    }
+    
+    if (currentIs1 && currentIs2) {
+      draw_data[T_idx].color = 'black';    
+      //drawVertex(current_x, current_height, vertex_name, 'darkorchid');
+    } else if (currentIs1) {
+      draw_data[T_idx].color = 'orchid';
+      //drawVertex(current_x, current_height, vertex_name, 'black');
+    } else {
+      draw_data[T_idx].color = 'chartreuse';
+      //drawVertex(current_x, current_height, vertex_name, 'chartreuse');
+    }
+    return new NodeG(update_prev_x, currentIs1, currentIs2);
+  }
   
+  function show2(T, str, arc, level, node_label) // print the suffix tree
+ { 
+    if(T == null)//should not happen!
+    { 
+      return;//should not be here
+    }
+    //else
+    if(T.isLeaf)
+    { 
+      if (node_label.length > height_level[level]) height_level[level] = node_label.length;
+      return;//llewop d
+    }
+    //else
+    nForks++;
+    var attr, iter = 0;
+    var spaces = '';  var i;
+    for(i=1; i < arc.length; i++) spaces += ' ';
+    spaces += '|';   // |spaces|==|arc|
+    var str2 = str+spaces;//nosilla l
+
+    var used = new Array(); 
+    var min = '';
+    
+    for (attr in T) 
+      if (attr.length == 1) {
+        var wAndT2 = T[attr];
+        var w = wAndT2.fst;
+        var myStr = Txt.substring(w.left, w.right+1);
+        used.push(new Node2(myStr, attr));
+      }
+    for (var i=0; i<used.length-1; i++)
+      for (var j=i+1; j<used.length; j++) {
+        if (stringCmp(used[i].index, used[j].index) == -1 ) {
+          var tmp = used[i];
+          used[i] = used[j];
+          used[j] = tmp;
+        }       
+        else if (stringCmp(used[i].index, used[j].index) == 0) {
+          if (stringCmp(used[i].word, used[j].word) == -1) {
+            var tmp = used[i];
+            used[i] = used[j];
+            used[j] = tmp;
+          }         
+        }
+    }
+    if (node_label.length > height_level[level]) height_level[level] = node_label.length;
+    for (var i=0; i < used.length; i++) {
+      iter++;
+      attr = used[i];
+      var wAndT2 = T[attr.index];
+      var w = wAndT2.fst, T2 = wAndT2.snd;
+      var myStr = '('+(w.left)+':'+Txt.substring(w.left, w.right+1)+')|';
+      var label = node_label + Txt.substring(w.left, w.right + 1);
+      
+      if (label.indexOf('$') > -1) {
+        T[attr.index].fst.right = Txt.indexOf('$');
+        wAndT2 = T[attr.index];
+        w = wAndT2.fst;
+      }
+      
+          
+      show2(T2, str2, myStr, level+1, Txt.substring(w.left, w.right+1))
+
+    }
+
+  }//show
 
 }

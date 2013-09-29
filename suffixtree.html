@@ -55,7 +55,9 @@
     <div id="actions" class="panel">
         <p id="buildv1" style="padding-top: 10px;">Build Suffix Tree</p>
         <p id="search" style="padding-top: 10px;">Search</p>
-        <p id="search" class="execAction" style="padding-top: 10px;" onclick=buildLRS()>LRS</p>
+        <p id="LRS" class="execAction" style="padding-top: 10px;" 
+        onclick=buildLRS()>LRS</p>
+        <p id="LCS" style="padding-top: 10px;">LCS</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -63,9 +65,16 @@
         <div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="GATAGACA$" /></div>
         <div id="buildv1-go" class="execAction" onclick=buildSuffixTree()><p>GO</p></div>
         <div id="buildv1-err" class="err"></div>
+
         <div id="search-input"><input type="text" id="search_inp" autocomplete="off" value="GA" /></div>
         <div id="search-go" class="execAction" onclick=goSearch()><p>GO</p></div>        
         <div id="search-err" class="err"></div>
+
+        <div id="lcs-input"><input type="text" id="s1" autocomplete="off" value="GATAGACA$" /><input type="text" id="s2" autocomplete="off" value="CATA#" /></div>
+        <div id="lcs-go" class="execAction" onclick=test1()><p>GO</p></div>        
+        <div id="lcs-err" class="err"></div>
+
+
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -142,16 +151,29 @@
                 $('#current-action').show();
                 $('#current-action p').html("Search "+ $('#search_inp').val());
                 $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-                //closeSearch();
+                //closeLRS();
                 triggerRightPanels();
                 isPlaying = true;
                 //document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
             }
         }, 500);
     }
+
     function test1() {
+        if(isPlaying) { stop(); }
         isPlaying = true;
-        stWidget.testAnimation();
+        
+        setTimeout( function() {
+            if ((mode=="exploration")&&stWidget.goLCS()) {
+                $('#current-action').show();
+                $('#current-action p').html("Search "+ $('#search_inp').val());
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeLCS();
+                triggerRightPanels();
+                isPlaying = true;
+                //document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
+            }
+        }, 500);
     }
 
     function goSearch() {

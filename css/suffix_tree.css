@@ -61,6 +61,33 @@
 			padding: 5px 8px;
 		}		
 
+
+#lcs-input {
+	position: fixed;
+	bottom: 78px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#lcs-input input {
+		width: 78px;
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#lcs-go {
+		position: fixed;
+		bottom: 78px;
+		left: 385px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#lcs-go p {
+			padding: 5px 8px;
+		}
 	
 /*all action pullout (error) stuff here*/
 .err {
@@ -76,4 +103,12 @@
 .background {
   fill: none;
   pointer-events: all;
+}
+
+.lcs_first {
+	fill: orchid;
+}
+
+.lcs_second {
+	fill: chartreuse;
 }
