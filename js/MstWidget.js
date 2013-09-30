@@ -172,7 +172,7 @@ var MST = function(){
       sortedArray.push(enqueuedEdge);
     }
 
-    sortedArray.sort(ObjectPair.sort);
+    sortedArray.sort(ObjectPair.compare);
 
     while(sortedArray.length > 0){
       var dequeuedEdge = sortedArray.shift();
