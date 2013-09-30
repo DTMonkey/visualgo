@@ -146,6 +146,7 @@ var MST = function(){
     console.log(stateList);
 
     graphWidget.startAnimation(stateList);
+	return true;
   }
 
   this.kruskal = function(mstTypeConstant){

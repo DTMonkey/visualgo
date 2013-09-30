@@ -54,13 +54,15 @@
     
     <div id="actions" class="panel">
         <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.9)</p>
-        <p id="kruskals" class="execAction" style="padding-bottom: 10px;" onclick=kruskals()>Kruskal's Algo</p>
+        <p id="kruskals" class="execAction" onclick=kruskals()>Kruskal's Algo</p>
+        <p id="kruskals" class="execAction" style="padding-bottom: 10px;" onclick=prims()>Prim's Algo</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
     	<div id="sample1-err" class="err"></div>
         <div id="kruskals-err" class="err"></div>
+        <div id="prims-err" class="err"></div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -168,6 +170,19 @@
       if ((mode=="exploration")&&mstWidget.kruskal(MST_MIN)) {
         $('#current-action').show();
         $('#current-action p').html("Kruskal's Algorithm to find MST");
+        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+        triggerRightPanels();
+        isPlaying = true;
+      }
+    }, 500);
+  }
+  
+  function prims() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&mstWidget.prim(0,MST_MIN)) {
+        $('#current-action').show();
+        $('#current-action p').html("Prim's Algorithm to find MST");
         $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
         triggerRightPanels();
         isPlaying = true;

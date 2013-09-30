@@ -12,10 +12,17 @@ $( document ).ready(function() {
 	//and the others
 	$('#sample1').click(function() {
 		$('#kruskals-err').html("");
+		$('#prims-err').html("");
 	});
 	
 	$('#kruskals').click(function() {
 		$('#sample1-err').html("");
+		$('#prims-err').html("");
+	});
+	
+	$('#prims').click(function() {
+		$('#sample1-err').html("");
+		$('#kruskals-err').html("");
 	});
 		
 	//tutorial mode

@@ -1,8 +1,8 @@
 @charset "utf-8";
 
-#actions { height: 64px; width: 150px; }
+#actions { height: 91px; width: 150px; }
 	#actions-hide {
-		padding: 24px 15px 24px 14px;
+		padding: 37px 15px 38px 14px;
 	}
 
 /*all action pullout (input) stuff here*/
@@ -13,11 +13,16 @@
 	color: red;
 }
 #sample1-err {
-	bottom: 92px;
+	bottom: 119px;
 	left: 201px;
 	padding: 8px 0px 7px;
 }
 #kruskals-err {
+	bottom: 92px;
+	left: 201px;
+	padding: 5px 0px;
+}
+#prims-err {
 	bottom: 60px;
 	left: 201px;
 	padding: 8px 0px 7px;

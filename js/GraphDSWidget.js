@@ -310,7 +310,7 @@ var Graph = function() {
       var circle2 = mainSvg.selectAll(".v" + ii.toString());
       circle2[0][2].value = circle2[0][2].value;
       circle2[0] = circle2[0].splice(0,2);
-      circle2.style("fill", "blue");
+      circle2.style("fill", surpriseColour);
       
     })
     .on("mouseout", function () { 
@@ -379,7 +379,7 @@ var Graph = function() {
           var circle2 = mainSvg.selectAll(".v" + ii.toString());
           circle2[0][2].value = circle2[0][2].value;
           circle2[0] = circle2[0].splice(0,2);
-          circle2.style("fill", "blue");
+          circle2.style("fill", surpriseColour);
         })
         .on("mouseout", function () { 
           var circle2 = mainSvg.selectAll(".v" + ii.toString());
@@ -674,7 +674,7 @@ var Graph = function() {
         var circle2 = mainSvg.selectAll(".v" + ii.toString());
         circle2[0][2].value = circle2[0][2].value;
         circle2[0] = circle2[0].splice(0,2);
-        circle2.style("fill", "blue");
+        circle2.style("fill", surpriseColour);
         
       })
       .on("mouseout", function () { 
@@ -947,7 +947,7 @@ var Graph = function() {
       var circle2 = mainSvg.selectAll(".v" + ii.toString());
       circle2[0][2].value = circle2[0][2].value;
       circle2[0] = circle2[0].splice(0,2);
-      circle2.style("fill", "blue");
+      circle2.style("fill", surpriseColour);
       
     })
     .on("mouseout", function () { 
@@ -1007,7 +1007,7 @@ var Graph = function() {
      var circle2 = mainSvg.selectAll(".v" + ii.toString());
      circle2[0][2].value = circle2[0][2].value;
      circle2[0] = circle2[0].splice(0,2);
-     circle2.style("fill", "blue");
+     circle2.style("fill", surpriseColour);
 
     })
     .on("mouseout", function () { 
