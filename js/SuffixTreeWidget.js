@@ -62,6 +62,8 @@ var SuffixTreeWidget = function() {
   var maxX = 0, maxY = 0;
 
   mainSvg.style("class", "unselectable");
+  mainSvg.attr("height", window.innerHeight);
+  mainSvg.attr("width", window.innerWidth);
   
   var projection = d3.geo.albersUsa()
     .scale(1070)
@@ -570,7 +572,7 @@ var SuffixTreeWidget = function() {
   this.buildSuffixTree = function(txt) {
     clearScreen();
     Txt = txt;
-    stDriver();
+    stDriver(txt);
   }
 
   this.buildGeneralSuffixTree = function() {
@@ -595,10 +597,7 @@ var SuffixTreeWidget = function() {
     if (input.length - input_idx <= node_label.length) return -2;
   }
 
-  function stDriver(second)
-  { //Txt = document.theForm.inp.value;
-    //Txt = "GATAGACA$";
-    //resetEverything();
+  function prepareStDriver() {
     if (Txt.length == 0) {
       alert("Please enter a non-empty string");
       return
@@ -637,7 +636,57 @@ var SuffixTreeWidget = function() {
     }   
     maxY = 0; maxX = 0;
     // TODO:
-    drawSuffixTree(root, 0, 70, '');
+    var startX = 70;
+  }
+
+  function stDriver(txt)
+  { 
+    Txt = txt;
+    if (Txt.length == 0) {
+      alert("Please enter a non-empty string");
+      return
+    }
+    if (Txt[Txt.length-1] != '$') {
+      alert("$ has been appended to your string");
+      Txt += '$';
+      document.getElementById("s").value = Txt;
+    }
+    infinity = Txt.length + 1000; // well it's quite big :-)
+    nForks = 0;
+    draw_data = new Array();
+    //document.theForm.opt.value = '';
+    suffix_table = new Array();
+    reverse_suffix_table = new Array();
+    currentColorNode = -1;
+    currentColorElem = -1;
+    insertionSort(Txt);
+
+    algorithm2();  // ------------ the business
+    height_level = new Array();
+    for (var i=0; i < Txt.length; i++) height_level[i] = 0;
+    //show(root, '', 'tree:|', 0, '');
+    //document.theForm.opt.value += nForks + ' branching nodes';
+    height = Txt.length*32;
+
+    /*
+    var ctx = document.getElementById("canvas").getContext("2d");
+    ctx.clearRect(0, 0, 3000, 3000);
+
+    ctx.save();
+    */
+    height_level[0] = height_offset ;
+    for (var i=1; i < Txt.length; i++) {
+        height_level[i] = height_level[0]*i*5.5;
+    }   
+    maxY = 0; maxX = 0;
+    // TODO:
+    var startX = 70;
+    drawSuffixTree(root, 0, startX, '');
+    startX = (window.innerWidth - (maxX - startX))/2.5;
+    clearScreen();
+    Txt = txt;
+    prepareStDriver();
+    drawSuffixTree(root, 0, startX, '');
     // TODO:
     drawAllLabel();
     
