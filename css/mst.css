@@ -6,6 +6,32 @@
 	}
 
 /*all action pullout (input) stuff here*/
+#prims-input {
+	position: fixed;
+	bottom: 60px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#prims-input input {
+		width: 40px;
+		background: black;
+		color: white;
+		padding: 8px;
+	}
+	#prims-go {
+		position: fixed;
+		bottom: 60px;
+		left: 228px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#prims-go p {
+			padding: 8px 8px 7px;
+		}
 
 /*all action pullout (error) stuff here*/
 .err {
@@ -24,7 +50,7 @@
 }
 #prims-err {
 	bottom: 60px;
-	left: 201px;
+	left: 272px;
 	padding: 8px 0px 7px;
 }
 
