@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Visualizations - Single-Source Shortest Paths</title>
+
+<!--css-->
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/viz.css">
+
+<link rel="stylesheet" href="css/sssp.css"> <!--not yet implemented-->
+
+<!--js-->
+<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
+<script src="js/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="js/viz.js"></script>
+<script src="js/common.js"></script>
+<script src="js/sssp_actions.js"></script> <!--not yet implemented-->
+<!--script src="//connect.facebook.net/en_US/all.js"></script-->  <!--I turn off this as this is very slow-->
+<script src="js/d3/d3.v3.js"></script>
+<!-- heap scripts are below-->
+
+<!--fonts-->
+<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+<div id="top-bar">
+  <a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+    <span id="title">
+      <a class="selected-viz">Single-Source Shortest Paths</a>
+    </span>
+    <a id="fb-login" href="#" target="_blank">Facebook connect</a>
+    <span id="trick">
+    <fb:login-button show-faces="false" width="200" max-rows="1" style="float: right; margin-top: 9px;"></fb:login-button>
+    </span>
+    <div id="mode-menu">
+      <div id="mode-button">Exploration Mode<img src="img/arrow_white.png" alt="Home"/></div>
+        <div id="other-modes">
+            <a href="#">Tutorial Mode</a>
+            <!--<a href="#">Training Mode</a>--> <!--under construction-->
+        </div>
+    </div>
+</div>
+    
+    <div id="viz"></div>
+    
+    <div id="current-action" class="panel"><p></p></div>
+    
+    <div id="actions" class="panel">
+        <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.17)</p>
+        <p id="bellmanford" class="execAction">Bellman Ford's</p>
+        <p id="dijkstra" class="execAction" style="padding-bottom: 10px;">Dijkstra's</p>
+    </div>
+    <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-extras">
+    <!--put all the extra action pullouts (input) and error messages here-->
+    	<div id="sample1-err" class="err"></div>
+        <div id="bellmanford-input"><input type="text" id="bellmanford-v" autocomplete="off" value=2 /></div>
+        <div id="bellmanford-go" class="execAction" onclick=bellmanford()><p>GO</p></div>
+        <div id="bellmanford-err" class="err"></div>-->
+        <div id="dijkstra-input"><input type="text" id="dijkstra-v" autocomplete="off" value=2 /></div>
+        <div id="dijkstra-go" class="execAction" onclick=dijkstra()><p>GO</p></div>
+        <div id="dijkstra-err" class="err"></div>-->
+    </div>
+    
+    <div id="status" class="panel"><p></p></div>
+    <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
+    
+    <div id="codetrace" class="panel">
+    <!--can add class "highlighed" to hightlight one line-->
+    <p id="code1" style="padding-top: 10px;"></p>
+    <p id="code2"></p>
+    <p id="code3"></p>
+    <p id="code4"></p>
+    <p id="code5"></p>
+    <p id="code6"></p>
+    <p id="code7" style="padding-bottom: 10px;"></p>
+    </div>
+    <div id="codetrace-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide codetrace panel"/></div>
+    
+<div id="left-bar"></div>
+<div id="right-bar"></div>
+<!-- Bottom bar and overlay popups -->
+<div id="bottom-bar">
+	<a id="trigger-about">About</a>
+    <a id="trigger-team">Team</a>
+    <a id="trigger-terms">Terms of use</a>
+</div>
+
+<div id="media-controls">
+	<div id="speed-control">slow<div id="speed-input"></div>fast</div>
+	<span id="go-to-beginning" class="media-control-button" title="go to beginning" onclick=goToBeginning()><img src="img/goToBeginning.png" alt="go to beginning" /></span>
+	<span id="previous" class="media-control-button" title="step backward" onclick=stepBackward()><img src="img/prevFrame.png" alt="previous frame" /></span>
+    <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="img/pause.png" alt="pause" /></span>
+    <span id="play" class="media-control-button" title="play" onclick=play()><img src="img/play.png" alt="play" /></span>
+    <span id="next" class="media-control-button" title="step forward" onclick=stepForward()><img src="img/nextFrame.png" alt="next frame" /></span>
+    <span id="go-to-end" class="media-control-button" title="go to end" onclick=goToEnd()><img src="img/goToEnd.png" alt="go to end"/></span>
+    <div id="progress-bar" class="media-control-button"></div>
+</div>
+
+<div id="dark-overlay"></div>
+<div id="about" class="overlays"></div>
+<div id="team" class="overlays"></div>
+<div id="termsofuse" class="overlays"></div>
+
+<!--tutorial dialogs here-->
+<div id="sssp-tutorial-1" class="tutorial-dialog">
+  This is obsolete.
+     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-2" class="tutorial-dialog">
+  This is obsolete.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-3" class="tutorial-dialog">
+  This is obsolete.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-4" class="tutorial-dialog">
+  This is obsolete.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-5" class="tutorial-dialog">
+  This is obsolete.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-6" class="tutorial-dialog">
+  Control the animation with the player controls! Keyboard shortcuts are:<br/>
+    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
+    <strong>Left/right arrows:</strong> step backward/step forward<br/>
+    <strong>-/+:</strong> decrease/increase speed<br/>
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="sssp-tutorial-7" class="tutorial-dialog">
+  Return to "Exploration Mode" to start exploring!
+</div>
+
+<script src="js/graph_library/constant.js"></script>
+<script src="js/graph_library/properties.js"></script>
+<script src="js/graph_library/helperObjects.js"></script>
+<script src="js/graph_library/misc.js"></script>
+<script src="js/graph_library/Widget.js"></script>
+<script src="js/graph_library/GraphWidget.js"></script>
+<script src="js/graph_library/GraphVertexWidget.js"></script>
+<script src="js/graph_library/GraphEdgeWidget.js"></script>
+<script src="js/SSSPWidget.js"></script>
+
+<script type="text/javascript">
+  //start by showing actions panel
+  $('#play').hide();
+
+  var ssspWidget = new SSSP();
+  var gw = ssspWidget.getGraphWidget();
+  
+  sample1();
+
+  function sample1() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&ssspWidget.examples(SSSP_EXAMPLE_CP4P17)) {
+        $('#progress-bar').slider( "option", "max", 0);
+        isPlaying = false;
+      }
+    }, 500);
+  }
+    
+  function bellmanford() {
+    if(isPlaying) { stop(); }
+    var sourceS = parseInt($('#bellmanford-v').val());
+    setTimeout( function() {
+      if ((mode=="exploration")&&ssspWidget.bellmanford(sourceS)) {
+        closeBellmanFords();
+        $('#current-action').show();
+        $('#current-action p').html("Bellman Ford's Algorithm, source vertex " + sourceS);
+        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+        triggerRightPanels();
+        isPlaying = true;
+      }
+    }, 500);
+  }
+  
+  function dijkstra() {
+    if(isPlaying) { stop(); }
+  	var sourceS = parseInt($('#dijkstra-v').val());
+    setTimeout( function() {
+      if ((mode=="exploration")&&ssspWidget.dijkstra(sourceS)) {
+        closeDijkstras();
+        $('#current-action').show();
+        $('#current-action p').html("Dijkstra's Algorithm, source vertex " + sourceS);
+        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+        triggerRightPanels();
+        isPlaying = true;
+      }
+    }, 500);
+  }
+
+  //playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidget.js
+  var isPaused = false;
+  function isAtEnd() {
+    return (gw.getCurrentIteration()==(gw.getTotalIteration()-1));
+  }
+  
+  function pause() {
+    if(isPlaying) {
+      isPaused = true;
+      gw.pause();
+      $('#play').show();
+      $('#pause').hide();
+    }
+  }
+  function play() {
+    if(isPlaying) {
+      isPaused = false;
+      $('#pause').show();
+      $('#play').hide();
+      if(isAtEnd()) {
+        gw.replay();
+      } else {
+        gw.play();
+      }
+    }
+  }
+  function stepForward() {
+    if(isPlaying) {
+      pause();
+      gw.forceNext(250);
+    }
+  }
+  function stepBackward() {
+    if(isPlaying) {
+      pause();
+      gw.forcePrevious(250);  
+    }
+  }
+  function goToBeginning() {
+    if(isPlaying) {
+      gw.jumpToIteration(0,0);
+      pause();
+    }
+  }
+  function goToEnd() {
+    if(isPlaying) {
+      gw.jumpToIteration(gw.getTotalIteration()-1,0);
+      pause();
+    }
+  }
+  function stop() {
+    gw.stop();
+    isPaused = false;
+    isPlaying = false;
+    $('#pause').show();
+    $('#play').hide();
+  }
+  
+  //shortcut keys for playback controls
+  $(document).keydown( function(event) {
+    if(event.which == 32) { //spacebar
+      if(isPaused) { play(); } else { pause(); }
+    } else if(event.which == 37) { //left arrow
+      stepBackward();
+    } else if(event.which == 39) { //right arrow
+      stepForward();
+    } else if(event.which == 35) { //end
+      stop();
+    } else if (event.which == 189) { //minus
+      var d = (2200-gw.getAnimationDuration())-100;
+      if(d > 0) {
+        $("#speed-input").slider("value", d);
+      } else {
+        $("#speed-input").slider("value", 0);
+      }
+    } else if (event.which == 187) { //plus
+      var d = (2200-gw.getAnimationDuration())+100;
+      if(d <= 2000) {
+        $("#speed-input").slider("value", d);
+      } else {
+        $("#speed-input").slider("value", 2000);
+      }
+    }
+  });
+  
+  //sliders
+  $("#speed-input").slider({
+    min: 200,
+    max: 2000,
+    value: 1700,
+    change: function(event, ui) {
+      gw.setAnimationDuration(2200-ui.value);
+    }
+  });
+  $("#progress-bar").slider({
+    range: "min",
+    min: 0,
+    value: 0,
+    slide: function(event, ui) {
+      gw.pause();
+      gw.jumpToIteration(ui.value,0);
+    },
+    stop: function(event, ui) {
+      if(!isPaused) { setTimeout( function(){gw.play();}, 500) }
+    }
+  });
+  
+</script>
+
+</body>
+</html>

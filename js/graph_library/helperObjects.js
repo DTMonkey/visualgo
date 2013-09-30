@@ -59,8 +59,8 @@ ObjectTriple.compare = function(objTripleOne, objTripleTwo){
 		if(objTripleOne.getSecond() > objTripleTwo.getSecond()) return 1;
 		if(objTripleOne.getSecond() < objTripleTwo.getSecond()) return -1;
 		else{
-			if(objTripleOne.getThrid() > objTripleTwo.getThrid()) return 1;
-			if(objTripleOne.getThrid() < objTripleTwo.getThrid()) return -1;
+			if(objTripleOne.getThird() > objTripleTwo.getThird()) return 1;
+			if(objTripleOne.getThird() < objTripleTwo.getThird()) return -1;
 			else return 0;
 		}
 	}
