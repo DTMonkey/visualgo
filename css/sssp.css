@@ -8,7 +8,7 @@
 /*all action pullout (input) stuff here*/
 #bellmanford-input {
 	position: fixed;
-	bottom: 90px;
+	bottom: 92px;
 	left: 196px;
 	background: #777;
 	width: 0px;
@@ -18,11 +18,11 @@
 		width: 40px;
 		background: black;
 		color: white;
-		padding: 8px;
+		padding: 6px 8px 5px;
 	}
 	#bellmanford-go {
 		position: fixed;
-		bottom: 90px;
+		bottom: 92px;
 		left: 228px;
 		width: 0px;
 		background: #777;
@@ -30,7 +30,7 @@
 		overflow: hidden;
 	}
 		#bellmanford-go p {
-			padding: 8px 8px 7px;
+			padding: 5px 8px;
 		}
 
 #dijkstra-input {

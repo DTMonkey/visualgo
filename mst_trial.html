@@ -53,7 +53,7 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-        <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.9)</p>
+        <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.10)</p>
         <p id="kruskals" class="execAction" onclick=kruskals()>Kruskal's Algo</p>
         <p id="prims" class="execAction" style="padding-bottom: 10px;">Prim's Algo</p>
     </div>
@@ -155,6 +155,7 @@
 
   var mstWidget = new MST();
   var gw = mstWidget.getGraphWidget();
+  mstWidget.examples(MST_EXAMPLE_CP4P9);
     
   function sample1() {
     if(isPlaying) { stop(); }

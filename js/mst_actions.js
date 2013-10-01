@@ -1,5 +1,5 @@
 var actionsWidth = 150;
-var statusCodetraceWidth = 410;
+var statusCodetraceWidth = 430;
 
 var isPrimsOpen = false;
 

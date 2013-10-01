@@ -69,17 +69,22 @@ var MST = function(){
     }
 
     currentState = createState(internalAdjList, internalEdgeList);
+	currentState["status"] = 'The original graph';
+	currentState["lineNo"] = 0;
     stateList.push(currentState);
 
     vertexHighlighted[startVertexText] = true;
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    stateList.push(currentState);
+    currentState["status"] = 'add '+startVertexText+' to set T';
+	currentState["lineNo"] = 1;
+	stateList.push(currentState);
 
     delete vertexHighlighted[startVertexText];
     vertexTraversed[startVertexText] = true;
 
     var sortedArray = [];
     
+	var enqueuedToString = "";
     for(key in internalAdjList[startVertexText]){
       if(key == "cx" || key == "cy") continue;
 
@@ -89,18 +94,33 @@ var MST = function(){
         enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
       else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
       edgeTraversed[enqueuedEdgeId] = true;
+	  enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["vertexA"]+","+internalEdgeList[enqueuedEdgeId]["vertexB"]+"), ";
       sortedArray.push(enqueuedEdge);
     }
+	enqueuedToString = enqueuedToString.substring(0,enqueuedToString.length-2);
 
     sortedArray.sort(ObjectTriple.compare);
 
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+	currentState["status"] = 'Add '+enqueuedToString+' to the Priority Queue';
+	currentState["lineNo"] = 2;
     stateList.push(currentState);
 
     while(Object.keys(notVisited).length > 0){
       var dequeuedEdge = sortedArray.shift();
       var otherVertex = dequeuedEdge.getSecond();
       var edgeId = dequeuedEdge.getThird();
+	  
+	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState["el"][edgeId]["animateHighlighted"] = true;
+	  correctVertex = internalEdgeList[edgeId]["vertexA"];
+	  if(correctVertex == otherVertex) {
+		  correctVertex = internalEdgeList[edgeId]["vertexB"];
+	  }
+	  currentState["status"] = 'Remove edge ('+correctVertex+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T.';
+	  currentState["lineNo"] = 4;
+      stateList.push(currentState);
+	  
       if(notVisited[otherVertex] != null){
         delete edgeTraversed[edgeId];
         edgeHighlighted[edgeId] = true;
@@ -108,6 +128,8 @@ var MST = function(){
 
         currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
         currentState["el"][edgeId]["animateHighlighted"] = true;
+		currentState["status"] = otherVertex+' is not in T';
+		currentState["lineNo"] = 4;
         stateList.push(currentState);
 
         delete notVisited[otherVertex];
@@ -115,6 +137,7 @@ var MST = function(){
         delete vertexHighlighted[otherVertex];
         vertexTraversed[otherVertex] = true;
 
+		var enqueuedToString = "";
         for(key in internalAdjList[otherVertex]){
           if(key == "cx" || key == "cy") continue;
 
@@ -125,13 +148,17 @@ var MST = function(){
           else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
           if(edgeHighlighted[enqueuedEdgeId] == null){
             edgeTraversed[enqueuedEdgeId] = true;
+			enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["vertexA"]+","+internalEdgeList[enqueuedEdgeId]["vertexB"]+"), ";
             sortedArray.push(enqueuedEdge);
           }
         }
 
-        sortedArray.sort(ObjectTriple.compare);
+        enqueuedToString = enqueuedToString.substring(0,enqueuedToString.length-2);
+		sortedArray.sort(ObjectTriple.compare);
 
         currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+		currentState["status"] = 'so add '+otherVertex+' to T, and add '+enqueuedToString+' to the Priority Queue';
+		currentState["lineNo"] = 5;
         stateList.push(currentState);
       }
 
@@ -139,6 +166,8 @@ var MST = function(){
         delete edgeTraversed[edgeId];
 
         currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+		currentState["status"] = otherVertex+' is in T, so ignore this edge';
+		currentState["lineNo"] = 6;
         stateList.push(currentState);
       }
     }
@@ -151,6 +180,8 @@ var MST = function(){
 
     edgeTraversed = {};
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+	currentState["status"] = 'The highlighted vertices and edges form a Minimum Spanning Tree';
+	currentState["lineNo"] = 7;
     stateList.push(currentState);
 
     console.log(stateList);
@@ -168,8 +199,9 @@ var MST = function(){
     var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
     var sortedArray = [];
     var tempUfds = new UfdsHelper();
+	var totalWeight = 0;
 	
-	//add error checks
+	//add error check
 	if(amountVertex == 0) { //no graph
 		$('#kruskals-err').html("There is no graph to run this on. Please select a sample graph first.");
 		return false;
@@ -190,30 +222,43 @@ var MST = function(){
 
     sortedArray.sort(ObjectPair.compare);
 	
-	var sortedArrayToString = "";
-	for(var i=0; i<sortedArray.length; i++) {
-		var thisEdgeId = sortedArray[i].getSecond();
-		sortedArrayToString += "("+internalEdgeList[thisEdgeId]["vertexA"]+","+internalEdgeList[thisEdgeId]["vertexB"]+")";
-		if(i < (sortedArray.length-1)) {
-			sortedArrayToString += ", ";
+	function sortedArrayToString() {
+		var ansStr = "";
+		for(var i=0; i<sortedArray.length; i++) {
+			var thisEdgeId = sortedArray[i].getSecond();
+			ansStr += "("+internalEdgeList[thisEdgeId]["weight"]+",("+internalEdgeList[thisEdgeId]["vertexA"]+","+internalEdgeList[thisEdgeId]["vertexB"]+"))";
+			if(i < (sortedArray.length-1)) {
+				ansStr += ", ";
+			}
 		}
+		return ansStr;
 	}
-	currentState["status"] = 'Edges are sorted in increasing order of weight: '+sortedArrayToString;
+	currentState["status"] = 'Edges are sorted in increasing order of weight: '+sortedArrayToString();
 	currentState["lineNo"] = [1,2];
     stateList.push(currentState);
 
     while(sortedArray.length > 0){
+	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+	  if(sortedArray.length > 1) {
+	  	currentState["status"] = 'The remaining edges are '+sortedArrayToString();
+	  } else if(sortedArray.length == 1) {
+		currentState["status"] = 'The remaining edge is '+sortedArrayToString();
+	  }
+	  currentState["lineNo"] = 3;
+	  stateList.push(currentState);
+	  
       var dequeuedEdge = sortedArray.shift();
       var dequeuedEdgeId = dequeuedEdge.getSecond();
       var vertexA = internalEdgeList[dequeuedEdgeId]["vertexA"];
       var vertexB = internalEdgeList[dequeuedEdgeId]["vertexB"];
+	  var thisWeight = internalEdgeList[dequeuedEdgeId]["weight"];
 
       edgeTraversed[dequeuedEdgeId] = true;
       vertexHighlighted[vertexA] = true;
       vertexHighlighted[vertexB] = true;
 
       currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-	  currentState["status"] = 'Checking if adding edge ('+vertexA+','+vertexB+') forms a cycle';
+	  currentState["status"] = 'Checking if adding edge ('+thisWeight+',('+vertexA+','+vertexB+')) forms a cycle';
 	  currentState["lineNo"] = 4;
       stateList.push(currentState);
 
@@ -224,6 +269,7 @@ var MST = function(){
         edgeHighlighted[dequeuedEdgeId] = true;
         vertexTraversed[vertexA] = true;
         vertexTraversed[vertexB] = true;
+		totalWeight += parseInt(thisWeight);
       }
 
       delete edgeTraversed[dequeuedEdgeId];
@@ -232,17 +278,17 @@ var MST = function(){
 
       currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
 	  if(noCycle) {
-	  	currentState["status"] = 'Edge ('+vertexA+','+vertexB+') does not form a cycle, so add it to T';
+	  	currentState["status"] = 'Adding edge ('+vertexA+','+vertexB+') with weight '+thisWeight+' does not form a cycle, so add it to T. The current weight of T is '+totalWeight+'.';
 	  	currentState["lineNo"] = 5;
 	  } else {
-		currentState["status"] = 'Edge ('+vertexA+','+vertexB+') forms a cycle, so ignore it';
+		currentState["status"] = 'Adding edge ('+vertexA+','+vertexB+') will form a cycle, so ignore it. The current weight of T remains at '+totalWeight+'.';
 	  	currentState["lineNo"] = 6;
 	  }
       stateList.push(currentState);
     }
 	
 	currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-	currentState["status"] = 'The highlighted edges form a Minimum Spanning Tree';
+	currentState["status"] = 'The highlighted vertices and edges form a Minimum Spanning Tree with MST weight = '+totalWeight;
 	currentState["lineNo"] = 7;
     stateList.push(currentState);
 	
@@ -418,13 +464,13 @@ var MST = function(){
   function populatePseudocode(act) {
     switch (act) {
       case 0: // Prim's
-        $('#code1').html('');
-        $('#code2').html('');
-        $('#code3').html('');
-        $('#code4').html('');
-        $('#code5').html('');
-        $('#code6').html('');
-        $('#code7').html('');
+        $('#code1').html('T = {s}');
+        $('#code2').html('enqueue edges connected to s in PQ by weight');
+        $('#code3').html('while (!PQ.isEmpty)');
+        $('#code4').html('&nbsp;&nbsp;if (vertex v linked with e=PQ.remove is not in T)');
+        $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;T = T &cup; v, enqueue edges connected to v');
+		$('#code6').html('&nbsp;&nbsp;else ignore e');
+        $('#code7').html('T is an MST');
         break;
       case 1: // Kruskal's
         $('#code1').html('Sort E edges by increasing weight');
@@ -433,7 +479,7 @@ var MST = function(){
         $('#code4').html('&nbsp;&nbsp;if adding e=edgelist[i] does not form a cycle');
         $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;add e to T');
         $('#code6').html('&nbsp;&nbsp;else ignore e');
-        $('#code7').html('T is a MST');
+        $('#code7').html('T is an MST');
         break;
     }
   }
