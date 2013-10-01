@@ -322,24 +322,8 @@ var GraphWidget = function(){
 
       currentVertex.showVertex();
 
-      switch(currentVertexState[key]["state"]){
-        case OBJ_HIDDEN:
-          currentVertex.hideVertex();
-          break;
-        case VERTEX_DEFAULT:
-          currentVertex.defaultVertex();
-          break;
-        case VERTEX_HIGHLIGHTED:
-          currentVertex.highlightVertex();
-          break;
-        case VERTEX_TRAVERSED:
-          currentVertex.traversedVertex();
-          break;
-        case VERTEX_RESULT:
-          currentVertex.resultVertex();
-        default:
-          break;
-      }
+      if(currentVertexState[key]["state"] == OBJ_HIDDEN) currentVertex.hideVertex();
+      else currentVertex.stateVertex(currentVertexState[key]["state"]);
 
       currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
       currentVertex.changeText(currentVertexState[key]["text"]);
@@ -376,22 +360,8 @@ var GraphWidget = function(){
 
       currentEdge.showEdge();
 
-      switch(currentEdgeState[key]["state"]){
-        case OBJ_HIDDEN:
-          currentEdge.hideEdge();
-          break;
-        case EDGE_DEFAULT:
-          currentEdge.defaultEdge();
-          break;
-        case EDGE_HIGHLIGHTED:
-          currentEdge.highlightEdge();
-          break;
-        case EDGE_TRAVERSED:
-          currentEdge.traversedEdge();
-          break;
-        default:
-          break;
-      }
+      if(currentEdgeState[key]["state"] == OBJ_HIDDEN) currentEdge.hideEdge();
+      else currentEdge.stateEdge(currentEdgeState[key]["state"]);
 
       currentEdge.hideWeight();
       if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){

@@ -2,14 +2,21 @@
 
 var OBJ_HIDDEN = -1;
 
-var VERTEX_DEFAULT = 0;
-var VERTEX_HIGHLIGHTED = 1;
-var VERTEX_TRAVERSED = 2;
-var VERTEX_RESULT = 3;
+var VERTEX_DEFAULT = "default";
+var VERTEX_HIGHLIGHTED = "highlighted";
+var VERTEX_TRAVERSED = "traversed";
+var VERTEX_RESULT = "result";
+var VERTEX_BLUE_FILL = "blueFill";
+var VERTEX_GREEN_FILL = "greenFill";
+var EDGE_PINK_FILL = "pinkFill";
+var VERTEX_RED_FILL = "redFill";
 
-var EDGE_DEFAULT = 0;
-var EDGE_HIGHLIGHTED = 1;
-var EDGE_TRAVERSED = 2;
+var EDGE_DEFAULT = "default";
+var EDGE_HIGHLIGHTED = "highlighted";
+var EDGE_TRAVERSED = "traversed";
+var EDGE_BLUE = "blue";
+var EDGE_PINK = "pink";
+var EDGE_RED = "red";
 
 var EDGE_TYPE_UDE = 0;
 var EDGE_TYPE_DE = 1;

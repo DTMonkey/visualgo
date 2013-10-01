@@ -198,6 +198,10 @@ var graphVertexProperties = {
  */
 
 var graphEdgeProperties = {
+  "animateHighlightedPath":{
+      "stroke": surpriseColour,
+      "stroke-width": 10
+  },
   "path":{
     "stroke-width": 3,
     "default":{

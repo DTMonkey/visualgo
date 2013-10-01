@@ -65,8 +65,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     edgeSvg.append("path")
           .attr("id", "tempEdge" + line.attr("id"))
-          .attr("stroke", graphEdgeProperties["path"]["highlighted"]["stroke"])
-          .attr("stroke-width", graphEdgeProperties["path"]["highlighted"]["stroke-width"])
+          .attr("stroke", graphEdgeProperties["animateHighlightedPath"]["stroke"])
+          .attr("stroke-width", graphEdgeProperties["animateHighlightedPath"]["stroke-width"])
           .transition()
           .duration(duration)
           .each("start", function(){
@@ -76,7 +76,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
           .attr("d", lineCommand)
           .each("end", function(){
             line.attr("stroke", graphEdgeProperties["path"]["highlighted"]["stroke"])
-                .attr("stroke-width", graphEdgeProperties["path"]["highlighted"]["stroke-width"]);
+                .attr("stroke-width", graphEdgeProperties["path"]["stroke-width"]);
 
             edgeSvg.select("#tempEdge" + line.attr("id"))
                   .remove();
@@ -122,7 +122,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
       attributeList["path"][key] = graphEdgeProperties["path"]["highlighted"][key];
     }
 
-     for(key in graphEdgeProperties["weight"]["default"]){
+     for(key in graphEdgeProperties["weight"]["highlighted"]){
       attributeList["weight"][key] = graphEdgeProperties["weight"]["highlighted"][key];
     }
   }
@@ -134,8 +134,20 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
       attributeList["path"][key] = graphEdgeProperties["path"]["traversed"][key];
     }
 
-     for(key in graphEdgeProperties["weight"]["default"]){
+     for(key in graphEdgeProperties["weight"]["traversed"]){
       attributeList["weight"][key] = graphEdgeProperties["weight"]["traversed"][key];
+    }
+  }
+
+  this.stateEdge = function(stateName){
+    var key;
+
+    for(key in graphEdgeProperties["path"][stateName]){
+      attributeList["path"][key] = graphEdgeProperties["path"][stateName][key];
+    }
+
+     for(key in graphEdgeProperties["weight"][stateName]){
+      attributeList["weight"][key] = graphEdgeProperties["weight"][stateName][key];
     }
   }
 

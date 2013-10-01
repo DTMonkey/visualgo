@@ -192,6 +192,22 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     }
   }
 
+  this.stateVertex = function(stateName){
+    var key;
+
+    for(key in graphVertexProperties["innerCircle"][stateName]){
+      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"][stateName][key];
+    }
+
+    for(key in graphVertexProperties["outerCircle"][stateName]){
+      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"][stateName][key];
+    }
+
+    for(key in graphVertexProperties["text"][stateName]){
+      attributeList["text"][key] = graphVertexProperties["text"][stateName][key];
+    }
+  }
+
   this.getAttributes = function(){
     return deepCopy(attributeList);
   }
