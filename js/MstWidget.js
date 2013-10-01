@@ -229,7 +229,7 @@ var MST = function(){
     for(key in internalEdgeList){
       var enqueuedEdge;
       if(mstTypeConstant == MST_MAX) enqueuedEdge = new ObjectPair(-1*internalEdgeList[key]["weight"], key);
-      else enqueuedEdge = new ObjectPair(internalEdgeList[key]["weight"], key);
+      else enqueuedEdge = new ObjectPair(internalEdgeList[key]["weight"], parseInt(key));
       sortedArray.push(enqueuedEdge);
     }
 
@@ -328,9 +328,142 @@ var MST = function(){
         break;
       case MST_EXAMPLE_RAIL:
         internalAdjList = {
+          0:{
+            "cx": 100,
+            "cy": 100,
+            1:0
+          },
+          1:{
+            "cx": 200,
+            "cy": 100,
+            0:0,
+            2:1,
+            6:2,
+            7:3
+          },
+          2:{
+            "cx": 300,
+            "cy": 100,
+            1:1,
+            3:4,
+            7:5,
+            8:6
+          },
+          3:{
+            "cx": 400,
+            "cy": 100,
+            2:4,
+            4:7,
+            8:8
+          },
+          4:{
+            "cx": 500,
+            "cy": 100,
+            3:7
+          },
+          5:{
+            "cx": 100,
+            "cy": 200,
+            6:9
+          },
+          6:{
+            "cx": 200,
+            "cy": 200,
+            1:2,
+            5:9,
+            7:10
+          },
+          7:{
+            "cx": 300,
+            "cy": 200,
+            1:3,
+            2:5,
+            6:10,
+            8:11
+          },
+          8:{
+            "cx": 400,
+            "cy": 200,
+            2:6,
+            3:8,
+            7:11,
+            9:12
+          },
+          9:{
+            "cx": 500,
+            "cy": 200,
+            8:12
+          }
         };
         internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 10
+          },
+          1:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 10
+          },
+          2:{
+              "vertexA": 1,
+              "vertexB": 6,
+              "weight": 8
+          },
+          3:{
+              "vertexA": 1,
+              "vertexB": 7,
+              "weight": 13
+          },
+          4:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 10
+          },
+          5:{
+              "vertexA": 2,
+              "vertexB": 7,
+              "weight": 8
+          },
+          6:{
+              "vertexA": 2,
+              "vertexB": 8,
+              "weight": 13
+          },
+          7:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 10
+          },
+          8:{
+              "vertexA": 3,
+              "vertexB": 8,
+              "weight": 8
+          },
+          9:{
+              "vertexA": 5,
+              "vertexB": 6,
+              "weight": 10
+          },
+          10:{
+              "vertexA": 6,
+              "vertexB": 7,
+              "weight": 10
+          },
+          11:{
+              "vertexA": 7,
+              "vertexB": 8,
+              "weight": 10
+          },
+          12:{
+              "vertexA": 8,
+              "vertexB": 9,
+              "weight": 10
+          }
         };
+        amountVertex = 10;
+        amountEdge = 13;
         break;
       case MST_EXAMPLE_CP4P10:
         internalAdjList = {
