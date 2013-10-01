@@ -313,108 +313,242 @@ var MST = function(){
 
   this.examples = function(mstExampleConstant){
     switch(mstExampleConstant){
-      case MST_EXAMPLE_TESSELLATION:
+       case MST_EXAMPLE_TESSELLATION:
         internalAdjList = {
-        };
-        internalEdgeList = {
-        };
-        break;
-      case MST_EXAMPLE_K5:
-        internalAdjList = {
-          0:{
-            "cx": 50,
-            "cy": 200,
+		  0:{
+            "cx": 200,
+            "cy": 50,
             1:0,
-            2:1,
-            3:2,
-            4:3
+			2:1
           },
-          1:{
-            "cx": 450,
-            "cy": 200,
+		  1:{
+            "cx": 200,
+            "cy": 170,
             0:0,
-            2:4,
-            3:5,
-            4:6
+			2:2,
+			3:3,
+			4:4
           },
-          2:{
-            "cx": 150,
-            "cy": 400,
-            0:2,
-            1:4,
-            3:7,
-            4:8
-          },
-          3:{
-            "cx": 250,
-            "cy": 100,
-            0:2,
-            1:5,
-            2:7,
-            4:9
-          },
-          4:{
+		  2:{
             "cx": 350,
-            "cy": 400,
-            0:3,
-            1:6,
-            2:8,
-            3:9
+            "cy": 110,
+            0:1,
+			1:2,
+			3:5,
+			6:6
+          },
+		  3:{
+            "cx": 500,
+            "cy": 170,
+            1:3,2:5,4:7,5:8,6:9,7:10,8:11
+          },
+		  4:{
+            "cx": 275,
+            "cy": 290,
+            1:4,3:7,5:12
+          },
+		  5:{
+            "cx": 500,
+            "cy": 290,
+            3:8,4:12,7:13
+          },
+		  6:{
+            "cx": 600,
+            "cy": 50,
+            2:6,3:9,8:14
+          },
+		  7:{
+            "cx": 640,
+            "cy": 240,
+            3:10,5:13,8:15
+          },
+		  8:{
+            "cx": 700,
+            "cy": 120,
+            3:11,6:14,7:15
           }
         };
         internalEdgeList = {
-          0:{
+		  0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 8
+          },
+		  1:{
+              "vertexA": 0,
+              "vertexB": 2,
+              "weight": 12
+          },
+		  2:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 13
+          },
+		  3:{
+              "vertexA": 1,
+              "vertexB": 3,
+              "weight": 25
+          },
+		  4:{
+              "vertexA": 1,
+              "vertexB": 4,
+              "weight": 9
+          },
+		  5:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 14
+          },
+		  6:{
+              "vertexA": 2,
+              "vertexB": 6,
+              "weight": 21
+          },
+		  7:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 20
+          },
+		  8:{
+              "vertexA": 3,
+              "vertexB": 5,
+              "weight": 8
+          },
+		  9:{
+              "vertexA": 3,
+              "vertexB": 6,
+              "weight": 12
+          },
+		  10:{
+              "vertexA": 3,
+              "vertexB": 7,
+              "weight": 12
+          },
+		  11:{
+              "vertexA": 3,
+              "vertexB": 8,
+              "weight": 16
+          },
+		  12:{
+              "vertexA": 4,
+              "vertexB": 5,
+              "weight": 19
+          },
+		  13:{
+              "vertexA": 5,
+              "vertexB": 7,
+              "weight": 11
+          },
+		  14:{
+              "vertexA": 6,
+              "vertexB": 8,
+              "weight": 11
+          },
+		  15:{
+              "vertexA": 7,
+              "vertexB": 8,
+              "weight": 9
+          },
+        };
+		amountVertex = 9;
+        amountEdge = 16;
+        break;
+      case MST_EXAMPLE_K5:
+        internalAdjList = {
+		  0:{
+            "cx": 280,
+            "cy": 150,
+            1:0,
+			2:1,
+			3:2,
+			4:3
+          },
+		  1:{
+            "cx": 620,
+            "cy": 150,
+            0:0,
+			2:4,
+			3:5,
+			4:6
+          },
+		  2:{
+            "cx": 350,
+            "cy": 340,
+            0:1,
+			1:4,
+			3:7,
+			4:8
+          },
+		  3:{
+            "cx": 450,
+            "cy": 50,
+            0:2,
+			1:5,
+			2:7,
+			4:9
+          },
+		  4:{
+            "cx": 550,
+            "cy": 340,
+            0:3,
+			1:6,
+			2:8,
+			3:9
+          }
+        };
+        internalEdgeList = {
+		  0:{
               "vertexA": 0,
               "vertexB": 1,
               "weight": 24
           },
-          1:{
+		  1:{
               "vertexA": 0,
               "vertexB": 2,
               "weight": 13
           },
-          2:{
+		  2:{
               "vertexA": 0,
               "vertexB": 3,
               "weight": 13
           },
-          3:{
+		  3:{
               "vertexA": 0,
               "vertexB": 4,
               "weight": 22
           },
-          4:{
+		  4:{
               "vertexA": 1,
               "vertexB": 2,
               "weight": 22
           },
-          5:{
+		  5:{
               "vertexA": 1,
               "vertexB": 3,
               "weight": 13
           },
-          6:{
+		  6:{
               "vertexA": 1,
               "vertexB": 4,
               "weight": 13
           },
-          7:{
+		  7:{
               "vertexA": 2,
               "vertexB": 3,
               "weight": 19
           },
-          8:{
+		  8:{
               "vertexA": 2,
               "vertexB": 4,
               "weight": 14
           },
-          9:{
+		  9:{
               "vertexA": 3,
               "vertexB": 4,
               "weight": 19
-          }
+          },
         };
-        amountVertex = 5;
+		amountVertex = 5;
         amountEdge = 10;
         break;
       case MST_EXAMPLE_RAIL:
