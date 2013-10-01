@@ -83,6 +83,18 @@ var MST = function(){
     vertexTraversed[startVertexText] = true;
 
     var sortedArray = [];
+	
+	function sortedArrayToString() {
+		var ansStr = "";
+		for(var i=0; i<sortedArray.length; i++) {
+			var thisTriple = sortedArray[i];
+			ansStr += "("+thisTriple.getFirst()+","+thisTriple.getSecond()+")";
+			if(i < (sortedArray.length-1)) {
+				ansStr += ", ";
+			}
+		}
+		return ansStr;
+	}
     
 	var enqueuedToString = "";
     for(key in internalAdjList[startVertexText]){
@@ -94,7 +106,7 @@ var MST = function(){
         enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
       else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
       edgeTraversed[enqueuedEdgeId] = true;
-	  enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["vertexA"]+","+internalEdgeList[enqueuedEdgeId]["vertexB"]+"), ";
+	  enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["weight"]+","+key+"), ";
       sortedArray.push(enqueuedEdge);
     }
 	enqueuedToString = enqueuedToString.substring(0,enqueuedToString.length-2);
@@ -102,7 +114,7 @@ var MST = function(){
     sortedArray.sort(ObjectTriple.compare);
 
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-	currentState["status"] = 'Add '+enqueuedToString+' to the Priority Queue';
+	currentState["status"] = 'Add '+enqueuedToString+' to the PQ. The PQ is now '+sortedArrayToString()+'.';
 	currentState["lineNo"] = 2;
     stateList.push(currentState);
 
@@ -113,11 +125,7 @@ var MST = function(){
 	  
 	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
       currentState["el"][edgeId]["animateHighlighted"] = true;
-	  correctVertex = internalEdgeList[edgeId]["vertexA"];
-	  if(correctVertex == otherVertex) {
-		  correctVertex = internalEdgeList[edgeId]["vertexB"];
-	  }
-	  currentState["status"] = 'Remove edge ('+correctVertex+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T.';
+	  currentState["status"] = 'Remove pair ('+dequeuedEdge.getFirst()+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T. The PQ is now '+sortedArrayToString()+'.';
 	  currentState["lineNo"] = 4;
       stateList.push(currentState);
 	  
@@ -148,7 +156,7 @@ var MST = function(){
           else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
           if(edgeHighlighted[enqueuedEdgeId] == null){
             edgeTraversed[enqueuedEdgeId] = true;
-			enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["vertexA"]+","+internalEdgeList[enqueuedEdgeId]["vertexB"]+"), ";
+			 enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["weight"]+","+key+"), ";
             sortedArray.push(enqueuedEdge);
           }
         }
@@ -157,7 +165,7 @@ var MST = function(){
 		sortedArray.sort(ObjectTriple.compare);
 
         currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-		currentState["status"] = 'so add '+otherVertex+' to T, and add '+enqueuedToString+' to the Priority Queue';
+		currentState["status"] = 'so add '+otherVertex+' to T, and add '+enqueuedToString+' to the Priority Queue. The PQ is now '+sortedArrayToString()+'.';
 		currentState["lineNo"] = 5;
         stateList.push(currentState);
       }
