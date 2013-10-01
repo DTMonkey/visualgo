@@ -7,7 +7,7 @@ var isPrimsOpen = false;
 function openSamples() {
 	if(!isSamplesOpen) {
 		$('#samples-submenu').animate({
-			width: "+="+277
+			width: "+="+320
 		}, 250);
 	}
 	isSamplesOpen = true;
@@ -16,7 +16,7 @@ function closeSamples() {
 	if(true) {
 		$('#samples-err').html("");
 		$('#samples-submenu').animate({
-			width: "-="+277
+			width: "-="+320
 		}, 250);
 		isSamplesOpen = false;
 	}
