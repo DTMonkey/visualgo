@@ -321,9 +321,101 @@ var MST = function(){
         break;
       case MST_EXAMPLE_K5:
         internalAdjList = {
+          0:{
+            "cx": 50,
+            "cy": 200,
+            1:0,
+            2:1,
+            3:2,
+            4:3
+          },
+          1:{
+            "cx": 450,
+            "cy": 200,
+            0:0,
+            2:4,
+            3:5,
+            4:6
+          },
+          2:{
+            "cx": 150,
+            "cy": 400,
+            0:2,
+            1:4,
+            3:7,
+            4:8
+          },
+          3:{
+            "cx": 250,
+            "cy": 100,
+            0:2,
+            1:5,
+            2:7,
+            4:9
+          },
+          4:{
+            "cx": 350,
+            "cy": 400,
+            0:3,
+            1:6,
+            2:8,
+            3:9
+          }
         };
         internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 24
+          },
+          1:{
+              "vertexA": 0,
+              "vertexB": 2,
+              "weight": 13
+          },
+          2:{
+              "vertexA": 0,
+              "vertexB": 3,
+              "weight": 13
+          },
+          3:{
+              "vertexA": 0,
+              "vertexB": 4,
+              "weight": 22
+          },
+          4:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 22
+          },
+          5:{
+              "vertexA": 1,
+              "vertexB": 3,
+              "weight": 13
+          },
+          6:{
+              "vertexA": 1,
+              "vertexB": 4,
+              "weight": 13
+          },
+          7:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 19
+          },
+          8:{
+              "vertexA": 2,
+              "vertexB": 4,
+              "weight": 14
+          },
+          9:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 19
+          }
         };
+        amountVertex = 5;
+        amountEdge = 10;
         break;
       case MST_EXAMPLE_RAIL:
         internalAdjList = {
