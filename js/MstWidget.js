@@ -78,7 +78,6 @@ var MST = function(){
     currentState["status"] = 'add '+startVertexText+' to set T';
     currentState["lineNo"] = 1;
     stateList.push(currentState);
-    stateList.push(currentState);
 
     delete vertexHighlighted[startVertexText];
     vertexTraversed[startVertexText] = true;
@@ -220,7 +219,7 @@ var MST = function(){
     }
 
     currentState = createState(internalAdjList, internalEdgeList);
-    stateList.push(currentState);
+    //stateList.push(currentState);
 
     for(key in internalAdjList){
       tempUfds.insert(key);
@@ -468,7 +467,7 @@ var MST = function(){
       case MST_EXAMPLE_CP4P10:
         internalAdjList = {
           0:{
-            "cx": 150,
+            "cx": 350,
             "cy": 150,
             1:0,
             2:1,
@@ -476,28 +475,28 @@ var MST = function(){
             4:3
           },
           1:{
-            "cx": 200,
-            "cy": 100,
+            "cx": 450,
+            "cy": 50,
             0:0,
             2:4
           },
           2:{
-            "cx": 250,
+            "cx": 550,
             "cy": 150,
             0:1,
             1:4,
             3:5
           },
           3:{
-            "cx": 200,
-            "cy": 200,
+            "cx": 450,
+            "cy": 250,
             0:2,
             2:5,
             4:6
           },
           4:{
-            "cx": 150,
-            "cy": 250,
+            "cx": 350,
+            "cy": 350,
             0:3,
             3:6
           }
