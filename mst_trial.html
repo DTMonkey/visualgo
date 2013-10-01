@@ -62,7 +62,7 @@
     <!--put all the extra action pullouts (input) and error messages here-->
     	<div id="samples-submenu">
             <div id="sample1" class="execAction" onclick=sample1()><p>CP 4.10</p></div><!--
-            --><div id="sample2" class="execAction" onclick=sample2()><p>CP 4.13</p></div><!--
+            --><div id="sample2" class="execAction" onclick=sample2()><p>CP 4.14</p></div><!--
             --><div id="sample3" class="execAction" onclick=sample3()><p>K5</p></div><!--
             --><div id="sample4" class="execAction" onclick=sample4()><p>Rail</p></div><!--
             --><div id="sample5" class="execAction" onclick=sample5()><p>Tessellation</p></div>
@@ -163,12 +163,12 @@
 
   var mstWidget = new MST();
   var gw = mstWidget.getGraphWidget();
-  mstWidget.examples(MST_EXAMPLE_CP4P9);
+  mstWidget.examples(MST_EXAMPLE_CP4P10);
     
   function sample1() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P9)) {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P10)) {
         $('#progress-bar').slider( "option", "max", 0);
 		closeSamples();
         isPlaying = false;
@@ -178,7 +178,7 @@
   function sample2() {
     if(isPlaying) { stop(); }
     setTimeout( function() {
-      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P13)) {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P14)) {
         $('#progress-bar').slider( "option", "max", 0);
 		closeSamples();
         isPlaying = false;

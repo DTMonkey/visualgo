@@ -20,6 +20,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
   var line;
   var weightText;
+  var weightTextPath;
 
   // var vertexA = graphVertexA.getClassNumber();
   // var vertexB = graphVertexB.getClassNumber();
@@ -287,7 +288,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     weightText = edgeWeightSvg.append("text");
 
-    weightText.attr("id", attributeList["weight"]["weightId"]);
+    weightText.attr("id", attributeList["weight"]["id"]);
 
     weightText.attr("fill", attributeList["weight"]["fill"])
               .attr("font-family", attributeList["weight"]["font-family"])
@@ -296,14 +297,14 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
               .attr("font-weight", attributeList["weight"]["font-weight"])
               .attr("text-anchor", attributeList["weight"]["text-anchor"]);
 
-    weightText.append("textPath")
-              .attr("xlink:href", function(){
-                return "#" + attributeList["path"]["id"];
-              })
-              .attr("startOffset", attributeList["weight"]["startOffset"])
-              .text(function(){
-                return attributeList["weight"]["text"];
-              });
+    weightTextPath = weightText.append("textPath")
+                              .attr("xlink:href", function(){
+                                return "#" + attributeList["path"]["id"];
+                              })
+                              .attr("startOffset", attributeList["weight"]["startOffset"])
+                              .text(function(){
+                                return attributeList["weight"]["text"];
+                              });
   }
 
   function cxA(){
@@ -410,12 +411,11 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
               .attr("font-weight", attributeList["weight"]["font-weight"])
               .attr("text-anchor", attributeList["weight"]["text-anchor"]);
               
-    weightText.select("textPath")
-              .transition()
-              .duration(dur)
-              .text(function(){
-                return attributeList["weight"]["text"];
-              });
+    weightTextPath.transition()
+                  .duration(dur)
+                  .text(function(){
+                    return attributeList["weight"]["text"];
+                  });
   }
 
   function updatePath(){

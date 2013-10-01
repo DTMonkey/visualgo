@@ -5,8 +5,8 @@
 var MST_EXAMPLE_TESSELLATION = 0;
 var MST_EXAMPLE_K5 = 1;
 var MST_EXAMPLE_RAIL = 2;
-var MST_EXAMPLE_CP4P9 = 3;
-var MST_EXAMPLE_CP4P13 = 4;
+var MST_EXAMPLE_CP4P10 = 3;
+var MST_EXAMPLE_CP4P14 = 4;
 
 // MST Type Constant
 var MST_MIN = 0; // Minimum Spanning Tree
@@ -127,7 +127,6 @@ var MST = function(){
       var edgeId = dequeuedEdge.getThird();
 
       currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      currentState["el"][edgeId]["animateHighlighted"] = true;
       currentState["status"] = 'Remove pair ('+dequeuedEdge.getFirst()+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T. The PQ is now '+sortedArrayToString()+'.';
       currentState["lineNo"] = 4;
       stateList.push(currentState);
@@ -333,7 +332,7 @@ var MST = function(){
         internalEdgeList = {
         };
         break;
-      case MST_EXAMPLE_CP4P9:
+      case MST_EXAMPLE_CP4P10:
         internalAdjList = {
           0:{
             "cx": 150,
@@ -411,11 +410,83 @@ var MST = function(){
         amountVertex = 5;
         amountEdge = 7;
         break;
-      case MST_EXAMPLE_CP4P13:
+      case MST_EXAMPLE_CP4P14:
         internalAdjList = {
+          0:{
+            "cx": 50,
+            "cy": 50,
+            1:0,
+            2:1
+          },
+          1:{
+            "cx": 150,
+            "cy": 150,
+            0:0,
+            2:2,
+            3:3,
+            4:4
+          },
+          2:{
+            "cx": 150,
+            "cy": 50,
+            0:1,
+            1:2,
+            3:5
+          },
+          3:{
+            "cx": 250,
+            "cy": 150,
+            1:3,
+            2:5,
+            4:6
+          },
+          4:{
+            "cx": 150,
+            "cy": 250,
+            1:4,
+            3:6
+          }
         };
         internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 9
+          },
+          1:{
+              "vertexA": 0,
+              "vertexB": 2,
+              "weight": 75
+          },
+          2:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 95
+          },
+          3:{
+              "vertexA": 1,
+              "vertexB": 3,
+              "weight": 19
+          },
+          4:{
+              "vertexA": 1,
+              "vertexB": 4,
+              "weight": 42
+          },
+          5:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 51
+          }
+          ,
+          6:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 31
+          }
         };
+        amountVertex = 5;
+        amountEdge = 7;
         break;
     }
 
