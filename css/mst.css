@@ -6,6 +6,24 @@
 	}
 
 /*all action pullout (input) stuff here*/
+#samples-submenu {
+	position: fixed;
+	bottom: 119px;
+	left: 196px;
+	width: 0px;
+	height: 32px;
+	overflow: hidden;
+}
+	#samples-submenu .execAction {
+		display: inline-block;
+		background: #777;
+		margin-right: 3px;
+		color: white;
+	}
+		#samples-submenu .execAction p {
+			padding: 8px 8px 7px;
+		}
+
 #prims-input {
 	position: fixed;
 	bottom: 60px;
@@ -38,7 +56,7 @@
 	position: fixed;
 	color: red;
 }
-#sample1-err {
+#samples-err {
 	bottom: 119px;
 	left: 201px;
 	padding: 8px 0px 7px;

@@ -1,7 +1,26 @@
 var actionsWidth = 150;
 var statusCodetraceWidth = 430;
 
+var isSamplesOpen = false;
 var isPrimsOpen = false;
+
+function openSamples() {
+	if(!isSamplesOpen) {
+		$('#samples-submenu').animate({
+			width: "+="+277
+		}, 250);
+	}
+	isSamplesOpen = true;
+}
+function closeSamples() {
+	if(true) {
+		$('#samples-err').html("");
+		$('#samples-submenu').animate({
+			width: "-="+277
+		}, 250);
+		isSamplesOpen = false;
+	}
+}
 
 function openPrims() {
 	if(!isPrimsOpen) {
@@ -30,28 +49,38 @@ function closePrims() {
 }
 
 function hideEntireActionsPanel() {
+	closeSamples();
+	closePrims();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
 	//the actions with pullout inputs
+	$('#samples').click(function() {
+		closePrims();
+		$('#kruskals-err').html("");
+		openSamples();
+	})
+	
 	$('#prims').click(function() {
-		$('#sample1-err').html("");
+		closeSamples();
 		$('#kruskals-err').html("");
 		openPrims();
 	});
 	
 	//and the others
-	$('#sample1').click(function() {
+	$('#kruskals').click(function() {
+		closeSamples();
 		closePrims();
-		$('#kruskals-err').html("");
 	});
 	
-	$('#kruskals').click(function() {
-		closePrims();
-		$('#sample1-err').html("");
-	});
+	//overwrite some viz.js stuff here
+  	$('#samples-submenu').css('background-color','#eee');
+	$('#samples-submenu').children().css('background-color', colourTheSecond);
+	if(colourTheSecond == '#fec515' || colourTheSecond == '#a7d41e') {
+		$('#samples-submenu').children().css('color', 'black');
+	}
 		
 	//tutorial mode
 	$('#heap-tutorial-1 .tutorial-next').click(function() {

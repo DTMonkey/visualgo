@@ -53,14 +53,21 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-        <p id="sample1" class="execAction" style="padding-top: 10px;" onclick=sample1()>Sample Graph (CP4.10)</p>
+        <p id="samples" style="padding-top: 10px;">Sample Graphs</p>
         <p id="kruskals" class="execAction" onclick=kruskals()>Kruskal's Algo</p>
-        <p id="prims" class="execAction" style="padding-bottom: 10px;">Prim's Algo</p>
+        <p id="prims" style="padding-bottom: 10px;">Prim's Algo</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-    	<div id="sample1-err" class="err"></div>
+    	<div id="samples-submenu">
+            <div id="sample1" class="execAction" onclick=sample1()><p>CP 4.10</p></div><!--
+            --><div id="sample2" class="execAction" onclick=sample2()><p>CP 4.13</p></div><!--
+            --><div id="sample3" class="execAction" onclick=sample3()><p>K5</p></div><!--
+            --><div id="sample4" class="execAction" onclick=sample4()><p>Rail</p></div><!--
+            --><div id="sample5" class="execAction" onclick=sample5()><p>Tessellation</p></div>
+        </div>
+    	<div id="samples-err" class="err"></div>
         <div id="kruskals-err" class="err"></div>
         <div id="prims-input"><input type="text" id="prim-v" autocomplete="off" value=0 /></div>
         <div id="prims-go" class="execAction" onclick=prims()><p>GO</p></div>
@@ -150,6 +157,7 @@
 <script src="js/MstWidget.js"></script>
 
 <script type="text/javascript">
+
   //start by showing actions panel
   $('#play').hide();
 
@@ -162,6 +170,47 @@
     setTimeout( function() {
       if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P9)) {
         $('#progress-bar').slider( "option", "max", 0);
+		closeSamples();
+        isPlaying = false;
+      }
+    }, 500);
+  }
+  function sample2() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_CP4P13)) {
+        $('#progress-bar').slider( "option", "max", 0);
+		closeSamples();
+        isPlaying = false;
+      }
+    }, 500);
+  }
+  function sample3() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_K5)) {
+        $('#progress-bar').slider( "option", "max", 0);
+		closeSamples();
+        isPlaying = false;
+      }
+    }, 500);
+  }
+  function sample4() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_RAIL)) {
+        $('#progress-bar').slider( "option", "max", 0);
+		closeSamples();
+        isPlaying = false;
+      }
+    }, 500);
+  }
+  function sample5() {
+    if(isPlaying) { stop(); }
+    setTimeout( function() {
+      if ((mode=="exploration")&&mstWidget.examples(MST_EXAMPLE_TESSELLATION)) {
+        $('#progress-bar').slider( "option", "max", 0);
+		closeSamples();
         isPlaying = false;
       }
     }, 500);
