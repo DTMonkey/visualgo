@@ -30,6 +30,38 @@ var graphVertexProperties = {
     "result":{
       "fill": "#f7e81e",
       "stroke": "#fff"
+    },
+	"greenFill":{
+      "fill": "#52bc69",
+      "stroke": "#fff"
+    },
+	"greenOutline":{
+      "fill": "#eee",
+      "stroke": "#fff"
+    },
+	"pinkFill":{
+      "fill": "#ed5a7d",
+      "stroke": "#fff"
+    },
+	"pinkOutline":{
+      "fill": "#eee",
+      "stroke": "#fff"
+    },
+	"blueFill":{
+      "fill": "#2ebbd1",
+      "stroke": "#fff"
+    },
+	"blueOutline":{
+      "fill": "#eee",
+      "stroke": "#fff"
+    },
+	"redFill":{
+      "fill": "#d9513c",
+      "stroke": "#fff"
+    },
+	"redOutline":{
+      "fill": "#eee",
+      "stroke": "#fff"
     }
   },
   "outerCircle":{
@@ -50,6 +82,38 @@ var graphVertexProperties = {
     "result":{
       "fill": "#f7e81e",
       "stroke": "#f7e81e"
+    },
+	"greenFill":{
+      "fill": "#52bc69",
+      "stroke": "#52bc69"
+    },
+	"greenOutline":{
+      "fill": "#52bc69",
+      "stroke": "#52bc69"
+    },
+	"pinkFill":{
+      "fill": "#ed5a7d",
+      "stroke": "#ed5a7d"
+    },
+	"pinkOutline":{
+      "fill": "#ed5a7d",
+      "stroke": "#ed5a7d"
+    },
+	"blueFill":{
+      "fill": "#2ebbd1",
+      "stroke": "#2ebbd1"
+    },
+	"blueOutline":{
+      "fill": "#2ebbd1",
+      "stroke": "#2ebbd1"
+    },
+	"redFill":{
+      "fill": "#d9513c",
+      "stroke": "#d9513c"
+    },
+	"redOutline":{
+      "fill": "#d9513c",
+      "stroke": "#d9513c"
     }
   },
   "text":{
@@ -77,6 +141,54 @@ var graphVertexProperties = {
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
+    },
+	"greenFill":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"greenOutline":{
+      "fill": "#52bc69",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"pinkFill":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"pinkOutline":{
+      "fill": "#ed5a7d",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"blueFill":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"blueOutline":{
+      "fill": "#2ebbd1",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"redFill":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"redOutline":{
+      "fill": "#d9513c",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
     }
   }
 };
@@ -96,6 +208,18 @@ var graphEdgeProperties = {
     },
     "traversed":{
       "stroke": surpriseColour
+    },
+	"green":{
+      "stroke": "#52bc69"
+    },
+	"pink":{
+      "stroke": "#ed5a7d"
+    },
+	"blue":{
+      "stroke": "#2ebbd1"
+    },
+	"red":{
+      "stroke": "#d9513c"
     }
   },
   "weight":{
@@ -117,6 +241,34 @@ var graphEdgeProperties = {
     "traversed":{
       "startOffset": "50%",
       "fill": surpriseColour,
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"green":{
+      "startOffset": "50%",
+      "fill": "#52bc69",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"pink":{
+      "startOffset": "50%",
+      "fill": "#ed5a7d",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"blue":{
+      "startOffset": "50%",
+      "fill": "#2ebbd1",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"red":{
+      "startOffset": "50%",
+      "fill": "#d9513c",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
