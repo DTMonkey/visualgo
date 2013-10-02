@@ -49,7 +49,7 @@ var MST = function(){
     var key;
     var i;
     var notVisited = {};
-    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
+    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {}, edgeQueued = {};
     var stateList = [];
     var currentState;
 
@@ -73,8 +73,8 @@ var MST = function(){
     currentState["lineNo"] = 0;
     stateList.push(currentState);
 
-    vertexHighlighted[startVertexText] = true;
-    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    vertexTraversed[startVertexText] = true;
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
     currentState["status"] = 'add '+startVertexText+' to set T';
     currentState["lineNo"] = 1;
     stateList.push(currentState);
@@ -93,6 +93,7 @@ var MST = function(){
           ansStr += ", ";
         }
       }
+	  if(ansStr == "") {ansStr = "empty";}
       return ansStr;
     }
      
@@ -106,7 +107,7 @@ var MST = function(){
       if(mstTypeConstant == MST_MAX)
         enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
       else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-      edgeTraversed[enqueuedEdgeId] = true;
+      edgeQueued[enqueuedEdgeId] = true;
       enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["weight"]+","+key+"), ";
       sortedArray.push(enqueuedEdge);
     }
@@ -115,35 +116,38 @@ var MST = function(){
 
     sortedArray.sort(ObjectTriple.compare);
 
-    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Add '+enqueuedToString+' to the PQ. The PQ is now '+sortedArrayToString()+'.';
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
+    currentState["status"] = 'Add '+enqueuedToString+' to the PQ.<br/>The PQ is now '+sortedArrayToString()+'.';
     currentState["lineNo"] = 2;
     stateList.push(currentState);
 
-    while(Object.keys(notVisited).length > 0){
+    while(/*Object.keys(notVisited).length > 0*/sortedArray.length>0){
       var dequeuedEdge = sortedArray.shift();
       var otherVertex = dequeuedEdge.getSecond();
       var edgeId = dequeuedEdge.getThird();
 
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-      currentState["status"] = 'Remove pair ('+dequeuedEdge.getFirst()+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T. The PQ is now '+sortedArrayToString()+'.';
+	  vertexHighlighted[otherVertex] = true;
+	  edgeHighlighted[edgeId] = true;
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
+      currentState["status"] = 'Remove pair ('+dequeuedEdge.getFirst()+','+otherVertex+') from PQ. Check if vertex '+otherVertex+' is in T.<br/>The PQ is now '+sortedArrayToString()+'.';
       currentState["lineNo"] = 4;
       stateList.push(currentState);
 
       if(notVisited[otherVertex] != null){
-        delete edgeTraversed[edgeId];
+        delete edgeHighlighted[edgeId];
         edgeHighlighted[edgeId] = true;
         vertexHighlighted[otherVertex] = true;
 
-        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-        currentState["el"][edgeId]["animateHighlighted"] = true;
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
+        //currentState["el"][edgeId]["animateHighlighted"] = true;
         currentState["status"] = otherVertex+' is not in T';
         currentState["lineNo"] = 4;
         stateList.push(currentState);
 
         delete notVisited[otherVertex];
-
         delete vertexHighlighted[otherVertex];
+		delete edgeHighlighted[edgeId];
+		edgeTraversed[edgeId] = true;
         vertexTraversed[otherVertex] = true;
 
         var enqueuedToString = "";
@@ -157,8 +161,8 @@ var MST = function(){
           if(mstTypeConstant == MST_MAX)
             enqueuedEdge = enqueuedEdge = new ObjectTriple(-1*internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
           else enqueuedEdge = new ObjectTriple(internalEdgeList[enqueuedEdgeId]["weight"], key, enqueuedEdgeId);
-          if(edgeHighlighted[enqueuedEdgeId] == null){
-            edgeTraversed[enqueuedEdgeId] = true;
+          if(edgeQueued[enqueuedEdgeId] == null){
+            edgeQueued[enqueuedEdgeId] = true;
             enqueuedToString += "("+internalEdgeList[enqueuedEdgeId]["weight"]+","+key+"), ";
             sortedArray.push(enqueuedEdge);
           }
@@ -167,16 +171,17 @@ var MST = function(){
         enqueuedToString = enqueuedToString.substring(0,enqueuedToString.length-2);
         sortedArray.sort(ObjectTriple.compare);
 
-        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-        currentState["status"] = 'so add '+otherVertex+' to T, and add '+enqueuedToString+' to the Priority Queue. The PQ is now '+sortedArrayToString()+'.';
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
+        currentState["status"] = 'so add '+otherVertex+' to T, and add '+enqueuedToString+' to the Priority Queue.<br/>The PQ is now '+sortedArrayToString()+'.';
         currentState["lineNo"] = 5;
         stateList.push(currentState);
       }
 
       else{
-        delete edgeTraversed[edgeId];
+        delete edgeQueued[edgeId];
+		delete edgeHighlighted[edgeId];
 
-        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
         currentState["status"] = otherVertex+' is in T, so ignore this edge';
         currentState["lineNo"] = 6;
         stateList.push(currentState);
@@ -189,8 +194,7 @@ var MST = function(){
      * 2. It's less intuitive for the students to NOT display the MST at the final state of the animation
      */
 
-    edgeTraversed = {};
-    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
     currentState["status"] = 'The highlighted vertices and edges form a Minimum Spanning Tree';
     currentState["lineNo"] = 7;
     stateList.push(currentState);
@@ -207,7 +211,7 @@ var MST = function(){
     var i;
     var stateList = [];
     var currentState;
-    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {};
+    var vertexHighlighted = {}, edgeHighlighted = {}, vertexTraversed = {}, edgeTraversed = {}, edgeQueued={};
     var sortedArray = [];
     var tempUfds = new UfdsHelper();
     var totalWeight = 0;
@@ -219,7 +223,6 @@ var MST = function(){
     }
 
     currentState = createState(internalAdjList, internalEdgeList);
-    //stateList.push(currentState);
 
     for(key in internalAdjList){
       tempUfds.insert(key);
@@ -227,8 +230,14 @@ var MST = function(){
 
     for(key in internalEdgeList){
       var enqueuedEdge;
-      if(mstTypeConstant == MST_MAX) enqueuedEdge = new ObjectPair(-1*internalEdgeList[key]["weight"], key);
-      else enqueuedEdge = new ObjectPair(internalEdgeList[key]["weight"], parseInt(key));
+      if(mstTypeConstant == MST_MAX) {
+		  edgeQueued[key]=true;
+		  enqueuedEdge = new ObjectPair(-1*internalEdgeList[key]["weight"], parseInt(key));
+	  }
+      else {
+		  edgeQueued[key]=true;
+		  enqueuedEdge = new ObjectPair(internalEdgeList[key]["weight"], parseInt(key));
+	  }
       sortedArray.push(enqueuedEdge);
     }
 
@@ -246,16 +255,17 @@ var MST = function(){
       return ansStr;
     }
     
+	currentState = createState(internalAdjList, internalEdgeList,vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
     currentState["status"] = 'Edges are sorted in increasing order of weight: '+sortedArrayToString();
     currentState["lineNo"] = [1,2];
     stateList.push(currentState);
 
     while(sortedArray.length > 0){
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
       if(sortedArray.length > 1) {
         currentState["status"] = 'The remaining edges are '+sortedArrayToString();
       } else if(sortedArray.length == 1) {
-      currentState["status"] = 'The remaining edge is '+sortedArrayToString();
+      	currentState["status"] = 'The remaining edge is '+sortedArrayToString();
       }
       currentState["lineNo"] = 3;
       stateList.push(currentState);
@@ -266,11 +276,11 @@ var MST = function(){
       var vertexB = internalEdgeList[dequeuedEdgeId]["vertexB"];
       var thisWeight = internalEdgeList[dequeuedEdgeId]["weight"];
 
-      edgeTraversed[dequeuedEdgeId] = true;
+      edgeHighlighted[dequeuedEdgeId] = true;
       vertexHighlighted[vertexA] = true;
       vertexHighlighted[vertexB] = true;
 
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
       currentState["status"] = 'Checking if adding edge ('+thisWeight+',('+vertexA+','+vertexB+')) forms a cycle';
       currentState["lineNo"] = 4;
       stateList.push(currentState);
@@ -280,28 +290,29 @@ var MST = function(){
       if(!tempUfds.isSameSet(vertexA, vertexB)){
         noCycle = true;
         tempUfds.unionSet(vertexA, vertexB);
-        edgeHighlighted[dequeuedEdgeId] = true;
+        edgeTraversed[dequeuedEdgeId] = true;
         vertexTraversed[vertexA] = true;
         vertexTraversed[vertexB] = true;
         totalWeight += parseInt(thisWeight);
       }
 
-      delete edgeTraversed[dequeuedEdgeId];
+      delete edgeHighlighted[dequeuedEdgeId];
+	  delete edgeQueued[dequeuedEdgeId]
       delete vertexHighlighted[vertexA];
       delete vertexHighlighted[vertexB];
 
-      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
       if(noCycle) {
         currentState["status"] = 'Adding edge ('+vertexA+','+vertexB+') with weight '+thisWeight+' does not form a cycle, so add it to T. The current weight of T is '+totalWeight+'.';
         currentState["lineNo"] = 5;
       } else {
-      currentState["status"] = 'Adding edge ('+vertexA+','+vertexB+') will form a cycle, so ignore it. The current weight of T remains at '+totalWeight+'.';
+      	currentState["status"] = 'Adding edge ('+vertexA+','+vertexB+') will form a cycle, so ignore it. The current weight of T remains at '+totalWeight+'.';
         currentState["lineNo"] = 6;
       }
       stateList.push(currentState);
     }
 
-    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued);
     currentState["status"] = 'The highlighted vertices and edges form a Minimum Spanning Tree with MST weight = '+totalWeight;
     currentState["lineNo"] = 7;
       stateList.push(currentState);
@@ -854,45 +865,77 @@ var MST = function(){
 	return true;
   }
 
-  function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){
+  function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed, edgeQueued){
+	var isDefaultGrey = true;
+	if((vertexHighlighted == null)&&(edgeHighlighted == null)&&(vertexTraversed == null)&&(edgeTraversed == null)&&(edgeQueued == null)) isDefaultGrey = false;
     if(vertexHighlighted == null) vertexHighlighted = {};
     if(edgeHighlighted == null) edgeHighlighted = {};
     if(vertexTraversed == null) vertexTraversed = {};
     if(edgeTraversed == null) edgeTraversed = {};
+	if(edgeQueued == null) edgeQueued = {};
 
   	var key;
   	var state = {
       "vl":{},
       "el":{}
     };
-
-  	for(key in internalAdjListObject){
-  		state["vl"][key] = {};
-
-  		state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
-  		state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
-  		state["vl"][key]["text"] = key;
-  		state["vl"][key]["state"] = VERTEX_DEFAULT;
-  	}
-
-  	for(key in internalEdgeListObject){
-  		state["el"][key] = {};
-
-      state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
-      state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
-      state["el"][key]["type"] = EDGE_TYPE_UDE;
-      state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
+	
+	if(isDefaultGrey){
+		for(key in internalAdjListObject){
+			state["vl"][key] = {};
+	
+			state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
+			state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
+			state["vl"][key]["text"] = key;
+			state["vl"][key]["state"] = VERTEX_GREY_OUTLINE;
+		}
+		for(key in internalEdgeListObject){
+			state["el"][key] = {};
+	
+		  state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
+		  state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
+		  state["el"][key]["type"] = EDGE_TYPE_UDE;
+		  state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
+		  state["el"][key]["state"] = EDGE_GREY;
+		  state["el"][key]["displayWeight"] = true;
+		  state["el"][key]["animateHighlighted"] = false;
+		}
+    } else {
+	 	for(key in internalAdjListObject){
+			state["vl"][key] = {};
+	
+			state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
+			state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
+			state["vl"][key]["text"] = key;
+			state["vl"][key]["state"] = VERTEX_DEFAULT;
+    	}
+		for(key in internalEdgeListObject){
+			state["el"][key] = {};
+	
+		  state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
+		  state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
+		  state["el"][key]["type"] = EDGE_TYPE_UDE;
+		  state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
+		  state["el"][key]["state"] = EDGE_DEFAULT;
+		  state["el"][key]["displayWeight"] = true;
+		  state["el"][key]["animateHighlighted"] = false;
+		}
+	}
+	
+	for(key in edgeQueued){
+	  key1 = state["el"][key]["vertexA"];
+	  key2 = state["el"][key]["vertexB"]
+	  state["vl"][key1]["state"] = VERTEX_DEFAULT;
+	  state["vl"][key2]["state"] = VERTEX_DEFAULT;
       state["el"][key]["state"] = EDGE_DEFAULT;
-      state["el"][key]["displayWeight"] = true;
-      state["el"][key]["animateHighlighted"] = false;
-  	}
+    }
 
     for(key in vertexHighlighted){
       state["vl"][key]["state"] = VERTEX_BLUE_FILL;
     }
 
     for(key in edgeHighlighted){
-      state["el"][key]["state"] = EDGE_RED;
+      state["el"][key]["state"] = EDGE_BLUE;
     }
 
     for(key in vertexTraversed){
@@ -900,7 +943,7 @@ var MST = function(){
     }
 
     for(key in edgeTraversed){
-      state["el"][key]["state"] = EDGE_BLUE;
+      state["el"][key]["state"] = EDGE_GREEN;
     }
 
   	return state;

@@ -8,8 +8,9 @@ var VERTEX_TRAVERSED = "traversed";
 var VERTEX_RESULT = "result";
 var VERTEX_BLUE_FILL = "blueFill";
 var VERTEX_GREEN_FILL = "greenFill";
-var EDGE_PINK_FILL = "pinkFill";
+var VERTEX_PINK_FILL = "pinkFill";
 var VERTEX_RED_FILL = "redFill";
+var VERTEX_GREY_OUTLINE = "greyOutline";
 
 var EDGE_DEFAULT = "default";
 var EDGE_HIGHLIGHTED = "highlighted";
@@ -17,6 +18,8 @@ var EDGE_TRAVERSED = "traversed";
 var EDGE_BLUE = "blue";
 var EDGE_PINK = "pink";
 var EDGE_RED = "red";
+var EDGE_GREEN = "green";
+var EDGE_GREY = "grey";
 
 var EDGE_TYPE_UDE = 0;
 var EDGE_TYPE_DE = 1;

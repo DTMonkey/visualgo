@@ -19,7 +19,7 @@ $( document ).ready(function() {
 	var heap = new Array("heap", "binary heap", "priority queue", "cs2020", "cs2010", "recursion", "recursive", "data structure");
 	var union = new Array("union", "union find disjoint sets", "ufds", "cs3233", "cs2020", "cs2010", "array", "tree", "set");
 	var graphs = new Array("graphs", "tree");
-	var mst = new Array("mst", "tree", "min", "spanning");
+	var mst = new Array("mst", "tree", "min", "spanning", "cs2020", "cs2010");
 	
 	var allViz = new Array(sorting, bitmask, linked, bst, heap, union, graphs, mst);
 	

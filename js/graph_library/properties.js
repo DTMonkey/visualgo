@@ -62,6 +62,14 @@ var graphVertexProperties = {
 	"redOutline":{
       "fill": "#eee",
       "stroke": "#fff"
+    },
+	"greyFill":{
+      "fill": "#cccccc",
+      "stroke": "#fff"
+    },
+	"greyOutline":{
+      "fill": "#eee",
+      "stroke": "#fff"
     }
   },
   "outerCircle":{
@@ -114,6 +122,14 @@ var graphVertexProperties = {
 	"redOutline":{
       "fill": "#d9513c",
       "stroke": "#d9513c"
+    },
+	"greyFill":{
+      "fill": "#cccccc",
+      "stroke": "#cccccc"
+    },
+	"greyOutline":{
+      "fill": "#cccccc",
+      "stroke": "#cccccc"
     }
   },
   "text":{
@@ -189,6 +205,18 @@ var graphVertexProperties = {
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
+    },
+	"greyFill":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"greyOutline":{
+      "fill": "#cccccc",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
     }
   }
 };
@@ -224,6 +252,9 @@ var graphEdgeProperties = {
     },
 	"red":{
       "stroke": "#d9513c"
+    },
+	"grey":{
+      "stroke": "#cccccc"
     }
   },
   "weight":{
@@ -273,6 +304,13 @@ var graphEdgeProperties = {
 	"red":{
       "startOffset": "50%",
       "fill": "#d9513c",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
+	"grey":{
+      "startOffset": "50%",
+      "fill": "#cccccc",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
