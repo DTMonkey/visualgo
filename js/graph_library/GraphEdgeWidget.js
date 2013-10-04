@@ -9,7 +9,7 @@
  * EDGE_TYPE_BDE = BiDirectional Edge
  */
 
-// Marker objects. backwardArrow still buggy
+// Marker objects
 
 markerSvg.append("marker")
           .attr("id", "arrow")
@@ -24,13 +24,13 @@ markerSvg.append("marker")
 
 markerSvg.append("marker")
           .attr("id", "backwardArrow")
-          .attr("viewBox", "0 -5 10 10")
-          .attr('refX', ARROW_REFX)
+          .attr("viewBox", "-10 -5 10 10")
+          .attr('refX', -1*ARROW_REFX)
           .attr("markerWidth", ARROW_MARKER_WIDTH)
           .attr("markerHeight", ARROW_MARKER_HEIGHT)
           .attr("orient", "auto")
           .append("path")
-              .attr("d", "M0,-5 L10,0 L0,5")
+              .attr("d", "M0,-5 L-10,0 L0,5")
               .attr('fill', ARROW_FILL);
 
 // GraphEdgeWidget object
