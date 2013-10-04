@@ -94,14 +94,14 @@ var SSSP = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
-
-    var q = [];
-    q.push(sourceVertex);
-	
-	while (q.length > 0) {
       for (key in internalEdgeList)
         delete edgeTraversed[key];
 
+    var q = [];
+    q.push(sourceVertex);
+	var EdgeProcessed = 0;
+	
+	while (q.length > 0) {
       vertexHighlighted[q[0]] = true;
    	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
 	  currentState["status"] = 'The queue is now {' + q + '}<br>Exploring neighbors of vertex u = ' + q[0];
@@ -119,12 +119,13 @@ var SSSP = function(){
 		  vertexTraversed[vertexA] = true;
 
 		  edgeTraversed[j] = true;
-          var thisStatus = 'relax(' + vertexA + ',' + vertexB + ',' + weightAB + ')';
+          EdgeProcessed = EdgeProcessed + 1;
+          var thisStatus = 'relax(' + vertexA + ',' + vertexB + ',' + weightAB + '), #edge processed = ' + EdgeProcessed;
           if (d[vertexA] + weightAB < d[vertexB]) {
             d[vertexB] = d[vertexA] + weightAB;
             p[vertexB] = vertexA;
             internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
-            thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + vertexA;
+            thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + p[vertexB];
 			q.push(vertexB);
           }
 		  else
@@ -146,11 +147,15 @@ var SSSP = function(){
 	  }
 	}
  
+    for (key in internalAdjList)
+	  delete vertexHighlighted[key];
+    for (key in internalAdjList)
+	  delete vertexTraversed[key];
     for (key in internalEdgeList)
 	  delete edgeHighlighted[key];
     edgeTraversed = {};
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'BFS algorithm is complete.';
+    currentState["status"] = 'BFS processes O(V + E) = ' + EdgeProcessed + ' edges.<br>The BFS/SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
     stateList.push(currentState);
 
     console.log(stateList);
@@ -207,6 +212,7 @@ var SSSP = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
+	var EdgeProcessed = 0;
 
     for (var i = 1; i < amountVertex; i++) { // V-1 passes of Bellman Ford's
       for (key in internalEdgeList)
@@ -226,10 +232,11 @@ var SSSP = function(){
         for (var k = amountEdge; k < 2 * amountEdge; k++)
           delete edgeHighlighted[k];
 
+		EdgeProcessed = EdgeProcessed + 1;
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
-        var thisStatus = 'Pass number: ' + i + ', relax(' + vertexA + ',' + vertexB + ',' + weightAB + ')';
+        var thisStatus = 'Pass number: ' + i + ', relax(' + vertexA + ',' + vertexB + ',' + weightAB + '), #edge processed = ' + EdgeProcessed;
 
         // highlight the edge being relaxed in the input graph
         vertexHighlighted[vertexA] = true;
@@ -241,10 +248,12 @@ var SSSP = function(){
           d[vertexB] = d[vertexA] + weightAB;
           p[vertexB] = vertexA;
           internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
-          thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + vertexA;
+          thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + p[vertexB];
           vertexHighlighted[vertexB + amountVertex] = VERTEX_HIGHLIGHTED;
           edgeHighlighted[j + amountEdge] = EDGE_HIGHLIGHTED;
         }
+        else
+		  thisStatus = thisStatus + '<br>No change';
 
         for (var k = 0; k < amountVertex; k++)
           if (p[k] != -1)
@@ -264,7 +273,7 @@ var SSSP = function(){
     for (var k = 0; k < 2 * amountEdge; k++)
       delete edgeHighlighted[k];
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Bellman Ford\'s algorithm is complete.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
+    currentState["status"] = 'Bellman Ford\'s processes O(VE) = ' + (amountVertex-1) + '*' + amountEdge + ' = ' + EdgeProcessed + '  edges.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
     stateList.push(currentState);
 
     console.log(stateList);
@@ -321,61 +330,74 @@ var SSSP = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
+    for (key in internalEdgeList)
+      delete edgeTraversed[key];
 
     var pq = [];
-
-    for (var i = 0; i < amountVertex; i++) {
-      if (i == sourceVertex) {
+    for (var i = 0; i < amountVertex; i++)
+      if (i == sourceVertex)
         pq.push(new ObjectPair(0, i))
-//        alert('(0,' + i + ')');
-      }
-      else {
+      else
         pq.push(new ObjectPair(1000000000, i));
-//        alert('(1000000000,' + i + ')');
-      }
-    }
 
-/*    for (var i = 1; i < amountVertex; i++) {
-      for (key in internalEdgeList)
-        delete edgeHighlighted[key];
+	var EdgeProcessed = 0;
+	
+	while (pq.length > 0) {
+      //vertexHighlighted[q[0]] = true;
+   	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+	  currentState["status"] = 'The priority queue is now {' + pq + '}<br>Exploring neighbors of vertex u = '; // + pq[0];
+	  currentState["lineNo"] = 2;
+	  stateList.push(currentState);
 
-      currentState = createState(internalAdjList, internalEdgeList);
-      currentState["status"] = 'Pass number: ' + i;
-      currentState["lineNo"] = 2;
-      stateList.push(currentState);
-
+      var u = pq.shift(); // front most item
+/*	  
       for (var j = 0; j < amountEdge; j++) {
-        edgeHighlighted[j] = true;
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
-        var thisStatus = 'Pass number: ' + i + ', relax(' + vertexA + ',' + vertexB + ',' + weightAB + ')';
-        if (d[vertexA] + weightAB < d[vertexB]) {
-          d[vertexB] = d[vertexA] + weightAB;
-          p[vertexB] = vertexA;
-          internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
-          thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + vertexA;
-        }
 
-        for (var k = amountEdge; k < 2 * amountEdge; k++)
-          internalEdgeList[k]["state"] = OBJ_HIDDEN;
-        for (var k = 0; k < amountVertex; k++)
-          if (p[k] != -1)
-            for (var l = 0; l < amountEdge; l++)
-              if (internalEdgeList[l]["vertexA"] == p[k] && internalEdgeList[l]["vertexB"] == k)
-                internalEdgeList[l + amountEdge]["state"] = EDGE_HIGHLIGHTED;
+		if (u == vertexA) {
+		  vertexTraversed[vertexA] = true;
 
-        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-        currentState["status"] = thisStatus;
-        currentState["lineNo"] = [3,4];
-        stateList.push(currentState);
-      }
-    }
-*/
+		  edgeTraversed[j] = true;
+          EdgeProcessed = EdgeProcessed + 1;
+          var thisStatus = 'relax(' + vertexA + ',' + vertexB + ',' + weightAB + '), #edge processed = ' + EdgeProcessed;
+          if (d[vertexA] + weightAB < d[vertexB]) {
+            d[vertexB] = d[vertexA] + weightAB;
+            p[vertexB] = vertexA;
+            internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
+            thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + p[vertexB];
+			q.push(vertexB);
+          }
+		  else
+            thisStatus = thisStatus + '<br>No change';
 
+		  for (var k = amountEdge; k < 2 * amountEdge; k++)
+            internalEdgeList[k]["state"] = OBJ_HIDDEN;
+          for (var k = 0; k < amountVertex; k++)
+            if (p[k] != -1)
+              for (var l = 0; l < amountEdge; l++)
+                if (internalEdgeList[l]["vertexA"] == p[k] && internalEdgeList[l]["vertexB"] == k)
+                  internalEdgeList[l + amountEdge]["state"] = EDGE_HIGHLIGHTED;
+
+      	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          currentState["status"] = thisStatus;
+          currentState["lineNo"] = [3,4];
+          stateList.push(currentState);
+	    }
+	  }
+ */
+	}
+
+    for (key in internalAdjList)
+	  delete vertexHighlighted[key];
+    for (key in internalAdjList)
+	  delete vertexTraversed[key];
+    for (key in internalEdgeList)
+	  delete edgeHighlighted[key];
     edgeTraversed = {};
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Dijkstra\'s algorithm is complete.';
+    currentState["status"] = 'Dijkstra\'s processes O(V + E) = ' + EdgeProcessed + ' edges.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
     stateList.push(currentState);
 
     console.log(stateList);
@@ -421,6 +443,7 @@ var SSSP = function(){
             "cy": 20,
             "text": 3
           },
+
           4:{
             "cx": 20,
             "cy": 90,
@@ -441,11 +464,13 @@ var SSSP = function(){
             "cy": 90,
             "text": 7
           },
+
           8:{
             "cx": 20,
             "cy": 160,
             "text": 8
           },
+
           9:{
             "cx": 20,
             "cy": 230,
@@ -466,6 +491,7 @@ var SSSP = function(){
             "cy": 230,
             "text": 12
           },
+
           13:{
             "cx": 420,
             "cy": 20,
@@ -490,6 +516,7 @@ var SSSP = function(){
             "text": 'Inf',
             "state": OBJ_HIDDEN
           },
+
           17:{
             "cx": 420,
             "cy": 90,
@@ -514,12 +541,14 @@ var SSSP = function(){
             "text": 'Inf',
             "state": OBJ_HIDDEN
           },
+
           21:{
             "cx": 420,
             "cy": 160,
             "text": 'Inf',
             "state": OBJ_HIDDEN
           },
+
           22:{
             "cx": 420,
             "cy": 230,
@@ -545,6 +574,7 @@ var SSSP = function(){
             "state": OBJ_HIDDEN
           }
         };
+
         internalEdgeList = {
           0:{
               "vertexA": 0,
@@ -552,18 +582,19 @@ var SSSP = function(){
               "weight": 1
           },
           1:{
-              "vertexA": 1,
-              "vertexB": 2,
+              "vertexA": 0,
+              "vertexB": 4,
               "weight": 1
           },
+
           2:{
-              "vertexA": 2,
-              "vertexB": 3,
+              "vertexA": 1,
+              "vertexB": 0,
               "weight": 1
           },
           3:{
-              "vertexA": 0,
-              "vertexB": 4,
+              "vertexA": 1,
+              "vertexB": 2,
               "weight": 1
           },
           4:{
@@ -571,134 +602,145 @@ var SSSP = function(){
               "vertexB": 5,
               "weight": 1
           },
+
           5:{
+              "vertexA": 2,
+              "vertexB": 1,
+              "weight": 1
+          },
+          6:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 1
+          },
+          7:{
               "vertexA": 2,
               "vertexB": 6,
               "weight": 1
           },
-          6:{
+
+          8:{
+              "vertexA": 3,
+              "vertexB": 2,
+              "weight": 1
+          },
+          9:{
               "vertexA": 3,
               "vertexB": 7,
               "weight": 1
           },
-          7:{
+
+          10:{
+              "vertexA": 4,
+              "vertexB": 0,
+              "weight": 1
+          },
+          11:{
+              "vertexA": 4,
+              "vertexB": 8,
+              "weight": 1
+          },
+
+          12:{
+              "vertexA": 5,
+              "vertexB": 1,
+              "weight": 1
+          },
+          13:{
               "vertexA": 5,
               "vertexB": 6,
               "weight": 1
           },
-          8:{
-              "vertexA": 4,
-              "vertexB": 8,
-              "weight": 1
-          },
-          9:{
-              "vertexA": 8,
-              "vertexB": 9,
-              "weight": 1
-          },
-          10:{
+          14:{
               "vertexA": 5,
               "vertexB": 10,
               "weight": 1
           },
-          11:{
-              "vertexA": 6,
-              "vertexB": 11,
-              "weight": 1
-          },
-          12:{
-              "vertexA": 7,
-              "vertexB": 12,
-              "weight": 1
-          },
-          13:{
-              "vertexA": 9,
-              "vertexB": 10,
-              "weight": 1
-          },
-          14:{
-              "vertexA": 10,
-              "vertexB": 11,
-              "weight": 1
-          },
+
           15:{
-              "vertexA": 11,
-              "vertexB": 12,
+              "vertexA": 6,
+              "vertexB": 2,
               "weight": 1
           },
           16:{
-              "vertexA": 1,
-              "vertexB": 0,
+              "vertexA": 6,
+              "vertexB": 5,
               "weight": 1
           },
           17:{
-              "vertexA": 2,
-              "vertexB": 1,
-              "weight": 1
-          },
-          18:{
-              "vertexA": 3,
-              "vertexB": 2,
-              "weight": 1
-          },
-          19:{
-              "vertexA": 4,
-              "vertexB": 0,
-              "weight": 1
-          },
-          20:{
-              "vertexA": 5,
-              "vertexB": 1,
-              "weight": 1
-          },
-          21:{
               "vertexA": 6,
-              "vertexB": 2,
+              "vertexB": 11,
               "weight": 1
           },
-          22:{
+
+          18:{
               "vertexA": 7,
               "vertexB": 3,
               "weight": 1
           },
-          23:{
-              "vertexA": 6,
-              "vertexB": 5,
+          19:{
+              "vertexA": 7,
+              "vertexB": 12,
               "weight": 1
           },
-          24:{
+
+          20:{
               "vertexA": 8,
               "vertexB": 4,
               "weight": 1
           },
-          25:{
+          21:{
+              "vertexA": 8,
+              "vertexB": 9,
+              "weight": 1
+          },
+
+          22:{
               "vertexA": 9,
               "vertexB": 8,
               "weight": 1
           },
-          26:{
+          23:{
+              "vertexA": 9,
+              "vertexB": 10,
+              "weight": 1
+          },
+
+          24:{
               "vertexA": 10,
               "vertexB": 5,
               "weight": 1
           },
+          25:{
+              "vertexA": 10,
+              "vertexB": 9,
+              "weight": 1
+          },
+          26:{
+              "vertexA": 10,
+              "vertexB": 11,
+              "weight": 1
+          },
+
           27:{
               "vertexA": 11,
               "vertexB": 6,
               "weight": 1
           },
           28:{
-              "vertexA": 12,
-              "vertexB": 7,
+              "vertexA": 11,
+              "vertexB": 10,
               "weight": 1
           },
           29:{
-              "vertexA": 10,
-              "vertexB": 9,
+              "vertexA": 11,
+              "vertexB": 12,
               "weight": 1
           },
+
           30:{
-              "vertexA": 11,
-              "vertexB": 10,
+              "vertexA": 12,
+              "vertexB": 7,
               "weight": 1
           },
           31:{
@@ -714,20 +756,21 @@ var SSSP = function(){
 			  "state": OBJ_HIDDEN
           },
           33:{
-              "vertexA": 14,
-              "vertexB": 15,
+              "vertexA": 13,
+              "vertexB": 17,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
+
           34:{
-              "vertexA": 15,
-              "vertexB": 16,
+              "vertexA": 14,
+              "vertexB": 13,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
           35:{
-              "vertexA": 13,
-              "vertexB": 17,
+              "vertexA": 14,
+              "vertexB": 15,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
@@ -737,139 +780,148 @@ var SSSP = function(){
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
+
           37:{
+              "vertexA": 15,
+              "vertexB": 14,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          38:{
+              "vertexA": 15,
+              "vertexB": 16,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          39:{
               "vertexA": 15,
               "vertexB": 19,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          38:{
+
+          40:{
+              "vertexA": 16,
+              "vertexB": 15,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          41:{
               "vertexA": 16,
               "vertexB": 20,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          39:{
+
+          42:{
+              "vertexA": 17,
+              "vertexB": 13,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          43:{
+              "vertexA": 17,
+              "vertexB": 21,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+
+          44:{
+              "vertexA": 18,
+              "vertexB": 14,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          45:{
               "vertexA": 18,
               "vertexB": 19,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          40:{
-              "vertexA": 17,
-              "vertexB": 21,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          41:{
-              "vertexA": 21,
-              "vertexB": 22,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          42:{
+          46:{
               "vertexA": 18,
               "vertexB": 23,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          43:{
-              "vertexA": 19,
-              "vertexB": 24,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          44:{
-              "vertexA": 20,
-              "vertexB": 25,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          45:{
-              "vertexA": 22,
-              "vertexB": 23,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          46:{
-              "vertexA": 23,
-              "vertexB": 24,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          47:{
-              "vertexA": 24,
-              "vertexB": 25,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
 
-          48:{
-              "vertexA": 14,
-              "vertexB": 13,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          49:{
-              "vertexA": 15,
-              "vertexB": 14,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          50:{
-              "vertexA": 16,
-              "vertexB": 15,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          51:{
-              "vertexA": 17,
-              "vertexB": 13,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          52:{
-              "vertexA": 18,
-              "vertexB": 14,
-              "weight": 1,
-			  "state": OBJ_HIDDEN
-          },
-          53:{
+          47:{
               "vertexA": 19,
               "vertexB": 15,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          54:{
+          48:{
+              "vertexA": 19,
+              "vertexB": 18,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          49:{
+              "vertexA": 19,
+              "vertexB": 24,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+
+          50:{
               "vertexA": 20,
               "vertexB": 16,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          55:{
-              "vertexA": 19,
-              "vertexB": 18,
+          51:{
+              "vertexA": 20,
+              "vertexB": 25,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          56:{
+
+          52:{
               "vertexA": 21,
               "vertexB": 17,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          57:{
+          53:{
+              "vertexA": 21,
+              "vertexB": 22,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+
+          54:{
               "vertexA": 22,
               "vertexB": 21,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
-          58:{
+          55:{
+              "vertexA": 22,
+              "vertexB": 23,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+
+          56:{
               "vertexA": 23,
               "vertexB": 18,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
+          57:{
+              "vertexA": 23,
+              "vertexB": 22,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+          58:{
+              "vertexA": 23,
+              "vertexB": 24,
+              "weight": 1,
+			  "state": OBJ_HIDDEN
+          },
+
           59:{
               "vertexA": 24,
               "vertexB": 19,
@@ -877,20 +929,21 @@ var SSSP = function(){
 			  "state": OBJ_HIDDEN
           },
           60:{
-              "vertexA": 25,
-              "vertexB": 20,
+              "vertexA": 24,
+              "vertexB": 23,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
           61:{
-              "vertexA": 23,
-              "vertexB": 22,
+              "vertexA": 24,
+              "vertexB": 25,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
+
           62:{
-              "vertexA": 24,
-              "vertexB": 23,
+              "vertexA": 25,
+              "vertexB": 20,
               "weight": 1,
 			  "state": OBJ_HIDDEN
           },
@@ -1401,10 +1454,10 @@ var SSSP = function(){
         $('#code7').html('');
         break;
       case 2: // Dijkstra's
-        $('#code1').html('TBA');
-     		$('#code2').html('TBA');
-        $('#code3').html('TBA');
-        $('#code4').html('TBA');
+        $('#code1').html('initSSSP');
+        $('#code2').html('while the priority queue PQ is not empty');
+        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
         $('#code5').html('');
         $('#code6').html('');
         $('#code7').html('');
