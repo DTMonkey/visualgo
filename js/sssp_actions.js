@@ -1,8 +1,43 @@
 var actionsWidth = 150;
 var statusCodetraceWidth = 410;
 
+var isSamplesOpen = false;
 var isBellmanFordsOpen = false;
 var isDijkstrasOpen = false;
+
+function openSamples() {
+	if(!isSamplesOpen) {
+		$('#sample1').animate({
+			width: "+="+150
+		}, 100, function() {
+			$('#sample2').animate({
+				width: "+="+150
+			}, 100, function() {
+				$('#sample3').animate({
+					width: "+="+150
+				}, 100);
+			});
+		});
+	}
+	isSamplesOpen = true;
+}
+function closeSamples() {
+	if(true) {
+		$('#sample-err').html("");
+		$('#sample1').animate({
+			width: "-="+150
+		}, 100, function() {
+			$('#sample2').animate({
+				width: "-="+150
+			}, 100, function() {
+				$('#sample3').animate({
+					width: "-="+150
+				}, 100);
+			});
+		});
+		isSamplesOpen = false;
+	}
+}
 
 function openBellmanFords() {
 	if(!isBellmanFordsOpen) {
@@ -60,8 +95,8 @@ function hideEntireActionsPanel() {
 }
 
 $( document ).ready(function() {
-	
-	$('#sample1').click(function() {
+	$('#sample').click(function() {
+		openSamples();
 		closeBellmanFords();
 		closeDijkstras();
 		$('#sample1-err').html("");
@@ -70,14 +105,16 @@ $( document ).ready(function() {
 	});
 	
 	$('#bellmanford').click(function() {
+		closeSamples();
+		openBellmanFords();
+		closeDijkstras();
 		$('#sample1-err').html("");
 		$('#bellmanford-err').html("");
 		$('#dijkstra-err').html("");
-		openBellmanFords();
-		closeDijkstras();
 	});
 	
 	$('#dijkstra').click(function() {
+		closeSamples();
 		closeBellmanFords();
 		openDijkstras();
 		$('#sample1-err').html("");

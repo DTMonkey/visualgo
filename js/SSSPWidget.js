@@ -2,7 +2,9 @@
 // Defines an SSSP object; keeps implementation of graph internally and interact with GraphWidget to display Bellman Ford's and Dijkstra's SSSP visualizations
 
 // SSSP Example Constants
-var SSSP_EXAMPLE_CP4P17 = 0;
+var SSSP_EXAMPLE_CP3_4_17 = 0;
+var SSSP_EXAMPLE_CP3_4_18 = 1;
+var SSSP_EXAMPLE_CP3_4_19 = 2;
 
 var SSSP = function(){
   var self = this;
@@ -79,13 +81,13 @@ var SSSP = function(){
     vertexHighlighted[sourceVertex] = true;
     internalAdjList[sourceVertex + amountVertex]["text"] = 0;
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Start from source s = ' + sourceVertex + '<br>Set d[' + sourceVertex + '] = 0';
+    currentState["status"] = 'Start from source s = ' + sourceVertex + '<br>Set p[v] = -1 for all v and d[' + sourceVertex + '] = 0';
     currentState["lineNo"] = 1;
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
 
-    for (var i = 1; i < amountVertex; i++) {
+    for (var i = 1; i < amountVertex; i++) { // V-1 passes of Bellman Ford's
       for (key in internalEdgeList)
         delete edgeHighlighted[key];
 
@@ -95,20 +97,34 @@ var SSSP = function(){
       stateList.push(currentState);
 
       for (var j = 0; j < amountEdge; j++) {
-        edgeHighlighted[j] = true;
+        // turn off highlights first
+        for (var k = 0; k < 2 * amountVertex; k++)
+          delete vertexHighlighted[k];
+        for (var k = amountEdge; k < 2 * amountEdge; k++)
+          internalEdgeList[k]["state"] = OBJ_HIDDEN;
+        for (var k = amountEdge; k < 2 * amountEdge; k++)
+          delete edgeHighlighted[k];
+
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
         var thisStatus = 'Pass number: ' + i + ', relax(' + vertexA + ',' + vertexB + ',' + weightAB + ')';
-        if (d[vertexA] + weightAB < d[vertexB]) {
+
+        // highlight the edge being relaxed in the input graph
+        vertexHighlighted[vertexA] = true;
+        vertexHighlighted[vertexB] = true;
+        edgeHighlighted[j] = true;
+
+        // if we can relax vertex B, do updates and some more highlights
+        if (d[vertexA] != 1000000000 && d[vertexA] + weightAB < d[vertexB]) {
           d[vertexB] = d[vertexA] + weightAB;
           p[vertexB] = vertexA;
           internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
           thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + vertexA;
+          vertexHighlighted[vertexB + amountVertex] = VERTEX_HIGHLIGHTED;
+          edgeHighlighted[j + amountEdge] = EDGE_HIGHLIGHTED;
         }
 
-        for (var k = amountEdge; k < 2 * amountEdge; k++)
-          internalEdgeList[k]["state"] = OBJ_HIDDEN;
         for (var k = 0; k < amountVertex; k++)
           if (p[k] != -1)
             for (var l = 0; l < amountEdge; l++)
@@ -122,9 +138,12 @@ var SSSP = function(){
       }
     }
 
-    edgeTraversed = {};
+    for (var k = 0; k < 2 * amountVertex; k++)
+      delete vertexHighlighted[k];
+    for (var k = 0; k < 2 * amountEdge; k++)
+      delete edgeHighlighted[k];
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Bellman Ford\'s algorithm is complete.';
+    currentState["status"] = 'Bellman Ford\'s algorithm is complete.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
     stateList.push(currentState);
 
     console.log(stateList);
@@ -182,7 +201,18 @@ var SSSP = function(){
 
     delete vertexHighlighted[sourceVertex];
 
-    var pq = {};
+    var pq = [];
+
+    for (var i = 0; i < amountVertex; i++) {
+      if (i == sourceVertex) {
+        pq.push(new ObjectPair(0, i))
+//        alert('(0,' + i + ')');
+      }
+      else {
+        pq.push(new ObjectPair(1000000000, i));
+//        alert('(1000000000,' + i + ')');
+      }
+    }
 
 /*    for (var i = 1; i < amountVertex; i++) {
       for (key in internalEdgeList)
@@ -235,29 +265,41 @@ var SSSP = function(){
   }
 
   this.examples = function(ssspExampleConstant) {
+    // GRR, this function is buggy when changing sample graph (some edge weights are not displayed correctly)
+    // Ivan has to show an example using MST first...
+
+    if (internalAdjList != null) {
+      for (key in internalAdjList)
+        delete internalAdjList[key];
+    }
+    if (internalEdgeList != null) {
+      for (key in internalEdgeList)
+        delete internalEdgeList[key];
+    }
+
     switch (ssspExampleConstant) {
-      case SSSP_EXAMPLE_CP4P17:
+      case SSSP_EXAMPLE_CP3_4_17:
         internalAdjList = {
           0:{
             "cx": 210,
             "cy": 190,
             "text": 0,
-            4:6
+            4:3
           },
           1:{
             "cx": 50,
             "cy": 50,
             "text": 1,
-            3:3,
-            4:4
+            3:1,
+            4:0
           },
           2:{
             "cx": 170,
             "cy": 120,
             "text": 2,
-            0:0,
-            1:1,
-            3:2
+            0:4,
+            1:2,
+            3:6
           },
           3:{
             "cx": 330,
@@ -275,31 +317,31 @@ var SSSP = function(){
             "cy": 190,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
-            4:6
+            9:10
           },
           6:{
             "cx": 550,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
-            3:3,
-            4:4
+            8:8,
+            9:7
           },
           7:{
             "cx": 670,
             "cy": 120,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
-            0:0,
-            1:1,
-            3:2
+            5:11,
+            6:9,
+            8:13
           },
           8:{
             "cx": 830,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
-            4:5
+            9:12
           },
           9:{
             "cx": 740,
@@ -310,28 +352,28 @@ var SSSP = function(){
         };
         internalEdgeList = {
           0:{
-              "vertexA": 2,
-              "vertexB": 0,
+              "vertexA": 1,
+              "vertexB": 4,
               "weight": 6
           },
           1:{
-              "vertexA": 2,
-              "vertexB": 1,
-              "weight": 2
-          },
-          2:{
-              "vertexA": 2,
-              "vertexB": 3,
-              "weight": 7
-          },
-          3:{
               "vertexA": 1,
               "vertexB": 3,
               "weight": 3
           },
-          4:{
-              "vertexA": 1,
+          2:{
+              "vertexA": 2,
+              "vertexB": 1,
+              "weight": 2
+          },
+          3:{
+              "vertexA": 0,
               "vertexB": 4,
+              "weight": 1
+          },
+          4:{
+              "vertexA": 2,
+              "vertexB": 0,
               "weight": 6
           },
           5:{
@@ -340,37 +382,37 @@ var SSSP = function(){
               "weight": 5
           },
           6:{
-              "vertexA": 0,
-              "vertexB": 4,
-              "weight": 1
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 7
           },
           7:{
-              "vertexA": 7,
-              "vertexB": 5,
+              "vertexA": 6,
+              "vertexB": 9,
               "weight": 6,
               "state": OBJ_HIDDEN
           },
           8:{
-              "vertexA": 7,
-              "vertexB": 6,
-              "weight": 2,
-              "state": OBJ_HIDDEN
-          },
-          9:{
-              "vertexA": 7,
-              "vertexB": 8,
-              "weight": 7,
-              "state": OBJ_HIDDEN
-          },
-          10:{
               "vertexA": 6,
               "vertexB": 8,
               "weight": 3,
               "state": OBJ_HIDDEN
           },
-          11:{
-              "vertexA": 6,
+          9:{
+              "vertexA": 7,
+              "vertexB": 6,
+              "weight": 2,
+              "state": OBJ_HIDDEN
+          },
+          10:{
+              "vertexA": 5,
               "vertexB": 9,
+              "weight": 1,
+              "state": OBJ_HIDDEN
+          },
+          11:{
+              "vertexA": 7,
+              "vertexB": 5,
               "weight": 6,
               "state": OBJ_HIDDEN
           },
@@ -381,27 +423,276 @@ var SSSP = function(){
               "state": OBJ_HIDDEN
           },
           13:{
-              "vertexA": 5,
-              "vertexB": 9,
-              "weight": 1,
+              "vertexA": 7,
+              "vertexB": 8,
+              "weight": 7,
               "state": OBJ_HIDDEN
           }
         };
         amountVertex = 5;
         amountEdge = 7;
         break;
-      case SSSP_EXAMPLE_OTHERS:
+      case SSSP_EXAMPLE_CP3_4_18:
         internalAdjList = {
+          0:{
+            "cx": 50,
+            "cy": 125,
+            "text": 0,
+            1:0,
+            2:3
+          },
+          1:{
+            "cx": 150,
+            "cy": 50,
+            "text": 1,
+            3:2
+          },
+          2:{
+            "cx": 150,
+            "cy": 200,
+            "text": 2,
+            3:4
+          },
+          3:{
+            "cx": 250,
+            "cy": 125,
+            "text": 3,
+            4:2
+          },
+          4:{
+            "cx": 350,
+            "cy": 125,
+            "text": 4,
+          },
+          5:{
+            "cx": 550,
+            "cy": 125,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            6:5,
+            7:8
+          },
+          6:{
+            "cx": 650,
+            "cy": 50,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            8:6
+          },
+          7:{
+            "cx": 650,
+            "cy": 200,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            8:9
+          },
+          8:{
+            "cx": 750,
+            "cy": 125,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            9:7
+          },
+          9:{
+            "cx": 850,
+            "cy": 125,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          }
         };
         internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 1
+          },
+          1:{
+              "vertexA": 1,
+              "vertexB": 3,
+              "weight": 2
+          },
+          2:{
+              "vertexA": 3,
+              "vertexB": 4,
+              "weight": 3
+          },
+          3:{
+              "vertexA": 0,
+              "vertexB": 2,
+              "weight": 10
+          },
+          4:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": -10
+          },
+          5:{
+              "vertexA": 5,
+              "vertexB": 6,
+              "weight": 1,
+              "state": OBJ_HIDDEN
+          },
+          6:{
+              "vertexA": 6,
+              "vertexB": 8,
+              "weight": 2,
+              "state": OBJ_HIDDEN
+          },
+          7:{
+              "vertexA": 8,
+              "vertexB": 9,
+              "weight": 3,
+              "state": OBJ_HIDDEN
+          },
+          8:{
+              "vertexA": 5,
+              "vertexB": 7,
+              "weight": 10,
+              "state": OBJ_HIDDEN
+          },
+          9:{
+              "vertexA": 7,
+              "vertexB": 8,
+              "weight": -10,
+              "state": OBJ_HIDDEN
+          }
         };
+        amountVertex = 5;
+        amountEdge = 5;
+        break;
+      case SSSP_EXAMPLE_CP3_4_19:
+        internalAdjList = {
+          0:{
+            "cx": 50,
+            "cy": 50,
+            "text": 0,
+            1:0,
+            4:4
+          },
+          1:{
+            "cx": 150,
+            "cy": 50,
+            "text": 1,
+            2:1
+          },
+          2:{
+            "cx": 250,
+            "cy": 50,
+            "text": 2,
+            1:2,
+            3:3
+          },
+          3:{
+            "cx": 350,
+            "cy": 50,
+            "text": 3
+          },
+          4:{
+            "cx": 150,
+            "cy": 125,
+            "text": 4
+          },
+          5:{
+            "cx": 550,
+            "cy": 50,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            6:5,
+            9:9
+          },
+          6:{
+            "cx": 650,
+            "cy": 50,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            7:6
+          },
+          7:{
+            "cx": 750,
+            "cy": 50,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN,
+            6:7,
+            8:8
+          },
+          8:{
+            "cx": 850,
+            "cy": 50,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          9:{
+            "cx": 650,
+            "cy": 125,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          }
+        };
+        internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 99
+          },
+          1:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 15
+          },
+          2:{
+              "vertexA": 2,
+              "vertexB": 1,
+              "weight": -42
+          },
+          3:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 10
+          },
+          4:{
+              "vertexA": 0,
+              "vertexB": 4,
+              "weight": -99
+          },
+          5:{
+              "vertexA": 5,
+              "vertexB": 6,
+              "weight": 99,
+              "state": OBJ_HIDDEN
+          },
+          6:{
+              "vertexA": 6,
+              "vertexB": 7,
+              "weight": 15,
+              "state": OBJ_HIDDEN
+          },
+          7:{
+              "vertexA": 7,
+              "vertexB": 6,
+              "weight": -42,
+              "state": OBJ_HIDDEN
+          },
+          8:{
+              "vertexA": 7,
+              "vertexB": 8,
+              "weight": 10,
+              "state": OBJ_HIDDEN
+          },
+          9:{
+              "vertexA": 5,
+              "vertexB": 9,
+              "weight": -99,
+              "state": OBJ_HIDDEN
+          }
+        };
+        amountVertex = 5;
+        amountEdge = 5;
         break;
     }
 
     var newState = createState(internalAdjList, internalEdgeList);
-
     graphWidget.updateGraph(newState, 500);
-	return true;
+    return true;
   }
 
   function createState(internalAdjListObject, internalEdgeListObject, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed){

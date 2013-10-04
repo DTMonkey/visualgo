@@ -6,9 +6,39 @@
 	}
 
 /*all action pullout (input) stuff here*/
+#sample1 {
+	position: fixed;
+	bottom: 125px;
+	left: 200px;
+	width: 0px;
+	background: #777;
+	color: white;
+	overflow: hidden;
+}
+
+#sample2 {
+	position: fixed;
+	bottom: 125px;
+	left: 355px;
+	width: 0px;
+	background: #777;
+	color: white;
+	overflow: hidden;
+}
+
+#sample3 {
+	position: fixed;
+	bottom: 125px;
+	left: 510px;
+	width: 0px;
+	background: #777;
+	color: white;
+	overflow: hidden;
+}
+
 #bellmanford-input {
 	position: fixed;
-	bottom: 92px;
+	bottom: 90px;
 	left: 196px;
 	background: #777;
 	width: 0px;
@@ -18,11 +48,11 @@
 		width: 40px;
 		background: black;
 		color: white;
-		padding: 6px 8px 5px;
+		padding: 8px;
 	}
 	#bellmanford-go {
 		position: fixed;
-		bottom: 92px;
+		bottom: 90px;
 		left: 228px;
 		width: 0px;
 		background: #777;
@@ -30,7 +60,7 @@
 		overflow: hidden;
 	}
 		#bellmanford-go p {
-			padding: 5px 8px;
+			padding: 8px 8px 7px;
 		}
 
 #dijkstra-input {
@@ -65,7 +95,7 @@
 	position: fixed;
 	color: red;
 }
-#sample1-err {
+#sample-err {
 	bottom: 119px;
 	left: 201px;
 	padding: 8px 0px 7px;
