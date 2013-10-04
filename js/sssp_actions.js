@@ -2,6 +2,7 @@ var actionsWidth = 150;
 var statusCodetraceWidth = 410;
 
 var isSamplesOpen = false;
+var isBFSOpen = false;
 var isBellmanFordsOpen = false;
 var isDijkstrasOpen = false;
 
@@ -15,7 +16,11 @@ function openSamples() {
 			}, 100, function() {
 				$('#sample3').animate({
 					width: "+="+150
-				}, 100);
+				}, 100,	function() {
+					$('#sample4').animate({
+						width: "+="+150
+					}, 100);
+				});
 			});
 		});
 	}
@@ -32,10 +37,40 @@ function closeSamples() {
 			}, 100, function() {
 				$('#sample3').animate({
 					width: "-="+150
-				}, 100);
+				}, 100, function() {
+					$('#sample4').animate({
+						width: "-="+150
+					}, 100);
+				});
 			});
 		});
 		isSamplesOpen = false;
+	}
+}
+
+function openBFS() {
+	if(!isBFSOpen) {
+		$('#bfs-input').animate({
+			width: "+="+32
+		}, 100, function() {
+			$('#bfs-go').animate({
+				width: "+="+34
+			},100);
+		});
+	}
+	isBFSOpen = true;
+}
+function closeBFS() {
+	if(true) {
+		$('#bfs-err').html("");
+		$('#bfs-go').animate({
+			width: "-="+34
+		}, 100, function() {
+			$('#bfs-input').animate({
+				width: "-="+32
+			}, 100);
+		});
+		isBFSOpen = false;
 	}
 }
 
@@ -97,6 +132,7 @@ function hideEntireActionsPanel() {
 $( document ).ready(function() {
 	$('#sample').click(function() {
 		openSamples();
+		closeBFS();
 		closeBellmanFords();
 		closeDijkstras();
 		$('#sample1-err').html("");
@@ -104,20 +140,35 @@ $( document ).ready(function() {
 		$('#dijkstra-err').html("");
 	});
 	
+	$('#bfs').click(function() {
+		closeSamples();
+		openBFS();
+		closeBellmanFords();
+		closeDijkstras();
+		$('#sample1-err').html("");
+		$('#bfs-err').html("");
+		$('#bellmanford-err').html("");
+		$('#dijkstra-err').html("");
+	});
+
 	$('#bellmanford').click(function() {
 		closeSamples();
+		closeBFS();
 		openBellmanFords();
 		closeDijkstras();
 		$('#sample1-err').html("");
+		$('#bfs-err').html("");
 		$('#bellmanford-err').html("");
 		$('#dijkstra-err').html("");
 	});
 	
 	$('#dijkstra').click(function() {
 		closeSamples();
+		closeBFS();
 		closeBellmanFords();
 		openDijkstras();
 		$('#sample1-err').html("");
+		$('#bfs-err').html("");
 		$('#bellmanford-err').html("");
 		$('#dijkstra-err').html("");
 	});

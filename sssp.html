@@ -54,6 +54,7 @@
     
     <div id="actions" class="panel">
         <p id="sample" class="execAction" style="padding-top: 10px;">Sample Graphs</p>
+        <p id="bfs" class="execAction">BFS</p>
         <p id="bellmanford" class="execAction">Bellman Ford's</p>
         <p id="dijkstra" class="execAction" style="padding-bottom: 10px;">Dijkstra's</p>
     </div>
@@ -61,15 +62,19 @@
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
       	<div id="sample-err" class="err"></div>
-        <div id="sample1" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17 (standard)</p></div>
-        <div id="sample2" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div>
-        <div id="sample3" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
-        <div id="bellmanford-input"><input type="text" id="bellmanford-v" autocomplete="off" value=2 /></div>
+        <div id="sample1" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_3)><p>CP3 4.3 (unweighted)</p></div>
+        <div id="sample2" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17 (standard)</p></div>
+        <div id="sample3" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div>
+        <div id="sample4" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
+        <div id="bfs-input"><input type="text" id="bfs-v" autocomplete="off" value=0 /></div>
+        <div id="bfs-go" class="execAction" onclick=bfs()><p>GO</p></div>
+        <div id="bfs-err" class="err"></div>
+        <div id="bellmanford-input"><input type="text" id="bellmanford-v" autocomplete="off" value=0 /></div>
         <div id="bellmanford-go" class="execAction" onclick=bellmanford()><p>GO</p></div>
-        <div id="bellmanford-err" class="err"></div>-->
-        <div id="dijkstra-input"><input type="text" id="dijkstra-v" autocomplete="off" value=2 /></div>
+        <div id="bellmanford-err" class="err"></div>
+        <div id="dijkstra-input"><input type="text" id="dijkstra-v" autocomplete="off" value=0 /></div>
         <div id="dijkstra-go" class="execAction" onclick=dijkstra()><p>GO</p></div>
-        <div id="dijkstra-err" class="err"></div>-->
+        <div id="dijkstra-err" class="err"></div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -171,7 +176,22 @@
       }
     }, 500);
   }
-    
+
+  function bfs() {
+    if(isPlaying) { stop(); }
+    var sourceS = parseInt($('#bfs-v').val());
+    setTimeout( function() {
+      if ((mode=="exploration")&&ssspWidget.bfs(sourceS)) {
+        closeBFS();
+        $('#current-action').show();
+        $('#current-action p').html("BFS(" + sourceS + ")");
+        $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+        triggerRightPanels();
+        isPlaying = true;
+      }
+    }, 500);
+  }
+
   function bellmanford() {
     if(isPlaying) { stop(); }
     var sourceS = parseInt($('#bellmanford-v').val());

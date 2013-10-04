@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-#actions { height: 91px; width: 150px; }
+#actions { height: 121px; width: 150px; }
 	#actions-hide {
 		padding: 37px 15px 38px 14px;
 	}
@@ -8,7 +8,7 @@
 /*all action pullout (input) stuff here*/
 #sample1 {
 	position: fixed;
-	bottom: 125px;
+	bottom: 150px;
 	left: 200px;
 	width: 0px;
 	background: #777;
@@ -18,7 +18,7 @@
 
 #sample2 {
 	position: fixed;
-	bottom: 125px;
+	bottom: 150px;
 	left: 355px;
 	width: 0px;
 	background: #777;
@@ -28,13 +28,50 @@
 
 #sample3 {
 	position: fixed;
-	bottom: 125px;
+	bottom: 150px;
 	left: 510px;
 	width: 0px;
 	background: #777;
 	color: white;
 	overflow: hidden;
 }
+
+#sample4 {
+	position: fixed;
+	bottom: 150px;
+	left: 665px;
+	width: 0px;
+	background: #777;
+	color: white;
+	overflow: hidden;
+}
+
+#bfs-input {
+	position: fixed;
+	bottom: 120px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#bfs-input input {
+		width: 40px;
+		background: black;
+		color: white;
+		padding: 8px;
+	}
+	#bfs-go {
+		position: fixed;
+		bottom: 120px;
+		left: 228px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#bfs-go p {
+			padding: 8px 8px 7px;
+		}
 
 #bellmanford-input {
 	position: fixed;
@@ -96,14 +133,19 @@
 	color: red;
 }
 #sample-err {
-	bottom: 119px;
+	bottom: 149px;
 	left: 201px;
+	padding: 8px 0px 7px;
+}
+#bfs-err {
+	bottom: 119px;
+	left: 272px;
 	padding: 8px 0px 7px;
 }
 #bellmanford-err {
 	bottom: 92px;
 	left: 272px;
-	padding: 5px 0px;
+	padding: 8px 0px 7px;
 }
 #dijkstra-err {
 	bottom: 60px;
