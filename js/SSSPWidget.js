@@ -2,9 +2,10 @@
 // Defines an SSSP object; keeps implementation of graph internally and interact with GraphWidget to display Bellman Ford's and Dijkstra's SSSP visualizations
 
 // SSSP Example Constants
-var SSSP_EXAMPLE_CP3_4_17 = 0;
-var SSSP_EXAMPLE_CP3_4_18 = 1;
-var SSSP_EXAMPLE_CP3_4_19 = 2;
+var SSSP_EXAMPLE_CP3_4_3 = 0;
+var SSSP_EXAMPLE_CP3_4_17 = 1;
+var SSSP_EXAMPLE_CP3_4_18 = 2;
+var SSSP_EXAMPLE_CP3_4_19 = 3;
 
 var SSSP = function(){
   var self = this;
@@ -278,6 +279,237 @@ var SSSP = function(){
     }
 
     switch (ssspExampleConstant) {
+      case SSSP_EXAMPLE_CP3_4_3:
+        internalAdjList = {
+          0:{
+            "cx": 20,
+            "cy": 20,
+            "text": 0
+          },
+          1:{
+            "cx": 90,
+            "cy": 20,
+            "text": 1
+          },
+          2:{
+            "cx": 160,
+            "cy": 20,
+            "text": 2
+          },
+          3:{
+            "cx": 230,
+            "cy": 20,
+            "text": 3
+          },
+          4:{
+            "cx": 20,
+            "cy": 90,
+            "text": 4
+          },
+          5:{
+            "cx": 90,
+            "cy": 90,
+            "text": 5
+          },
+          6:{
+            "cx": 160,
+            "cy": 90,
+            "text": 6
+          },
+          7:{
+            "cx": 230,
+            "cy": 90,
+            "text": 7
+          },
+          8:{
+            "cx": 20,
+            "cy": 160,
+            "text": 8
+          },
+          9:{
+            "cx": 20,
+            "cy": 230,
+            "text": 9
+          },
+          10:{
+            "cx": 90,
+            "cy": 230,
+            "text": 10
+          },
+          11:{
+            "cx": 160,
+            "cy": 230,
+            "text": 11
+          },
+          12:{
+            "cx": 230,
+            "cy": 230,
+            "text": 12
+          },
+          13:{
+            "cx": 20,
+            "cy": 20,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          14:{
+            "cx": 90,
+            "cy": 20,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          15:{
+            "cx": 160,
+            "cy": 20,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          16:{
+            "cx": 230,
+            "cy": 20,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          17:{
+            "cx": 20,
+            "cy": 90,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          18:{
+            "cx": 90,
+            "cy": 90,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          19:{
+            "cx": 160,
+            "cy": 90,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          20:{
+            "cx": 230,
+            "cy": 90,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          21:{
+            "cx": 20,
+            "cy": 160,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          22:{
+            "cx": 20,
+            "cy": 230,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          23:{
+            "cx": 90,
+            "cy": 230,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          24:{
+            "cx": 160,
+            "cy": 230,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          },
+          25:{
+            "cx": 230,
+            "cy": 230,
+            "text": 'Inf',
+            "state": OBJ_HIDDEN
+          }
+        };
+        internalEdgeList = {
+          0:{
+              "vertexA": 0,
+              "vertexB": 1,
+              "weight": 1
+          },
+          1:{
+              "vertexA": 1,
+              "vertexB": 2,
+              "weight": 1
+          },
+          2:{
+              "vertexA": 2,
+              "vertexB": 3,
+              "weight": 1
+          },
+          3:{
+              "vertexA": 0,
+              "vertexB": 4,
+              "weight": 1
+          },
+          4:{
+              "vertexA": 1,
+              "vertexB": 5,
+              "weight": 1
+          },
+          5:{
+              "vertexA": 2,
+              "vertexB": 6,
+              "weight": 1
+          },
+          6:{
+              "vertexA": 3,
+              "vertexB": 7,
+              "weight": 1
+          },
+          7:{
+              "vertexA": 5,
+              "vertexB": 6,
+              "weight": 1
+          },
+          8:{
+              "vertexA": 4,
+              "vertexB": 8,
+              "weight": 1
+          },
+          9:{
+              "vertexA": 8,
+              "vertexB": 9,
+              "weight": 1
+          },
+          10:{
+              "vertexA": 5,
+              "vertexB": 10,
+              "weight": 1
+          },
+          11:{
+              "vertexA": 6,
+              "vertexB": 11,
+              "weight": 1
+          },
+          12:{
+              "vertexA": 7,
+              "vertexB": 12,
+              "weight": 1
+          },
+          13:{
+              "vertexA": 9,
+              "vertexB": 10,
+              "weight": 1
+          },
+          14:{
+              "vertexA": 10,
+              "vertexB": 11,
+              "weight": 1
+          },
+          15:{
+              "vertexA": 11,
+              "vertexB": 12,
+              "weight": 1
+          }
+        };
+        amountVertex = 13;
+        amountEdge = 16;
+        break;
       case SSSP_EXAMPLE_CP3_4_17:
         internalAdjList = {
           0:{
@@ -313,14 +545,14 @@ var SSSP = function(){
             "text": 4,
           },
           5:{
-            "cx": 710,
+            "cx": 610,
             "cy": 190,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             9:10
           },
           6:{
-            "cx": 550,
+            "cx": 450,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
@@ -328,7 +560,7 @@ var SSSP = function(){
             9:7
           },
           7:{
-            "cx": 670,
+            "cx": 570,
             "cy": 120,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
@@ -337,14 +569,14 @@ var SSSP = function(){
             8:13
           },
           8:{
-            "cx": 830,
+            "cx": 730,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             9:12
           },
           9:{
-            "cx": 740,
+            "cx": 640,
             "cy": 280,
             "text": 'Inf',
             "state": OBJ_HIDDEN
@@ -465,7 +697,7 @@ var SSSP = function(){
             "text": 4,
           },
           5:{
-            "cx": 550,
+            "cx": 450,
             "cy": 125,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
@@ -473,28 +705,28 @@ var SSSP = function(){
             7:8
           },
           6:{
-            "cx": 650,
+            "cx": 550,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             8:6
           },
           7:{
-            "cx": 650,
+            "cx": 550,
             "cy": 200,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             8:9
           },
           8:{
-            "cx": 750,
+            "cx": 650,
             "cy": 125,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             9:7
           },
           9:{
-            "cx": 850,
+            "cx": 750,
             "cy": 125,
             "text": 'Inf',
             "state": OBJ_HIDDEN
@@ -593,7 +825,7 @@ var SSSP = function(){
             "text": 4
           },
           5:{
-            "cx": 550,
+            "cx": 450,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
@@ -601,14 +833,14 @@ var SSSP = function(){
             9:9
           },
           6:{
-            "cx": 650,
+            "cx": 550,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
             7:6
           },
           7:{
-            "cx": 750,
+            "cx": 650,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN,
@@ -616,13 +848,13 @@ var SSSP = function(){
             8:8
           },
           8:{
-            "cx": 850,
+            "cx": 750,
             "cy": 50,
             "text": 'Inf',
             "state": OBJ_HIDDEN
           },
           9:{
-            "cx": 650,
+            "cx": 550,
             "cy": 125,
             "text": 'Inf',
             "state": OBJ_HIDDEN
@@ -724,7 +956,7 @@ var SSSP = function(){
 
       state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
       state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
-      state["el"][key]["type"] = EDGE_TYPE_UDE;
+      state["el"][key]["type"] = EDGE_TYPE_DE; // HOW TO MAKE THIS DIRECTED?
       state["el"][key]["weight"] = internalEdgeListObject[key]["weight"];
       if (internalEdgeListObject[key]["state"] == OBJ_HIDDEN)
         state["el"][key]["state"] = OBJ_HIDDEN;
@@ -755,16 +987,25 @@ var SSSP = function(){
   
   function populatePseudocode(act) {
     switch (act) {
-      case 0: // Bellman Ford's
+      case 0: // BFS
         $('#code1').html('initSSSP');
-        $('#code2').html('for i = 1 to |V|-1');
-        $('#code3').html('&nbsp;&nbsp;for each edge(u, v) in E');
-        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w_u_v)');
+        $('#code2').html('while the queue Q is not empty');
+        $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = Q.front()');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
         $('#code5').html('');
         $('#code6').html('');
         $('#code7').html('');
         break;
-      case 1: // Dijkstra's
+      case 1: // Bellman Ford's
+        $('#code1').html('initSSSP');
+        $('#code2').html('for i = 1 to |V|-1');
+        $('#code3').html('&nbsp;&nbsp;for each edge(u, v) in E');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
+        $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 2: // Dijkstra's
         $('#code1').html('TBA');
      		$('#code2').html('TBA');
         $('#code3').html('TBA');
