@@ -260,56 +260,64 @@ var graphEdgeProperties = {
   "weight":{
     "font-size": 16,
     "default":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#333",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
     "highlighted":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
     "traversed":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": surpriseColour,
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
 	"green":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#52bc69",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
 	"pink":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#ed5a7d",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
 	"blue":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#2ebbd1",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
 	"red":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#d9513c",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
     },
 	"grey":{
-      "startOffset": "50%",
+      "startOffset": "75%",
+      "dy": -3,
       "fill": "#cccccc",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
@@ -319,5 +327,10 @@ var graphEdgeProperties = {
 }
 
 /*
- *
+ * marker.js
  */
+
+var ARROW_MARKER_WIDTH = 3;
+var ARROW_MARKER_HEIGHT = 3;
+var ARROW_REFX = 9;
+var ARROW_FILL = "#333";

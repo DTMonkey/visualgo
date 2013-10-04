@@ -9,7 +9,31 @@
  * EDGE_TYPE_BDE = BiDirectional Edge
  */
 
-// Weight not yet implemented in this object
+// Marker objects. backwardArrow still buggy
+
+markerSvg.append("marker")
+          .attr("id", "arrow")
+          .attr("viewBox", "0 -5 10 10")
+          .attr('refX', ARROW_REFX)
+          .attr("markerWidth", ARROW_MARKER_WIDTH)
+          .attr("markerHeight", ARROW_MARKER_HEIGHT)
+          .attr("orient", "auto")
+          .append("path")
+              .attr("d", "M0,-5 L10,0 L0,5")
+              .attr('fill', ARROW_FILL);
+
+markerSvg.append("marker")
+          .attr("id", "backwardArrow")
+          .attr("viewBox", "0 -5 10 10")
+          .attr('refX', ARROW_REFX)
+          .attr("markerWidth", ARROW_MARKER_WIDTH)
+          .attr("markerHeight", ARROW_MARKER_HEIGHT)
+          .attr("orient", "auto")
+          .append("path")
+              .attr("d", "M0,-5 L10,0 L0,5")
+              .attr('fill', ARROW_FILL);
+
+// GraphEdgeWidget object
 
 var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, weight){
   if(weight == null || isNaN(weight)) weight = 1;
@@ -21,6 +45,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   var line;
   var weightText;
   var weightTextPath;
+  var weightTextSpan
 
   // var vertexA = graphVertexA.getClassNumber();
   // var vertexB = graphVertexB.getClassNumber();
@@ -44,6 +69,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     "weight":{
       "id": null,
       "startOffset": null,
+      "dy": null,
       "fill": null,
       "font-family": null,
       "font-weight": null,
@@ -270,6 +296,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
     attributeList["weight"]["id"] = "ew" + edgeIdNumber;
     attributeList["weight"]["startOffset"] = graphEdgeProperties["weight"]["default"]["startOffset"];
+    attributeList["weight"]["dy"] = graphEdgeProperties["weight"]["default"]["dy"];
     attributeList["weight"]["fill"] = graphEdgeProperties["weight"]["default"]["fill"];
     attributeList["weight"]["font-family"] = graphEdgeProperties["weight"]["default"]["font-family"];
     attributeList["weight"]["font-size"] = 0;
@@ -301,10 +328,13 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
                               .attr("xlink:href", function(){
                                 return "#" + attributeList["path"]["id"];
                               })
-                              .attr("startOffset", attributeList["weight"]["startOffset"])
-                              .text(function(){
-                                return attributeList["weight"]["text"];
-                              });
+                              .attr("startOffset", attributeList["weight"]["startOffset"]);
+
+    weightTextSpan = weightTextPath.append("tspan")
+                                  .attr("dy", attributeList["weight"]["dy"])
+                                  .text(function(){
+                                    return attributeList["weight"]["text"];
+                                  });
   }
 
   function cxA(){
@@ -400,7 +430,17 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
         .duration(dur)
         .attr("d", attributeList["path"]["d"])
         .attr("stroke", attributeList["path"]["stroke"])
-        .attr("stroke-width", attributeList["path"]["stroke-width"]);
+        .attr("stroke-width", attributeList["path"]["stroke-width"])
+        .style("marker-start", function(){
+          if(attributeList["path"]["d"] == initCommand) return null;
+          if(attributeList["path"]["class"] == "bde") return "url(#backwardArrow)";
+          return null;
+        })
+        .style("marker-end", function(){
+          if(attributeList["path"]["d"] == initCommand) return null;
+          if(attributeList["path"]["class"] == "de" || attributeList["path"]["class"] == "bde") return "url(#arrow)";
+          return null;
+        });
 
     weightText.transition()
               .duration(dur)
@@ -411,7 +451,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
               .attr("font-weight", attributeList["weight"]["font-weight"])
               .attr("text-anchor", attributeList["weight"]["text-anchor"]);
               
-    weightTextPath.transition()
+    weightTextSpan.transition()
                   .duration(dur)
                   .text(function(){
                     return attributeList["weight"]["text"];
