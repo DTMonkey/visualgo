@@ -10,7 +10,18 @@ function openSamples() {
 	if(!isSamplesOpen) {
 		$('#sample1').animate({
 			width: "+="+150
-		}, 100, function() {
+		}, 100);
+		$('#sample2').animate({
+			width: "+="+150
+		}, 100);
+		$('#sample3').animate({
+			width: "+="+150
+		}, 100);
+		$('#sample4').animate({
+			width: "+="+150
+		}, 100);
+/*
+		, function() {
 			$('#sample2').animate({
 				width: "+="+150
 			}, 100, function() {
@@ -22,7 +33,7 @@ function openSamples() {
 					}, 100);
 				});
 			});
-		});
+		});*/
 	}
 	isSamplesOpen = true;
 }
@@ -31,8 +42,17 @@ function closeSamples() {
 		$('#sample-err').html("");
 		$('#sample1').animate({
 			width: "-="+150
-		}, 100, function() {
-			$('#sample2').animate({
+		}, 100); //, function() {
+		$('#sample2').animate({
+			width: "-="+150
+		}, 100);
+		$('#sample3').animate({
+			width: "-="+150
+		}, 100);
+		$('#sample4').animate({
+			width: "-="+150
+		}, 100);
+/*			$('#sample2').animate({
 				width: "-="+150
 			}, 100, function() {
 				$('#sample3').animate({
@@ -43,7 +63,7 @@ function closeSamples() {
 					}, 100);
 				});
 			});
-		});
+		});*/
 		isSamplesOpen = false;
 	}
 }
@@ -104,8 +124,11 @@ function openDijkstras() {
 		$('#dijkstra-input').animate({
 			width: "+="+32
 		}, 100, function() {
-			$('#dijkstra-go').animate({
-				width: "+="+34
+			$('#dijkstra-go1').animate({
+				width: "+="+70
+			},100);
+			$('#dijkstra-go2').animate({
+				width: "+="+70
 			},100);
 		});
 	}
@@ -114,8 +137,11 @@ function openDijkstras() {
 function closeDijkstras() {
 	if(true) {
 		$('#dijkstra-err').html("");
-		$('#dijkstra-go').animate({
-			width: "-="+34
+		$('#dijkstra-go1').animate({
+			width: "-="+70
+		}, 100);
+		$('#dijkstra-go2').animate({
+			width: "-="+70
 		}, 100, function() {
 			$('#dijkstra-input').animate({
 				width: "-="+32
@@ -127,6 +153,10 @@ function closeDijkstras() {
 
 function hideEntireActionsPanel() {
 	hideActionsPanel();
+	closeSamples();
+	closeBFS();
+	closeBellmanFords();
+	closeDijkstras();
 }
 
 $( document ).ready(function() {
@@ -174,20 +204,20 @@ $( document ).ready(function() {
 	});
 		
 	//tutorial mode
-	$('#heap-tutorial-1 .tutorial-next').click(function() {
+	$('#sssp-tutorial-1 .tutorial-next').click(function() {
 		showActionsPanel();
 	});
-	$('#heap-tutorial-2 .tutorial-next').click(function() {
+	$('#sssp-tutorial-2 .tutorial-next').click(function() {
 		hideEntireActionsPanel();
 	});
-	$('#heap-tutorial-3 .tutorial-next').click(function() {
+	$('#sssp-tutorial-3 .tutorial-next').click(function() {
 		showStatusPanel();
 	});
-	$('#heap-tutorial-4 .tutorial-next').click(function() {
+	$('#sssp-tutorial-4 .tutorial-next').click(function() {
 		hideStatusPanel();
 		showCodetracePanel();
 	});
-	$('#heap-tutorial-5 .tutorial-next').click(function() {
+	$('#sssp-tutorial-5 .tutorial-next').click(function() {
 		hideCodetracePanel();
 	});
 });

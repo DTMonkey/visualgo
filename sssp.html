@@ -20,7 +20,6 @@
 <script src="js/sssp_actions.js"></script> <!--not yet implemented-->
 <!--script src="//connect.facebook.net/en_US/all.js"></script-->  <!--I turn off this as this is very slow-->
 <script src="js/d3/d3.v3.js"></script>
-<!-- heap scripts are below-->
 
 <!--fonts-->
 <link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
@@ -73,7 +72,8 @@
         <div id="bellmanford-go" class="execAction" onclick=bellmanford()><p>GO</p></div>
         <div id="bellmanford-err" class="err"></div>
         <div id="dijkstra-input"><input type="text" id="dijkstra-v" autocomplete="off" value=0 /></div>
-        <div id="dijkstra-go" class="execAction" onclick=dijkstra()><p>GO</p></div>
+        <div id="dijkstra-go1" class="execAction" onclick=dijkstra(1)><p>Original</p></div>
+        <div id="dijkstra-go2" class="execAction" onclick=dijkstra(2)><p>Modified</p></div>
         <div id="dijkstra-err" class="err"></div>
     </div>
     
@@ -119,23 +119,23 @@
 
 <!--tutorial dialogs here-->
 <div id="sssp-tutorial-1" class="tutorial-dialog">
-  This is obsolete.
+Welcome to the SSSP visualization.<br>We currently have several sample graphs of different types for you to play with (unweighted, weighted-normal, with negative weight, and with negative cycle).<br>In the future, we will restore the graph drawing capability from older visualization.
      <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-2" class="tutorial-dialog">
-  This is obsolete.
+We currently have three graph algorithms that can be visualized:<br>The O(V + E) BFS -- only for unweighted graph<br>The general purpose O(VE) Bellman Ford's, and<br>The O((V + E) log V) Dijkstra's algorithm -- only for graph without negative weight/negative weight cycle.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-3" class="tutorial-dialog">
-  This is obsolete.
+When the SSSP algorithm animation is running, the left side of the screen shows the input graph and the right side of the screen shows the SSSP spanning tree with the distance information.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-4" class="tutorial-dialog">
-  This is obsolete.
+The status bar explains the execution of the algorithm at each animation step.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-5" class="tutorial-dialog">
-  This is obsolete.
+The pseudocode highlight links the algorithm with the animation.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-6" class="tutorial-dialog">
@@ -207,11 +207,11 @@
     }, 500);
   }
   
-  function dijkstra() {
+  function dijkstra(versiontype) {
     if(isPlaying) { stop(); }
   	var sourceS = parseInt($('#dijkstra-v').val());
     setTimeout( function() {
-      if ((mode=="exploration")&&ssspWidget.dijkstra(sourceS)) {
+      if ((mode=="exploration")&&ssspWidget.dijkstra(sourceS,versiontype)) {
         closeDijkstras();
         $('#current-action').show();
         $('#current-action p').html("Dijkstra(" + sourceS + ")");

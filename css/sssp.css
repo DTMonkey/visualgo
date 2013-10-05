@@ -114,16 +114,28 @@
 		color: white;
 		padding: 8px;
 	}
-	#dijkstra-go {
+	#dijkstra-go1 {
 		position: fixed;
 		bottom: 60px;
-		left: 228px;
+		left: 232px;
 		width: 0px;
 		background: #777;
 		color: white;
 		overflow: hidden;
 	}
-		#dijkstra-go p {
+		#dijkstra-go1 p {
+			padding: 8px 8px 7px;
+		}
+	#dijkstra-go2 {
+		position: fixed;
+		bottom: 60px;
+		left: 308px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#dijkstra-go2 p {
 			padding: 8px 8px 7px;
 		}
 
@@ -154,74 +166,74 @@
 }
 
 /*all tutorial stuff here*/
-#heap-tutorial-1 {
+#sssp-tutorial-1 {
 	top: 60px;
 	left: 60px;
 	width: 250px;
 }
-#heap-tutorial-2 {
-	bottom: 230px;
+#sssp-tutorial-2 {
+	bottom: 200px;
 	left: 60px;
-	width: 220px;
+	width: 350px;
 }
-	#heap-tutorial-2:before {
+	#sssp-tutorial-2:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-3 {
-	top: 300px;
+#sssp-tutorial-3 {
+	top: 400px;
 	left: 50%;
-	width: 200px;
+	width: 230px;
 	margin-left: -110px;
 }
-	#heap-tutorial-3:before {
+	#sssp-tutorial-3:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-4 {
+#sssp-tutorial-4 {
 	bottom: 335px;
 	right: 150px;
-	width: 200px;
+	width: 230px;
 }
-	#heap-tutorial-4:before {
+	#sssp-tutorial-4:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-5 {
+#sssp-tutorial-5 {
 	bottom: 275px;
 	right: 170px;
-	width: 180px;
+	width: 200px;
 }
-	#heap-tutorial-5:before {
+	#sssp-tutorial-5:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-6 {
+#sssp-tutorial-6 {
 	bottom: 70px;
 	left: 50%;
-	width: 220px;
+	width: 280px;
 	margin-left: -120px;
 }
-	#heap-tutorial-6:before {
+	#sssp-tutorial-6:before {
 		top: 100%;
 		left: 50%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-7 {
+#sssp-tutorial-7 {
 	top: 70px;
 	right: 60px;
 	width: 150px;
 }
-	#heap-tutorial-7:before {
+	#sssp-tutorial-7:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;

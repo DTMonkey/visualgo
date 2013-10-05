@@ -59,12 +59,11 @@ var SSSP = function(){
       return false;
     }
 
-    for (var j = 0; j < amountEdge; j++) {
-	  if (internalEdgeList[j]["weight"] > 1) {
-		$('#bfs-err').html("At least one edge of this graph has weight > 1. We cannot run BFS to get the SSSP information of this graph.");
+    for (var j = 0; j < amountEdge; j++)
+      if (internalEdgeList[j]["weight"] > 1) {
+        $('#bfs-err').html("At least one edge of this graph has weight > 1. We cannot run BFS to get the SSSP information of this graph.");
         return false;
-	  }
-	}
+      }
 
     for (key in internalAdjList) {
       if (key == "cx" || key == "cy") continue;
@@ -74,7 +73,7 @@ var SSSP = function(){
     var d = {};
     var p = {};
     for (var i = 0; i < amountVertex; i++) {
-      d[i] = 1000000000;
+      d[i] = 1000;
       p[i] = -1;
     }
     d[sourceVertex] = 0;
@@ -94,31 +93,31 @@ var SSSP = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
-      for (key in internalEdgeList)
-        delete edgeTraversed[key];
+    for (key in internalEdgeList)
+      delete edgeTraversed[key];
 
     var q = [];
     q.push(sourceVertex);
-	var EdgeProcessed = 0;
-	
-	while (q.length > 0) {
+    var EdgeProcessed = 0;
+
+    while (q.length > 0) {
       vertexHighlighted[q[0]] = true;
-   	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-	  currentState["status"] = 'The queue is now {' + q + '}<br>Exploring neighbors of vertex u = ' + q[0];
-	  currentState["lineNo"] = 2;
-	  stateList.push(currentState);
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState["status"] = 'The queue is now {' + q + '}<br>Exploring neighbors of vertex u = ' + q[0];
+      currentState["lineNo"] = 2;
+      stateList.push(currentState);
 
       var u = q.shift(); // front most item
-	  
+    
       for (var j = 0; j < amountEdge; j++) {
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
 
-		if (u == vertexA) {
-		  vertexTraversed[vertexA] = true;
+        if (u == vertexA) {
+          vertexTraversed[vertexA] = true;
 
-		  edgeTraversed[j] = true;
+          edgeTraversed[j] = true;
           EdgeProcessed = EdgeProcessed + 1;
           var thisStatus = 'relax(' + vertexA + ',' + vertexB + ',' + weightAB + '), #edge processed = ' + EdgeProcessed;
           if (d[vertexA] + weightAB < d[vertexB]) {
@@ -126,12 +125,12 @@ var SSSP = function(){
             p[vertexB] = vertexA;
             internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
             thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + p[vertexB];
-			q.push(vertexB);
+            q.push(vertexB);
           }
-		  else
+          else
             thisStatus = thisStatus + '<br>No change';
 
-		  for (var k = amountEdge; k < 2 * amountEdge; k++)
+          for (var k = amountEdge; k < 2 * amountEdge; k++)
             internalEdgeList[k]["state"] = OBJ_HIDDEN;
           for (var k = 0; k < amountVertex; k++)
             if (p[k] != -1)
@@ -139,20 +138,20 @@ var SSSP = function(){
                 if (internalEdgeList[l]["vertexA"] == p[k] && internalEdgeList[l]["vertexB"] == k)
                   internalEdgeList[l + amountEdge]["state"] = EDGE_HIGHLIGHTED;
 
-      	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
           currentState["status"] = thisStatus;
           currentState["lineNo"] = [3,4];
           stateList.push(currentState);
-	    }
-	  }
-	}
+        }
+      }
+    }
  
     for (key in internalAdjList)
-	  delete vertexHighlighted[key];
+      delete vertexHighlighted[key];
     for (key in internalAdjList)
-	  delete vertexTraversed[key];
+      delete vertexTraversed[key];
     for (key in internalEdgeList)
-	  delete edgeHighlighted[key];
+      delete edgeHighlighted[key];
     edgeTraversed = {};
     currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
     currentState["status"] = 'BFS processes O(V + E) = ' + EdgeProcessed + ' edges.<br>The BFS/SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
@@ -176,7 +175,7 @@ var SSSP = function(){
     // error checks
     if (amountVertex == 0) { // no graph
       $('#bellmanford-err').html("There is no graph to run this on. Please select a sample graph first.");
-  		return false;
+      return false;
     }
 
     if (sourceVertex >= amountVertex) { // source vertex not in range
@@ -192,7 +191,7 @@ var SSSP = function(){
     var d = {};
     var p = {};
     for (var i = 0; i < amountVertex; i++) {
-      d[i] = 1000000000;
+      d[i] = 1000;
       p[i] = -1;
     }
     d[sourceVertex] = 0;
@@ -212,7 +211,7 @@ var SSSP = function(){
     stateList.push(currentState);
 
     delete vertexHighlighted[sourceVertex];
-	var EdgeProcessed = 0;
+    var EdgeProcessed = 0;
 
     for (var i = 1; i < amountVertex; i++) { // V-1 passes of Bellman Ford's
       for (key in internalEdgeList)
@@ -232,7 +231,7 @@ var SSSP = function(){
         for (var k = amountEdge; k < 2 * amountEdge; k++)
           delete edgeHighlighted[k];
 
-		EdgeProcessed = EdgeProcessed + 1;
+        EdgeProcessed = EdgeProcessed + 1;
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
@@ -244,7 +243,7 @@ var SSSP = function(){
         edgeHighlighted[j] = true;
 
         // if we can relax vertex B, do updates and some more highlights
-        if (d[vertexA] != 1000000000 && d[vertexA] + weightAB < d[vertexB]) {
+        if (d[vertexA] != 1000 && d[vertexA] + weightAB < d[vertexB]) {
           d[vertexB] = d[vertexA] + weightAB;
           p[vertexB] = vertexA;
           internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
@@ -253,7 +252,7 @@ var SSSP = function(){
           edgeHighlighted[j + amountEdge] = EDGE_HIGHLIGHTED;
         }
         else
-		  thisStatus = thisStatus + '<br>No change';
+          thisStatus = thisStatus + '<br>No change';
 
         for (var k = 0; k < amountVertex; k++)
           if (p[k] != -1)
@@ -283,7 +282,7 @@ var SSSP = function(){
     return true;
   }
 
-  this.dijkstra = function(sourceVertex) {
+  this.dijkstra = function(sourceVertex, versiontype) {
     var key;
     var i;
     var notVisited = {};
@@ -310,7 +309,7 @@ var SSSP = function(){
     var d = {};
     var p = {};
     for (var i = 0; i < amountVertex; i++) {
-      d[i] = 1000000000;
+      d[i] = 1000;
       p[i] = -1;
     }
     d[sourceVertex] = 0;
@@ -334,45 +333,93 @@ var SSSP = function(){
       delete edgeTraversed[key];
 
     var pq = [];
-    for (var i = 0; i < amountVertex; i++)
-      if (i == sourceVertex)
-        pq.push(new ObjectPair(0, i))
-      else
-        pq.push(new ObjectPair(1000000000, i));
+    var done = [];
 
-	var EdgeProcessed = 0;
-	
-	while (pq.length > 0) {
-      //vertexHighlighted[q[0]] = true;
-   	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-	  currentState["status"] = 'The priority queue is now {' + pq + '}<br>Exploring neighbors of vertex u = '; // + pq[0];
-	  currentState["lineNo"] = 2;
-	  stateList.push(currentState);
+    if (versiontype == 1) { // original
+      for (var i = 0; i < amountVertex; i++)
+        if (i == sourceVertex)
+          pq.push(new ObjectPair(0, i));
+        else
+          pq.push(new ObjectPair(1000, i));
+    }
+    else // modified
+      pq.push(new ObjectPair(0, sourceVertex)); // only push one
 
-      var u = pq.shift(); // front most item
-/*	  
+    var EdgeProcessed = 0;
+  
+    while (pq.length > 0) {
+      pq.sort(ObjectPair.compare); // sort by distance, then by vertex number, lousy O(n log n) PQ update
+      if (versiontype == 2 && EdgeProcessed > 50) { // to prevent infinite loop in Modified Dijkstra on negative cycle
+        currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+        currentState["status"] = 'Modified Dijkstra\'s algorithm is stopped prematurely<br>in order to prevent infinite loop';
+        stateList.push(currentState);
+        break;
+      }
+
+      vertexTraversed[pq[0].getSecond()] = true;
+      done.push(pq[0].getSecond());
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState["status"] = 'The priority queue is now {(';
+      // for debugging the entire PQ
+      //      for (var k = 0; k < pq.length; k++)
+      //        currentState["status"] += '(' + pq[k].getFirst() + ',' + pq[k].getSecond() + ') ';
+      currentState["status"] += pq[0].getFirst() + ',' + pq[0].getSecond() + ')';
+      if (pq.length > 1)
+        currentState["status"] += ', (' + pq[1].getFirst() + ',' + pq[1].getSecond() + ')';
+      if (pq.length > 2)
+        currentState["status"] += ', (' + pq[2].getFirst() + ',' + pq[2].getSecond() + ')';
+      if (pq.length > 3)
+        currentState["status"] += ', ...';
+      var frontitem = pq.shift(); // front most item
+      var dist = frontitem.getFirst(); // not used in original dijkstra
+      var u = frontitem.getSecond();
+      if (versiontype == 2 && dist > d[u]) {
+        currentState["status"] += '}<br>But this pair (' + dist + ',' + u + ') is an old information and skipped';
+        currentState["lineNo"] = [2,3];
+      }
+      else {
+        currentState["status"] += '}<br>Exploring neighbors of vertex u = ' + u;
+        currentState["lineNo"] = 2;
+      }
+      stateList.push(currentState);
+
       for (var j = 0; j < amountEdge; j++) {
         var vertexA = internalEdgeList[j]["vertexA"];
         var vertexB = internalEdgeList[j]["vertexB"];
         var weightAB = internalEdgeList[j]["weight"];
 
-		if (u == vertexA) {
-		  vertexTraversed[vertexA] = true;
-
-		  edgeTraversed[j] = true;
+        if (u == vertexA) {
+          vertexTraversed[vertexA] = true;
+          edgeTraversed[j] = true;
           EdgeProcessed = EdgeProcessed + 1;
           var thisStatus = 'relax(' + vertexA + ',' + vertexB + ',' + weightAB + '), #edge processed = ' + EdgeProcessed;
+
           if (d[vertexA] + weightAB < d[vertexB]) {
             d[vertexB] = d[vertexA] + weightAB;
+            if (versiontype == 1)
+              for (var k = 0; k < pq.length; k++) // lousy O(n) PQ update, but it works for this animation (only for version 1)
+                if (pq[k].getSecond() == vertexB) {
+                  pq.splice(k, 1);
+                  break;
+                }
             p[vertexB] = vertexA;
             internalAdjList[vertexB + amountVertex]["text"] = d[vertexB];
             thisStatus = thisStatus + '<br>We update d[' + vertexB + '] = ' + d[vertexB] + ' and p[' + vertexB + '] = ' + p[vertexB];
-			q.push(vertexB);
+
+            var canRelaxThis = true;
+            for (var k = 0; k < done.length; k++)
+              if (done[k] == vertexB) {
+                canRelaxThis = false;
+                break;
+              }
+
+            if (versiontype == 2 || canRelaxThis) // for standard dijkstra
+              pq.push(new ObjectPair(d[vertexB], vertexB));
           }
-		  else
+          else
             thisStatus = thisStatus + '<br>No change';
 
-		  for (var k = amountEdge; k < 2 * amountEdge; k++)
+          for (var k = amountEdge; k < 2 * amountEdge; k++)
             internalEdgeList[k]["state"] = OBJ_HIDDEN;
           for (var k = 0; k < amountVertex; k++)
             if (p[k] != -1)
@@ -380,37 +427,42 @@ var SSSP = function(){
                 if (internalEdgeList[l]["vertexA"] == p[k] && internalEdgeList[l]["vertexB"] == k)
                   internalEdgeList[l + amountEdge]["state"] = EDGE_HIGHLIGHTED;
 
-      	  currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+          currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
           currentState["status"] = thisStatus;
-          currentState["lineNo"] = [3,4];
+          if (versiontype == 1)    
+            currentState["lineNo"] = [3,4];
+          else
+            currentState["lineNo"] = [4,5];
           stateList.push(currentState);
-	    }
-	  }
- */
-	}
+        }
+      }
+    }
 
-    for (key in internalAdjList)
-	  delete vertexHighlighted[key];
-    for (key in internalAdjList)
-	  delete vertexTraversed[key];
-    for (key in internalEdgeList)
-	  delete edgeHighlighted[key];
-    edgeTraversed = {};
-    currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
-    currentState["status"] = 'Dijkstra\'s processes O(V + E) = ' + EdgeProcessed + ' edges.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
-    stateList.push(currentState);
+    if (versiontype == 1 || (versiontype == 2 && EdgeProcessed <= 50)) { // to prevent infinite loop in Modified Dijkstra on negative cycle
+      for (key in internalAdjList)
+        delete vertexHighlighted[key];
+      for (key in internalAdjList)
+        delete vertexTraversed[key];
+      for (key in internalEdgeList)
+        delete edgeHighlighted[key];
+      edgeTraversed = {};
+      currentState = createState(internalAdjList, internalEdgeList, vertexHighlighted, edgeHighlighted, vertexTraversed, edgeTraversed);
+      currentState["status"] = 'Dijkstra\'s processes O((V + E) * log V) = ' + EdgeProcessed + ' edges.<br>The SSSP spanning tree from source = ' + sourceVertex + ' is shown on the right side.';
+      stateList.push(currentState);
+    }
 
     console.log(stateList);
 
-    populatePseudocode(2);
+    if (versiontype == 1)    
+      populatePseudocode(2);
+    else
+      populatePseudocode(3);
+
     graphWidget.startAnimation(stateList);
     return true;
   }
 
   this.examples = function(ssspExampleConstant) {
-    // GRR, this function is buggy when changing sample graph (some edge weights are not displayed correctly)
-    // Ivan has to show an example using MST first...
-
     if (internalAdjList != null) {
       for (key in internalAdjList)
         delete internalAdjList[key];
@@ -753,205 +805,205 @@ var SSSP = function(){
               "vertexA": 13,
               "vertexB": 14,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           33:{
               "vertexA": 13,
               "vertexB": 17,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           34:{
               "vertexA": 14,
               "vertexB": 13,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           35:{
               "vertexA": 14,
               "vertexB": 15,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           36:{
               "vertexA": 14,
               "vertexB": 18,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           37:{
               "vertexA": 15,
               "vertexB": 14,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           38:{
               "vertexA": 15,
               "vertexB": 16,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           39:{
               "vertexA": 15,
               "vertexB": 19,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           40:{
               "vertexA": 16,
               "vertexB": 15,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           41:{
               "vertexA": 16,
               "vertexB": 20,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           42:{
               "vertexA": 17,
               "vertexB": 13,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           43:{
               "vertexA": 17,
               "vertexB": 21,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           44:{
               "vertexA": 18,
               "vertexB": 14,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           45:{
               "vertexA": 18,
               "vertexB": 19,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           46:{
               "vertexA": 18,
               "vertexB": 23,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           47:{
               "vertexA": 19,
               "vertexB": 15,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           48:{
               "vertexA": 19,
               "vertexB": 18,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           49:{
               "vertexA": 19,
               "vertexB": 24,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           50:{
               "vertexA": 20,
               "vertexB": 16,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           51:{
               "vertexA": 20,
               "vertexB": 25,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           52:{
               "vertexA": 21,
               "vertexB": 17,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           53:{
               "vertexA": 21,
               "vertexB": 22,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           54:{
               "vertexA": 22,
               "vertexB": 21,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           55:{
               "vertexA": 22,
               "vertexB": 23,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           56:{
               "vertexA": 23,
               "vertexB": 18,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           57:{
               "vertexA": 23,
               "vertexB": 22,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           58:{
               "vertexA": 23,
               "vertexB": 24,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           59:{
               "vertexA": 24,
               "vertexB": 19,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           60:{
               "vertexA": 24,
               "vertexB": 23,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           61:{
               "vertexA": 24,
               "vertexB": 25,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
 
           62:{
               "vertexA": 25,
               "vertexB": 20,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           },
           63:{
               "vertexA": 25,
               "vertexB": 24,
               "weight": 1,
-			  "state": OBJ_HIDDEN
+        "state": OBJ_HIDDEN
           }
 
         };
@@ -1381,26 +1433,26 @@ var SSSP = function(){
     if(vertexTraversed == null) vertexTraversed = {};
     if(edgeTraversed == null) edgeTraversed = {};
 
-  	var key;
-  	var state = {
+    var key;
+    var state = {
       "vl":{},
       "el":{}
     };
 
-  	for(key in internalAdjListObject){
-  		state["vl"][key] = {};
+    for(key in internalAdjListObject){
+      state["vl"][key] = {};
 
-  		state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
-  		state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
+      state["vl"][key]["cx"] = internalAdjListObject[key]["cx"];
+      state["vl"][key]["cy"] = internalAdjListObject[key]["cy"];
       state["vl"][key]["text"] = internalAdjListObject[key]["text"];
       if (internalAdjListObject[key]["state"] == OBJ_HIDDEN)
         state["vl"][key]["state"] = OBJ_HIDDEN;
-  		else
+      else
         state["vl"][key]["state"] = VERTEX_DEFAULT;
-  	}
+    }
 
-  	for(key in internalEdgeListObject){
-  		state["el"][key] = {};
+    for(key in internalEdgeListObject){
+      state["el"][key] = {};
 
       state["el"][key]["vertexA"] = internalEdgeListObject[key]["vertexA"];
       state["el"][key]["vertexB"] = internalEdgeListObject[key]["vertexB"];
@@ -1412,7 +1464,7 @@ var SSSP = function(){
         state["el"][key]["state"] = EDGE_DEFAULT;
       state["el"][key]["displayWeight"] = true;
       state["el"][key]["animateHighlighted"] = false;
-  	}
+    }
 
     for(key in vertexHighlighted){
       state["vl"][key]["state"] = VERTEX_HIGHLIGHTED;
@@ -1430,7 +1482,7 @@ var SSSP = function(){
       state["el"][key]["state"] = EDGE_TRAVERSED;
     }
 
-  	return state;
+    return state;
   }
   
   function populatePseudocode(act) {
@@ -1453,12 +1505,21 @@ var SSSP = function(){
         $('#code6').html('');
         $('#code7').html('');
         break;
-      case 2: // Dijkstra's
+      case 2: // Original Dijkstra's
         $('#code1').html('initSSSP');
         $('#code2').html('while the priority queue PQ is not empty');
         $('#code3').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
-        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v))');
+        $('#code4').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + update PQ');
         $('#code5').html('');
+        $('#code6').html('');
+        $('#code7').html('');
+        break;
+      case 3: // Modified Dijkstra's
+        $('#code1').html('initSSSP');
+        $('#code2').html('while the priority queue PQ is not empty');
+        $('#code3').html('&nbsp;&nbsp;if the front pair is invalid, skip');
+        $('#code4').html('&nbsp;&nbsp;for each neighbor v of u = PQ.front()');
+        $('#code5').html('&nbsp;&nbsp;&nbsp;&nbsp;relax(u, v, w(u, v)) + insert new pair to PQ');
         $('#code6').html('');
         $('#code7').html('');
         break;
