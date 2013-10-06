@@ -979,6 +979,9 @@ var SuffixTreeWidget = function() {
       processQueue.push(-1);
     }
     var prev = new Array();
+    var curState = createState(A);
+    curState["status"] = "Current result will be yellow colored.";
+    stateList.push(curState);
     for (var i in processQueue) {
       var currentState = createState(A);
       if (processQueue[i]==-1) {
@@ -1092,6 +1095,9 @@ var SuffixTreeWidget = function() {
 
     var stateList = new Array();
     var currentState = createState(A);
+    currentState["status"] = "Purple vertices belong to string 1. Green vertices belong to string 2. Current result will be yellow colored.";
+    stateList.push(currentState);
+    currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
@@ -1256,6 +1262,9 @@ var SuffixTreeWidget = function() {
 
     var stateList = new Array();
     var currentState = createState(A);
+    currentState["status"] = "Current max vertex will be yellow colored.";
+    stateList.push(currentState);
+    currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
