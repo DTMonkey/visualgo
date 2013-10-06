@@ -54,26 +54,28 @@
     <div id="actions" class="panel">
         <p id="sample" class="execAction" style="padding-top: 10px;">Sample Graphs</p>
         <p id="bfs" class="execAction">BFS</p>
-        <p id="bellmanford" class="execAction">Bellman Ford's</p>
-        <p id="dijkstra" class="execAction" style="padding-bottom: 10px;">Dijkstra's</p>
+        <p id="bellmanford" class="execAction">Bellman Ford's Algo</p>
+        <p id="dijkstra" class="execAction" style="padding-bottom: 10px;">Dijkstra's Algo</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-      	<div id="sample-err" class="err"></div>
-        <div id="sample1" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_3)><p>CP3 4.3 (unweighted)</p></div>
-        <div id="sample2" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17 (standard)</p></div>
-        <div id="sample3" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div>
-        <div id="sample4" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
-        <div id="bfs-input"><input type="text" id="bfs-v" autocomplete="off" value=0 /></div>
+      	<div id="samples-err" class="err" style="z-index: 2000;"></div>
+        <div id="samples-submenu">
+            <div id="sample1" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_3)><p>CP3 4.3 (unweighted)</p></div><!--
+            --><div id="sample2" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_17)><p>CP3 4.17</p></div><!--
+            --><div id="sample3" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_18)><p>CP3 4.18 (negative weight)</p></div><!--
+            --><div id="sample4" class="execAction" onclick=sample(SSSP_EXAMPLE_CP3_4_19)><p>CP3 4.19 (negative cycle)</p></div>
+        </div>        
+        <div id="bfs-input"><input type="text" id="bfs-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
         <div id="bfs-go" class="execAction" onclick=bfs()><p>GO</p></div>
         <div id="bfs-err" class="err"></div>
-        <div id="bellmanford-input"><input type="text" id="bellmanford-v" autocomplete="off" value=0 /></div>
+        <div id="bellmanford-input"><input type="text" id="bellmanford-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
         <div id="bellmanford-go" class="execAction" onclick=bellmanford()><p>GO</p></div>
         <div id="bellmanford-err" class="err"></div>
-        <div id="dijkstra-input"><input type="text" id="dijkstra-v" autocomplete="off" value=0 /></div>
-        <div id="dijkstra-go1" class="execAction" onclick=dijkstra(1)><p>Original</p></div>
-        <div id="dijkstra-go2" class="execAction" onclick=dijkstra(2)><p>Modified</p></div>
+        <div id="dijkstra-input"><input type="text" id="dijkstra-v" title="Enter the starting vertex" autocomplete="off" value=0 /></div>
+        <div id="dijkstra-go1" class="execAction" onclick=dijkstra(1) title="Use the original Dijkstra algorithm"><p>Original</p></div>
+        <div id="dijkstra-go2" class="execAction" onclick=dijkstra(2) title="Use the modified Dijkstra algorithm"><p>Modified</p></div>
         <div id="dijkstra-err" class="err"></div>
     </div>
     
@@ -119,23 +121,23 @@
 
 <!--tutorial dialogs here-->
 <div id="sssp-tutorial-1" class="tutorial-dialog">
-Welcome to the SSSP visualization.<br>We currently have several sample graphs of different types for you to play with (unweighted, weighted-normal, with negative weight, and with negative cycle).<br>In the future, we will restore the graph drawing capability from older visualization.
+	In the Single-Source Shortest Path (SSSP) problem, we aim to find the shortest paths from a particular start node to all other vertices in the graph (if they exist). <br/><br/>Different algorithms can be used depending on the nature of the graph, i.e. weighted/ unweighted, with/without negative weights/ cycles.
      <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-2" class="tutorial-dialog">
-We currently have three graph algorithms that can be visualized:<br>The O(V + E) BFS -- only for unweighted graph<br>The general purpose O(VE) Bellman Ford's, and<br>The O((V + E) log V) Dijkstra's algorithm -- only for graph without negative weight/negative weight cycle.
+	Choose a sample graph <!--or draw your own graph-->and try running the different SSSP algorithms on it:<br/><br/>The O(V + E) <strong>Breadth-first search</strong> (only for unweighted graphs),<br/>The general purpose O(VE) <strong>Bellman Ford's algorithm</strong>, or<br/>The O((V + E) log V) <strong>Dijkstra's algorithm</strong> (only for graphs without negative weights/negative weight cycles)
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-3" class="tutorial-dialog">
-When the SSSP algorithm animation is running, the left side of the screen shows the input graph and the right side of the screen shows the SSSP spanning tree with the distance information.
+	When the SSSP algorithm animation is running, the input graph will be shown on the left, and the SSSP spanning tree will be shown on the right with the corresponding distance information.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-4" class="tutorial-dialog">
-The status bar explains the execution of the algorithm at each animation step.
+	The status bar explains the execution of the algorithm at each animation step.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-5" class="tutorial-dialog">
-The pseudocode highlight links the algorithm with the animation.
+	You can also follow the psuedocode highlights to trace the algorithm.
     <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
 </div>
 <div id="sssp-tutorial-6" class="tutorial-dialog">

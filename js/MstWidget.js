@@ -86,13 +86,15 @@ var MST = function(){
 
     function sortedArrayToString() {
       var ansStr = "";
-      for(var i=0; i<sortedArray.length; i++) {
+	  var maxLength = Math.min(sortedArray.length, 6);
+      for(var i=0; i<maxLength; i++) {
         var thisTriple = sortedArray[i];
         ansStr += "("+thisTriple.getFirst()+","+thisTriple.getSecond()+")";
-        if(i < (sortedArray.length-1)) {
+        if(i < (maxLength-1)) {
           ansStr += ", ";
         }
       }
+	  if(sortedArray.length > 6) {ansStr += "..";}
 	  if(ansStr == "") {ansStr = "empty";}
       return ansStr;
     }
@@ -245,13 +247,17 @@ var MST = function(){
 
     function sortedArrayToString() {
       var ansStr = "";
-      for(var i=0; i<sortedArray.length; i++) {
+	  var maxLength = Math.min(sortedArray.length, 10);
+      for(var i=0; i<maxLength; i++) {
         var thisEdgeId = sortedArray[i].getSecond();
         ansStr += "("+internalEdgeList[thisEdgeId]["weight"]+",("+internalEdgeList[thisEdgeId]["vertexA"]+","+internalEdgeList[thisEdgeId]["vertexB"]+"))";
-        if(i < (sortedArray.length-1)) {
+        if(i < (maxLength-1)) {
           ansStr += ", ";
         }
       }
+	  if(sortedArray.length > 10) {
+		  ansStr += " ...";
+	  }
       return ansStr;
     }
     

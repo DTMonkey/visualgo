@@ -8,62 +8,18 @@ var isDijkstrasOpen = false;
 
 function openSamples() {
 	if(!isSamplesOpen) {
-		$('#sample1').animate({
-			width: "+="+150
-		}, 100);
-		$('#sample2').animate({
-			width: "+="+150
-		}, 100);
-		$('#sample3').animate({
-			width: "+="+150
-		}, 100);
-		$('#sample4').animate({
-			width: "+="+150
-		}, 100);
-/*
-		, function() {
-			$('#sample2').animate({
-				width: "+="+150
-			}, 100, function() {
-				$('#sample3').animate({
-					width: "+="+150
-				}, 100,	function() {
-					$('#sample4').animate({
-						width: "+="+150
-					}, 100);
-				});
-			});
-		});*/
+		$('#samples-submenu').animate({
+			width: "+="+550
+		}, 350);
 	}
 	isSamplesOpen = true;
 }
 function closeSamples() {
 	if(true) {
-		$('#sample-err').html("");
-		$('#sample1').animate({
-			width: "-="+150
-		}, 100); //, function() {
-		$('#sample2').animate({
-			width: "-="+150
-		}, 100);
-		$('#sample3').animate({
-			width: "-="+150
-		}, 100);
-		$('#sample4').animate({
-			width: "-="+150
-		}, 100);
-/*			$('#sample2').animate({
-				width: "-="+150
-			}, 100, function() {
-				$('#sample3').animate({
-					width: "-="+150
-				}, 100, function() {
-					$('#sample4').animate({
-						width: "-="+150
-					}, 100);
-				});
-			});
-		});*/
+		$('#samples-err').html("");
+		$('#samples-submenu').animate({
+			width: "-="+550
+		}, 350);
 		isSamplesOpen = false;
 	}
 }
@@ -93,7 +49,6 @@ function closeBFS() {
 		isBFSOpen = false;
 	}
 }
-
 function openBellmanFords() {
 	if(!isBellmanFordsOpen) {
 		$('#bellmanford-input').animate({
@@ -125,11 +80,13 @@ function openDijkstras() {
 			width: "+="+32
 		}, 100, function() {
 			$('#dijkstra-go1').animate({
-				width: "+="+70
-			},100);
-			$('#dijkstra-go2').animate({
-				width: "+="+70
-			},100);
+				width: "+="+61
+			},100, function(){
+				$('#dijkstra-go2').css('border-left', '1px solid black');
+				$('#dijkstra-go2').animate({
+					width: "+="+64
+				},100);
+			});
 		});
 	}
 	isDijkstrasOpen = true;
@@ -137,26 +94,28 @@ function openDijkstras() {
 function closeDijkstras() {
 	if(true) {
 		$('#dijkstra-err').html("");
-		$('#dijkstra-go1').animate({
-			width: "-="+70
-		}, 100);
 		$('#dijkstra-go2').animate({
-			width: "-="+70
+			width: "-="+64
 		}, 100, function() {
-			$('#dijkstra-input').animate({
-				width: "-="+32
-			}, 100);
+			$('#dijkstra-go2').css('border-left', 'none');
+			$('#dijkstra-go1').animate({
+				width: "-="+61
+			}, 100, function() {
+				$('#dijkstra-input').animate({
+					width: "-="+32
+				}, 100);
+			});
 		});
 		isDijkstrasOpen = false;
 	}
 }
 
 function hideEntireActionsPanel() {
-	hideActionsPanel();
 	closeSamples();
 	closeBFS();
 	closeBellmanFords();
 	closeDijkstras();
+	hideActionsPanel();
 }
 
 $( document ).ready(function() {
@@ -165,9 +124,6 @@ $( document ).ready(function() {
 		closeBFS();
 		closeBellmanFords();
 		closeDijkstras();
-		$('#sample1-err').html("");
-		$('#bellmanford-err').html("");
-		$('#dijkstra-err').html("");
 	});
 	
 	$('#bfs').click(function() {
@@ -175,10 +131,6 @@ $( document ).ready(function() {
 		openBFS();
 		closeBellmanFords();
 		closeDijkstras();
-		$('#sample1-err').html("");
-		$('#bfs-err').html("");
-		$('#bellmanford-err').html("");
-		$('#dijkstra-err').html("");
 	});
 
 	$('#bellmanford').click(function() {
@@ -186,10 +138,6 @@ $( document ).ready(function() {
 		closeBFS();
 		openBellmanFords();
 		closeDijkstras();
-		$('#sample1-err').html("");
-		$('#bfs-err').html("");
-		$('#bellmanford-err').html("");
-		$('#dijkstra-err').html("");
 	});
 	
 	$('#dijkstra').click(function() {
@@ -197,11 +145,14 @@ $( document ).ready(function() {
 		closeBFS();
 		closeBellmanFords();
 		openDijkstras();
-		$('#sample1-err').html("");
-		$('#bfs-err').html("");
-		$('#bellmanford-err').html("");
-		$('#dijkstra-err').html("");
 	});
+	
+	//overwrite some viz.js stuff here
+  	$('#samples-submenu').css('background-color','#eee');
+	$('#samples-submenu').children().css('background-color', colourTheSecond);
+	if(colourTheSecond == '#fec515' || colourTheSecond == '#a7d41e') {
+		$('#samples-submenu').children().css('color', 'black');
+	}
 		
 	//tutorial mode
 	$('#sssp-tutorial-1 .tutorial-next').click(function() {
