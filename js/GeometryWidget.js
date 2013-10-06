@@ -560,6 +560,84 @@ var Geometry = function() {
     return true;
   }
 
+  function cross(px, py, qx, qy, rx, ry) {
+    return (rx - qx)*(py - qy) - (ry - qy)*(px - qx);
+  }
+
+  function ccw(x1, y1, x2, y2, x3, y3) {
+    return cross(x1, y1, x2, y2, x3, y3) > 0;
+  }
+
+  this.isConvex = function() {
+    var sz = Object.size(coord);
+    var stateList = new Array();
+    var currentState = createState(A);
+    if (sz < 3) {
+      currentState["status"] = "Point or line are not convex";
+      stateList.push(currentState);
+      graphWidget.startAnimation(stateList);
+      return true;
+    }
+    currentState["status"] = "Start";
+    stateList.push(currentState);
+    currentState = createState(A);    
+
+    var isLeft = ccw(coord[0][0], coord[0][1], coord[1][0], coord[1][1], coord[2][0], coord[2][1]);
+    currentState["status"] = "First 3 points ccw = " + isLeft;
+    var v0 = isUsed(coord[0][0], coord[0][1]);
+    var v1 = isUsed(coord[1][0], coord[1][1]);
+    var v2 = isUsed(coord[2][0], coord[2][1]);
+    currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["vl"][v2]["state"] = VERTEX_HIGHLIGHTED;
+    var e = getEdgeConnectTwoVertex(v0, v1);
+    currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
+    var e1 = getEdgeConnectTwoVertex(v1, v2);
+    currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+    stateList.push(currentState);
+    //currentState = createState(A);
+    for (var i=1; i < sz; i++) {
+      currentState = createState(A);
+      v0 = isUsed(coord[i][0], coord[i][1]);
+      var k = (i == Object.size(coord) -1) ? 0 : i+1;
+      v1 = isUsed(coord[k][0], coord[k][1]);
+      var l;
+      if (i == Object.size(coord) - 2) l = 0;
+      else if (i == Object.size(coord) - 1) l = 1;
+      else l = i + 2;
+      v2 = isUsed(coord[l][0], coord[l][1]);
+      e = getEdgeConnectTwoVertex(v0, v1);
+      currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
+      e1 = getEdgeConnectTwoVertex(v1, v2);
+      currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+      currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v2]["state"] = VERTEX_HIGHLIGHTED;
+      var tmp = ccw(coord[i][0], coord[i][1], coord[k][0], coord[k][1], coord[l][0], coord[l][1]);
+      var status = "These 3 points ccw = " + tmp + ". ";
+
+      if (tmp == isLeft) {
+        status += "The same as first ccw. Continue."
+      } else {
+        status += "Different from first ccw. Stop."
+        currentState["status"] = status;
+        stateList.push(currentState);
+        currentState = createState(A);
+        currentState["status"] = "Polygon is not convex.";
+        stateList.push(currentState);
+        graphWidget.startAnimation(stateList);
+        return true;
+      }
+      currentState["status"] = status;
+      stateList.push(currentState);
+    }
+    currentState = createState(A);
+    currentState["status"] = "Polygon is convex.";
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
+
   function getCircleLineIntersectionPoint(x1, y1, x2, y2, r, cx, cy) {
     var baX = x2 - x1; //pointB.x - pointA.x;
     var baY = y2 - y1; //pointB.y - pointA.y;
@@ -1321,7 +1399,7 @@ var Geometry = function() {
 
   this.clrscr = function() {
     clearScreen();
-    createAdjMatrix();
+    //createAdjMatrix();
   }
   
   function clearScreen() {
@@ -1336,6 +1414,10 @@ var Geometry = function() {
     for (i = 1; i < amountVertex; i++){
       graphWidget.removeVertex(A[i].getSecond());
     }
+
+    try {
+      graphWidget.removeVertex(0);
+    } catch (err) {}
 
     mainSvg.selectAll(".edgelabel").remove();
     mainSvg.selectAll("text").remove();

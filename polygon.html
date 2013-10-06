@@ -61,7 +61,7 @@
     <div id="actions" class="panel">
         <p id="tree_graph" class="execAction" onclick=clearScreen()>Clear</p>
 		<p id="tree_graph" class="execAction" onclick=perimeter()>Perimeter</p>
-		<p id="tree_graph" class="execAction" onclick=showStar()>Star</p>
+		<p id="tree_graph" class="execAction" onclick=isConvex()>isConvex</p>
 		<p id="tree_graph" class="execAction" onclick=showCP45()>CP4.5</p>	
 		<p id="tree_graph" class="execAction" onclick=showCP48()>CP4.8</p>	
 		<p id="tree_graph" class="execAction" onclick=showCP22()>CP2.2</p>	
@@ -203,6 +203,22 @@
                 isPlaying = true;
             }
         }, 500);
+    }
+
+    function isConvex() {
+        if(isPlaying) { stop(); }
+        isPlaying = true;
+        
+        setTimeout( function() {
+            if ((mode=="exploration")&&GeometryWidget.isConvex()) {
+                $('#current-action').show();
+                $('#current-action p').html("CHeck convex");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);   
     }
 
     var isPaused = false;
