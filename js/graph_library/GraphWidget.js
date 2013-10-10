@@ -52,27 +52,30 @@ var GraphWidget = function(){
 
   // Default for weight is 1 and for type is EDGE_TYPE_UDE
   this.addEdge = function(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show, showWeight){
-    if(show != false) show = true;
-    if(showWeight != true) showWeight = false;
-    if(type == null || isNaN(type)) type = EDGE_TYPE_UDE;
-    if(weight == null || isNaN(weight)) weight = 1;
+    try {
+      if(show != false) show = true;
+      if(showWeight != true) showWeight = false;
+      if(type == null || isNaN(type)) type = EDGE_TYPE_UDE;
+      if(weight == null || isNaN(weight)) weight = 1;
 
-    var vertexA = vertexList[vertexClassA];
-    var vertexB = vertexList[vertexClassB];
+      var vertexA = vertexList[vertexClassA];
+      var vertexB = vertexList[vertexClassB];
 
-    var newEdge = new GraphEdgeWidget(vertexA, vertexB, edgeIdNumber, type, weight);
+      var newEdge = new GraphEdgeWidget(vertexA, vertexB, edgeIdNumber, type, weight);
 
-    edgeList[edgeIdNumber] = newEdge;
-    edgeUpdateList[edgeIdNumber] = false;
+      edgeList[edgeIdNumber] = newEdge;
+      edgeUpdateList[edgeIdNumber] = false;
 
-    vertexList[vertexClassA].addEdge(newEdge);
-    vertexList[vertexClassB].addEdge(newEdge);
+      vertexList[vertexClassA].addEdge(newEdge);
+      vertexList[vertexClassB].addEdge(newEdge);
 
-    if(show == true){
-      edgeList[edgeIdNumber].showEdge();
-      if(showWeight == true) edgeList[edgeIdNumber].showWeight();
-      edgeList[edgeIdNumber].redraw();
+      if(show == true){
+        edgeList[edgeIdNumber].showEdge();
+        if(showWeight == true) edgeList[edgeIdNumber].showWeight();
+        edgeList[edgeIdNumber].redraw();
+      }
     }
+    catch(err) {}
   }
 
   this.removeEdge = function(edgeIdNumber){
@@ -351,45 +354,46 @@ var GraphWidget = function(){
       }
     }
 
-    for(key in currentEdgeState){
-      if(edgeList[key] == null || edgeList[key] == undefined){
-        self.addEdge(currentEdgeState[key]["vertexA"],currentEdgeState[key]["vertexB"],key,currentEdgeState[key]["type"],currentEdgeState[key]["weight"],false);
-      }
+    try {
+      for(key in currentEdgeState){
+        if(edgeList[key] == null || edgeList[key] == undefined){
+          self.addEdge(currentEdgeState[key]["vertexA"],currentEdgeState[key]["vertexB"],key,currentEdgeState[key]["type"],currentEdgeState[key]["weight"],false);
+        }
 
-      var currentEdge = edgeList[key];
+        var currentEdge = edgeList[key];
 
-      currentEdge.showEdge();
+        currentEdge.showEdge();
 
-      if(currentEdgeState[key]["state"] == OBJ_HIDDEN) currentEdge.hideEdge();
-      else currentEdge.stateEdge(currentEdgeState[key]["state"]);
+        if(currentEdgeState[key]["state"] == OBJ_HIDDEN) currentEdge.hideEdge();
+        else currentEdge.stateEdge(currentEdgeState[key]["state"]);
 
-      currentEdge.hideWeight();
-      if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
-        currentEdge.showWeight();
-      }
+        currentEdge.hideWeight();
+        if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
+          currentEdge.showWeight();
+        }
 
-      currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
-      currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
-      currentEdge.changeType(currentEdgeState[key]["type"]);
-      currentEdge.changeWeight(currentEdgeState[key]["weight"]);
+        currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
+        currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
+        currentEdge.changeType(currentEdgeState[key]["type"]);
+        currentEdge.changeWeight(currentEdgeState[key]["weight"]);
 
-      currentEdge.refreshPath();
-      if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
-      else{
-        currentEdge.animateHighlighted(duration*0.9);
-      }
+        currentEdge.refreshPath();
+        if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
+        else{
+          currentEdge.animateHighlighted(duration*0.9);
+        }
 
-      edgeUpdateList[key] = true;
-    }
-
-    for(key in edgeUpdateList){
-      if(edgeUpdateList[key] == false){
-        edgeList[key].hideEdge();
-        edgeList[key].redraw(duration);
         edgeUpdateList[key] = true;
       }
-    }
 
+      for(key in edgeUpdateList){
+        if(edgeUpdateList[key] == false){
+          edgeList[key].hideEdge();
+          edgeList[key].redraw(duration);
+          edgeUpdateList[key] = true;
+        }
+      }
+    } catch(err) {}
     for(key in vertexUpdateList){
       vertexUpdateList[key] = false;
     }

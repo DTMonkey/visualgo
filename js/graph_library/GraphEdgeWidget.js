@@ -338,27 +338,33 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
   }
 
   function cxA(){
-    return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cx"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cx"]);
   }
 
   function cyA(){
-    return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cy"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cy"]);
   }
 
   function rA(){
-    return parseFloat(graphVertexA.getAttributes()["outerCircle"]["r"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["r"]);
   }
 
   function cxB(){
-    return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cx"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cx"]);
   }
 
   function cyB(){
-    return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cy"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cy"]);
   }
 
   function rB(){
-    return parseFloat(graphVertexB.getAttributes()["outerCircle"]["r"]);
+    if (graphVertexA)
+      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["r"]);
   }
 
   function calculatePath(){

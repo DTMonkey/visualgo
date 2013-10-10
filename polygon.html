@@ -9,13 +9,13 @@
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/viz.css">
 
-<link rel="stylesheet" href="css/heap.css">
+<link rel="stylesheet" href="css/geometry.css">
 
 <!--js-->
 <!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
 <script src="js/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<script src="js/suffix_tree_actions.js"></script>
+<script src="js/geometry_actions.js"></script>
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
 <script src="http://connect.facebook.net/en_US/all.js"></script>
@@ -34,7 +34,7 @@
 <div id="top-bar">
 	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-    	<a class="selected-viz">Graphs</a>
+    	<a class="selected-viz">Geometry</a>
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
@@ -49,25 +49,25 @@
     </div>
 </div>
 
-<div id="main">
-    
-    <div id="viz">
-
-
-    </div>
+   
+    <div id="viz"></div>
 
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-        <p id="tree_graph" class="execAction" onclick=clearScreen()>Clear</p>
-		<p id="tree_graph" class="execAction" onclick=perimeter()>Perimeter</p>
-		<p id="tree_graph" class="execAction" onclick=isConvex()>isConvex</p>		
+        <p id="clear" class="execAction" onclick=clearScreen()>Clear</p>
+		<p id="perimeter" class="execAction" onclick=perimeter()>Perimeter</p>
+		<p id="is_convex" class="execAction" onclick=isConvex()>isConvex</p>		
+        <p id="graham">Graham Scan</p>
 	</div>
-    <div id="actions-hide" class="panel-hide"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
-    
+        <div id="graham-go" class="execAction" onclick=goGrahamScan()><p>GO</p></div>
+        
+    </div>
     <div id="status" class="panel"><p></p></div>
-    <div id="status-hide" class="panel-hide"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide status panel"/></div>
+    <div id="status-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide status panel"/></div>
     
     <div id="codetrace" class="panel">
     	<!--can add class "highlighed" to hightlight one line-->
@@ -79,9 +79,8 @@
 		<p id="code6"></p>
 		<p id="code7" style="padding-bottom: 10px;"></p>
     </div>
-    <div id="codetrace-hide" class="panel-hide"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide codetrace panel"/></div>
+    <div id="codetrace-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide codetrace panel"/></div>
     
-</div>
 
 <div id="left-bar"></div>
 <div id="right-bar"></div>
@@ -104,58 +103,11 @@
 </div>
 
 <div id="dark-overlay"></div>
+<div id="about" class="overlays"></div>
+<div id="team" class="overlays"></div>
+<div id="termsofuse" class="overlays"></div>
 
-<div id="help" class="overlays">
-	<h4>Help</h4>
-    <img class="close-overlay" src="http://rosemarietan.com/fyp/img/cross_white.png" />
-    <div class="content">
-        <p>The <strong style="color: #ed5a7d;">ACTIONS</strong> panel on the bottom left displays all available operations on this data structure. Experiment with them!</p>
-        <p>The <strong style="color: #2ebbd1;">STATUS</strong> panel on the right displays the status of the current operation. The <strong style="color: #52bc69;">CODETRACE</strong> panel below it displays the pseudocode for the current operation, and uses code highlighting to show you which step is being carried out.</p>
-        <p>During each action, you can use the playback controls at the bottom of the screen to control the animation. Note that you have to click 'stop' first before you can issue another action.</p>
-    </div>
-</div>
 
-<div id="about" class="overlays">
-	<h4>About the project</h4>
-    <img class="close-overlay" src="http://rosemarietan.com/fyp/img/cross_white.png" />
-    <div class="content">
-        <p><strong><span style="line-height: 200%;">Motivation</span></strong><br/>
-        	WeNeedAName was conceptualised in 2011 by Dr Steven Halim as a tool to help his students better understand data structures and algorithms, by allowing them to learn the basics on their own and at their own pace. Together with two of his students from the National University of Singapore, a series of visualisations were developed and consolidated, from simple sorting algorithms to complex graph data structures.</p>
-        <p>Though specifically designed for the use of NUS students taking various data structure and algorithm classes (CS1020, CS2010, CS2020, and CS3233), as advocators of online learning, we hope that curious minds around the world will find these visualisations useful as well.</p>
-        <p><strong><span style="line-height: 200%;">Ongoing developments</span></strong><br/>
-        	WeNeedAName is an ongoing project (as is evident from its name!), and more complex visualisations are still being developed. Originally developed using HTML5 Canvas, we are currently redesigning the site to harness the power of Scalable Vector Graphics (SVG) instead. An automated testing system is also in the works.</p>
-        <p><strong><span style="line-height: 200%;">Publications</span></strong><br/>
-        	This work has been presented briefly at the CLI Workshop at the ACM ICPC World Finals 2012 (Poland, Warsaw) and at the <a href="http://www.mii.lt/olympiads_in_informatics/htm/INFOL099.htm" target="_blank">IOI Conference at IOI 2012</a> (Sirmione-Montichiari, Italy).</p>
-    </div>
-</div>
-
-<div id="team" class="overlays">
-	<h4>The team</h4>
-    <img class="close-overlay" src="http://rosemarietan.com/fyp/img/cross_white.png" />
-    <div class="content">
-        <p><strong><span style="line-height: 200%;">Project leader</span></strong><br/><a href="http://www.comp.nus.edu.sg/~stevenha/" target="_blank">Dr Steven Halim</a>, Lecturer, SoC, NUS</p>
-        <p><strong><span style="line-height: 200%;">Initial Programmers</span></strong><br/>
-        	<a href="http://zichun.i-xo.net/" target="_blank">Koh Zi Chun</a><br/>
-            <a href="http://roticv.rantx.com/" target="_blank">Victor Loh Bo Huai</a></p>
-        <p><strong><span style="line-height: 200%;">Past Final Year Project students</span></strong><br/>
-            Phan Thi Quynh Trang<br/>
-            Peter Phandi<br/>
-            Albert Millardo Tjindradinata<br/>
-            Nguyen Hoang Duy<br/>
-        <p><strong><span style="line-height: 200%;">Present Final Year Project students</span></strong><br/>
-            <a href="http://www.rosemarietan.com/" target="_blank">Rose Marie Tan Zhao Yun</a><br/>
-            Ivan Reinaldo</p>
-        <p><strong><span style="line-height: 200%;">Advisor</span></strong><br/><a href="http://felix-halim.net/" target="_blank">Felix Halim</a></p>
-    </div>
-</div>
-
-<div id="termsofuse" class="overlays">
-	<h4>Terms of use</h4>
-    <img class="close-overlay" src="http://rosemarietan.com/fyp/img/cross_white.png" />
-    <div class="content">
-        <p>If you are a data structure and algorithm teacher, you are allowed to use this website for your classes. You can take screen shots from this website and use the screen shots elsewhere as long as you cite this website as a reference.</p><!--I think we need a better copyright/terms of use statement-->
-    </div>
-</div>
 
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
@@ -170,14 +122,16 @@
 	//start by showing actions panel
 	//enableActionsOnly();
 	$('#play').hide();
-	$("#fb-login").css("display", "block");
 
 	var GeometryWidget = new Geometry();
 	var gw = GeometryWidget.getGraphWidget();
 		
 	//showTree();
 
-	
+	$('#graham').click(function() {
+        GeometryWidget.initGrahamScan();
+        openGrahamScan();
+    });
 	
     function clearScreen() {
         GeometryWidget.clrscr();
@@ -214,6 +168,24 @@
             }
         }, 500);   
     }
+
+    function goGrahamScan() {
+        if(isPlaying) { stop(); }
+        isPlaying = true;
+        
+        setTimeout( function() {
+            if ((mode=="exploration")&&GeometryWidget.grahamScan()) {
+                $('#current-action').show();
+                $('#current-action p').html("Graham scan");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeGrahamScan();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);      
+    }
+
+
 
     var isPaused = false;
     function isAtEnd() {

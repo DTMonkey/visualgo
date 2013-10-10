@@ -39,6 +39,8 @@ var Geometry = function() {
    var adjMatrix = [], adjList = [];
    var aborted_mousedown = false;
    var move1 = true;
+   var screenHeight = window.innerHeight - 100;
+   var screenWidth = window.innerWidth - 80;
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -53,6 +55,8 @@ var Geometry = function() {
    .attr('fill', '#000');
    mainSvg.style("cursor", "crosshair");
 
+  mainSvg.attr("height", screenHeight);
+  mainSvg.attr("width", screenWidth);
   function resetEverything() {
     coord = new Array();
     A = new Array();
@@ -353,7 +357,7 @@ var Geometry = function() {
                   }
                 }
                 if (islast) deleted_vertex_list.push(current_id_num1);
-                createAdjMatrix();    
+                //createAdjMatrix();    
                 return;
               } else {
                 if (mousedown_node != null) {
@@ -500,18 +504,21 @@ var Geometry = function() {
       state["vl"][key]["state"] = VERTEX_DEFAULT;
     }
 
-    for (var i = 1; i <= internalHeapObject.length; i++){
-      var edgeId = i;
+    try {
+      for (var i = 1; i <= internalHeapObject.length; i++){
+        var edgeId = i;
 
-      state["el"][edgeId] = {};
+        state["el"][edgeId] = {};
 
-      state["el"][edgeId]["vertexA"] = edgeList["#e" + i.toString()][0]; //internalHeapObject[parent(i)].getSecond();
-      state["el"][edgeId]["vertexB"] = edgeList["#e" + i.toString()][1];//internalHeapObject[i].getSecond();
-      state["el"][edgeId]["type"] = EDGE_TYPE_UDE;
-      state["el"][edgeId]["weight"] = 1;
-      state["el"][edgeId]["state"] = EDGE_DEFAULT;
-      state["el"][edgeId]["animateHighlighted"] = false;
+        state["el"][edgeId]["vertexA"] = edgeList["#e" + i.toString()][0]; //internalHeapObject[parent(i)].getSecond();
+        state["el"][edgeId]["vertexB"] = edgeList["#e" + i.toString()][1];//internalHeapObject[i].getSecond();
+        state["el"][edgeId]["type"] = EDGE_TYPE_UDE;
+        state["el"][edgeId]["weight"] = 1;
+        state["el"][edgeId]["state"] = EDGE_DEFAULT;
+        state["el"][edgeId]["animateHighlighted"] = false;
+      }
     }
+    catch (err) {}
 
     return state;
   }
@@ -523,6 +530,7 @@ var Geometry = function() {
       if ((e[0] == v0 && e[1] == v1) || (e[0] == v1 && e[1] == v0))
         return i;
     }   
+    return null;
   }
 
   this.findPerimeter = function() {
@@ -565,7 +573,7 @@ var Geometry = function() {
   }
 
   function ccw(x1, y1, x2, y2, x3, y3) {
-    return cross(x1, y1, x2, y2, x3, y3) > 0;
+    return cross(x1, y1, x2, y2, x3, y3) < 0;
   }
 
   this.isConvex = function() {
@@ -846,7 +854,7 @@ var Geometry = function() {
                   }
                 }
                 if (islast) deleted_vertex_list.push(current_id_num1);     
-                createAdjMatrix();    
+                //createAdjMatrix();    
                 return;
               }      
             });
@@ -908,494 +916,12 @@ var Geometry = function() {
                         mainSvg.select("#w_e" + i.toString()).remove();
                       }
                     }              
-                    createAdjMatrix();  
+                    
                     return;
                   }      
                 });
     }
 
-  this.showTree = function(){
-    clearScreen();
-    var i;
-
-    var initValue = [99999,0,1,2,3,4,5,6,7,8,9]; // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < 11; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-    // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<=10; i++) coord[i] = new Array();
-    coord[1][0] = 300; coord[1][1] = 20;
-    coord[2][0] = 100; coord[2][1] = 60;
-    coord[3][0] = 0 ; coord[3][1] = 100;
-    coord[4][0] = 100; coord[4][1] = 100;
-    coord[5][0] = 60; coord[5][1] = 150;
-    coord[6][0] = 140; coord[6][1] = 150;
-    coord[7][0] = 200; coord[7][1] = 100;
-    coord[8][0] = 500; coord[8][1] = 60;
-    coord[9][0] = 400; coord[9][1] = 100;
-    coord[10][0] = 600; coord[10][1] = 100;
-    // add vertices first
-    for (i=1; i<11;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length; i++)
-    {
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);       
-    }
-
-    var edgeId = 0;
-    //addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(1, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    } else {
-      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(1, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 7, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(8, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
-    }
-
-    amountEdge = edgeId;
-    addExtraEdge();
-   
-  }
-  
-  
-  this.showStar = function() {
-  	clearScreen();
-  	var i;
-
-    var initValue = [999999,0,1,2,3,4] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < 6; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-      // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<=5; i++) coord[i] = new Array();
-    coord[1][0] = 180; coord[1][1] = 80;
-    coord[2][0] = 420; coord[2][1] = 80;
-    coord[3][0] = 230 ; coord[3][1] = 200;
-    coord[4][0] = 300; coord[4][1] = 20;
-    coord[5][0] = 370; coord[5][1] = 200;
-    // add vertices first
-    for (i=1; i<6;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length  ; i++)
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-    var edgeId = 0;
-    if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(1, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(3, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);         
-    } else {
-      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(1, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(3, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    }
-    amountEdge = edgeId;
-    addExtraEdge();
-    if (document.getElementById("weighted_checkbox").checked)
-      for (i=1; i < Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        var w = dist2P(
-          coord[edgeList[edgeId][0]][0], 
-          coord[edgeList[edgeId][0]][1],
-          coord[edgeList[edgeId][1]][0],
-          coord[edgeList[edgeId][1]][1])
-        if (w > 100) w-=100*(parseInt(w/100));
-        if (w == 0) w = 12;
-        addWeightText(edgeId, parseInt(w));
-      }
-    createAdjMatrix();
-  }
-
-  this.showK5 = function() {
-    clearScreen();
-    var i;
-
-    var initValue = [999999,0,1,2,3,4] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < 6; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-    // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<=5; i++) coord[i] = new Array();
-      coord[1][0] = 180; coord[1][1] = 80;
-    coord[2][0] = 420; coord[2][1] = 80;
-    coord[3][0] = 230; coord[3][1] = 200;
-    coord[4][0] = 300; coord[4][1] = 20;
-    coord[5][0] = 370; coord[5][1] = 200;
-      // add vertices first
-    for (i=1; i<6;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length  ; i++)
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-    var edgeId = 0;
-    for (i=1; i<6; i++)
-      for (j=i+1; j<6; j++)
-        if (document.getElementById("direct_checkbox").checked)
-        {
-          addDirectedEdge(i, j, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        } else {
-          addIndirectedEdge(i, j, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        }
-    amountEdge = edgeId;
-    addExtraEdge();
-    if (document.getElementById("weighted_checkbox").checked)
-      for (i=1; i < Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        var w = dist2P(
-          coord[edgeList[edgeId][0]][0], 
-          coord[edgeList[edgeId][0]][1],
-          coord[edgeList[edgeId][1]][0],
-          coord[edgeList[edgeId][1]][1])
-        if (w > 100) w-=100*(parseInt(w/100));
-        if (w == 0) w = 12;
-        addWeightText(edgeId, parseInt(w));
-      }
-    createAdjMatrix();
-  }
-
-  this.showCP22 = function() {
-    clearScreen();
-    var i;
-
-    var initValue = [999999,0,1,2,3,4,5,6] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < 8; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-    // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<=7; i++) coord[i] = new Array();
-    coord[1][0] = 220; coord[1][1] = 180;
-    coord[2][0] = 170; coord[2][1] = 120;
-    coord[3][0] = 270; coord[3][1] = 120;
-    coord[4][0] = 170; coord[4][1] = 60;
-    coord[5][0] = 270; coord[5][1] = 60;
-    coord[6][0] = 370; coord[6][1] = 60;
-    coord[7][0] = 370; coord[7][1] = 120;
-    // add vertices first
-    for (i=1; i<8;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length  ; i++)
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-    var edgeId = 0;
-    if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(1, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(3, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    } else {
-      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(1, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(3, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    }
-    amountEdge = edgeId;
-    addExtraEdge();
-    if (document.getElementById("weighted_checkbox").checked)
-      for (i=1; i < Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        var w = dist2P(
-          coord[edgeList[edgeId][0]][0], 
-          coord[edgeList[edgeId][0]][1],
-          coord[edgeList[edgeId][1]][0],
-          coord[edgeList[edgeId][1]][1])
-        if (w > 100) w-=100*(parseInt(w/100));
-        if (w == 0) w = 12;
-        addWeightText(edgeId, parseInt(w));
-      }
-    createAdjMatrix();
-  }
-
-  this.showCP42 = function() {
-    clearScreen();
-    var i;
-
-    var initValue = [999999,0,1,2,3,4,5,6,7,8,9,10,11,12] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < initValue.length; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-      // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<initValue.length; i++) coord[i] = new Array();
-    coord[1][0] = 150; coord[1][1] = 40;
-    coord[2][0] = 150; coord[2][1] = 90;
-    coord[3][0] = 150; coord[3][1] = 140;
-    coord[4][0] = 150; coord[4][1] = 190;
-    coord[5][0] = 250; coord[5][1] = 40;
-    coord[6][0] = 250; coord[6][1] = 90;
-    coord[7][0] = 250; coord[7][1] = 190;
-    coord[8][0] = 350; coord[8][1] = 40;
-    coord[9][0] = 350; coord[9][1] = 90;
-    coord[10][0] = 350; coord[10][1] = 190;
-    coord[11][0] = 450; coord[11][1] = 40;
-    coord[12][0] = 450; coord[12][1] = 90;
-    coord[13][0] = 450; coord[13][1] = 190;
-      // add vertices first
-      for (i=1; i<initValue.length;i++) {
-        coord[i][0] += 80;
-      }
-      for (i = 1; i < A.length  ; i++)
-        addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-      var edgeId = 0;
-      if (document.getElementById("direct_checkbox").checked) {
-        addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(3, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(9, 10, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(11, 12, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(12, 13, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(1, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(5, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(8, 11, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(4, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addDirectedEdge(7, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(10, 13, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addDirectedEdge(6, 9, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      } else {
-        addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(3, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(6, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(8, 9, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(9, 10, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(11, 12, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(12, 13, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(1, 5, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(5, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(8, 11, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(4, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-        addIndirectedEdge(7, 10, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(10, 13, ++edgeId, EDGE_TYPE_UDE, 1, true);
-        addIndirectedEdge(6, 9, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      }
-      amountEdge = edgeId;
-      addExtraEdge();
-      if (document.getElementById("weighted_checkbox").checked)
-        for (i=1; i < Object.size(edgeList); i++) {
-          var edgeId = "#e" + i.toString();
-          var w = dist2P(
-            coord[edgeList[edgeId][0]][0], 
-            coord[edgeList[edgeId][0]][1],
-            coord[edgeList[edgeId][1]][0],
-            coord[edgeList[edgeId][1]][1])
-          if (w > 100) w-=100*(parseInt(w/100));
-          if (w == 0) w = 12;
-          addWeightText(edgeId, parseInt(w));
-        }
-      createAdjMatrix();
-  }
-
-  this.showCP45 = function() {
-    clearScreen();
-    var i;
-
-    var initValue = [999999,0,1,2,3,4,5] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < initValue.length; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-    // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<initValue.length; i++) coord[i] = new Array();
-      coord[1][0] = 170; coord[1][1] = 80;
-    coord[2][0] = 270; coord[2][1] = 80;
-    coord[3][0] = 370; coord[3][1] = 80;
-    coord[4][0] = 170; coord[4][1] = 160;
-    coord[5][0] = 270; coord[5][1] = 160;
-    coord[6][0] = 370; coord[6][1] = 160;
-
-    // add vertices first
-    for (i=1; i<initValue.length;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length  ; i++)
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-    var edgeId = 0;
-    if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(2, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    } else {
-      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(2, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    }
-    amountEdge = edgeId;
-    addExtraEdge();
-    if (document.getElementById("weighted_checkbox").checked)
-      for (i=1; i < Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        var w = dist2P(
-          coord[edgeList[edgeId][0]][0], 
-          coord[edgeList[edgeId][0]][1],
-          coord[edgeList[edgeId][1]][0],
-          coord[edgeList[edgeId][1]][1])
-        if (w > 100) w-=100*(parseInt(w/100));
-        if (w == 0) w = 12;
-        addWeightText(edgeId, parseInt(w));
-      }
-    createAdjMatrix();
-  }
-
-  this.showCP48 = function() {
-    clearScreen();
-    var i;
-
-    var initValue = [999999,0,1,2,3,4,5,6,7] // set a huge number A[0] to prevent minor bug
-
-    A = [];
-
-    for (i = 0; i < initValue.length; i++){
-      A[i] = new ObjectPair(initValue[i], amountVertex); // testing layout, to leave the edges there for now
-      amountVertex++;
-    }
-
-    var i, j;
-
-    // compute vertex coordinates  
-    var vtx_count = 1; // 1-based indexing
-    for (i=0; i<initValue.length; i++) coord[i] = new Array();
-    coord[1][0] = 90; coord[1][1] = 80;
-    coord[2][0] = 190; coord[2][1] = 80;
-    coord[3][0] = 190, coord[3][1] = 160;
-    coord[4][0] = 290; coord[4][1] = 80;
-    coord[5][0] = 390; coord[5][1] = 80;
-    coord[6][0] = 490; coord[6][1] = 80;
-    coord[7][0] = 390; coord[7][1] = 160;
-    coord[8][0] = 490; coord[8][1] = 160;
-
-
-    // add vertices first
-    for (i=1; i<initValue.length;i++) {
-      coord[i][0] += 80;
-    }
-    for (i = 1; i < A.length  ; i++)
-      addVertexWithHover(coord[i][0], coord[i][1], A[i].getFirst(), A[i].getSecond(), true, i);
-
-    var edgeId = 0;
-    if (document.getElementById("direct_checkbox").checked) {
-      addDirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(3, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(6, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addDirectedEdge(8, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addDirectedEdge(7, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    } else {
-      addIndirectedEdge(1, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(2, 4, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 3, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(3, 2, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(4, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(5, 6, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(6, 8, ++edgeId, EDGE_TYPE_UDE, 1, true);
-      addIndirectedEdge(8, 7, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-      addIndirectedEdge(7, 5, ++edgeId, EDGE_TYPE_UDE, 1, true); 
-    }
-    amountEdge = edgeId;
-    addExtraEdge();
-    if (document.getElementById("weighted_checkbox").checked)
-      for (i=1; i < Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        var w = dist2P(
-          coord[edgeList[edgeId][0]][0], 
-          coord[edgeList[edgeId][0]][1],
-          coord[edgeList[edgeId][1]][0],
-          coord[edgeList[edgeId][1]][1])
-        if (w > 100) w-=100*(parseInt(w/100));
-        if (w == 0) w = 12;
-        addWeightText(edgeId, parseInt(w));
-      }
-    createAdjMatrix();
-  }
 
   this.clrscr = function() {
     clearScreen();
@@ -1422,7 +948,7 @@ var Geometry = function() {
     mainSvg.selectAll(".edgelabel").remove();
     mainSvg.selectAll("text").remove();
     amountVertex = 0;
-    resetEverything();
+    //resetEverything();
   }  
 
   // Javascript addon: get size of an object
@@ -1448,366 +974,176 @@ var Geometry = function() {
     edgeList[edgeId.toString()] = [vertexClassA, vertexClassB];
   }
 
-  function createAdjMatrix() {
-    var vertex_count = getNextVertexId() - 1;
-    adjMatrix = new Array(vertex_count);
-    for (var i = 0; i < vertex_count; i++) {
-      adjMatrix[i] = new Array(vertex_count);
-      for (var j=0; j < vertex_count; j++)
-        adjMatrix[i][j] = 0;
-    }
-
-    var tmp = "#e";
-    for (var i=1; i <= Object.size(edgeList); i++) {
-      var edge_id = tmp + i.toString();
-      if (mainSvg.select(edge_id).attr("style"))
-        if (mainSvg.select(edge_id).attr("style").indexOf("hidden") != -1) continue;
-      var from_vertex_id = edgeList[edge_id][0];
-      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
-      var from_vertex_content = target[0][2].textContent;
-
-      var to_vertex_id = edgeList[edge_id][1];
-      if (from_vertex_id == to_vertex_id) continue;
-
-      target = mainSvg.selectAll(".v" + to_vertex_id.toString());
-      var to_vertex_content = target[0][2].textContent;       
-
-      if (document.getElementById("weighted_checkbox").checked) {
-        var weight = document.getElementById("w_e"+ i.toString());
-        adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = (weight == null) ? 1 : weight.textContent;
-        if (!document.getElementById("direct_checkbox").checked) 
-          adjMatrix[parseInt(to_vertex_content)][parseInt(from_vertex_content)] = (weight == null) ? 1 : weight.textContent;       
-      } else {
-        adjMatrix[parseInt(from_vertex_content)][parseInt(to_vertex_content)] = 1;        
-        if (!document.getElementById("direct_checkbox").checked) 
-          adjMatrix[parseInt(to_vertex_content)][parseInt(from_vertex_content)] = 1;           
-      }
-    }
-    var xv = 1;
-    drawAdjMatrix();
-  }
-
-  function drawAdjMatrix() {
-    var table = document.getElementById("adj_matrix_table");
-    table.innerHTML = "";
-
-    for (var i=0; i < adjMatrix.length; i++) {
-      var row = table.insertRow(-1);
-      for (var j=0; j < adjMatrix.length; j++) {
-        var cell = row.insertCell(-1);
-        cell.innerHTML = adjMatrix[i][j];
-      }
-    }
-    var row = table.insertRow(0);
-    var c = row.insertCell(-1);
-    c.innerHTML = " ";
-    for (var i=0; i < adjMatrix.length; i++) {
-      var cell = row.insertCell(-1);;
-      cell.innerHTML = i;
-      if (i>0) {
-        cell = table.rows[i].insertCell(0);
-        cell.innerHTML = i-1;
-      }
-    }
-    c = table.rows[adjMatrix.length].insertCell(0);
-    c.innerHTML = adjMatrix.length-1;
-
-    createAdjList();
-    if (document.getElementById("weighted_checkbox").checked) {
-      drawAdjList_directed();
-    } else drawAdjList();
-  }
-
-  function createAdjList() {
-    var vertex_count = adjMatrix.length;
-    for (var i = 0; i < vertex_count; i++) {
-      adjList[i] = new Array();
-    }
-
-    for (var i=0; i < adjMatrix.length; i++) 
-      for (j = 0; j < adjMatrix.length; j++) {
-        if (adjMatrix[i][j] != 0) {
-          if (document.getElementById("weighted_checkbox").checked)
-            adjList[i].push(adjMatrix[i][j]);
-          adjList[i].push(j);
-        }
-      }
-  }
-
-  function drawAdjList() {
-    var table = document.getElementById("adj_list_table");
-    table.innerHTML = "";
-
-    for (var i=0; i < adjList.length; i++) {
-      var row = table.insertRow(-1);
-      var cell = row.insertCell(-1);
-      cell.innerHTML = i.toString() + ":";
-    }
-
-    for (var i=0; i < adjList.length; i++) {
-      var row = table.rows[i];
-      for (var j=0; j < adjList[i].length; j++) {
-        var cell = row.insertCell(-1);
-        cell.innerHTML = adjList[i][j];
-      }
-    }
-    drawEdgeList();
-  }
-
-  function drawAdjList_directed() {
-    var table = document.getElementById("adj_list_table");
-    table.innerHTML = "";
-
-    for (var i=0; i < adjList.length; i++) {
-      var row = table.insertRow(-1);
-      var cell = row.insertCell(-1);
-      cell.innerHTML = i.toString() + ":";
-    }
-
-    for (var i=0; i < adjList.length; i++) {
-      var row = table.rows[i];
-      for (var j=0; j < adjList[i].length; j+=2) {
-        var cell = row.insertCell(-1);
-        cell.innerHTML = "(" + adjList[i][j] + "," + adjList[i][j+1] + ")";
-      }
-    }
-    drawEdgeList_directed();
-  }
-
-  function drawEdgeList() {
-    var table = document.getElementById("edge_list_table");
-    table.innerHTML = "";
-
-    for (var i=1; i <= Object.size(edgeList); i++) {
-      var row = table.insertRow(-1);
-      var cell = row.insertCell(-1);
-      cell.innerHTML = (i-1).toString() + ":";
-    }
-
-    var tmp = "#e";
-    for (var i=1; i <= Object.size(edgeList); i++) {
-      var edge_id = tmp + i.toString();
-      var from_vertex_id = edgeList[edge_id][0];
-      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
-      var from_vertex_content = target[0][2].textContent;
-
-      var to_vertex_id = edgeList[edge_id][1];
-      var row = table.rows[i-1];
-      if (!(from_vertex_content == 0 && to_vertex_id == 1)) {
-        var cell = row.insertCell(-1);
-        cell.innerHTML = from_vertex_content;
-        cell = row.insertCell(-1);
-        cell.innerHTML = to_vertex_id-1;
-      }
-
-    }
-    
-    graphTest();
-  }
-
-  function drawEdgeList_directed() {
-    var table = document.getElementById("edge_list_table");
-    table.innerHTML = "";
-
-     for (var i=0; i <=  Object.size(edgeList); i++) {
-      var row = table.insertRow(-1);
-      var cell = row.insertCell(0);
-      cell.innerHTML = (i).toString() + ":";
-    }
-
-    var tmp = "#e", count = 0;
-    for (var i=1; i <= Object.size(edgeList); i++) {
-      var edge_id = tmp + i.toString();
-      var from_vertex_id = edgeList[edge_id][0];
-      var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
-      if (typeof(target[0][2]) == "undefined") continue;
-      var from_vertex_content = target[0][2].textContent;
-      var to_vertex_id = edgeList[edge_id][1];
-      if (from_vertex_content == to_vertex_id-1) continue;
-      count++;
-      var row = table.rows[i-1];
-      var cell = row.insertCell(-1);
-      cell.innerHTML = adjMatrix[from_vertex_content][to_vertex_id-1];
-      cell = row.insertCell(-1);
-      cell.innerHTML = from_vertex_content;
-      cell = row.insertCell(-1);
-      cell.innerHTML = to_vertex_id-1;
-    }
-   
-    graphTest();
-  }
-
   function isShowOnGraph(vertex_id) {
     var a = mainSvg.selectAll(".v" + (vertex_id + 1).toString());
     if (a[0].length) return true;
     return false;
   }
 
-  function graphTest() {
-    var adj = [];
-    var N, M, vertices = [];
+  function collinear(x1, y1, x2, y2, x3, y3) {
+    var x = Math.abs(cross(x1, y1, x2, y2, x3, y3));
+    return (Math.abs(cross(x1, y1, x2, y2, x3, y3)) < 0.00000001);
+  }
 
-    N = M = 0; // set vertices and edges to 0
-    for (var i=0;i<adjMatrix.length;++i) {
-      if (!isShowOnGraph(i)) continue;
-      adj[i] = [];
-      var exist = false;
-      for (var j=0;j<adjMatrix[i].length;++j) {
-        if (!isShowOnGraph(j)) continue;
-        if (adjMatrix[i][j]) {
-          adj[i].push(j);
-          M++;
-        }
-        if (adjMatrix[i][j] !== null) {
-          exist = true;
-        }
+  function angleCmp(ax, ay, bx, by) {
+    if (collinear(pivot_x, pivot_y, ax, ay, bx, by))
+      return dist2P(pivot_x, pivot_y, ax, ay) < dist2P(pivot_x, pivot_y, bx, by);
+    var d1x = ax - pivot_x, d1y = ay - pivot_y;
+    var d2x = bx - pivot_x, d2y = by - pivot_y;
+    return Math.atan2(d1y, d1x) < Math.atan2(d2y, d2x);
+  }
+
+  var pivot_x = 0, pivot_y = 0;
+
+  this.initGrahamScan = function() {
+    clearScreen();
+    var min = 20;
+    var maxH = screenHeight - 20;
+    var maxW = screenWidth - 20 ;
+    // and the formula is:
+    //var random = Math.floor(Math.random() * (max - min + 1)) + min;
+    var rx, ry;
+    for (var i=0; i < 15; i++) {
+      rx = Math.floor(Math.random() * (maxW - min + 1)) + min;
+      ry = Math.floor(Math.random() * (maxH - min + 1)) + min;
+      
+      while ((isUsed(rx, ry) != -1) || ((rx < 166 && ry > 400)) || (rx > 897 && ry > 280)) {
+        rx = Math.floor(Math.random() * (maxW - min + 1)) + min;
+        ry = Math.floor(Math.random() * (maxH - min + 1)) + min;
       }
-      if (exist) {
-        N++;
-        vertices.push(i);
-      }
-    }
-    function set(c, yesno) {
-      document.getElementById(c).innerHTML = yesno ? ": Yes": ": No";
-    }
-
-    if (N === 0) {
-      set('isTree', true);
-      set('isBipartite', true);
-      set('isComplete', true);
-      //set('euler', true);
-    } else {
-      (function checkTree(v) {
-        var vis = {};
-        for (var i=0;i<vertices.length;++i) {
-          vis[vertices[i]] = false;
-        }
-        function dfs(v, p) {
-          if (vis[v]) return true;
-          vis[v] = true;
-          for (var i=0;i<adj[v].length;++i) {
-            if (adj[v][i] === p) continue;
-            if (dfs(adj[v][i],v)) return true;
-          }
-          return false;
-        }
-        var istree = !dfs(v);
-        for (var i=0;i<vertices.length;++i) {
-          istree = istree && vis[vertices[i]];
-        }
-        set('isTree', istree);
-      })(vertices[0]);
-
-      (function checkBipartite(v) {
-        var vis = {};
-        for (var i=0;i<vertices.length;++i) {
-          vis[vertices[i]] = false;
-        }
-        function dfs(v, p, c) {
-          if (vis[v] !== false) {
-            return vis[v] !== c;
-          }
-          vis[v] = c;
-          for (var i=0;i<adj[v].length;++i) {
-            if (adj[v][i] === p) continue;
-            if (dfs(adj[v][i], v, 1-c)) return true;
-          }
-          return false;
-        }
-        set('isBipartite', !dfs(v, false, 0));      
-      })(vertices[0]);
-
-      var KM;
-      if ($('#directed-cb').is(':checked')) {
-        KM = (N * (N-1));
-      } else {
-        KM = N * (N-1);
-      }
-      set('isComplete', M===KM);
+      
+      A[amountVertex] = new ObjectPair("", amountVertex);
+      graphWidget.addVertex(rx, ry, A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+      coord[i] = new Array();
+      coord[i][0] = rx; coord[i][1] = ry; 
+      coord[i][3] = i; // class id
     }
   }
 
-  this.switchDirectIndirect = function () {
-    //showTree();
-    convertDirectIndirectGraph();
-    //alert(document.getElementById("direct_checkbox").checked);
-  }
-
-  function convertDirectIndirectGraph() {
-    if (!document.getElementById("direct_checkbox").checked) {
-      // convert from direct to indirect
-      // 1. remove marker
-      for (var i=1; i <= Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        mainSvg.select(edgeId).style('marker-end', '');
-        // 2. remove/hide weight
-        /*
-        var weight = document.getElementById("w_e" + i.toString());
-        if (weight) {
-          weight.style.visibility = "hidden";
-        }*/
-      }
-      // 3. update tables
-      createAdjMatrix();
-    } else {
-      // convert from indirect to direct
-      // 1. add marker
-      for (var i=1; i <= Object.size(edgeList); i++) {
-        var edgeId = "#e" + i.toString();
-        mainSvg.select(edgeId).style('marker-end', 'url(#end-arrow)');
-        // 2. add/show weight
-        /*
-        var weight = document.getElementById("w_e" + i.toString());
-        if (weight) {
-          weight.style.visibility = "visible";
-        }
-        */
-      }
-      // 3. update tables
-      createAdjMatrix();
+  this.grahamScan = function() {
+    var N = Object.size(coord);
+    if (N <= 3) {
+      //TODO
+      return true;
     }
-
-  }
-
-  this.convertDirectIndirectGraph = function() {
-    if (!document.getElementById("weighted_checkbox").checked) {
-      // convert from weight to unweight
-      // 1. remove marker
-      for (var i=1; i <= Object.size(edgeList); i++) {
-       
-        // 2. remove/hide weight
-        
-        var weight = document.getElementById("w_e" + i.toString());
-        if (weight) {
-          weight.style.visibility = "hidden";
-        }
+    var P0 = 0;
+    // find P0 with biggest Y and biggest X
+    for (var i=1; i < N; i++) {
+      if ((coord[i][1] > coord[P0][1]) || (coord[i][1] == coord[P0][1] && coord[i][0] > coord[P0][0])) {
+        P0 = i;
       }
-      // 3. update tables
-      createAdjMatrix();
-    } else {
-      // convert from indirect to direct
-      for (var i=1; i <= Object.size(edgeList); i++) {
-          // 2. add/show weight
-        
-        var weight = document.getElementById("w_e" + i.toString());
-        if (weight) {
-          weight.style.visibility = "visible";
-        } else {
-          // add random weight
-          var edgeId = "#e" + i.toString();
-          var w = dist2P(
-            coord[edgeList[edgeId][0]][0], 
-            coord[edgeList[edgeId][0]][1],
-            coord[edgeList[edgeId][1]][0],
-            coord[edgeList[edgeId][1]][1]);
-          if (w > 100) w-=100*(parseInt(w/100));
-          if (w == 0) w = 12;
-          addWeightText(edgeId, parseInt(w));
-        }
-      }
-      // 3. update tables
-      createAdjMatrix();
     }
+    var tmp = coord[0]; coord[0] = coord[P0]; coord[P0] = tmp;
+    var tmp1 = A[0]; A[0] = A[P0]; A[P0] = tmp1;
+    pivot_x = coord[0][0]; pivot_y = coord[0][1];
+    // sort
+    for (var i=1; i < N-1; i++) 
+      for (var j=i+1; j < N; j++) {
+        if (angleCmp(coord[i][0], coord[i][1], coord[j][0], coord[j][1])) {
+          tmp = coord[i];
+          coord[i] = coord[j];
+          coord[j] = tmp;
+          tmp1 = A[i];
+          A[i] = A[j];
+          A[j] = tmp1;
+        }
+      }
+
+    var stateList = new Array();
+    var currentState = createState(A);
+    // TODO: highlight indexing process here.
+    for (var i = 0; i < N; i++) {
+      currentState = createState(A);
+      currentState["status"] = "Start indexing the vertices."
+      //currentState["vl"][coord[i][2]]["text"] = i;
+      currentState["vl"][i]["text"] = i;
+      currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+      for (var j=0; j < i; j++)
+        currentState["vl"][j]["text"] = j;
+      //currentState["vl"][coord[i][2]]["state"] = VERTEX_HIGHLIGHTED;
+      stateList.push(currentState);
+    }
+    currentState = createState(A);
+    currentState["status"] = "Finish indexing the vertices."
+    for (var j=0; j < N; j++)
+      currentState["vl"][j]["text"] = j;
+    stateList.push(currentState);
+
+
+    var prev_x = 0, prev_y = 0, now_x = 0, now_y = 0;
+    var S = new Array();
+    for (var i=0; i < N; i++) coord[i][2] = i;
+
+    S.push(coord[N-1]); S.push(coord[0]); S.push(coord[1]);
+    amountEdge = 1;
+    addIndirectedEdge(coord[N-1][3], coord[0][3], amountEdge++, EDGE_TYPE_UDE, 1, false);
+    addIndirectedEdge(coord[0][3], coord[1][3], amountEdge++, EDGE_TYPE_UDE, 1, false);
+    currentState = createState(A);
+    currentState["vl"][N-1]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["vl"][0]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["vl"][1]["state"] = VERTEX_HIGHLIGHTED;
+
+    var e1 = getEdgeConnectTwoVertex(coord[N-1][3], coord[0][3]);
+    currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+    //currentState["el"][1]["animateHighlighted"] = true;
+    var e2 = getEdgeConnectTwoVertex(coord[0][3], coord[1][3]);
+    currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
+    // highlight edges
+    //(N-1, 0, EDGE_TYPE_UDE, 1, true);
+
+
+
+    for (var k=0; k < N; k++)
+      currentState["vl"][k]["text"] = k;
+    stateList.push(currentState);
+
+    var i = 2;
+    while (i < N) {
+      var j = Object.size(S) - 1;
+      if (ccw(S[j-1][0], S[j-1][1], S[j][0], S[j][1], coord[i][0], coord[i][1])) {
+        S.push(coord[i++]);
+        currentState = createState(A);
+        for (var k=0; k < j+1; k++) {
+          currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
+        }
+        currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "Push current vertex into stack";
+        for (var k=0; k < N; k++)
+          currentState["vl"][k]["text"] = k;
+        currentState["el"][1]["state"] = EDGE_HIGHLIGHTED;
+        stateList.push(currentState);
+      }
+      else {
+        currentState = createState(A);
+        currentState["status"] = "Pop from stack";
+        for (var k=0; k < Object.size(S)-2; k++) {
+          currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
+        }
+        currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
+        S.pop();
+        stateList.push(currentState);
+        currentState = createState(A);
+        currentState["status"] = "Pop from stack";
+        for (var k=0; k < Object.size(S)-1; k++) {
+          currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
+        }
+        currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
+        for (var k=0; k < N; k++)
+          currentState["vl"][k]["text"] = k;
+        stateList.push(currentState);
+      }
+    }
+    currentState = createState(A);
+    for (var k=0; k < Object.size(S); k++) {
+      currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
+    }
+    currentState["status"] = "Finish.";
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+
+    // result is in S
+    return true;
   }
+
 
 }
