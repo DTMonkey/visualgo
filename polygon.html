@@ -135,18 +135,18 @@
 	
     function clearScreen() {
         GeometryWidget.clrscr();
+        closeGrahamScan();
     }
 
     function perimeter() {
         if(isPlaying) { stop(); }
         isPlaying = true;
-        
+        closeGrahamScan();
         setTimeout( function() {
             if ((mode=="exploration")&&GeometryWidget.findPerimeter()) {
                 $('#current-action').show();
                 $('#current-action p').html("Find perimeter");
                 $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-                closeSearch();
                 triggerRightPanels();
                 isPlaying = true;
             }
@@ -156,13 +156,12 @@
     function isConvex() {
         if(isPlaying) { stop(); }
         isPlaying = true;
-        
+        closeGrahamScan();
         setTimeout( function() {
             if ((mode=="exploration")&&GeometryWidget.isConvex()) {
                 $('#current-action').show();
                 $('#current-action p').html("CHeck convex");
                 $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-                closeSearch();
                 triggerRightPanels();
                 isPlaying = true;
             }

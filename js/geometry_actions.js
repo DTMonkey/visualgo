@@ -81,12 +81,26 @@ function closeLCS() {
 
 }
 
+function closeSearch() {
+	if(isSearch){
+		$('#lcs-err').html("");	
+		$('#lcs-go').animate({
+			width: "-="+34
+		}, 100, function() {
+			$('#lcs-input').animate({
+				width: "-="+200
+			}, 250 );
+		});		
+		isSearch = false;
+	}
+
+}
 
 $( document ).ready(function() {
 	
 	//the actions with pullout inputs
 	$('#buildv1').click(function() {
-		closeSearch();
+		closeGrahamScan();
 		closeLCS();
 		openBuildv1();
 	});	

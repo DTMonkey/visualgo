@@ -957,11 +957,20 @@ var Geometry = function() {
   
   function clearScreen() {
     var i;
+    mainSvg.on("mousedown", function (d) { 
+      mousedown_event = this;
+      doMouseDown();
+    });
 
     // remove edges first
     for (i = 1; i <= amountEdge; i++){
       graphWidget.removeEdge(i);
     }
+    try {
+      for (i = 0; i <= 50; i++){
+        graphWidget.removeEdge(i);
+    }
+    } catch(err) {}
 
     // remove vertices after removing edges
     for (i = 1; i < amountVertex; i++){
@@ -975,7 +984,7 @@ var Geometry = function() {
     mainSvg.selectAll(".edgelabel").remove();
     mainSvg.selectAll("text").remove();
     amountVertex = 0;
-    //resetEverything();
+    resetEverything();
   }  
 
   // Javascript addon: get size of an object
@@ -1024,6 +1033,12 @@ var Geometry = function() {
 
   this.initGrahamScan = function() {
     clearScreen();
+    for (var i=0; i < 150; i++) {
+      try {        
+          graphWidget.removeVertex(i);
+      } catch(err) {}
+    }
+
     mainSvg.on("mousedown", function (d) { 
       mousedown_event = this;
       doMouseDownGraham();
@@ -1053,6 +1068,11 @@ var Geometry = function() {
   }
 
   this.grahamScan = function() {
+    for (var i=0; i < 150; i++) {
+      try {        
+          graphWidget.removeEdge(i);
+      } catch(err) {}
+    }
     var N = Object.size(coord);
     if (N <= 3) {
       //TODO
