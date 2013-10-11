@@ -446,6 +446,24 @@ var Geometry = function() {
     }
   }
 
+  function doclick3(cur) {
+    var is_deleted = 0;
+    if (isUsed(cur[0],cur[1]) == -1) {
+      var new_vertex_id = getNextVertexId();
+      if (deleted_vertex_list.length > 0) {
+        is_deleted = 1;
+        new_vertex_id = deleted_vertex_list[0];
+        deleted_vertex_list.splice(0, 1);
+      }
+
+      coord[amountVertex] = new Array();
+      coord[amountVertex][0] = cur[0];
+      coord[amountVertex][1] = cur[1];
+      A[amountVertex] = new ObjectPair("", amountVertex);
+      graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+    }
+  }
+
 
   function doMouseDown() {
     if (d3.event.ctrlKey) return;
@@ -459,6 +477,18 @@ var Geometry = function() {
         addIndirectedEdge(amountVertex-1, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
       mousedown_node = amountVertex-1;
     } //else mousedown_node = is_used;
+  }
+
+  function doMouseDownGraham() {
+    if (d3.event.ctrlKey) return;
+    mousedown_in_progress = true;
+    var cur = d3.mouse(mousedown_event);
+    var is_used = isUsed(cur[0], cur[1]);
+    var prev = mousedown_node;
+    if (is_used == -1) {
+      doclick3(cur);
+      mousedown_node = amountVertex-1;
+    } 
   }
 
   
@@ -504,22 +534,19 @@ var Geometry = function() {
       state["vl"][key]["state"] = VERTEX_DEFAULT;
     }
 
-    try {
-      for (var i = 1; i <= internalHeapObject.length; i++){
-        var edgeId = i;
-
-        state["el"][edgeId] = {};
-
-        state["el"][edgeId]["vertexA"] = edgeList["#e" + i.toString()][0]; //internalHeapObject[parent(i)].getSecond();
-        state["el"][edgeId]["vertexB"] = edgeList["#e" + i.toString()][1];//internalHeapObject[i].getSecond();
-        state["el"][edgeId]["type"] = EDGE_TYPE_UDE;
-        state["el"][edgeId]["weight"] = 1;
-        state["el"][edgeId]["state"] = EDGE_DEFAULT;
-        state["el"][edgeId]["animateHighlighted"] = false;
+    var count = 0;
+    for (edgeId in edgeList) {
+      if (edgeList.hasOwnProperty(edgeId)) {
+        var id = parseInt(edgeId.substring(2));
+        state["el"][id] = {};
+        state["el"][id]["vertexA"] = edgeList[edgeId][0];
+        state["el"][id]["vertexB"] = edgeList[edgeId][1];
+        state["el"][id]["type"] = EDGE_TYPE_UDE;
+        state["el"][id]["weight"] = 1;
+        state["el"][id]["state"] = EDGE_DEFAULT;
+        state["el"][id]["animateHighlighted"] = false;
       }
     }
-    catch (err) {}
-
     return state;
   }
 
@@ -997,6 +1024,11 @@ var Geometry = function() {
 
   this.initGrahamScan = function() {
     clearScreen();
+    mainSvg.on("mousedown", function (d) { 
+      mousedown_event = this;
+      doMouseDownGraham();
+    });
+
     var min = 20;
     var maxH = screenHeight - 20;
     var maxW = screenWidth - 20 ;
@@ -1076,18 +1108,22 @@ var Geometry = function() {
 
     S.push(coord[N-1]); S.push(coord[0]); S.push(coord[1]);
     amountEdge = 1;
-    addIndirectedEdge(coord[N-1][3], coord[0][3], amountEdge++, EDGE_TYPE_UDE, 1, false);
-    addIndirectedEdge(coord[0][3], coord[1][3], amountEdge++, EDGE_TYPE_UDE, 1, false);
+    //addIndirectedEdge(coord[N-1][3], coord[0][3], amountEdge++, EDGE_TYPE_UDE, 1, true);
+    addIndirectedEdge(N-1, 0, amountEdge++, EDGE_TYPE_UDE, 1, true);
+    addIndirectedEdge(0, 1, amountEdge++, EDGE_TYPE_UDE, 1, true);
     currentState = createState(A);
     currentState["vl"][N-1]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][0]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][1]["state"] = VERTEX_HIGHLIGHTED;
 
-    var e1 = getEdgeConnectTwoVertex(coord[N-1][3], coord[0][3]);
+    var e1 = getEdgeConnectTwoVertex(N-1, 0);
     currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+    currentState["el"][e1]["animateHighlighted"] = true;
     //currentState["el"][1]["animateHighlighted"] = true;
-    var e2 = getEdgeConnectTwoVertex(coord[0][3], coord[1][3]);
-    currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
+    var e2 = getEdgeConnectTwoVertex(0, 1);
+    //currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
+    //currentState["el"][e2]["animateHighlighted"] = true;
+    //currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
     // highlight edges
     //(N-1, 0, EDGE_TYPE_UDE, 1, true);
 
@@ -1097,29 +1133,49 @@ var Geometry = function() {
       currentState["vl"][k]["text"] = k;
     stateList.push(currentState);
 
+
+    
+    //addIndirectedEdge(coord[0][3], coord[1][3], amountEdge++, EDGE_TYPE_UDE, 1, true);
+    //graphWidget.removeEdge(1);
+    //delete edgeList["#e1"];
+    //currentState = createState(A);
+    //stateList.push(currentState);
+
     var i = 2;
     while (i < N) {
       var j = Object.size(S) - 1;
       if (ccw(S[j-1][0], S[j-1][1], S[j][0], S[j][1], coord[i][0], coord[i][1])) {
         S.push(coord[i++]);
+        addIndirectedEdge(S[Object.size(S)-2][2], S[Object.size(S)-1][2], amountEdge++, EDGE_TYPE_UDE, 1, true);
         currentState = createState(A);
         for (var k=0; k < j+1; k++) {
           currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
         }
+
         currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
         currentState["status"] = "Push current vertex into stack";
         for (var k=0; k < N; k++)
           currentState["vl"][k]["text"] = k;
-        currentState["el"][1]["state"] = EDGE_HIGHLIGHTED;
+        currentState["el"][amountEdge-1]["state"] = EDGE_HIGHLIGHTED;
         stateList.push(currentState);
       }
       else {
+        for (var t=1; t <= amountEdge; t++) {
+          var e = edgeList["#e" + t.toString()];
+          if (typeof(e) == "undefined") continue;
+          if ((e[0] == S[Object.size(S)-1][2]) || (e[1] == S[Object.size(S)-1][2])) {
+            //graphWidget.removeEdge(i);
+            delete edgeList["#e" + t.toString()];
+          }
+        }   
         currentState = createState(A);
         currentState["status"] = "Pop from stack";
         for (var k=0; k < Object.size(S)-2; k++) {
           currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
         }
         currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
+        
+        
         S.pop();
         stateList.push(currentState);
         currentState = createState(A);
@@ -1137,6 +1193,8 @@ var Geometry = function() {
     for (var k=0; k < Object.size(S); k++) {
       currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
     }
+    for (var k=0; k < N; k++)
+      currentState["vl"][k]["text"] = k;
     currentState["status"] = "Finish.";
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
