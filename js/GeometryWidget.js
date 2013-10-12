@@ -563,16 +563,11 @@ var Geometry = function() {
   this.findPerimeter = function() {
     var stateList = new Array();
     var currentState = createState(A);
-    currentState["status"] = "Start";
-    /*
-    var v0 = isUsed(coord[0][0], coord[0][1]);
-    var v1 = isUsed(coord[1][0], coord[1][1]);
-    currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
-    currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
-    var e = getEdgeConnectTwoVertex(v0, v1);
-    currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
-    */
+    popuatePseudocode(0);
+    currentState["status"] = "Start. result = 0";
+    currentState["lineNo"] = 1;
     stateList.push(currentState);
+
     var dist = 0, over_dist = 0;
     for (var i=0; i < Object.size(coord); i++) {
       currentState = createState(A);
@@ -585,11 +580,13 @@ var Geometry = function() {
       currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
       dist = dist2P(coord[i][0], coord[i][1], coord[k][0], coord[k][1]);
       over_dist += dist;
-      currentState["status"] = "Distance between these 2 vertices = " + dist + ". Perimeter = " + over_dist + ".";
+      currentState["status"] = "Distance between these 2 vertices = " + dist + ". result = " + over_dist + ".";
+      currentState["lineNo"] = 3;
       stateList.push(currentState);
     }
     currentState = createState(A);
-    currentState["status"] = "Polygon perimeter = " + over_dist + ".";
+    //currentState["lineNo"] = 2;
+    currentState["status"] = "result = " + over_dist + ".";
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
     return true;
@@ -606,19 +603,22 @@ var Geometry = function() {
   this.isConvex = function() {
     var sz = Object.size(coord);
     var stateList = new Array();
+    popuatePseudocode(1);
     var currentState = createState(A);
+    currentState["status"] = "Start";
+    currentState["lineNo"] = 2;
     if (sz < 3) {
-      currentState["status"] = "Point or line are not convex";
+      currentState["status"] = "Point or line are not convex";      
       stateList.push(currentState);
       graphWidget.startAnimation(stateList);
       return true;
     }
-    currentState["status"] = "Start";
     stateList.push(currentState);
     currentState = createState(A);    
 
     var isLeft = ccw(coord[0][0], coord[0][1], coord[1][0], coord[1][1], coord[2][0], coord[2][1]);
     currentState["status"] = "First 3 points ccw = " + isLeft;
+    currentState["lineNo"] = 3;
     var v0 = isUsed(coord[0][0], coord[0][1]);
     var v1 = isUsed(coord[1][0], coord[1][1]);
     var v2 = isUsed(coord[2][0], coord[2][1]);
@@ -653,9 +653,11 @@ var Geometry = function() {
 
       if (tmp == isLeft) {
         status += "The same as first ccw. Continue."
+        currentState["lineNo"] = 5;
       } else {
         status += "Different from first ccw. Stop."
         currentState["status"] = status;
+        currentState["lineNo"] = 6;
         stateList.push(currentState);
         currentState = createState(A);
         currentState["status"] = "Polygon is not convex.";
@@ -668,6 +670,7 @@ var Geometry = function() {
     }
     currentState = createState(A);
     currentState["status"] = "Polygon is convex.";
+    currentState["lineNo"] = 7;
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
     return true;
@@ -1068,6 +1071,7 @@ var Geometry = function() {
   }
 
   this.grahamScan = function() {
+    popuatePseudocode(2);
     for (var i=0; i < 150; i++) {
       try {        
           graphWidget.removeEdge(i);
@@ -1107,7 +1111,7 @@ var Geometry = function() {
     for (var i = 0; i < N; i++) {
       currentState = createState(A);
       currentState["status"] = "Start indexing the vertices."
-      //currentState["vl"][coord[i][2]]["text"] = i;
+      currentState["lineNo"] = 1;
       currentState["vl"][i]["text"] = i;
       currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
       for (var j=0; j < i; j++)
@@ -1121,7 +1125,7 @@ var Geometry = function() {
       currentState["vl"][j]["text"] = j;
     stateList.push(currentState);
 
-
+    //currentState = createState(A);
     var prev_x = 0, prev_y = 0, now_x = 0, now_y = 0;
     var S = new Array();
     for (var i=0; i < N; i++) coord[i][2] = i;
@@ -1135,6 +1139,8 @@ var Geometry = function() {
     currentState["vl"][N-1]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][0]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][1]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["status"] = "Push these 3 points into stack."
+    currentState["lineNo"] = 2;
 
     var e1 = getEdgeConnectTwoVertex(N-1, 0);
     currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
@@ -1164,6 +1170,10 @@ var Geometry = function() {
     var i = 2;
     while (i < N) {
       var j = Object.size(S) - 1;
+      currentState = createState(A);
+      currentState["status"] = "Checking ccw of these 3 points";
+      currentState["lineNo"] = 4;
+      stateList.push(currentState);
       if (ccw(S[j-1][0], S[j-1][1], S[j][0], S[j][1], coord[i][0], coord[i][1])) {
         S.push(coord[i++]);
         addIndirectedEdge(S[Object.size(S)-2][2], S[Object.size(S)-1][2], amountEdge++, EDGE_TYPE_UDE, 1, true);
@@ -1174,6 +1184,7 @@ var Geometry = function() {
 
         currentState["vl"][S[Object.size(S)-1][2]]["state"] = VERTEX_HIGHLIGHTED;
         currentState["status"] = "Push current vertex into stack";
+        currentState["lineNo"] = 5;
         for (var k=0; k < N; k++)
           currentState["vl"][k]["text"] = k;
         currentState["el"][amountEdge-1]["state"] = EDGE_HIGHLIGHTED;
@@ -1190,6 +1201,7 @@ var Geometry = function() {
         }   
         currentState = createState(A);
         currentState["status"] = "Pop from stack";
+        currentState["lineNo"] = 6;
         for (var k=0; k < Object.size(S)-2; k++) {
           currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
         }
@@ -1200,6 +1212,7 @@ var Geometry = function() {
         stateList.push(currentState);
         currentState = createState(A);
         currentState["status"] = "Pop from stack";
+        currentState["lineNo"] = 6;
         for (var k=0; k < Object.size(S)-1; k++) {
           currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
         }
@@ -1216,11 +1229,40 @@ var Geometry = function() {
     for (var k=0; k < N; k++)
       currentState["vl"][k]["text"] = k;
     currentState["status"] = "Finish.";
+    currentState["lineNo"] = 7;
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
 
     // result is in S
     return true;
+  }
+
+  function popuatePseudocode(act) {
+    switch (act) {
+      case 0: // Perimeter
+        document.getElementById('code1').innerHTML = 'result = 0';
+        document.getElementById('code2').innerHTML = 'for (i=0; i < (int)P.size(); i++)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspresult += dist(P[i], P[(i+1) % (int)P.size()]';
+        break;
+      case 1: // isConvex
+        document.getElementById('code1').innerHTML = 'sz =  size of P'
+        document.getElementById('code2').innerHTML = 'if (sz < 3) polygon is convex';
+        document.getElementById('code3').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
+        document.getElementById('code4').innerHTML = 'for (i=0; i < sz -1; i++)';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspif ccw(P[i], P[i+1], P[(i+2) == sz ? 1 : i+2]) != isLeft';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsppolygon is not convex';
+        document.getElementById('code7').innerHTML = 'polygon is convex';
+        break;
+      case 2: // graham scan
+        document.getElementById('code1').innerHTML = 'indexing the vertices'
+        document.getElementById('code2').innerHTML = 'push P[N-1], P[0], P[1] into stack S';
+        document.getElementById('code3').innerHTML = 'while (i < N) // i = 2, N = size of P ';
+        document.getElementById('code4').innerHTML = '&nbsp&nbspif (ccw(S[S.size() - 1-1], S[S.size() - 1], P[i])';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp&nbsp&nbsppush P[i] into stack and increase i';
+        document.getElementById('code6').innerHTML = '&nbsp&nbspelse pop from S';
+        document.getElementById('code7').innerHTML = 'S is the result';
+        break;
+    } 
   }
 
 
