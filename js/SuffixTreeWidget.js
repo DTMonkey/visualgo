@@ -968,6 +968,7 @@ var SuffixTreeWidget = function() {
 
   this.goSearch = function() {
     var input = document.getElementById("search_inp").value;
+    popuatePseudocode(0);
     buildSuffixTree(input);
     //(path_label, node_label, x, y, match_flag)
     var stateList = new Array();
@@ -982,18 +983,24 @@ var SuffixTreeWidget = function() {
     var prev_edge = new Array();
     var curState = createState(A);
     var populateResult = false;
+    var isResultPartial = true;
     var results = new Array();
     curState["status"] = "Current result will be yellow colored.";
     stateList.push(curState);
     for (var i in processQueue) {
       var currentState = createState(A);
       if (populateResult) {
+        if (!isResultPartial) {
+          isResultPartial = true;
+          results = new Array();
+        }
         results.push(processQueue[i].path_label);
         continue;
       }
 
       if (processQueue[i]==-1) {
         currentState["status"] = "No match found."
+        currentState["lineNo"] = 7;
         for (var j=0; j < prev.length; j++) {
           currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
         }
@@ -1023,18 +1030,29 @@ var SuffixTreeWidget = function() {
       prev.push(node_idx);
       if (node.match_flag == -2) {
         currentState["status"] = "Path label: " + node.path_label + ". Match found";
+        currentState["lineNo"] = 5;
+        isResultPartial = false;
+        results.push(node.path_label);
         stateList.push(currentState);
         populateResult = true;
       } else if (node.match_flag == -1) {
-        if (i=="0") currentState["status"] = "Start from root";
-        else currentState["status"] = "Path label: " + node.path_label + ". No match, going back";
+        if (i=="0") {
+          currentState["status"] = "Start from root";
+          currentState["lineNo"] = 1;
+        }
+        else {
+          currentState["status"] = "Path label: " + node.path_label + ". No match, going back";
+          currentState["lineNo"] = 4;
+        }
       } else {
         currentState["status"] = "Path label: " + node.path_label + ". Partial match found, going deeper";;
+        currentState["lineNo"] = 6;
       }
       stateList.push(currentState);
     }
     currentState = createState(A);
     currentState["status"] = "The results are yellow colored."
+    currentState["lineNo"] = 5;
     for (var j=0; j<results.length; j++) {
       var tmp_idx = parseInt(draw_data[results[j]].class_id);
       currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
@@ -1132,6 +1150,7 @@ var SuffixTreeWidget = function() {
 
   this.goLRS = function(isitLCS) {
     var input = document.getElementById("search_inp").value;
+    popuatePseudocode(1);
     buildSuffixTree(input);    
 
     var is_LCS = false;
@@ -1149,6 +1168,7 @@ var SuffixTreeWidget = function() {
     stateList.push(currentState);
     currentState = createState(A);
     currentState["status"] = "Start from root.";
+    currentState["lineNo"] = 1;
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
 
@@ -1218,19 +1238,24 @@ var SuffixTreeWidget = function() {
 
       if (isGoingUp[i]) {
         currentState["status"] = "Going back."
+        currentState["lineNo"] = 3;
       } else if (node.is_leaf) {
         currentState["status"] = "This is a leaf node, going back.";
+        currentState["lineNo"] = 4;
       } else {
         currentState["status"] = "Path label: " + node.path_label + ". ";
         if (node.path_label.length > max.length) {
           max = node.path_label;
           results = [];
           results.push(node.path_label);
+          currentState["lineNo"] = 6;
           currentState["status"]+= "Longer than current max. Updating max";
         } else if (node.path_label.length == max.length) {
           results.push(node.path_label);
+          currentState["lineNo"] = 6;
           currentState["status"]+= "Equal to current max. Updating max";
         } else {
+          currentState["lineNo"] = 5;
           currentState["status"]+= "Smaller than current max.";
         }
       }
@@ -1242,6 +1267,7 @@ var SuffixTreeWidget = function() {
       stateList.push(currentState);
     }
     currentState = createState(A);
+    currentState["lineNo"] = 7;
     currentState["status"] = "LRS ";
     if (results.length > 1) currentState["status"]+= "are ";
     else currentState["status"]+= "is ";
@@ -1683,5 +1709,28 @@ var SuffixTreeWidget = function() {
     }
 
   }//show
+
+  function popuatePseudocode(act) {
+    switch (act) {
+      case 0: // Search
+        document.getElementById('code1').innerHTML = 'consider current node';
+        document.getElementById('code2').innerHTML = 'for (i in current node child)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbsp if (i is leave || not match)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbsp continue';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp if (i is full match) return all results';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp else if (i is partial match) go deeper';
+        document.getElementById('code7').innerHTML = 'return no match';
+        break;
+      case 1: // LRS
+        document.getElementById('code1').innerHTML = 'result = \'\'';
+        document.getElementById('code2').innerHTML = 'consider current node';
+        document.getElementById('code3').innerHTML = 'for (i in current node child)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbspif i is leave continue';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspelse if (current node path label length >= result.length)';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsp update result';
+        document.getElementById('code7').innerHTML = 'return result';
+        break;
+      }
+  }
 
 }
