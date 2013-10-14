@@ -979,6 +979,7 @@ var SuffixTreeWidget = function() {
       processQueue.push(-1);
     }
     var prev = new Array();
+    var prev_edge = new Array();
     var curState = createState(A);
     curState["status"] = "Current result will be yellow colored.";
     stateList.push(curState);
@@ -996,6 +997,18 @@ var SuffixTreeWidget = function() {
       var node_idx = null;
       node_idx = parseInt(draw_data[node.path_label].class_id);
       currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      for (var w=0; w < Object.size(prev_edge); w++) {
+        currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+      }
+      for (var w=1; w <= Object.size(edgeList); w++) {
+        var e = edgeList["#e" + w.toString()];
+        if (typeof(e) == "undefined") continue;
+        if (e[1] == node_idx) {
+          currentState["el"][w]["state"]= EDGE_HIGHLIGHTED;  
+          prev_edge.push(w);
+          break;
+        }
+      }
       
       for (var j=0; j < prev.length; j++) {
         currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
@@ -1140,13 +1153,27 @@ var SuffixTreeWidget = function() {
     var max = "";
     // the animation starts here
     var prev = new Array();
+    var prev_edge = new Array();
     for (var i in processQueueLRS) {
       var currentState = createState(A);
       var node = processQueueLRS[i];      
       var node_idx = null;
       node_idx = parseInt(draw_data[node.path_label].class_id);
       currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
-      
+      var edgeId = 0;
+      for (var w=0; w < Object.size(prev_edge); w++) {
+        currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+      }
+      for (var w=1; w <= Object.size(edgeList); w++) {
+        var e = edgeList["#e" + w.toString()];
+        if (typeof(e) == "undefined") continue;
+        if (e[1] == node_idx) {
+          currentState["el"][w]["state"]= EDGE_HIGHLIGHTED;  
+          prev_edge.push(w);
+          break;
+        }
+      }
+
       for (var j=0; j < prev.length; j++) {
         currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
       }
@@ -1191,6 +1218,9 @@ var SuffixTreeWidget = function() {
     for (var j=0; j<results.length; j++) {
       var tmp_idx = parseInt(draw_data[results[j]].class_id);
       currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+    }
+    for (var w=0; w < Object.size(prev_edge); w++) {
+      currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
     }
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
