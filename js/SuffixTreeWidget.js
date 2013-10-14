@@ -981,10 +981,17 @@ var SuffixTreeWidget = function() {
     var prev = new Array();
     var prev_edge = new Array();
     var curState = createState(A);
+    var populateResult = false;
+    var results = new Array();
     curState["status"] = "Current result will be yellow colored.";
     stateList.push(curState);
     for (var i in processQueue) {
       var currentState = createState(A);
+      if (populateResult) {
+        results.push(processQueue[i].path_label);
+        continue;
+      }
+
       if (processQueue[i]==-1) {
         currentState["status"] = "No match found."
         for (var j=0; j < prev.length; j++) {
@@ -1016,6 +1023,8 @@ var SuffixTreeWidget = function() {
       prev.push(node_idx);
       if (node.match_flag == -2) {
         currentState["status"] = "Path label: " + node.path_label + ". Match found";
+        stateList.push(currentState);
+        populateResult = true;
       } else if (node.match_flag == -1) {
         if (i=="0") currentState["status"] = "Start from root";
         else currentState["status"] = "Path label: " + node.path_label + ". No match, going back";
@@ -1024,6 +1033,14 @@ var SuffixTreeWidget = function() {
       }
       stateList.push(currentState);
     }
+    currentState = createState(A);
+    currentState["status"] = "The results are yellow colored."
+    for (var j=0; j<results.length; j++) {
+      var tmp_idx = parseInt(draw_data[results[j]].class_id);
+      currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+    }
+    stateList.push(currentState);
+
     graphWidget.startAnimation(stateList);  
     return true;  
   }
@@ -1078,6 +1095,26 @@ var SuffixTreeWidget = function() {
       else if (is_prefix == -2) {
         fromResultNode = T;
         toResultNode = T2;
+        var tmpQ = new Array();
+        for (aattr in T2) {
+            if (aattr.length == 1) {
+            var wAndT2 = T2[aattr];
+            var w = wAndT2.fst;
+            var myStr = Txt.substring(w.left, w.right+1);
+            tmpQ.push(new Node4(input + myStr, myStr, draw_data[input + myStr].x, draw_data[input + myStr].y, 0));
+          }
+        }
+        for (var k=0; k<tmpQ.length-1; k++)
+          for (var j=k+1; j<tmpQ.length; j++) {
+            if (stringCmp(tmpQ[k].path_label, tmpQ[j].path_label) == -1 ) {
+              var tmp = tmpQ[k];
+              tmpQ[k] = tmpQ[j];
+              tmpQ[j] = tmp;
+            }       
+          }
+        for (var k=0; k < tmpQ.length; k++) {
+          processQueue.push(tmpQ[k]);
+        }
         foundResult = true;
         return;
       }
