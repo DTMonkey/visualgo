@@ -62,7 +62,7 @@ var Geometry = function() {
     A = new Array();
     amountVertex = 0;
     amountEdge = 0;
-
+    graphWidget = new GraphWidget();
     stateList = [];
     edgeGenerator = d3.svg.line()
     .x(function(d){return d.x;})
@@ -322,6 +322,7 @@ var Geometry = function() {
     .on("click", function () {
               // hold ctrl to delete node
               if (d3.event.ctrlKey) {
+                return;
                 //alert("click + ctrl");
                 // TODO: delete node and associated edges
                 console.log(d3.select(this).attr("class"));
@@ -399,6 +400,7 @@ var Geometry = function() {
         .on("click", function() {
                 // hold ctrl to delete node
                 if (d3.event.ctrlKey) {
+                  return;
                   //alert("click + ctrl");
                   // TODO: delete node and associated edges
                   console.log(d3.select(this).attr("class"));
@@ -412,6 +414,8 @@ var Geometry = function() {
                     current_id_num += current_id[i];
                   }
                   current_id_num = parseInt(current_id_num);
+                  coord[current_id_num][0] = -1;
+                  coord[current_id_num][1] = -1;
                   var tmp_e = "#e";
                   for (var i=1; i <= Object.size(edgeList); i++) {
                     var tmp_edge_id = tmp_e + i.toString();
@@ -580,13 +584,13 @@ var Geometry = function() {
       currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
       dist = dist2P(coord[i][0], coord[i][1], coord[k][0], coord[k][1]);
       over_dist += dist;
-      currentState["status"] = "Distance between these 2 vertices = " + dist + ". result = " + over_dist + ".";
+      currentState["status"] = "Distance between these 2 vertices = " + dist.toFixed(2) + ". result = " + over_dist.toFixed(2) + ".";
       currentState["lineNo"] = 3;
       stateList.push(currentState);
     }
     currentState = createState(A);
     //currentState["lineNo"] = 2;
-    currentState["status"] = "result = " + over_dist + ".";
+    currentState["status"] = "result = " + over_dist.toFixed(2) + ".";
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
     return true;
@@ -965,19 +969,17 @@ var Geometry = function() {
       doMouseDown();
     });
 
-    // remove edges first
-    for (i = 1; i <= amountEdge; i++){
-      graphWidget.removeEdge(i);
-    }
-    try {
-      for (i = 0; i <= 50; i++){
+   
+    for (i = 0; i <= 500; i++) {
+      try {
         graphWidget.removeEdge(i);
+      } catch(err) {}
     }
-    } catch(err) {}
-
-    // remove vertices after removing edges
-    for (i = 1; i < amountVertex; i++){
-      graphWidget.removeVertex(A[i].getSecond());
+    
+    for (i = 0; i <= 500; i++) {
+      try {
+        graphWidget.removeVertex(i);
+      } catch(err) {}
     }
 
     try {
@@ -1173,6 +1175,11 @@ var Geometry = function() {
       currentState = createState(A);
       currentState["status"] = "Checking ccw of these 3 points";
       currentState["lineNo"] = 4;
+      for (var k=0; k < j+1; k++) {
+        currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
+      }
+      for (var k=0; k < N; k++)
+          currentState["vl"][k]["text"] = k;
       stateList.push(currentState);
       if (ccw(S[j-1][0], S[j-1][1], S[j][0], S[j][1], coord[i][0], coord[i][1])) {
         S.push(coord[i++]);
@@ -1202,6 +1209,8 @@ var Geometry = function() {
         currentState = createState(A);
         currentState["status"] = "Pop from stack";
         currentState["lineNo"] = 6;
+        for (var k=0; k < N; k++)
+          currentState["vl"][k]["text"] = k;
         for (var k=0; k < Object.size(S)-2; k++) {
           currentState["vl"][S[k][2]]["state"] = VERTEX_TRAVERSED;
         }
