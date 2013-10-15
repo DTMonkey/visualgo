@@ -57,8 +57,9 @@
     <div id="actions" class="panel">
         <p id="clear" class="execAction" onclick=clearScreen()>Clear</p>
 		<p id="perimeter" class="execAction" onclick=perimeter()>Perimeter</p>
-		<p id="is_convex" class="execAction" onclick=isConvex()>isConvex</p>		
+		<p id="is_convex" class="execAction" onclick=isConvex()>isConvex</p>
         <p id="graham">Graham Scan</p>
+        <p id="point_inside" class="execAction" onclick=checkPointInsidePolygon()>Check point inside</p>
 	</div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -106,8 +107,6 @@
 <div id="about" class="overlays"></div>
 <div id="team" class="overlays"></div>
 <div id="termsofuse" class="overlays"></div>
-
-
 
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
@@ -187,6 +186,24 @@
         }, 500);      
     }
 
+    function checkPointInsidePolygon() {
+         if(isPlaying) { stop(); }
+        var gw = GeometryWidget.getGraphWidget();
+        isPlaying = true;
+        closeGrahamScan();
+        setTimeout( function() {
+            if ((mode=="exploration")&&GeometryWidget.checkPointInsidePolygon()) {
+                /*
+                $('#current-action').show();
+                $('#current-action p').html("Check point is inside polygon");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                triggerRightPanels();
+                isPlaying = true;*/
+                $('#current-action').show();
+                $('#current-action p').html("Click to draw your point");
+            }
+        }, 500); 
+    }
 
 
     var isPaused = false;

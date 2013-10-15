@@ -42,6 +42,8 @@ var Geometry = function() {
    var screenHeight = window.innerHeight - 100;
    var screenWidth = window.innerWidth - 80;
    var firstNode = -1;
+   var isCheckingPointInside = false;
+
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -80,6 +82,7 @@ var Geometry = function() {
     adjList = [];
     aborted_mousedown = false;
     firstNode = -1;
+    isCheckingPointInside = false;
   }
 
   function addExtraEdge() {    
@@ -304,6 +307,10 @@ var Geometry = function() {
       if (firstNode == -1) {
         firstNode = amountVertex-1;
       }
+      if (isCheckingPointInside) {
+        goPointInside();
+        return;
+      }
       var text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
 
       text[0] = text[0].splice(2,1);
@@ -367,6 +374,7 @@ var Geometry = function() {
           } else {
             if (mousedown_node != null) {
               if (ii != firstNode) return;
+              if (isCheckingPointInside)  return;
               addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
               //edgeList["#e" + amountEdge] = 
               mainSvg.on("mousedown", null);
@@ -443,11 +451,12 @@ var Geometry = function() {
                   }
                 }
                 if (islast) deleted_vertex_list.push(current_id_num1);
-                //createAdjMatrix();              
+                //createAdjMatrix();   
                 return;
               } else {
                 if (mousedown_node != null) {
                   if (ii != firstNode) return;
+                  if (isCheckingPointInside)  return;
                   addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
                   mainSvg.on("mousedown", null);
                 }
@@ -561,7 +570,7 @@ var Geometry = function() {
   }
 
   function getEdgeConnectTwoVertex(v0, v1) {
-    for (var i=1; i <= Object.size(edgeList); i++) {
+    for (var i=1; i <= amountEdge; i++) {
       var e = edgeList["#e" + i.toString()];
       if (typeof(e) == "undefined") continue;
       if ((e[0] == v0 && e[1] == v1) || (e[0] == v1 && e[1] == v0))
@@ -1277,8 +1286,119 @@ var Geometry = function() {
         document.getElementById('code6').innerHTML = '&nbsp&nbspelse pop from S';
         document.getElementById('code7').innerHTML = 'S is the result';
         break;
+      case 3: // check point inside polygon
+        document.getElementById('code1').innerHTML = 'for (i=0; i < P.size() -1; i++)'
+        document.getElementById('code2').innerHTML = '&nbsp&nbsp&nbsp&nbspif ccw(p, P[i], P[i+1]';
+        document.getElementById('code3').innerHTML = '&nbsp&nbsp&nbsp&nbspsum += angle(P[i], p, P[i+1])';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp  else sum -= angle(P[i], p, P[i+1])';
+        document.getElementById('code5').innerHTML = 'return fabs(fabs(sum) - 2*PI < EPS';
+        break;
     } 
   }
 
+  this.checkPointInsidePolygon = function() {
+    isCheckingPointInside = true;
+    mainSvg.on("mousedown", function (d) { 
+      mousedown_event = this;
+      doMouseDown();
+    });
+    return true;
+  }
 
+  // return angle aob in radz
+  function angle(ax, ay, ox, oy, bx, by) {
+    var ux = ax - ox, uy = ay - oy;
+    var vx = bx - ox, vy = by - oy;
+    return Math.acos((ux * vx + uy * vy)/ Math.sqrt((ux * ux + uy * uy) * (vx * vx + vy * vy)));
+  }
+
+  function goPointInside() {
+    $('#current-action').show();
+    $('#current-action p').html("Check point is inside polygon");
+    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
+    triggerRightPanels();
+    isPlaying = true;
+    var stateList = new Array();
+    var currentState = createState(A);
+    var latest = amountVertex-1;
+    var sum = 0;
+    var prev_edges = new Array();
+    popuatePseudocode(3);
+    currentState["status"] = "Start";
+    currentState["lineNo"] = 1;
+    stateList.push(currentState);
+    for (var i=0; i < Object.size(coord)-1; i++) {
+      var vl = isUsed(coord[latest][0], coord[latest][1]);
+      var v0 = isUsed(coord[i][0], coord[i][1]);
+      var v1 = isUsed(coord[i+1][0], coord[i+1][1]);
+      if (i == Object.size(coord)-2) v1 = isUsed(coord[0][0], coord[0][1]);
+
+      for (var t=0; t < Object.size(prev_edges); t++) {
+        var e = edgeList["#e" + prev_edges[t].toString()];
+        if (typeof(e) == "undefined") continue;
+        delete edgeList["#e" + prev_edges[t].toString()];        
+      } 
+      addIndirectedEdge(v0, vl, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      prev_edges.push(amountEdge-1);
+      addIndirectedEdge(vl, v1, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      prev_edges.push(amountEdge-1);
+      currentState = createState(A);
+
+      currentState["vl"][vl]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
+        
+      var e1 = getEdgeConnectTwoVertex(v0, vl);
+      currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+      e1 = getEdgeConnectTwoVertex(vl, v1);
+      currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+      //var e = getEdgeConnectTwoVertex(v0, v1);
+      //currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
+      currentState["status"] = "Checking these 3 points";
+      currentState["lineNo"] = 2;
+      stateList.push(currentState);
+      currentState = createState(A);
+      var e1 = getEdgeConnectTwoVertex(v0, vl);
+      currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+      e1 = getEdgeConnectTwoVertex(vl, v1);
+      currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
+      var vl = isUsed(coord[latest][0], coord[latest][1]);
+      var v0 = isUsed(coord[i][0], coord[i][1]);
+      v1 = isUsed(coord[i+1][0], coord[i+1][1]);
+      if (i == Object.size(coord)-2) v1 = isUsed(coord[0][0], coord[0][1]);
+      currentState["vl"][vl]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
+      var k = i + 1;
+      if (i == Object.size(coord)-2) k = 0;
+      if (ccw(coord[latest][0], coord[latest][1], coord[i][0], coord[i][1], coord[k][0], coord[k][1])) {
+        sum += angle(coord[i][0], coord[i][1], coord[latest][0], coord[latest][1], coord[k][0], coord[k][1]);
+        currentState["status"] = "Left turn. Sum angle = " + sum.toFixed(2);
+        currentState["lineNo"] = 3;
+      }
+      else {
+        sum -= angle(coord[i][0], coord[i][1], coord[latest][0], coord[latest][1], coord[k][0], coord[k][1]);
+        currentState["status"] = "Right turn. Sum angle = " + sum.toFixed(2);
+        currentState["lineNo"] = 4;
+      }
+      stateList.push(currentState);
+    }
+
+    for (var t=0; t < Object.size(prev_edges); t++) {
+      var e = edgeList["#e" + prev_edges[t].toString()];
+      if (typeof(e) == "undefined") continue;
+      delete edgeList["#e" + prev_edges[t].toString()];        
+    } 
+    currentState = createState(A);
+    //currentState["lineNo"] = 2;
+    var PI = Math.acos(-1.0);
+    var res = Math.abs(Math.abs(sum) - 2*PI) < 0.000001;
+    var isIn = res ? "inside " : "outside ";
+    currentState["status"] = "Sum angle = " + sum.toFixed(2) + ". The point is " + isIn + "polygon.";
+    currentState["lineNo"] = 5;
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);    
+    isCheckingPointInside = false;
+  }
 }
+
