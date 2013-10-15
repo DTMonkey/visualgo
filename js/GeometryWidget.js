@@ -41,6 +41,7 @@ var Geometry = function() {
    var move1 = true;
    var screenHeight = window.innerHeight - 100;
    var screenWidth = window.innerWidth - 80;
+   var firstNode = -1;
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -78,6 +79,7 @@ var Geometry = function() {
     adjMatrix = [];
     adjList = [];
     aborted_mousedown = false;
+    firstNode = -1;
   }
 
   function addExtraEdge() {    
@@ -294,32 +296,113 @@ var Geometry = function() {
         deleted_vertex_list.splice(0, 1);
       }
 
-    coord[amountVertex] = new Array();
-    coord[amountVertex][0] = cur[0];
-    coord[amountVertex][1] = cur[1];
-    A[amountVertex] = new ObjectPair(new_vertex_id -1, amountVertex);
-    graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+      coord[amountVertex] = new Array();
+      coord[amountVertex][0] = cur[0];
+      coord[amountVertex][1] = cur[1];
+      A[amountVertex] = new ObjectPair(new_vertex_id -1, amountVertex);
+      graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+      if (firstNode == -1) {
+        firstNode = amountVertex-1;
+      }
+      var text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
 
-    var text = mainSvg.selectAll(".v" + ((amountVertex-1)).toString());
+      text[0] = text[0].splice(2,1);
+      var ii = new_vertex_id -2;
+      text.on("mouseover", function () { 
+        var cc = d3.mouse(this);
+        
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0][2].value = circle2[0][2].value;
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", surpriseColour);
+        
+      })
+      .on("mouseout", function () { 
+        //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", "#eeeeee");
+      })
+      .on("click", function () {
+          // hold ctrl to delete node
+          if (d3.event.ctrlKey) {
+            return;
+            //alert("click + ctrl");
+            // TODO: delete node and associated edges
+            console.log(d3.select(this).attr("class"));
+            console.log(d3.selectAll(d3.select(this).attr("class")));
+            mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
+            var current_id = d3.select(this).attr("class");
+            var current_id_num = "";
+            for (var i=1; i < current_id.length; i++) {
+              current_id_num += current_id[i];
+            }
+            current_id_num = parseInt(current_id_num);
+            coord[current_id_num][0] = -1;
+            coord[current_id_num][1] = -1;
+            var tmp_e = "#e";
+            for (var i=1; i <= Object.size(edgeList); i++) {
+              var tmp_edge_id = tmp_e + i.toString();
+              console.log(edgeList[tmp_edge_id]);
+              if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
+                mainSvg.select(tmp_edge_id).style("visibility", "hidden");
+                mainSvg.select("#w_e" + i.toString()).remove();
+              }
+            }            
+            var islast = true;
+            var temp = d3.select(this);
+            temp = temp[0][0].textContent;
+            var current_id_num1 = parseInt(temp) + 1;
+            for (var i=0; i < deleted_vertex_list.length; i++) {
+              if (deleted_vertex_list[i] > current_id_num1) {
+                // insert 
+                deleted_vertex_list.splice(i, 0, current_id_num1);
+                islast = false;
+                break;
+              }
+            }
+            if (islast) deleted_vertex_list.push(current_id_num1);
+            //createAdjMatrix();    
+            return;
+          } else {
+            if (mousedown_node != null) {
+              if (ii != firstNode) return;
+              addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+              //edgeList["#e" + amountEdge] = 
+              mainSvg.on("mousedown", null);
+            }
+          }
+        }
+      );
+      circle = mainSvg.selectAll(".v" + (amountVertex-1).toString());
+      circle.style("cursor", "pointer");
+      console.log(circle[0][2].textContent);
+      //circle[0][2].textContent = new_vertex_id.toString();
+      console.log(circle[0][2].textContent);
+      var text = mainSvg.selectAll("text").selectAll(".v" + (amountVertex-1).toString());
+      text.style("pointer-events", "none");
 
-    text[0] = text[0].splice(2,1);
-    var ii = new_vertex_id -2;
-    text.on("mouseover", function () { 
-      var cc = d3.mouse(this);
-      
-      var circle2 = mainSvg.selectAll(".v" + ii.toString());
-      circle2[0][2].value = circle2[0][2].value;
-      circle2[0] = circle2[0].splice(0,2);
-      circle2.style("fill", surpriseColour);
-      
-    })
-    .on("mouseout", function () { 
-      //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
-      var circle2 = mainSvg.selectAll(".v" + ii.toString());
-      circle2[0] = circle2[0].splice(0,2);
-      circle2.style("fill", "#eeeeee");
-    })
-    .on("click", function () {
+      console.log("v"+(amountVertex-1).toString());      
+      circle[0] = circle[0].splice(0,2);
+      //console.log(circle[0]);
+      //console.log(circle);
+      circle.on("mouseover", function () { 
+        var cc = d3.mouse(this);
+    
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0][2].value = circle2[0][2].value;
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", surpriseColour);
+      })
+      .on("mouseout", function () { 
+        var circle2 = mainSvg.selectAll(".v" + ii.toString());
+        circle2[0] = circle2[0].splice(0,2);
+        circle2.style("fill", "#eeeeee");
+      })
+      .on("mousedown", function() {
+        //mousedown_node = d3.mouse(this);              
+      })
+      .on("click", function() {
               // hold ctrl to delete node
               if (d3.event.ctrlKey) {
                 return;
@@ -327,8 +410,10 @@ var Geometry = function() {
                 // TODO: delete node and associated edges
                 console.log(d3.select(this).attr("class"));
                 console.log(d3.selectAll(d3.select(this).attr("class")));
+                var temp = mainSvg.selectAll("." + d3.select(this).attr("class"));
+                temp = temp[0][2].textContent;
                 mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
-                var current_id = d3.select(this).attr("class");
+                var current_id = d3.select(this).attr("class");                  
                 var current_id_num = "";
                 for (var i=1; i < current_id.length; i++) {
                   current_id_num += current_id[i];
@@ -344,10 +429,10 @@ var Geometry = function() {
                     mainSvg.select(tmp_edge_id).style("visibility", "hidden");
                     mainSvg.select("#w_e" + i.toString()).remove();
                   }
-                }            
-                var islast = true;
-                var temp = d3.select(this);
-                temp = temp[0][0].textContent;
+                }  
+                coord[current_id_num][0] = -1;
+                coord[current_id_num][1] = -1;
+                var islast = true;                  
                 var current_id_num1 = parseInt(temp) + 1;
                 for (var i=0; i < deleted_vertex_list.length; i++) {
                   if (deleted_vertex_list[i] > current_id_num1) {
@@ -358,95 +443,16 @@ var Geometry = function() {
                   }
                 }
                 if (islast) deleted_vertex_list.push(current_id_num1);
-                //createAdjMatrix();    
+                //createAdjMatrix();              
                 return;
               } else {
                 if (mousedown_node != null) {
+                  if (ii != firstNode) return;
                   addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
-                  //edgeList["#e" + amountEdge] = 
                   mainSvg.on("mousedown", null);
                 }
-              }
-
+              }       
             });
-      circle = mainSvg.selectAll(".v" + (amountVertex-1).toString());
-      circle.style("cursor", "pointer");
-      console.log(circle[0][2].textContent);
-        //circle[0][2].textContent = new_vertex_id.toString();
-        console.log(circle[0][2].textContent);
-        var text = mainSvg.selectAll("text").selectAll(".v" + (amountVertex-1).toString());
-        text.style("pointer-events", "none");
-
-        console.log("v"+(amountVertex-1).toString());      
-        circle[0] = circle[0].splice(0,2);
-        //console.log(circle[0]);
-        //console.log(circle);
-        circle.on("mouseover", function () { 
-          var cc = d3.mouse(this);
-      
-          var circle2 = mainSvg.selectAll(".v" + ii.toString());
-          circle2[0][2].value = circle2[0][2].value;
-          circle2[0] = circle2[0].splice(0,2);
-          circle2.style("fill", surpriseColour);
-        })
-        .on("mouseout", function () { 
-          var circle2 = mainSvg.selectAll(".v" + ii.toString());
-          circle2[0] = circle2[0].splice(0,2);
-          circle2.style("fill", "#eeeeee");
-        })
-        .on("mousedown", function() {
-          //mousedown_node = d3.mouse(this);              
-        })
-        .on("click", function() {
-                // hold ctrl to delete node
-                if (d3.event.ctrlKey) {
-                  return;
-                  //alert("click + ctrl");
-                  // TODO: delete node and associated edges
-                  console.log(d3.select(this).attr("class"));
-                  console.log(d3.selectAll(d3.select(this).attr("class")));
-                  var temp = mainSvg.selectAll("." + d3.select(this).attr("class"));
-                  temp = temp[0][2].textContent;
-                  mainSvg.selectAll("." + d3.select(this).attr("class")).remove();
-                  var current_id = d3.select(this).attr("class");                  
-                  var current_id_num = "";
-                  for (var i=1; i < current_id.length; i++) {
-                    current_id_num += current_id[i];
-                  }
-                  current_id_num = parseInt(current_id_num);
-                  coord[current_id_num][0] = -1;
-                  coord[current_id_num][1] = -1;
-                  var tmp_e = "#e";
-                  for (var i=1; i <= Object.size(edgeList); i++) {
-                    var tmp_edge_id = tmp_e + i.toString();
-                    console.log(edgeList[tmp_edge_id]);
-                    if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
-                      mainSvg.select(tmp_edge_id).style("visibility", "hidden");
-                      mainSvg.select("#w_e" + i.toString()).remove();
-                    }
-                  }  
-                  coord[current_id_num][0] = -1;
-                  coord[current_id_num][1] = -1;
-                  var islast = true;                  
-                  var current_id_num1 = parseInt(temp) + 1;
-                  for (var i=0; i < deleted_vertex_list.length; i++) {
-                    if (deleted_vertex_list[i] > current_id_num1) {
-                      // insert 
-                      deleted_vertex_list.splice(i, 0, current_id_num1);
-                      islast = false;
-                      break;
-                    }
-                  }
-                  if (islast) deleted_vertex_list.push(current_id_num1);
-                  //createAdjMatrix();              
-                  return;
-                } else {
-                  if (mousedown_node != null) {
-                    addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
-                    mainSvg.on("mousedown", null);
-                  }
-                }       
-              });
     }
   }
 
@@ -610,7 +616,7 @@ var Geometry = function() {
     popuatePseudocode(1);
     var currentState = createState(A);
     currentState["status"] = "Start";
-    currentState["lineNo"] = 2;
+    //currentState["lineNo"] = 2;
     if (sz < 3) {
       currentState["status"] = "Point or line are not convex";      
       stateList.push(currentState);
@@ -622,7 +628,7 @@ var Geometry = function() {
 
     var isLeft = ccw(coord[0][0], coord[0][1], coord[1][0], coord[1][1], coord[2][0], coord[2][1]);
     currentState["status"] = "First 3 points ccw = " + isLeft;
-    currentState["lineNo"] = 3;
+    currentState["lineNo"] = 2;
     var v0 = isUsed(coord[0][0], coord[0][1]);
     var v1 = isUsed(coord[1][0], coord[1][1]);
     var v2 = isUsed(coord[2][0], coord[2][1]);
@@ -1249,16 +1255,16 @@ var Geometry = function() {
   function popuatePseudocode(act) {
     switch (act) {
       case 0: // Perimeter
-        document.getElementById('code1').innerHTML = 'result = 0';
-        document.getElementById('code2').innerHTML = 'for (i=0; i < (int)P.size(); i++)';
-        document.getElementById('code3').innerHTML = '&nbsp&nbspresult += dist(P[i], P[(i+1) % (int)P.size()]';
+        document.getElementById('code1').innerHTML = 'result = 0, sz = size of P';
+        document.getElementById('code2').innerHTML = 'for (i=0; i < sz; i++)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspresult += dist(P[i], P[(i+1) % sz]';
         break;
       case 1: // isConvex
-        document.getElementById('code1').innerHTML = 'sz =  size of P'
-        document.getElementById('code2').innerHTML = 'if (sz < 3) polygon is convex';
-        document.getElementById('code3').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
-        document.getElementById('code4').innerHTML = 'for (i=0; i < sz -1; i++)';
-        document.getElementById('code5').innerHTML = '&nbsp&nbspif ccw(P[i], P[i+1], P[(i+2) == sz ? 1 : i+2]) != isLeft';
+        document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex // sz =  size of P';
+        document.getElementById('code2').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
+        document.getElementById('code3').innerHTML = 'for (i=0; i < sz -1; i++)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsptmp = (i+2 == sz ? 1: i+2)';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspif ccw(P[i], P[i+1], P[tmp]) != isLeft';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsppolygon is not convex';
         document.getElementById('code7').innerHTML = 'polygon is convex';
         break;
