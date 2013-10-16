@@ -197,7 +197,7 @@
         setTimeout( function() {
             if ((mode=="exploration")&&stWidget.goLCS()) {
                 $('#current-action').show();
-                $('#current-action p').html("Search "+ $('#search_inp').val());
+                $('#current-action p').html("LCS") ;
                 $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
                 closeLCS();
                 triggerRightPanels();

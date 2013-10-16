@@ -916,7 +916,8 @@ var SuffixTreeWidget = function() {
       state["vl"][key]["state"] = VERTEX_DEFAULT;
     }
 
-    for (var i = 1; i < internalHeapObject.length; i++){
+    //for (var i = 1; i < internalHeapObject.length; i++){
+    for (var i = 1; i <= Object.size(edgeList); i++){
       var edgeId = i;
 
       state["el"][edgeId] = {};
@@ -968,7 +969,7 @@ var SuffixTreeWidget = function() {
 
   this.goSearch = function() {
     var input = document.getElementById("search_inp").value;
-    popuatePseudocode(0);
+    populatePseudocode(0);
     buildSuffixTree(input);
     //(path_label, node_label, x, y, match_flag)
     var stateList = new Array();
@@ -1150,7 +1151,7 @@ var SuffixTreeWidget = function() {
 
   this.goLRS = function(isitLCS) {
     var input = document.getElementById("search_inp").value;
-    popuatePseudocode(1);
+    populatePseudocode(1);
     buildSuffixTree(input);    
 
     var is_LCS = false;
@@ -1347,19 +1348,200 @@ var SuffixTreeWidget = function() {
 
   this.goLCS = function() {
     clearScreen();
+    var stateList = new Array();
+    // Determine whether an inside vertex contains both strings
+    processQueueLRS = new Array();
+    stGeneralDriver(true);
+    populatePseudocode(2);
+    // TODO: remove color of inside vertex that belongs to 1 string here
+    /*
+    for (var i in draw_data) {
+      // check if i is internal vetex
+      var tmp = draw_data[i];
+      var isInternal = false;
+      for (var j in draw_data) {
+        if (j == i) continue;
+        if (draw_data[j].parent_index == tmp.path_label) {
+          isInternal = true;
+          break;
+        }
+      }
+      if (isInternal) {
+        var tmp_vertex = mainSvg.selectAll(".v" + tmp.class_id.toString());
+        if (tmp.color == "orchid")
+          tmp_vertex.classed("lcs_first", false);
+        else if (tmp.color != "black")
+          tmp_vertex.classed("lcs_second", false);
+      }
+    } */
+
+    processQueueLRS.push(new NodeLRS('', draw_data[''].x, draw_data[''].y, false));
+    processTreeForLRS(root, '', false);
+    var currentState = createState(A);
+    currentState["status"] = "Start from root.";
+    //currentState["lineNo"] = 1;
+    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    stateList.push(currentState);
+
+    var stack = new Array(), prev = new Array();
+    var tmpProcessQ = new Array();
+    var isGoingUp = new Array();
+    tmpProcessQ[0] = processQueueLRS[0];
+    stack.push(processQueueLRS[0]);
+    var is_popping = false;
+    for (var i=1; i < processQueueLRS.length; i++) {
+      var top = stack[stack.length-1];
+      var next_node = processQueueLRS[i];
+      if ((draw_data[next_node.path_label].parent_index == top.path_label) && !is_popping) {
+        stack.push(next_node);
+        is_popping = false;
+        tmpProcessQ.push(next_node);
+      } else {
+        while (true) {
+          stack.pop();
+          is_popping = true;
+          top = stack[stack.length-1];
+          if (draw_data[next_node.path_label].parent_index == top.path_label) {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+            tmpProcessQ.push(next_node);
+            stack.push(next_node);
+            is_popping = false;
+            break;
+          } else {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+          }
+        }
+      }
+    }
+
+    processQueueLRS = tmpProcessQ;
+    var results = new Array();
+    var max = "";
+    // the animation starts here
+    var prev = new Array();
+    var prev_edge = new Array();
+    var string1s = new Array();
+    var string2s = new Array();
+    for (var i in processQueueLRS) {
+      var currentState = createState(A);
+      var node = processQueueLRS[i];      
+      var node_idx = null;
+      node_idx = parseInt(draw_data[node.path_label].class_id);
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      var edgeId = 0;
+      
+      for (var w=1; w <= Object.size(edgeList); w++) {
+        var e = edgeList["#e" + w.toString()];
+        if (typeof(e) == "undefined") continue;
+        if (e[1] == node_idx) {
+          currentState["el"][w]["state"]= EDGE_HIGHLIGHTED;  
+          prev_edge.push(w);
+          break;
+        }
+      }
+
+      for (var w=0; w < Object.size(prev_edge); w++) {
+        currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+      }
+      for (var j=0; j < prev.length; j++) {
+        currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+      prev.push(node_idx);
+
+      if (isGoingUp[i]) {
+        currentState["status"] = "Going back.";
+        //currentState["lineNo"] = 3;
+        for (var k=0; k < Object.size(string1s); k++) {
+          currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
+        }
+        for (var k=0; k < Object.size(string2s); k++) {
+          currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
+        }
+        stateList.push(currentState);
+        currentState = createState(A);
+        currentState["status"] = "Going back.";
+        for (var w=0; w < Object.size(prev_edge); w++) {
+          currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+        }
+        for (var j=0; j < prev.length; j++) {
+          currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+        }
+        var tmp_vertex = mainSvg.selectAll(".v" + draw_data[node.path_label].class_id.toString());
+        if (draw_data[node.path_label].color == "orchid") {
+          currentState["status"] = "This only contains string 1.";
+          //currentState["lineNo"] = 3;
+          string1s.push(node_idx);
+        } else if (draw_data[node.path_label].color != 'black' ) {
+          currentState["status"] = "This only contains string 2.";
+          //currentState["lineNo"] = 5;
+          string2s.push(node_idx);
+        }
+        for (var k=0; k < Object.size(string1s); k++) {
+          currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
+        }
+        for (var k=0; k < Object.size(string2s); k++) {
+          currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
+        }
+        stateList.push(currentState);
+      } else if (node.is_leaf) {
+        currentState["status"] = "This is a leaf node, going back.";
+        //currentState["lineNo"] = 1;
+        //currentState["lineNo"] = 4;
+        for (var k=0; k < Object.size(string1s); k++) {
+          currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
+        }
+        for (var k=0; k < Object.size(string2s); k++) {
+          currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
+        }
+      } else {
+        // TODO: do the check here and color node that belongs to 1 string
+        //if (draw_data[i].color == "orchid")
+        //tmp_vertex.attr("class", "lcs_first");
+        //else tmp_vertex.attr("class", "lcs_second");        
+        for (var k=0; k < Object.size(string1s); k++) {
+          currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
+        }
+        for (var k=0; k < Object.size(string2s); k++) {
+          currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
+        }
+      }
+      if (isGoingUp[i]) currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      stateList.push(currentState);
+    }
+    currentState = createState(A);
+    for (var w=0; w < Object.size(prev_edge); w++) {
+      currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+    }
+    for (var j=0; j < prev.length; j++) {
+        currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+    for (var k=0; k < Object.size(string1s); k++) {
+      currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
+    }
+    for (var k=0; k < Object.size(string2s); k++) {
+      currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
+    }
+    stateList.push(currentState);
+
+
+    // ends
     stGeneralDriver();
+    populatePseudocode(3);
     processQueueLRS = new Array();
     processQueueLRS.push(new NodeLRS('', draw_data[''].x, draw_data[''].y, false));
     processTreeForLRS(root, '', true);
+    prev_edge = new Array();
 
 
-    var stateList = new Array();
     var currentState = createState(A);
     currentState["status"] = "Current max vertex will be yellow colored.";
     stateList.push(currentState);
     currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    currentState["lineNo"] = 1;
     stateList.push(currentState);
 
     var stack = new Array(), prev = new Array();
@@ -1406,9 +1588,20 @@ var SuffixTreeWidget = function() {
       var node_idx = null;
       node_idx = parseInt(draw_data[node.path_label].class_id);
       currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
-      
+      for (var w=0; w < Object.size(prev_edge); w++) {
+        currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+      }
       for (var j=0; j < prev.length; j++) {
         currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+      }
+      for (var w=1; w <= Object.size(edgeList); w++) {
+        var e = edgeList["#e" + w.toString()];
+        if (typeof(e) == "undefined") continue;
+        if (e[1] == node_idx) {
+          currentState["el"][w]["state"]= EDGE_HIGHLIGHTED;  
+          prev_edge.push(w);
+          break;
+        }
       }
       prev.push(node_idx);
 
@@ -1416,10 +1609,13 @@ var SuffixTreeWidget = function() {
         currentState["status"] = "Going back."
       } else if (node.is_leaf) {
         currentState["status"] = "This is a leaf node, going back.";
+        currentState["lineNo"] = 3;
       } else if (draw_data[node.path_label].color != 'black') {
         currentState["status"] = "This is not a common node, going back.";
+        currentState["lineNo"] = 5;
       } else {
         currentState["status"] = "Path label: " + node.path_label + ". ";
+        currentState["lineNo"] = 6;
         if (node.path_label.length > max.length) {
           max = node.path_label;
           results = [];
@@ -1459,7 +1655,7 @@ var SuffixTreeWidget = function() {
     return true;
   }
 
-  function stGeneralDriver() { 
+  function stGeneralDriver(notColorInternal) { 
    //Txt = document.getElementById("s1").value;
     var s1 = document.getElementById("s1").value, s2 = document.getElementById("s2").value;
     //var s1 = "GATAGACA$", s2 = "CATA#";
@@ -1511,14 +1707,38 @@ var SuffixTreeWidget = function() {
     }
 
     // coloring
-    for (var i in draw_data) {
-      var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
-      tmp_vertex[0] = tmp_vertex[0].splice(0,2);
-      if (draw_data[i].color == "black") continue;
-      if (draw_data[i].color == "orchid")
-        tmp_vertex.attr("class", "lcs_first");
-      else tmp_vertex.attr("class", "lcs_second");
+
+    if (typeof(notColorInternal) == "undefined") {
+      for (var i in draw_data) {
+        var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
+        tmp_vertex[0] = tmp_vertex[0].splice(0,2);
+        if (draw_data[i].color == "black") continue;
+        if (draw_data[i].color == "orchid")
+          tmp_vertex.attr("class", "lcs_first");
+        else tmp_vertex.attr("class", "lcs_second");
+      }
+    } else {
+      for (var i in draw_data) {
+        var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
+        tmp_vertex[0] = tmp_vertex[0].splice(0,2);
+        var tmp = draw_data[i];
+        var isInternal = false;
+        for (var j in draw_data) {
+          if (j == i) continue;
+          if (draw_data[j].parent_index == tmp.path_label) {
+            isInternal = true;
+            break;
+          }
+        }
+        if (isInternal) continue;
+        if (draw_data[i].color == "black") continue;
+        if (draw_data[i].color == "orchid")
+          tmp_vertex.attr("class", "lcs_first");
+        else tmp_vertex.attr("class", "lcs_second");
+      }
+
     }
+
   }//stGeneralDriver
 
   function drawGeneralSuffixTree(T, level, prev_x, text) {
@@ -1710,7 +1930,7 @@ var SuffixTreeWidget = function() {
 
   }//show
 
-  function popuatePseudocode(act) {
+  function populatePseudocode(act) {
     switch (act) {
       case 0: // Search
         document.getElementById('code1').innerHTML = 'consider current node';
@@ -1730,6 +1950,23 @@ var SuffixTreeWidget = function() {
         document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsp update result';
         document.getElementById('code7').innerHTML = 'return result';
         break;
+      case 2: // LCS step 1, color internal node
+        document.getElementById('code1').innerHTML = 'if curent node is a leaf, return';
+        document.getElementById('code2').innerHTML = 'if current node belongs to string 1 only';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspcolor current node as string 1';
+        document.getElementById('code4').innerHTML = 'if current node belongs to string 2 only';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspcolor current node as string 2';    
+        break;
+      case 3: // LCS main
+        document.getElementById('code1').innerHTML = 'max = root';
+        document.getElementById('code2').innerHTML = 'findLCS(current node):';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspif current node is a leaf, return';
+        document.getElementById('code4').innerHTML = '&nbsp&nbspif current node belongs to 1 string only';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp&nbsp&nbspreturn';
+        document.getElementById('code6').innerHTML = '&nbsp&nbspif current node length >= max, update max';
+        document.getElementById('code7').innerHTML = '&nbsp&nbspfindLCS(current node\'s children)';      
+        break;
+
       }
   }
 
