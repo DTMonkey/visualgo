@@ -339,40 +339,40 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
 
   function cxA(){
     if (graphVertexA)
-      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cx"]);
+      return parseFloat(graphVertexA.getAttributes()["outerVertex"]["cx"]);
   }
 
   function cyA(){
     if (graphVertexA)
-      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["cy"]);
+      return parseFloat(graphVertexA.getAttributes()["outerVertex"]["cy"]);
   }
 
   function rA(){
     if (graphVertexA)
-      return parseFloat(graphVertexA.getAttributes()["outerCircle"]["r"]);
+      return parseFloat(graphVertexA.getAttributes()["outerVertex"]["r"]);
   }
 
   function cxB(){
     if (graphVertexA)
-      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cx"]);
+      return parseFloat(graphVertexB.getAttributes()["outerVertex"]["cx"]);
   }
 
   function cyB(){
     if (graphVertexA)
-      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["cy"]);
+      return parseFloat(graphVertexB.getAttributes()["outerVertex"]["cy"]);
   }
 
   function rB(){
     if (graphVertexA)
-      return parseFloat(graphVertexB.getAttributes()["outerCircle"]["r"]);
+      return parseFloat(graphVertexB.getAttributes()["outerVertex"]["r"]);
   }
 
   function calculatePath(){
     var x1 = cxA(), y1 = cyA();
     var x2 = cxB(), y2 = cyB();
     
-    var pts = getCircleLineIntersectionPoint(x1, y1, x2, y2, rA(), x1, y1);
-    var pts2 = getCircleLineIntersectionPoint(x1, y1, x2, y2, rB(), x2, y2);
+    var pts = getVertexLineIntersectionPoint(x1, y1, x2, y2, rA(), x1, y1);
+    var pts2 = getVertexLineIntersectionPoint(x1, y1, x2, y2, rB(), x2, y2);
     var min = 5000;
     var save1 = 0, save2 = 0;
     for (var i=1; i<=3; i+=2) 
@@ -391,7 +391,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     return [beginPoint, endPoint];
   }
   
-  function getCircleLineIntersectionPoint(x1, y1, x2, y2, r, cx, cy) {
+  function getVertexLineIntersectionPoint(x1, y1, x2, y2, r, cx, cy) {
     var baX = x2 - x1; //pointB.x - pointA.x;
     var baY = y2 - y1; //pointB.y - pointA.y;
     var caX = cx - x1; //center.x - pointA.x;

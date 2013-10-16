@@ -50,6 +50,20 @@ var GraphWidget = function(){
     }
   }
 
+  this.addRectVertex = function(rx, ry, vertexText, vertexClassNumber, show){
+    if(show != false) show = true;
+
+    var newVertex = new GraphVertexWidget(cx,cy,vertexText,vertexClassNumber);
+
+    vertexList[vertexClassNumber] = newVertex;
+    vertexUpdateList[vertexClassNumber] = false;
+
+    if(show == true){
+      vertexList[vertexClassNumber].showVertex();
+      vertexList[vertexClassNumber].redraw();
+    }
+  }
+
   // Default for weight is 1 and for type is EDGE_TYPE_UDE
   this.addEdge = function(vertexClassA, vertexClassB, edgeIdNumber, type, weight, show, showWeight){
     try {

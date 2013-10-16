@@ -5,14 +5,14 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   var self = this;
   var defaultAnimationDuration = 250; // millisecond
 
-  var innerCircle;
-  var outerCircle;
+  var innerVertex;
+  var outerVertex;
   var text;
 
   var textYaxisOffset = graphVertexProperties["text"]["font-size"]/3;
 
   var attributeList = {
-    "innerCircle": {
+    "innerVertex": {
       "class": null,
       "cx": null,
       "cy": null,
@@ -22,7 +22,7 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
       "stroke-width": null
     },
 
-    "outerCircle":{
+    "outerVertex":{
       "class": null,
       "cx": null,
       "cy": null,
@@ -59,31 +59,31 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   // Specifies the duration of the animation in milliseconds
   // If unspecified or illegal value, default duration applies. 
   this.showVertex = function(){
-    attributeList["outerCircle"]["r"] = graphVertexProperties["outerCircle"]["r"];
-    attributeList["outerCircle"]["stroke-width"] = graphVertexProperties["outerCircle"]["stroke-width"];
+    attributeList["outerVertex"]["r"] = graphVertexProperties["outerVertex"]["r"];
+    attributeList["outerVertex"]["stroke-width"] = graphVertexProperties["outerVertex"]["stroke-width"];
 
-    attributeList["innerCircle"]["r"] = graphVertexProperties["innerCircle"]["r"];
-    attributeList["innerCircle"]["stroke-width"] = graphVertexProperties["innerCircle"]["stroke-width"];
+    attributeList["innerVertex"]["r"] = graphVertexProperties["innerVertex"]["r"];
+    attributeList["innerVertex"]["stroke-width"] = graphVertexProperties["innerVertex"]["stroke-width"];
 
     attributeList["text"]["font-size"] = graphVertexProperties["text"]["font-size"];
   }
 
   this.hideVertex = function(){
-    attributeList["outerCircle"]["r"] = 0;
-    attributeList["outerCircle"]["stroke-width"] = 0;
+    attributeList["outerVertex"]["r"] = 0;
+    attributeList["outerVertex"]["stroke-width"] = 0;
 
-    attributeList["innerCircle"]["r"] = 0;
-    attributeList["innerCircle"]["stroke-width"] = 0;
+    attributeList["innerVertex"]["r"] = 0;
+    attributeList["innerVertex"]["stroke-width"] = 0;
 
     attributeList["text"]["font-size"] = 0;
   }
 
   this.moveVertex = function(cx, cy){
-    attributeList["outerCircle"]["cx"] = cx;
-    attributeList["outerCircle"]["cy"] = cy;
+    attributeList["outerVertex"]["cx"] = cx;
+    attributeList["outerVertex"]["cy"] = cy;
 
-    attributeList["innerCircle"]["cx"] = cx;
-    attributeList["innerCircle"]["cy"] = cy;
+    attributeList["innerVertex"]["cx"] = cx;
+    attributeList["innerVertex"]["cy"] = cy;
 
     attributeList["text"]["x"] = cx;
     attributeList["text"]["y"] = cy + textYaxisOffset;
@@ -107,35 +107,35 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
 
   this.changeRadius = function(newRadiusInner, newRadiusOuter){
     if(newRadiusInner == null || isNaN(newRadiusInner)) return;
-    attributeList["innerCircle"]["r"] = newRadiusInner;
+    attributeList["innerVertex"]["r"] = newRadiusInner;
     if(newRadiusOuter == null || isNaN(newRadiusOuter)) return;
-    attributeList["outerCircle"]["r"] = newRadiusOuter;
+    attributeList["outerVertex"]["r"] = newRadiusOuter;
   }
 
   this.changeStrokeWidth = function(newStrokeWidthInner, newStrokeWidthOuter){
     if(newStrokeWidthInner == null || isNaN(newStrokeWidthInner)) return;
-    attributeList["innerCircle"]["stroke-width"] = newStrokeWidthInner;
+    attributeList["innerVertex"]["stroke-width"] = newStrokeWidthInner;
     if(newStrokeWidthOuter == null || isNaN(newStrokeWidthOuter)) return;
-    attributeList["outerCircle"]["stroke-width"] = newStrokeWidthOuter;
+    attributeList["outerVertex"]["stroke-width"] = newStrokeWidthOuter;
   }
 
   // Removes the vertex (no animation)
   // If you want animation, hide & redraw the vertex first, then call this function
   this.removeVertex = function(){
-    outerCircle.remove();
-    innerCircle.remove();
+    outerVertex.remove();
+    innerVertex.remove();
     text.remove();
   }
 
   this.highlightVertex = function(){
     var key;
 
-    for(key in graphVertexProperties["innerCircle"]["highlighted"]){
-      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"]["highlighted"][key];
+    for(key in graphVertexProperties["innerVertex"]["highlighted"]){
+      attributeList["innerVertex"][key] = graphVertexProperties["innerVertex"]["highlighted"][key];
     }
 
-    for(key in graphVertexProperties["outerCircle"]["highlighted"]){
-      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"]["highlighted"][key];
+    for(key in graphVertexProperties["outerVertex"]["highlighted"]){
+      attributeList["outerVertex"][key] = graphVertexProperties["outerVertex"]["highlighted"][key];
     }
 
     for(key in graphVertexProperties["text"]["highlighted"]){
@@ -146,12 +146,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.traversedVertex = function(){
     var key;
 
-    for(key in graphVertexProperties["innerCircle"]["traversed"]){
-      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"]["traversed"][key];
+    for(key in graphVertexProperties["innerVertex"]["traversed"]){
+      attributeList["innerVertex"][key] = graphVertexProperties["innerVertex"]["traversed"][key];
     }
 
-    for(key in graphVertexProperties["outerCircle"]["traversed"]){
-      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"]["traversed"][key];
+    for(key in graphVertexProperties["outerVertex"]["traversed"]){
+      attributeList["outerVertex"][key] = graphVertexProperties["outerVertex"]["traversed"][key];
     }
 
     for(key in graphVertexProperties["text"]["traversed"]){
@@ -162,12 +162,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.resultVertex = function(){
     var key;
 
-    for(key in graphVertexProperties["innerCircle"]["result"]){
-      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"]["result"][key];
+    for(key in graphVertexProperties["innerVertex"]["result"]){
+      attributeList["innerVertex"][key] = graphVertexProperties["innerVertex"]["result"][key];
     }
 
-    for(key in graphVertexProperties["outerCircle"]["result"]){
-      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"]["result"][key];
+    for(key in graphVertexProperties["outerVertex"]["result"]){
+      attributeList["outerVertex"][key] = graphVertexProperties["outerVertex"]["result"][key];
     }
 
     for(key in graphVertexProperties["text"]["result"]){
@@ -179,12 +179,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.defaultVertex = function(){
     var key;
 
-    for(key in graphVertexProperties["innerCircle"]["default"]){
-      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"]["default"][key];
+    for(key in graphVertexProperties["innerVertex"]["default"]){
+      attributeList["innerVertex"][key] = graphVertexProperties["innerVertex"]["default"][key];
     }
 
-    for(key in graphVertexProperties["outerCircle"]["default"]){
-      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"]["default"][key];
+    for(key in graphVertexProperties["outerVertex"]["default"]){
+      attributeList["outerVertex"][key] = graphVertexProperties["outerVertex"]["default"][key];
     }
 
     for(key in graphVertexProperties["text"]["default"]){
@@ -195,12 +195,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.stateVertex = function(stateName){
     var key;
 
-    for(key in graphVertexProperties["innerCircle"][stateName]){
-      attributeList["innerCircle"][key] = graphVertexProperties["innerCircle"][stateName][key];
+    for(key in graphVertexProperties["innerVertex"][stateName]){
+      attributeList["innerVertex"][key] = graphVertexProperties["innerVertex"][stateName][key];
     }
 
-    for(key in graphVertexProperties["outerCircle"][stateName]){
-      attributeList["outerCircle"][key] = graphVertexProperties["outerCircle"][stateName][key];
+    for(key in graphVertexProperties["outerVertex"][stateName]){
+      attributeList["outerVertex"][key] = graphVertexProperties["outerVertex"][stateName][key];
     }
 
     for(key in graphVertexProperties["text"][stateName]){
@@ -243,25 +243,25 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
 
   // Initialize vertex and draw them, but the object will not be visible due to the radius of the vertex circle set to 0
   function init(){
-    outerCircle = vertexSvg.append("circle");
-    innerCircle = vertexSvg.append("circle");
+    outerVertex = vertexSvg.append("circle");
+    innerVertex = vertexSvg.append("circle");
     text = vertexTextSvg.append("text");
 
-    attributeList["innerCircle"]["class"] = "v" + vertexClassNumber
-    attributeList["innerCircle"]["cx"] = cx;
-    attributeList["innerCircle"]["cy"] = cy;
-    attributeList["innerCircle"]["fill"] = graphVertexProperties["innerCircle"]["default"]["fill"];
-    attributeList["innerCircle"]["r"] = 0;
-    attributeList["innerCircle"]["stroke"] = graphVertexProperties["innerCircle"]["default"]["stroke"];
-    attributeList["innerCircle"]["stroke-width"] = 0;
+    attributeList["innerVertex"]["class"] = "v" + vertexClassNumber
+    attributeList["innerVertex"]["cx"] = cx;
+    attributeList["innerVertex"]["cy"] = cy;
+    attributeList["innerVertex"]["fill"] = graphVertexProperties["innerVertex"]["default"]["fill"];
+    attributeList["innerVertex"]["r"] = 0;
+    attributeList["innerVertex"]["stroke"] = graphVertexProperties["innerVertex"]["default"]["stroke"];
+    attributeList["innerVertex"]["stroke-width"] = 0;
 
-    attributeList["outerCircle"]["class"] = "v" + vertexClassNumber
-    attributeList["outerCircle"]["cx"] = cx;
-    attributeList["outerCircle"]["cy"] = cy;
-    attributeList["outerCircle"]["fill"] = graphVertexProperties["outerCircle"]["default"]["fill"];
-    attributeList["outerCircle"]["r"] = 0;
-    attributeList["outerCircle"]["stroke"] = graphVertexProperties["outerCircle"]["default"]["stroke"];
-    attributeList["outerCircle"]["stroke-width"] = 0;
+    attributeList["outerVertex"]["class"] = "v" + vertexClassNumber
+    attributeList["outerVertex"]["cx"] = cx;
+    attributeList["outerVertex"]["cy"] = cy;
+    attributeList["outerVertex"]["fill"] = graphVertexProperties["outerVertex"]["default"]["fill"];
+    attributeList["outerVertex"]["r"] = 0;
+    attributeList["outerVertex"]["stroke"] = graphVertexProperties["outerVertex"]["default"]["stroke"];
+    attributeList["outerVertex"]["stroke-width"] = 0;
 
     attributeList["text"]["class"] = "v" + vertexClassNumber
     attributeList["text"]["x"] = cx;
@@ -273,23 +273,23 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     attributeList["text"]["text-anchor"] = graphVertexProperties["text"]["default"]["text-anchor"];
     attributeList["text"]["text"] = vertexText;
 
-    innerCircle.attr("class", attributeList["innerCircle"]["class"]);
-    outerCircle.attr("class", attributeList["outerCircle"]["class"]);
+    innerVertex.attr("class", attributeList["innerVertex"]["class"]);
+    outerVertex.attr("class", attributeList["outerVertex"]["class"]);
     text.attr("class", attributeList["text"]["class"]);
 
-    innerCircle.attr("cx", attributeList["innerCircle"]["cx"])
-              .attr("cy", attributeList["innerCircle"]["cy"])
-              .attr("fill", attributeList["innerCircle"]["fill"])
-              .attr("r", attributeList["innerCircle"]["r"])
-              .attr("stroke", attributeList["innerCircle"]["stroke"])
-              .attr("stroke-width", attributeList["innerCircle"]["stroke-width"]);
+    innerVertex.attr("cx", attributeList["innerVertex"]["cx"])
+              .attr("cy", attributeList["innerVertex"]["cy"])
+              .attr("fill", attributeList["innerVertex"]["fill"])
+              .attr("r", attributeList["innerVertex"]["r"])
+              .attr("stroke", attributeList["innerVertex"]["stroke"])
+              .attr("stroke-width", attributeList["innerVertex"]["stroke-width"]);
 
-    outerCircle.attr("cx", attributeList["outerCircle"]["cx"])
-              .attr("cy", attributeList["outerCircle"]["cy"])
-              .attr("fill", attributeList["outerCircle"]["fill"])
-              .attr("r", attributeList["outerCircle"]["r"])
-              .attr("stroke", attributeList["outerCircle"]["stroke"])
-              .attr("stroke-width", attributeList["outerCircle"]["stroke-width"]);
+    outerVertex.attr("cx", attributeList["outerVertex"]["cx"])
+              .attr("cy", attributeList["outerVertex"]["cy"])
+              .attr("fill", attributeList["outerVertex"]["fill"])
+              .attr("r", attributeList["outerVertex"]["r"])
+              .attr("stroke", attributeList["outerVertex"]["stroke"])
+              .attr("stroke-width", attributeList["outerVertex"]["stroke-width"]);
 
     text.attr("x", attributeList["text"]["x"])
         .attr("y", attributeList["text"]["y"])
@@ -310,23 +310,23 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     if(dur == null || isNaN(dur)) dur = defaultAnimationDuration;
     if(dur <= 0) dur = 1;
 
-    innerCircle.transition()
+    innerVertex.transition()
               .duration(dur)
-              .attr("cx", attributeList["innerCircle"]["cx"])
-              .attr("cy", attributeList["innerCircle"]["cy"])
-              .attr("fill", attributeList["innerCircle"]["fill"])
-              .attr("r", attributeList["innerCircle"]["r"])
-              .attr("stroke", attributeList["innerCircle"]["stroke"])
-              .attr("stroke-width", attributeList["innerCircle"]["stroke-width"]);
+              .attr("cx", attributeList["innerVertex"]["cx"])
+              .attr("cy", attributeList["innerVertex"]["cy"])
+              .attr("fill", attributeList["innerVertex"]["fill"])
+              .attr("r", attributeList["innerVertex"]["r"])
+              .attr("stroke", attributeList["innerVertex"]["stroke"])
+              .attr("stroke-width", attributeList["innerVertex"]["stroke-width"]);
 
-    outerCircle.transition()
+    outerVertex.transition()
               .duration(dur)
-              .attr("cx", attributeList["outerCircle"]["cx"])
-              .attr("cy", attributeList["outerCircle"]["cy"])
-              .attr("fill", attributeList["outerCircle"]["fill"])
-              .attr("r", attributeList["outerCircle"]["r"])
-              .attr("stroke", attributeList["outerCircle"]["stroke"])
-              .attr("stroke-width", attributeList["outerCircle"]["stroke-width"]);
+              .attr("cx", attributeList["outerVertex"]["cx"])
+              .attr("cy", attributeList["outerVertex"]["cy"])
+              .attr("fill", attributeList["outerVertex"]["fill"])
+              .attr("r", attributeList["outerVertex"]["r"])
+              .attr("stroke", attributeList["outerVertex"]["stroke"])
+              .attr("stroke-width", attributeList["outerVertex"]["stroke-width"]);
 
     text.transition()
         .duration(dur)

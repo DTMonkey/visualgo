@@ -12,7 +12,7 @@ var PSEUDOCODE_SVG_HEIGHT = 400;
  */
 
 var graphVertexProperties = {
-  "innerCircle":{
+  "innerVertex":{
     "r": 14,
     "stroke-width": 0,
     "default":{
@@ -72,7 +72,7 @@ var graphVertexProperties = {
       "stroke": "#fff"
     }
   },
-  "outerCircle":{
+  "outerVertex":{
     "r": 16,
     "stroke-width": 2,
     "default":{
