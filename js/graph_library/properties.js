@@ -14,6 +14,8 @@ var PSEUDOCODE_SVG_HEIGHT = 400;
 var graphVertexProperties = {
   "innerVertex":{
     "r": 14,
+    "width":30,
+    "height": 30,
     "stroke-width": 0,
     "default":{
       "fill": "#eee",
@@ -74,6 +76,8 @@ var graphVertexProperties = {
   },
   "outerVertex":{
     "r": 16,
+    "width": 32,
+    "height": 32,
     "stroke-width": 2,
     "default":{
       "fill": "#333",

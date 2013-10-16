@@ -1,7 +1,7 @@
 // Defines ONE node object
 // Set styles in properties.js and the CSS files!!!
 
-var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
+var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNumber){
   var self = this;
   var defaultAnimationDuration = 250; // millisecond
 
@@ -16,8 +16,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
       "class": null,
       "cx": null,
       "cy": null,
+      "x": null,
+      "y": null,
       "fill": null,
       "r": null,
+      "width": null,
+      "hieght": null,
       "stroke": null,
       "stroke-width": null
     },
@@ -26,8 +30,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
       "class": null,
       "cx": null,
       "cy": null,
+      "x": null,
+      "y": null,
       "fill": null,
       "r": null,
+      "width": null,
+      "hieght": null,
       "stroke": null,
       "stroke-width": null
     },
@@ -60,9 +68,13 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   // If unspecified or illegal value, default duration applies. 
   this.showVertex = function(){
     attributeList["outerVertex"]["r"] = graphVertexProperties["outerVertex"]["r"];
+    attributeList["outerVertex"]["width"] = graphVertexProperties["outerVertex"]["width"];
+    attributeList["outerVertex"]["height"] = graphVertexProperties["outerVertex"]["height"];
     attributeList["outerVertex"]["stroke-width"] = graphVertexProperties["outerVertex"]["stroke-width"];
 
     attributeList["innerVertex"]["r"] = graphVertexProperties["innerVertex"]["r"];
+    attributeList["innerVertex"]["width"] = graphVertexProperties["innerVertex"]["width"];
+    attributeList["innerVertex"]["height"] = graphVertexProperties["innerVertex"]["height"];
     attributeList["innerVertex"]["stroke-width"] = graphVertexProperties["innerVertex"]["stroke-width"];
 
     attributeList["text"]["font-size"] = graphVertexProperties["text"]["font-size"];
@@ -70,9 +82,13 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
 
   this.hideVertex = function(){
     attributeList["outerVertex"]["r"] = 0;
+    attributeList["outerVertex"]["width"] = 0;
+    attributeList["outerVertex"]["height"] = 0;
     attributeList["outerVertex"]["stroke-width"] = 0;
 
     attributeList["innerVertex"]["r"] = 0;
+    attributeList["innerVertex"]["width"] = 0;
+    attributeList["innerVertex"]["height"] = 0;
     attributeList["innerVertex"]["stroke-width"] = 0;
 
     attributeList["text"]["font-size"] = 0;
@@ -81,9 +97,13 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
   this.moveVertex = function(cx, cy){
     attributeList["outerVertex"]["cx"] = cx;
     attributeList["outerVertex"]["cy"] = cy;
+    attributeList["outerVertex"]["x"] = cx-graphVertexProperties["outerVertex"]["width"]/2;
+    attributeList["outerVertex"]["y"] = cy-graphVertexProperties["outerVertex"]["height"]/2;
 
     attributeList["innerVertex"]["cx"] = cx;
     attributeList["innerVertex"]["cy"] = cy;
+    attributeList["innerVertex"]["x"] = cx-graphVertexProperties["innerVertex"]["width"]/2;
+    attributeList["innerVertex"]["y"] = cy-graphVertexProperties["innerVertex"]["height"]/2;
 
     attributeList["text"]["x"] = cx;
     attributeList["text"]["y"] = cy + textYaxisOffset;
@@ -110,6 +130,20 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
     attributeList["innerVertex"]["r"] = newRadiusInner;
     if(newRadiusOuter == null || isNaN(newRadiusOuter)) return;
     attributeList["outerVertex"]["r"] = newRadiusOuter;
+  }
+
+  this.changeWidth = function(newWidthInner, newWidthOuter){
+    if(newWidthInner == null || isNaN(newWidthInner)) return;
+    attributeList["innerVertex"]["width"] = newWidthInner;
+    if(newWidthOuter == null || isNaN(newWidthOuter)) return;
+    attributeList["outerVertex"]["width"] = newWidthOuter;
+  }
+
+  this.changeHeight = function(newHeightInner, newHeightOuter){
+    if(newHeightInner == null || isNaN(newHeightInner)) return;
+    attributeList["innerVertex"]["height"] = newHeightInner;
+    if(newHeightOuter == null || isNaN(newHeightOuter)) return;
+    attributeList["outerVertex"]["height"] = newHeightOuter;
   }
 
   this.changeStrokeWidth = function(newStrokeWidthInner, newStrokeWidthOuter){
@@ -243,23 +277,31 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
 
   // Initialize vertex and draw them, but the object will not be visible due to the radius of the vertex circle set to 0
   function init(){
-    outerVertex = vertexSvg.append("circle");
-    innerVertex = vertexSvg.append("circle");
+    outerVertex = vertexSvg.append(vertexShape);
+    innerVertex = vertexSvg.append(vertexShape);
     text = vertexTextSvg.append("text");
 
     attributeList["innerVertex"]["class"] = "v" + vertexClassNumber
     attributeList["innerVertex"]["cx"] = cx;
     attributeList["innerVertex"]["cy"] = cy;
+    attributeList["innerVertex"]["x"] = cx-graphVertexProperties["innerVertex"]["width"]/2;
+    attributeList["innerVertex"]["y"] = cy-graphVertexProperties["innerVertex"]["height"]/2;
     attributeList["innerVertex"]["fill"] = graphVertexProperties["innerVertex"]["default"]["fill"];
     attributeList["innerVertex"]["r"] = 0;
+    attributeList["innerVertex"]["width"] = 0;
+    attributeList["innerVertex"]["height"] = 0;
     attributeList["innerVertex"]["stroke"] = graphVertexProperties["innerVertex"]["default"]["stroke"];
     attributeList["innerVertex"]["stroke-width"] = 0;
 
     attributeList["outerVertex"]["class"] = "v" + vertexClassNumber
     attributeList["outerVertex"]["cx"] = cx;
     attributeList["outerVertex"]["cy"] = cy;
+    attributeList["outerVertex"]["x"] = cx-graphVertexProperties["outerVertex"]["width"]/2;
+    attributeList["outerVertex"]["y"] = cy-graphVertexProperties["outerVertex"]["height"]/2;
     attributeList["outerVertex"]["fill"] = graphVertexProperties["outerVertex"]["default"]["fill"];
     attributeList["outerVertex"]["r"] = 0;
+    attributeList["innerVertex"]["width"] = 0;
+    attributeList["innerVertex"]["height"] = 0;
     attributeList["outerVertex"]["stroke"] = graphVertexProperties["outerVertex"]["default"]["stroke"];
     attributeList["outerVertex"]["stroke-width"] = 0;
 
@@ -279,15 +321,23 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
 
     innerVertex.attr("cx", attributeList["innerVertex"]["cx"])
               .attr("cy", attributeList["innerVertex"]["cy"])
+              .attr("x", attributeList["innerVertex"]["x"])
+              .attr("y", attributeList["innerVertex"]["y"])
               .attr("fill", attributeList["innerVertex"]["fill"])
               .attr("r", attributeList["innerVertex"]["r"])
+              .attr("width", attributeList["innerVertex"]["width"])
+              .attr("height", attributeList["innerVertex"]["height"])
               .attr("stroke", attributeList["innerVertex"]["stroke"])
               .attr("stroke-width", attributeList["innerVertex"]["stroke-width"]);
 
     outerVertex.attr("cx", attributeList["outerVertex"]["cx"])
               .attr("cy", attributeList["outerVertex"]["cy"])
+              .attr("x", attributeList["outerVertex"]["x"])
+              .attr("y", attributeList["outerVertex"]["y"])
               .attr("fill", attributeList["outerVertex"]["fill"])
               .attr("r", attributeList["outerVertex"]["r"])
+              .attr("width", attributeList["outerVertex"]["width"])
+              .attr("height", attributeList["outerVertex"]["height"])
               .attr("stroke", attributeList["outerVertex"]["stroke"])
               .attr("stroke-width", attributeList["outerVertex"]["stroke-width"]);
 
@@ -314,8 +364,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
               .duration(dur)
               .attr("cx", attributeList["innerVertex"]["cx"])
               .attr("cy", attributeList["innerVertex"]["cy"])
+              .attr("x", attributeList["innerVertex"]["x"])
+              .attr("y", attributeList["innerVertex"]["y"])
               .attr("fill", attributeList["innerVertex"]["fill"])
               .attr("r", attributeList["innerVertex"]["r"])
+              .attr("width", attributeList["innerVertex"]["width"])
+              .attr("height", attributeList["innerVertex"]["height"])
               .attr("stroke", attributeList["innerVertex"]["stroke"])
               .attr("stroke-width", attributeList["innerVertex"]["stroke-width"]);
 
@@ -323,8 +377,12 @@ var GraphVertexWidget = function(cx, cy, vertexText, vertexClassNumber){
               .duration(dur)
               .attr("cx", attributeList["outerVertex"]["cx"])
               .attr("cy", attributeList["outerVertex"]["cy"])
+              .attr("x", attributeList["outerVertex"]["x"])
+              .attr("y", attributeList["outerVertex"]["y"])
               .attr("fill", attributeList["outerVertex"]["fill"])
               .attr("r", attributeList["outerVertex"]["r"])
+              .attr("width", attributeList["outerVertex"]["width"])
+              .attr("height", attributeList["outerVertex"]["height"])
               .attr("stroke", attributeList["outerVertex"]["stroke"])
               .attr("stroke-width", attributeList["outerVertex"]["stroke-width"]);
 

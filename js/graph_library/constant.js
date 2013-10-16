@@ -2,6 +2,9 @@
 
 var OBJ_HIDDEN = -1;
 
+var VERTEX_SHAPE_CIRCLE = "circle";
+var VERTEX_SHAPE_RECT = "rect";
+
 var VERTEX_DEFAULT = "default";
 var VERTEX_HIGHLIGHTED = "highlighted";
 var VERTEX_TRAVERSED = "traversed";

@@ -39,7 +39,7 @@ var GraphWidget = function(){
   this.addVertex = function(cx, cy, vertexText, vertexClassNumber, show){
     if(show != false) show = true;
 
-    var newVertex = new GraphVertexWidget(cx,cy,vertexText,vertexClassNumber);
+    var newVertex = new GraphVertexWidget(cx,cy,VERTEX_SHAPE_CIRCLE,vertexText,vertexClassNumber);
 
     vertexList[vertexClassNumber] = newVertex;
     vertexUpdateList[vertexClassNumber] = false;
@@ -53,7 +53,8 @@ var GraphWidget = function(){
   this.addRectVertex = function(rx, ry, vertexText, vertexClassNumber, show){
     if(show != false) show = true;
 
-    var newVertex = new GraphVertexWidget(cx,cy,vertexText,vertexClassNumber);
+    console.log(VERTEX_SHAPE_RECT);
+    var newVertex = new GraphVertexWidget(rx,ry,VERTEX_SHAPE_RECT,vertexText,vertexClassNumber);
 
     vertexList[vertexClassNumber] = newVertex;
     vertexUpdateList[vertexClassNumber] = false;
