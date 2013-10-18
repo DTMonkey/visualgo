@@ -170,6 +170,10 @@
     stWidget.buildSuffixTree(document.getElementById("arrv1").value);
 
     function buildSuffixTree() {
+        try {
+            if(isPlaying) { stop(); }
+        } 
+        catch (err) {} 
         stWidget.buildSuffixTree(document.getElementById("arrv1").value);
     }
 

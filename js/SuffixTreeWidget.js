@@ -969,8 +969,9 @@ var SuffixTreeWidget = function() {
 
   this.goSearch = function() {
     var input = document.getElementById("search_inp").value;
+    var input2 = document.getElementById("arrv1").value;
     populatePseudocode(0);
-    buildSuffixTree(input);
+    this.buildSuffixTree(input2);
     //(path_label, node_label, x, y, match_flag)
     var stateList = new Array();
     foundResult = false;
@@ -1151,8 +1152,9 @@ var SuffixTreeWidget = function() {
 
   this.goLRS = function(isitLCS) {
     var input = document.getElementById("search_inp").value;
+    var input2 = document.getElementById("arrv1").value;
     populatePseudocode(1);
-    buildSuffixTree(input);    
+    this.buildSuffixTree(input2);    
 
     var is_LCS = false;
     if (typeof(isitLCS)!='undefined') {
@@ -1165,8 +1167,10 @@ var SuffixTreeWidget = function() {
 
     var stateList = new Array();
     var currentState = createState(A);
-    currentState["status"] = "Purple vertices belong to string 1. Green vertices belong to string 2. Current result will be yellow colored.";
-    stateList.push(currentState);
+    if (is_LCS) {
+      currentState["status"] = "Purple vertices belong to string 1. Green vertices belong to string 2. Current result will be yellow colored.";
+      stateList.push(currentState);
+    }
     currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["lineNo"] = 1;
@@ -1379,7 +1383,7 @@ var SuffixTreeWidget = function() {
     processTreeForLRS(root, '', false);
     var currentState = createState(A);
     currentState["status"] = "Start from root.";
-    //currentState["lineNo"] = 1;
+    currentState["lineNo"] = 1;
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
 
@@ -1452,7 +1456,7 @@ var SuffixTreeWidget = function() {
 
       if (isGoingUp[i]) {
         currentState["status"] = "Going back.";
-        //currentState["lineNo"] = 3;
+        currentState["lineNo"] = 1;
         for (var k=0; k < Object.size(string1s); k++) {
           currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
         }
@@ -1471,11 +1475,11 @@ var SuffixTreeWidget = function() {
         var tmp_vertex = mainSvg.selectAll(".v" + draw_data[node.path_label].class_id.toString());
         if (draw_data[node.path_label].color == "orchid") {
           currentState["status"] = "This only contains string 1.";
-          //currentState["lineNo"] = 3;
+          currentState["lineNo"] = 1;
           string1s.push(node_idx);
         } else if (draw_data[node.path_label].color != 'black' ) {
           currentState["status"] = "This only contains string 2.";
-          //currentState["lineNo"] = 5;
+          currentState["lineNo"] = 1;
           string2s.push(node_idx);
         }
         for (var k=0; k < Object.size(string1s); k++) {
@@ -1487,7 +1491,7 @@ var SuffixTreeWidget = function() {
         stateList.push(currentState);
       } else if (node.is_leaf) {
         currentState["status"] = "This is a leaf node, going back.";
-        //currentState["lineNo"] = 1;
+        currentState["lineNo"] = 1;
         //currentState["lineNo"] = 4;
         for (var k=0; k < Object.size(string1s); k++) {
           currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
@@ -1541,7 +1545,7 @@ var SuffixTreeWidget = function() {
     currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
-    currentState["lineNo"] = 1;
+    currentState["lineNo"] = 2;
     stateList.push(currentState);
 
     var stack = new Array(), prev = new Array();
@@ -1609,7 +1613,7 @@ var SuffixTreeWidget = function() {
         currentState["status"] = "Going back."
       } else if (node.is_leaf) {
         currentState["status"] = "This is a leaf node, going back.";
-        currentState["lineNo"] = 3;
+        currentState["lineNo"] = 4;
       } else if (draw_data[node.path_label].color != 'black') {
         currentState["status"] = "This is not a common node, going back.";
         currentState["lineNo"] = 5;
@@ -1655,6 +1659,7 @@ var SuffixTreeWidget = function() {
     return true;
   }
 
+  var lcs_txt = "";
   function stGeneralDriver(notColorInternal) { 
    //Txt = document.getElementById("s1").value;
     var s1 = document.getElementById("s1").value, s2 = document.getElementById("s2").value;
@@ -1692,7 +1697,31 @@ var SuffixTreeWidget = function() {
     for (var i=1; i < Txt.length; i++) {
       height_level[i] = height_level[0]*i*5.5;
     }   
-    drawGeneralSuffixTree(root, 0, 70, '');
+    maxY = 0; maxX = 0;
+    var startX = 70;
+    drawGeneralSuffixTree(root, 0, startX, '');  
+    startX = (window.innerWidth - (maxX - startX))/2.5;
+    lcs_txt = Txt;
+    clearScreen();
+    Txt = lcs_txt;
+    infinity = Txt.length + 1000; 
+    nForks = 0;
+    draw_data = new Array();
+    suffix_table = new Array();
+    reverse_suffix_table = new Array();
+    insertionSort(s1);
+    insertionSort(s2);
+
+    algorithm2();  // ------------ the business
+    height_level = new Array();
+    for (var i=0; i < Txt.length; i++) height_level[i] = 0;
+    show2(root, '', 'tree:|', 0, '');
+    height = Txt.length*32;
+    height_level[0] = height_offset;
+    for (var i=1; i < Txt.length; i++) {
+      height_level[i] = height_level[0]*i*5.5;
+    }   
+    drawGeneralSuffixTree(root, 0, startX, '');
     drawAllLabel();
     // update coord
     var count = 1;
@@ -1809,7 +1838,7 @@ var SuffixTreeWidget = function() {
     var current_height = height;
     A[amountVertex] = new ObjectPair(vertex_name, amountVertex);
     graphWidget.addVertex(update_prev_x, height, A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
-
+    if (maxX < update_prev_x) maxX = update_prev_x;
     //drawVertex(update_prev_x, height, vertex_name, 'black');
     if (T_idx == "") {
       draw_data[""] = new Node3(T_string, -1, -2, update_prev_x, level*height + height_offset, "");
@@ -1935,7 +1964,7 @@ var SuffixTreeWidget = function() {
       case 0: // Search
         document.getElementById('code1').innerHTML = 'consider current node';
         document.getElementById('code2').innerHTML = 'for (i in current node child)';
-        document.getElementById('code3').innerHTML = '&nbsp&nbsp if (i is leave || not match)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbsp if (i not match)';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbsp continue';
         document.getElementById('code5').innerHTML = '&nbsp&nbsp if (i is full match) return all results';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp else if (i is partial match) go deeper';
@@ -1946,7 +1975,7 @@ var SuffixTreeWidget = function() {
         document.getElementById('code2').innerHTML = 'consider current node';
         document.getElementById('code3').innerHTML = 'for (i in current node child)';
         document.getElementById('code4').innerHTML = '&nbsp&nbspif i is leave continue';
-        document.getElementById('code5').innerHTML = '&nbsp&nbspelse if (current node path label length >= result.length)';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspelse if (path label length >= result.length)';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsp update result';
         document.getElementById('code7').innerHTML = 'return result';
         break;
@@ -1958,11 +1987,11 @@ var SuffixTreeWidget = function() {
         document.getElementById('code5').innerHTML = '&nbsp&nbspcolor current node as string 2';    
         break;
       case 3: // LCS main
-        document.getElementById('code1').innerHTML = 'max = root';
-        document.getElementById('code2').innerHTML = 'findLCS(current node):';
-        document.getElementById('code3').innerHTML = '&nbsp&nbspif current node is a leaf, return';
-        document.getElementById('code4').innerHTML = '&nbsp&nbspif current node belongs to 1 string only';
-        document.getElementById('code5').innerHTML = '&nbsp&nbsp&nbsp&nbspreturn';
+        document.getElementById('code1').innerHTML = 'indexing the nodes';
+        document.getElementById('code2').innerHTML = 'max = root';
+        document.getElementById('code3').innerHTML = 'findLCS(current node):';
+        document.getElementById('code4').innerHTML = '&nbsp&nbspif current node is a leaf, return';
+        document.getElementById('code5').innerHTML = '&nbsp&nbspif current node is not common, return';
         document.getElementById('code6').innerHTML = '&nbsp&nbspif current node length >= max, update max';
         document.getElementById('code7').innerHTML = '&nbsp&nbspfindLCS(current node\'s children)';      
         break;
