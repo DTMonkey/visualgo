@@ -141,6 +141,7 @@ function hideEntireActionsPanel() {
 	closeInit();
 	closeSample();
 	closeFind();
+	closeIsSameSet();
 	closeUnion();
 	hideActionsPanel();
 }

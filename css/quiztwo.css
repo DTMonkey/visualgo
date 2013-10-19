@@ -1,0 +1,114 @@
+#login-screen {
+	position: fixed;
+	height: 320px;
+	width: 500px;
+	top: 50%;
+	left: 50%;
+	margin-top: -160px;
+	margin-left: -250px;
+}
+	#login-screen h1, h2 {
+		text-align: center;
+		font-size: 48px;
+		font-weight: bold;
+		text-transform: uppercase;
+		line-height: 100%;
+		margin-bottom: 5px;
+	}
+	#login-screen h2 { font-size: 36px; }
+	#login-screen form { text-align: center; padding-top: 40px; }
+		#login-screen input[type=text], input[type=password] {
+			color: #888;
+			box-shadow: 0px 0px 3px #929292 inset;
+			padding: 7px 10px;
+			font-size: 14px;
+			margin: 5px;
+			width: 218px;
+		}
+		#login-yes, #login-no {
+			margin: 40px 5px 0px 5px;
+			padding: 7px 10px;
+			color: white;
+			font-weight: bold;
+			cursor: pointer;
+			width: 114px;
+		}
+		#login-yes { background: #227faf; }
+		#login-no { background: #df3939; }
+			#login-yes:hover { background: black; }
+		#login-err { margin-top: 20px; color: #df3939; font-weight: bold; }
+		
+#instructions-screen {	
+	display: none;
+	position: fixed;
+	height: 400px;
+	width: 500px;
+	top: 50%;
+	left: 50%;
+	margin-top: -200px;
+	margin-left: -250px;
+	text-align: center;
+}
+	#instructions-screen h3 {
+		text-align: center;
+		font-size: 24px;
+		font-weight: bold;
+		text-transform: uppercase;
+		line-height: 100%;
+	}
+	ul#instructions { margin: 45px 0px; text-align: left; }
+	#instructions li { font-size: 14px; padding: 4px 0px; list-style-type: none; }
+	#start-test {
+		display: inline-block;
+		background: #227faf;
+		padding: 7px 10px;
+		color: white;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+		#start-test:hover { background: black; }
+		
+#test-screen {
+	display: none;
+}
+	#question-nav {
+		width: 100%;
+		position: fixed;
+		bottom: 42px;
+		text-align: center;
+		padding: 10px 0px;
+		z-index: -11;
+		
+		background: #227faf;
+		color: white;
+		font-size: 16px;
+		font-weight: bold;
+		-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;
+	}
+		#question-nav a.qnno {
+			padding: 0px 10px;
+			cursor: pointer;
+			opacity: 0.4;
+			text-align: center;
+			width: 16px;
+		}
+			#question-nav a.selected {
+				position: relative;
+				opacity: 1.0;
+			}
+			#question-nav a.answered {
+				opacity: 1.0;
+			}
+				#question-nav a.selected:before {
+					content: " ";
+					position: absolute;
+					top: -12px;
+					left: 8px;
+					height: 0px;
+					width: 0px;
+					border-style:solid;
+					border-width:10px;
+					border-color: transparent;
+					border-top-color: #eee;
+				}

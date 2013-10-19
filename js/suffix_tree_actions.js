@@ -1,54 +1,53 @@
-var actionsWidth = 150;
+var actionsWidth = 180;
 var statusCodetraceWidth = 370;
 
-var isBuildv1Open = false;
-var isBuildv2Open = false;
+var isBuildOpen = false;
 var isInsertOpen = false;
-var isSearch = false;
-var isLCS = false;
+var isSearchOpen = false;
+var isLCSOpen = false;
 
-function openBuildv1() {
-	if(!isBuildv1Open){
-		$('#buildv1-input').animate({
+function openBuild() {
+	if(!isBuildOpen){
+		$('#build-input').animate({
 			width: "+="+200
 		}, 250, function() {
-			$('#buildv1-go').animate({
+			$('#build-go').animate({
 				width: "+="+34
-			});
+			}, 100);
 		});
-		isBuildv1Open = true;
+		isBuildOpen = true;
 	}
 }
 
-function closeBuildv1() {
-	if(isBuildv1Open){
-		$('#buildv1-err').html("");	
-		$('#buildv1-go').animate({
+function closeBuild() {
+	if(isBuildOpen){
+		$('#build-err').html("");	
+		$('#build-go').animate({
 			width: "-="+34
 		}, 100, function() {
-			$('#buildv1-input').animate({
+			$('#build-input').animate({
 				width: "-="+200
 			}, 250 );
 		});
-		isBuildv1Open = false;
+		isBuildOpen = false;
 	}
 }
 
 function openSearch() {
-	if(!isSearch){
+	if(!isSearchOpen){
 		$('#search-input').animate({
 			width: "+="+200
 		}, 250, function() {
 			$('#search-go').animate({
 				width: "+="+34
-			});
+			},100);
 		});
-		isSearch = true;
+		isSearchOpen = true;
 	}
 }
 
 function closeSearch() {
-	if(isSearch){
+	if(isSearchOpen){
 		$('#search-err').html("");	
 		$('#search-go').animate({
 			width: "-="+34
@@ -58,26 +57,26 @@ function closeSearch() {
 			}, 250 );
 		});
 		
-		isSearch = false;
+		isSearchOpen = false;
 	}
 }
 
 function openLCS() {
-	if(!isLCS){
+	if(!isLCSOpen){
 		$('#lcs-input').animate({
 			width: "+="+200
 		}, 250, function() {
 			$('#lcs-go').animate({
 				width: "+="+34
-			});
+			},100);
 		});
-		isLCS = true;
+		isLCSOpen = true;
 	}
 
 }
 
 function closeLCS() {
-	if(isLCS){
+	if(isLCSOpen){
 		$('#lcs-err').html("");	
 		$('#lcs-go').animate({
 			width: "-="+34
@@ -86,7 +85,7 @@ function closeLCS() {
 				width: "-="+200
 			}, 250 );
 		});		
-		isLCS = false;
+		isLCSOpen = false;
 	}
 
 }
@@ -94,53 +93,35 @@ function closeLCS() {
 function hideEntireActionsPanel() {
 	closeSearch();
 	closeLCS();
-	closeBuildv1();
+	closeBuild();
 	hideActionsPanel();
 }
 
 $( document ).ready(function() {
 	
 	//the actions with pullout inputs
-	$('#buildv1').click(function() {
+	$('#build').click(function() {
 		closeSearch();
 		closeLCS();
-		openBuildv1();
+		openBuild();
 	});	
 
 	$('#search').click(function() {
-		closeBuildv1();
+		closeBuild();
 		closeLCS();
 		openSearch();
 	});
 
 	$("#LCS").click(function() {
-		closeBuildv1();
+		closeBuild();
 		closeSearch();
 		openLCS();
 	});
 
 	$("#LRS").click(function() {
-		closeBuildv1();
+		closeBuild();
 		closeSearch();
 		closeLCS();
-	});
-
-	//tutorial mode
-	$('#heap-tutorial-1 .tutorial-next').click(function() {
-		showActionsPanel();
-	});
-	$('#heap-tutorial-2 .tutorial-next').click(function() {
-		hideEntireActionsPanel();
-	});
-	$('#heap-tutorial-3 .tutorial-next').click(function() {
-		showStatusPanel();
-	});
-	$('#heap-tutorial-4 .tutorial-next').click(function() {
-		hideStatusPanel();
-		showCodetracePanel();
-	});
-	$('#heap-tutorial-5 .tutorial-next').click(function() {
-		hideCodetracePanel();
 	});
 
 })

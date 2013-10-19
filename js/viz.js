@@ -85,8 +85,8 @@ function triggerRightPanels() {
 }
 
 $( document ).ready(function() {
-	
 	$('#current-action').hide();
+	$('#actions-hide img').addClass('rotateRight');
 	
 	//surpriseColour stuff
 	$('.tutorial-next').css("background-color", surpriseColour);
