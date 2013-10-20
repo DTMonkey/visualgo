@@ -72,6 +72,7 @@
 #test-screen {
 	display: none;
 }
+
 	#question-nav {
 		width: 100%;
 		position: fixed;
@@ -112,3 +113,46 @@
 					border-color: transparent;
 					border-top-color: #eee;
 				}
+	
+	#info {
+		position: fixed;
+		top: 60px;
+		right: 60px;
+		text-align: right;
+	}
+		#info #student-name { font-size: 16px; text-transform: uppercase; }
+		#info #time-left { font-size: 30px; }
+		#submit-test {
+			display: inline-block;
+			margin-top: 15px;
+			background: #df3939;
+			color: white;
+			padding: 8px 12px;
+			font-size: 14px;
+			font-weight: bold;
+			text-transform: uppercase;
+			cursor: pointer;
+		}
+			#submit-test:hover { background: black; }
+			
+	#submit-check {
+		height: 100px;
+		width: 290px;
+		margin-top: -70px;
+		margin-left: -165px;
+		padding: 20px;
+		text-align: center;
+	}
+		#submit-check p { margin: 0px 0px 30px; padding: 0px; text-align: left; }
+		#submit-check .button {
+			display: inline-block;
+			padding: 7px 10px;
+			color: white;
+			font-weight: bold;
+			cursor: pointer;
+		}
+			#submit-check .button:hover { background: black; }
+			#submit-yes1 { background: #227faf; margin-right: 5px; width: 50px; }
+			#submit-no1 { background: #df3939; width: 50px; }
+			#submit-yes2 { background: #227faf; margin-right: 5px; width: 114px; }
+			#submit-no2 { background: #df3939; width: 114px; }

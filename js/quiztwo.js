@@ -6,6 +6,12 @@ var questionList = new Array(); //of real (jumbled) question numbers - maps 1-20
 var currentQn; //the unjumbled qn no (from php)
 var localQnNo; //1-based
 
+function submitTest() {
+	//TODO: send result to server
+	$('#test-screen').fadeOut("fast");
+	$('#result-screen').fadeIn("fast");
+}
+
 $(document).ready (function() {
 	
 	/*-------LOG IN CSS-------*/
@@ -92,4 +98,35 @@ $(document).ready (function() {
 		}
 	});
 
+	/*-------SUBMIT QUIZ-------*/
+	$('#submit-test').click(function() {
+		$('#dark-overlay').fadeIn("fast", function() {
+			$('#submit-check').fadeIn("fast");
+			$('#submit-yes1').show(); $('#submit-no1').show();
+			$('#submit-yes2').hide(); $('#submit-no2').hide();
+			$('#submit-check p').html('You only have 1 attempt on this quiz. Are you sure you want to submit it?');
+		});
+	});
+	$('#submit-yes1').click(function() {
+		$('#submit-yes1').hide(); $('#submit-no1').hide();
+		$('#submit-yes2').show(); $('#submit-no2').show();
+		$('#submit-check p').html('Are you really really sure? You still have '+20+' minutes left.');
+	});
+	$('#submit-no1').click(function() {
+		$('#submit-check').fadeOut("fast", function() {
+			$('#dark-overlay').fadeOut("fast");
+		});
+	});
+	$('#submit-yes2').click(function() {
+		$('#submit-check').fadeOut("fast", function() {
+			$('#dark-overlay').fadeOut("fast");
+		});
+		submitTest();
+	});
+	$('#submit-no2').click(function() {
+		$('#submit-check').fadeOut("fast", function() {
+			$('#dark-overlay').fadeOut("fast");
+		});
+	});
+	
 });

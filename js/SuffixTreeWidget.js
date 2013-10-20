@@ -62,8 +62,13 @@ var SuffixTreeWidget = function() {
   var maxX = 0, maxY = 0;
 
   mainSvg.style("class", "unselectable");
-  mainSvg.attr("height", window.innerHeight);
+  mainSvg.attr("height", window.innerHeight-80);
   mainSvg.attr("width", window.innerWidth);
+  
+  $( window ).resize(function() {
+	mainSvg.attr("height", window.innerHeight-80);
+	mainSvg.attr("width", window.innerWidth);
+  });
   
   var projection = d3.geo.albersUsa()
     .scale(1070)
