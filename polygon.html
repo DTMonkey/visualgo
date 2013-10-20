@@ -59,6 +59,7 @@
 		<p id="perimeter" class="execAction" onclick=perimeter()>Perimeter</p>
 		<p id="is_convex" class="execAction" onclick=isConvex()>isConvex</p>
         <p id="graham">Graham Scan</p>
+        <p id="cut_polygon" class="execAction" onclick=cutPolygon()>Cut polygon</p>
         <p id="point_inside" class="execAction" onclick=checkPointInsidePolygon()>Check point inside</p>
 	</div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
@@ -187,7 +188,7 @@
     }
 
     function checkPointInsidePolygon() {
-         if(isPlaying) { stop(); }
+        if (isPlaying) { stop(); }
         var gw = GeometryWidget.getGraphWidget();
         isPlaying = true;
         closeGrahamScan();
@@ -203,6 +204,26 @@
                 $('#current-action p').html("Click to draw your point");
             }
         }, 500); 
+    }
+
+    function cutPolygon() {
+        if (isPlaying) { stop(); }
+        var gw = GeometryWidget.getGraphWidget();
+        isPlaying = true;
+        closeGrahamScan();
+        setTimeout( function() {
+            if ((mode=="exploration")&&GeometryWidget.doCutPolygon()) {
+                /*
+                $('#current-action').show();
+                $('#current-action p').html("Check point is inside polygon");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                triggerRightPanels();
+                isPlaying = true;*/
+                $('#current-action').show();
+                $('#current-action p').html("Click to draw your 2 points");
+            }
+        }, 500); 
+
     }
 
 

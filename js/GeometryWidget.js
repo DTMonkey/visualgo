@@ -43,6 +43,8 @@ var Geometry = function() {
    var screenWidth = window.innerWidth - 80;
    var firstNode = -1;
    var isCheckingPointInside = false;
+   var cutPolygonState = 0;
+   var isPreviousPointInsde = false;
 
 
    mainSvg.style("class", "unselectable");
@@ -83,6 +85,8 @@ var Geometry = function() {
     aborted_mousedown = false;
     firstNode = -1;
     isCheckingPointInside = false;
+    cutPolygonState = 0;
+    isPreviousPointInsde = false;
   }
 
   function addExtraEdge() {    
@@ -302,7 +306,15 @@ var Geometry = function() {
       coord[amountVertex] = new Array();
       coord[amountVertex][0] = cur[0];
       coord[amountVertex][1] = cur[1];
-      A[amountVertex] = new ObjectPair(new_vertex_id -1, amountVertex);
+      if (cutPolygonState == 0)
+        A[amountVertex] = new ObjectPair(amountVertex, amountVertex);
+      else if (cutPolygonState == 1) {
+        A[amountVertex] = new ObjectPair("A", amountVertex);
+        cutPolygonState++;
+      } else {
+        A[amountVertex] = new ObjectPair("B", amountVertex);
+        cutPolygonState++;
+      }
       graphWidget.addVertex(cur[0], cur[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
       if (firstNode == -1) {
         firstNode = amountVertex-1;
@@ -315,20 +327,10 @@ var Geometry = function() {
 
       text[0] = text[0].splice(2,1);
       var ii = new_vertex_id -2;
-      text.on("mouseover", function () { 
-        var cc = d3.mouse(this);
-        
-        var circle2 = mainSvg.selectAll(".v" + ii.toString());
-        circle2[0][2].value = circle2[0][2].value;
-        circle2[0] = circle2[0].splice(0,2);
-        circle2.style("fill", surpriseColour);
-        
+      text.on("mouseover", function () {                
       })
       .on("mouseout", function () { 
-        //var circle2 = mainSvg.selectAll(".v" + ( (isUsed)).toString());
-        var circle2 = mainSvg.selectAll(".v" + ii.toString());
-        circle2[0] = circle2[0].splice(0,2);
-        circle2.style("fill", "#eeeeee");
+
       })
       .on("click", function () {
           // hold ctrl to delete node
@@ -375,7 +377,8 @@ var Geometry = function() {
             if (mousedown_node != null) {
               if (ii != firstNode) return;
               if (isCheckingPointInside)  return;
-              addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+              if (cutPolygonState > 0) return;
+              addIndirectedEdge(mousedown_node, ii, ++amountEdge, EDGE_TYPE_UDE, 0, true);
               //edgeList["#e" + amountEdge] = 
               mainSvg.on("mousedown", null);
             }
@@ -395,17 +398,9 @@ var Geometry = function() {
       //console.log(circle[0]);
       //console.log(circle);
       circle.on("mouseover", function () { 
-        var cc = d3.mouse(this);
-    
-        var circle2 = mainSvg.selectAll(".v" + ii.toString());
-        circle2[0][2].value = circle2[0][2].value;
-        circle2[0] = circle2[0].splice(0,2);
-        circle2.style("fill", surpriseColour);
+       
       })
       .on("mouseout", function () { 
-        var circle2 = mainSvg.selectAll(".v" + ii.toString());
-        circle2[0] = circle2[0].splice(0,2);
-        circle2.style("fill", "#eeeeee");
       })
       .on("mousedown", function() {
         //mousedown_node = d3.mouse(this);              
@@ -457,7 +452,8 @@ var Geometry = function() {
                 if (mousedown_node != null) {
                   if (ii != firstNode) return;
                   if (isCheckingPointInside)  return;
-                  addIndirectedEdge(ii, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+                  if (cutPolygonState > 0) return;
+                  addIndirectedEdge(mousedown_node, ii, ++amountEdge, EDGE_TYPE_UDE, 0, true);
                   mainSvg.on("mousedown", null);
                 }
               }       
@@ -492,8 +488,65 @@ var Geometry = function() {
     var prev = mousedown_node;
     if (is_used == -1) {
       doclick2(cur);
-      if (mousedown_node != null) 
+      if (mousedown_node != null && cutPolygonState!=2) {
         addIndirectedEdge(amountVertex-1, mousedown_node, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+        if (cutPolygonState == 3) {
+          var sz = Object.size(coord)-2;
+          for (var i=0; i < sz; i++) {
+            var nxt = (i == sz - 1) ? 0 : i+1;
+            var left1 = cross(coord[amountVertex-1][0], coord[amountVertex-1][1], coord[mousedown_node][0], coord[mousedown_node][1], coord[i][0], coord[i][1]);
+            var left2 = cross(coord[amountVertex-1][0], coord[amountVertex-1][1], coord[mousedown_node][0], coord[mousedown_node][1], coord[nxt][0], coord[nxt][1]);
+            if (left1 * left2 > -0.000001) continue;
+            var sect = lineIntersectSeg(coord[i][0], coord[i][1],
+                                        coord[nxt][0], coord[nxt][1],
+                                        coord[amountVertex-1][0], coord[amountVertex-1][1],
+                                        coord[mousedown_node][0], coord[mousedown_node][1]);
+            coord[amountVertex] = new Array();
+            coord[amountVertex][0] = sect[0];
+            coord[amountVertex][1] = sect[1];
+            A[amountVertex] = new ObjectPair("", amountVertex);
+            graphWidget.addVertex(sect[0], sect[1], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+            var ed = getEdgeConnectTwoVertex(i, nxt);
+            graphWidget.removeEdge(ed);
+            delete edgeList["#e" + ed.toString()];
+            addIndirectedEdge(i, amountVertex-1, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+            addIndirectedEdge(nxt, amountVertex-1, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+          }
+          var in1 = isInsidePolygon(coord[amountVertex-3][0], coord[amountVertex-3][1]);
+          var in2 = isInsidePolygon(coord[amountVertex-4][0], coord[amountVertex-4][1]);
+          var dis31 = dist2P(coord[amountVertex-1][0], coord[amountVertex-1][1],
+                             coord[amountVertex-3][0], coord[amountVertex-3][1]);
+          var dis32 = dist2P(coord[amountVertex-2][0], coord[amountVertex-2][1],
+                           coord[amountVertex-3][0], coord[amountVertex-3][1]);
+          var con3 = amountVertex-1, con4 = amountVertex-2;
+          if (dis31 > dis32) {
+            con3 = amountVertex-2;
+            con4 = amountVertex-1;
+          }
+          addIndirectedEdge(con3, amountVertex-3, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+          addIndirectedEdge(con4, amountVertex-4, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+
+          if (!in1 && !in2) { // both outside
+            var ed = getEdgeConnectTwoVertex(amountVertex-3, amountVertex-4);
+            graphWidget.removeEdge(ed);
+            delete edgeList["#e" + ed.toString()];
+            addIndirectedEdge(amountVertex-1, amountVertex-2, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+          } else if (in1 && in2) { // both inside
+
+          } else { // 1 inside 1 outside
+            var in_idx = amountVertex-3; var con_idx = con4;
+            if (in2) {
+              in_idx = amountVertex-4;
+              con_idx = con3;
+            }
+            var ed = getEdgeConnectTwoVertex(amountVertex-3, amountVertex-4);
+            graphWidget.removeEdge(ed);
+            delete edgeList["#e" + ed.toString()];
+            addIndirectedEdge(in_idx, con_idx, ++amountEdge, EDGE_TYPE_UDE, 0, true);                          
+          }
+          goCutPolygon();
+        }
+      }
       mousedown_node = amountVertex-1;
     } //else mousedown_node = is_used;
   }
@@ -542,7 +595,7 @@ var Geometry = function() {
       "status":{}
     };
 
-    for (var i = 0; i < internalHeapObject.length; i++) {
+    for (var i = 0; i < Object.size(internalHeapObject); i++) {
       var key = internalHeapObject[i].getSecond();
       //var key = i;
       state["vl"][key] = {};
@@ -580,6 +633,14 @@ var Geometry = function() {
   }
 
   this.findPerimeter = function() {
+    /*
+    if (isPreviousPointInsde) {
+      graphWidget.removeVertex(amountVertex-1);
+      delete coord[amountVertex-1];
+      delete A[amountVertex-1];
+    }
+    */
+
     var stateList = new Array();
     var currentState = createState(A);
     popuatePseudocode(0);
@@ -588,13 +649,18 @@ var Geometry = function() {
     stateList.push(currentState);
 
     var dist = 0, over_dist = 0;
+    var prevs = new Array();
     for (var i=0; i < Object.size(coord); i++) {
       currentState = createState(A);
+      for (var j=0; j < Object.size(prevs); j++) {
+        currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+      }
       var v0 = isUsed(coord[i][0], coord[i][1]);
       var k = (i == Object.size(coord) -1) ? 0 : i+1;
       var v1 = isUsed(coord[k][0], coord[k][1]);
       currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
       currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
+      prevs.push(v0);prevs.push(v1);
       var e = getEdgeConnectTwoVertex(v0, v1);
       currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
       dist = dist2P(coord[i][0], coord[i][1], coord[k][0], coord[k][1]);
@@ -604,6 +670,9 @@ var Geometry = function() {
       stateList.push(currentState);
     }
     currentState = createState(A);
+    for (var j=0; j < Object.size(prevs); j++) {
+      currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+    }
     //currentState["lineNo"] = 2;
     currentState["status"] = "result = " + over_dist.toFixed(2) + ".";
     stateList.push(currentState);
@@ -624,6 +693,8 @@ var Geometry = function() {
     var stateList = new Array();
     popuatePseudocode(1);
     var currentState = createState(A);
+    var prevs = new Array();
+
     currentState["status"] = "Start";
     //currentState["lineNo"] = 2;
     if (sz < 3) {
@@ -644,6 +715,7 @@ var Geometry = function() {
     currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
     currentState["vl"][v2]["state"] = VERTEX_HIGHLIGHTED;
+    prevs.push(v0);
     var e = getEdgeConnectTwoVertex(v0, v1);
     currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
     var e1 = getEdgeConnectTwoVertex(v1, v2);
@@ -652,7 +724,11 @@ var Geometry = function() {
     //currentState = createState(A);
     for (var i=1; i < sz; i++) {
       currentState = createState(A);
+      for (var j=0; j < Object.size(prevs); j++) {
+        currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+      }
       v0 = isUsed(coord[i][0], coord[i][1]);
+      prevs.push(v0);
       var k = (i == Object.size(coord) -1) ? 0 : i+1;
       v1 = isUsed(coord[k][0], coord[k][1]);
       var l;
@@ -688,6 +764,9 @@ var Geometry = function() {
       stateList.push(currentState);
     }
     currentState = createState(A);
+    for (var j=0; j < Object.size(prevs); j++) {
+      currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+    }
     currentState["status"] = "Polygon is convex.";
     currentState["lineNo"] = 7;
     stateList.push(currentState);
@@ -1271,7 +1350,7 @@ var Geometry = function() {
       case 1: // isConvex
         document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex // sz =  size of P';
         document.getElementById('code2').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
-        document.getElementById('code3').innerHTML = 'for (i=0; i < sz -1; i++)';
+        document.getElementById('code3').innerHTML = 'for (i=1; i < sz -1; i++)';
         document.getElementById('code4').innerHTML = '&nbsp&nbsptmp = (i+2 == sz ? 1: i+2)';
         document.getElementById('code5').innerHTML = '&nbsp&nbspif ccw(P[i], P[i+1], P[tmp]) != isLeft';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsppolygon is not convex';
@@ -1291,9 +1370,143 @@ var Geometry = function() {
         document.getElementById('code2').innerHTML = '&nbsp&nbsp&nbsp&nbspif ccw(p, P[i], P[i+1]';
         document.getElementById('code3').innerHTML = '&nbsp&nbsp&nbsp&nbspsum += angle(P[i], p, P[i+1])';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp  else sum -= angle(P[i], p, P[i+1])';
-        document.getElementById('code5').innerHTML = 'return fabs(fabs(sum) - 2*PI < EPS';
+        document.getElementById('code5').innerHTML = 'return fabs(fabs(sum) - 2*PI) < EPS';
+        break;
+      case 4: // cut polygon
+        document.getElementById('code1').innerHTML = 'for (point i in polygon)'
+        document.getElementById('code2').innerHTML = '&nbsp if left1 > -EPS //left1 = cross(A,B,i)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspadd i to result';
+        document.getElementById('code4').innerHTML = '&nbsp if left1*left2 < -EPS //left2 = cross(A,B,i+1)';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp  add intersection to result';
         break;
     } 
+  }
+
+  // line segment p-q intersect with line A-B
+  function lineIntersectSeg(px, py, qx, qy, Ax, Ay, Bx, By) {
+    var a = By - Ay;
+    var b = Ax - Bx;
+    var c = Bx*Ay - Ax*By;
+    var u = Math.abs(a*px + b*py + c);
+    var v = Math.abs(a*qx + b*qy + c);
+    return [(px*v + qx*u)/(u+v), (py*v + qy*u)/(u+v)];
+  }
+
+  this.doCutPolygon = function() {
+    cutPolygonState = 1;
+    mainSvg.on("mousedown", function (d) { 
+      mousedown_event = this;
+      doMouseDown();
+    });
+    return true;
+  }
+
+  function goCutPolygon() {
+    //return;
+    $('#current-action').show();
+    $('#current-action p').html("Cut polygon");
+    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
+    triggerRightPanels();
+    isPlaying = true;
+    popuatePseudocode(4);
+    var stateList = new Array();
+    var currentState = createState(A);
+    var prev_edges = new Array();
+    var pA = coord[amountVertex-3], pB = coord[amountVertex-4];
+
+    var dis31 = dist2P(coord[amountVertex-1][0], coord[amountVertex-1][1],
+                             coord[amountVertex-3][0], coord[amountVertex-3][1]);
+    var dis32 = dist2P(coord[amountVertex-2][0], coord[amountVertex-2][1],
+                     coord[amountVertex-3][0], coord[amountVertex-3][1]);
+    var conA = amountVertex-1, conB = amountVertex-2; // A connects with conA
+    if (dis31 > dis32) {
+      conA = amountVertex-2; 
+      conB = amountVertex-1;
+    }
+    currentState["status"] = "Start";
+    stateList.push(currentState);
+
+    var sz = Object.size(coord) - 4;
+    var p = new Array();
+    for (var i=0; i < sz; i++) {
+      //currentState = createState(A);
+      //stateList.push(currentState);
+
+      var nxt = (i == sz - 1) ? 0 : i+1;
+      currentState = createState(A);
+      for (var j=0; j < Object.size(p); j++) {
+        currentState["vl"][p[j]]["state"] = VERTEX_RESULT;
+      }
+      currentState["status"] = "Checking these points";
+      currentState["lineNo"] = 1;
+      currentState["vl"][amountVertex-3]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][amountVertex-4]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+      stateList.push(currentState);
+      currentState = createState(A);
+      var left1 = cross(pA[0], pA[1], pB[0], pB[1], coord[i][0], coord[i][1]);
+      var left2 = cross(pA[0], pA[1], pB[0], pB[1], coord[nxt][0], coord[nxt][1]);
+      if (left1 > -0.000001) { // coord[i] is on the left, push back
+        currentState["vl"][amountVertex-3]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][amountVertex-4]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["lineNo"] = 3;
+        currentState["status"] = "This point is on the left, add to result."
+        p.push(i);
+        for (var j=0; j < Object.size(p); j++) {
+          currentState["vl"][p[j]]["state"] = VERTEX_RESULT;
+        }
+        stateList.push(currentState);
+      } else {
+        currentState["status"] = "This point is on the right, skip.";
+        currentState["lineNo"] = 2;
+        for (var j=0; j < Object.size(p); j++) {
+          currentState["vl"][p[j]]["state"] = VERTEX_RESULT;
+        }
+        stateList.push(currentState);
+      }
+      if (left1 * left2 < -0.000001) { // edge(Q[i], Q[i+1] crosses line AB)
+        currentState["vl"][conA]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][conB]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+        currentState["status"] = "This edge crosses line AB";
+        currentState["lineNo"] = 5;
+        var conn = amountVertex-1;
+        var tmp = amountVertex-2;
+        if (dist2P(coord[tmp][0], coord[tmp][1], coord[i][0], coord[i][1]) +
+            dist2P(coord[tmp][0], coord[tmp][1], coord[nxt][0], coord[nxt][1]) - 
+            dist2P(coord[i][0], coord[i][1], coord[nxt][0], coord[nxt][1]) < 0.00001) {
+          conn = tmp;
+        }
+        p.push(conn);
+        for (var j=0; j < Object.size(p); j++) {
+          currentState["vl"][p[j]]["state"] = VERTEX_RESULT;
+        }
+        stateList.push(currentState);
+      }
+    }
+    currentState = createState(A);
+    currentState["status"] = "Finish.";
+    for (var j=0; j < Object.size(p); j++) {
+      currentState["vl"][p[j]]["state"] = VERTEX_RESULT;
+    }
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+
+    cutPolygonState = 0;
+  }
+
+  // no animation version, used for cut polygon
+  function isInsidePolygon(px, py) {
+    var sum = 0;
+    for (var i=0; i < Object.size(coord) - 4; i++) {
+      var nxt = (i == Object.size(coord) - 5) ? 0 : i + 1;
+      if (ccw(px, py, coord[i][0], coord[i][1], coord[nxt][0], coord[nxt][1])) {
+        sum += angle(coord[i][0], coord[i][1], px, py, coord[nxt][0], coord[nxt][1]);
+      } else sum -= angle(coord[i][0], coord[i][1], px, py, coord[nxt][0], coord[nxt][1]);
+    }
+    var PI = Math.acos(-1.0);
+    return Math.abs(Math.abs(sum) - 2*PI) < 0.000001;
   }
 
   this.checkPointInsidePolygon = function() {
@@ -1399,6 +1612,8 @@ var Geometry = function() {
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);    
     isCheckingPointInside = false;
+    isPreviousPointInsde = true;
   }
+
 }
 
