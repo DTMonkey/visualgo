@@ -111,6 +111,82 @@
 	padding: 8px 0px 7px;
 }
 
+/*tutorial dialogs*/
+#suffixtree-tutorial-1 {
+	top: 60px;
+	left: 60px;
+	width: 250px;
+}
+#suffixtree-tutorial-2 {
+	bottom: 200px;
+	left: 60px;
+	width: 220px;
+}
+	#suffixtree-tutorial-2:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#suffixtree-tutorial-3 {
+	top: 400px;
+	left: 50%;
+	width: 200px;
+	margin-left: -110px;
+}
+	#suffixtree-tutorial-3:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+#suffixtree-tutorial-4 {
+	bottom: 335px;
+	right: 150px;
+	width: 200px;
+}
+	#suffixtree-tutorial-4:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#suffixtree-tutorial-5 {
+	bottom: 275px;
+	right: 170px;
+	width: 180px;
+}
+	#suffixtree-tutorial-5:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#suffixtree-tutorial-6 {
+	bottom: 70px;
+	left: 50%;
+	width: 220px;
+	margin-left: -120px;
+}
+	#suffixtree-tutorial-6:before {
+		top: 100%;
+		left: 50%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#suffixtree-tutorial-7 {
+	top: 70px;
+	right: 60px;
+	width: 150px;
+}
+	#suffixtree-tutorial-7:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+
+/*others*/
 .background {
   fill: none;
   pointer-events: all;

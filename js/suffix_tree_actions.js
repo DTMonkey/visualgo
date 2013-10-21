@@ -123,5 +123,23 @@ $( document ).ready(function() {
 		closeSearch();
 		closeLCS();
 	});
+	
+	//tutorial mode
+	$('#suffixtree-tutorial-1 .tutorial-next').click(function() {
+		showActionsPanel();
+	});
+	$('#suffixtree-tutorial-2 .tutorial-next').click(function() {
+		hideEntireActionsPanel();
+	});
+	$('#suffixtree-tutorial-3 .tutorial-next').click(function() {
+		showStatusPanel();
+	});
+	$('#suffixtree-tutorial-4 .tutorial-next').click(function() {
+		hideStatusPanel();
+		showCodetracePanel();
+	});
+	$('#suffixtree-tutorial-5 .tutorial-next').click(function() {
+		hideCodetracePanel();
+	});
 
 })
