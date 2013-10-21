@@ -610,7 +610,7 @@ var SuffixTreeWidget = function() {
     if (Txt[Txt.length-1] != '$') {
       alert("$ has been appended to your string");
       Txt += '$';
-      document.getElementById("s").value = Txt;
+      document.getElementById("arrv1").value = Txt;
     }
     infinity = Txt.length + 1000; // well it's quite big :-)
     nForks = 0;
@@ -654,7 +654,7 @@ var SuffixTreeWidget = function() {
     if (Txt[Txt.length-1] != '$') {
       alert("$ has been appended to your string");
       Txt += '$';
-      document.getElementById("s").value = Txt;
+      document.getElementById("arrv1").value = Txt;
     }
     infinity = Txt.length + 1000; // well it's quite big :-)
     nForks = 0;
@@ -992,6 +992,7 @@ var SuffixTreeWidget = function() {
     var populateResult = false;
     var isResultPartial = true;
     var results = new Array();
+    var noMatch = false;
     curState["status"] = "Current result will be yellow colored.";
     stateList.push(curState);
     for (var i in processQueue) {
@@ -1001,13 +1002,29 @@ var SuffixTreeWidget = function() {
           isResultPartial = true;
           results = new Array();
         }
-        results.push(processQueue[i].path_label);
+        var pl = processQueue[i].path_label;
+        var tmp_q = new Array();
+        tmp_q.push(pl);
+        while (Object.size(tmp_q)) {
+          pl = tmp_q.pop();
+          if (pl[pl.length-1] != "$") {
+            for (var j in draw_data) {
+              var tpp = draw_data[j];
+              if (tpp.parent_index == pl) tmp_q.push(tpp.path_label);
+            }
+          } else {
+            results.push(pl);
+          }
+        }
+        
+        //results.push(processQueue[i].path_label);
         continue;
       }
 
       if (processQueue[i]==-1) {
         currentState["status"] = "No match found."
         currentState["lineNo"] = 7;
+        noMatch = true;
         for (var j=0; j < prev.length; j++) {
           currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
         }
@@ -1057,14 +1074,16 @@ var SuffixTreeWidget = function() {
       }
       stateList.push(currentState);
     }
-    currentState = createState(A);
-    currentState["status"] = "The results are yellow colored."
-    currentState["lineNo"] = 5;
-    for (var j=0; j<results.length; j++) {
-      var tmp_idx = parseInt(draw_data[results[j]].class_id);
-      currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+    if (!noMatch) {
+      currentState = createState(A);
+      currentState["status"] = "The results are yellow colored."
+      currentState["lineNo"] = 5;
+      for (var j=0; j<results.length; j++) {
+        var tmp_idx = parseInt(draw_data[results[j]].class_id);
+        currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
+      }
+      stateList.push(currentState);
     }
-    stateList.push(currentState);
 
     graphWidget.startAnimation(stateList);  
     return true;  
@@ -1179,7 +1198,7 @@ var SuffixTreeWidget = function() {
     currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["lineNo"] = 1;
-    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    //currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
 
     var stack = new Array(), prev = new Array();
@@ -1281,6 +1300,7 @@ var SuffixTreeWidget = function() {
     currentState["status"] = "LRS ";
     if (results.length > 1) currentState["status"]+= "are ";
     else currentState["status"]+= "is ";
+    if (results.length == 1 && results[0].length == 0) currentState["status"] += "empty string.";
     for (var i=0; i < results.length; i++) {
       if (i>0) currentState["status"]+= ", ";
       currentState["status"]+= results[i] + " ";
@@ -1520,6 +1540,7 @@ var SuffixTreeWidget = function() {
       stateList.push(currentState);
     }
     currentState = createState(A);
+    currentState["status"] = "The internal nodes that belongs to 1 string are colored";
     for (var w=0; w < Object.size(prev_edge); w++) {
       currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
     }
@@ -1676,7 +1697,7 @@ var SuffixTreeWidget = function() {
     if (s1[s1.length-1] != '$') {
       alert("$ has been appended to your first string");
       s1 += '$';
-      document.getElementById("s").value = s1;
+      document.getElementById("s1").value = s1;
     }
     if (s2[s2.length-1] != '#') {
       alert("# has been appended to your second string");

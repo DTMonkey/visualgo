@@ -1149,6 +1149,8 @@ var Geometry = function() {
     // and the formula is:
     //var random = Math.floor(Math.random() * (max - min + 1)) + min;
     var rx, ry;
+    var tmpArr = new Array(), rxAr = new Array(), ryAr = new Array();
+    var tmpCoord = new Array();
     for (var i=0; i < 15; i++) {
       rx = Math.floor(Math.random() * (maxW - min + 1)) + min;
       ry = Math.floor(Math.random() * (maxH - min + 1)) + min;
@@ -1158,16 +1160,57 @@ var Geometry = function() {
         ry = Math.floor(Math.random() * (maxH - min + 1)) + min;
       }
       
+      rxAr.push(rx); ryAr.push(ry);
+
+      /*
       A[amountVertex] = new ObjectPair("", amountVertex);
       graphWidget.addVertex(rx, ry, A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
-      coord[i] = new Array();
-      coord[i][0] = rx; coord[i][1] = ry; 
-      coord[i][3] = i; // class id
+      */
+      tmpCoord[i] = new Array();
+      tmpCoord[i][0] = rx; tmpCoord[i][1] = ry; 
+      tmpCoord[i][3] = i; // class id
+      
     }
+    var P0 = 0; var N = Object.size(tmpCoord);
+    // find P0 with biggest Y and biggest X
+    for (var i=1; i < N; i++) {
+      if ((tmpCoord[i][1] > tmpCoord[P0][1]) || (tmpCoord[i][1] == tmpCoord[P0][1] && tmpCoord[i][0] > tmpCoord[P0][0])) {
+        P0 = i;
+      }
+    }
+    var tmp = tmpCoord[0]; tmpCoord[0] = tmpCoord[P0]; tmpCoord[P0] = tmp;
+    //var tmp1 = A[0]; A[0] = A[P0]; A[P0] = tmp1;
+    pivot_x = tmpCoord[0][0]; pivot_y = tmpCoord[0][1];
+    // sort
+    for (var i=1; i < N-1; i++) 
+      for (var j=i+1; j < N; j++) {
+        if (angleCmp(tmpCoord[i][0], tmpCoord[i][1], tmpCoord[j][0], tmpCoord[j][1])) {
+          tmp = tmpCoord[i];
+          tmpCoord[i] = tmpCoord[j];
+          tmpCoord[j] = tmp;
+          tmp = rxAr[i]; rxAr[i] = rxAr[j]; rxAr[j] = tmp;
+          tmp = ryAr[i]; ryAr[i] = ryAr[j]; ryAr[j] = tmp;
+        }
+      }
+
+    for (var i=0; i < N; i++) {
+      A[amountVertex] = new ObjectPair("", amountVertex);
+      graphWidget.addVertex(rxAr[i], ryAr[i], A[amountVertex].getFirst(), A[amountVertex++].getSecond(), true);
+      coord[i] = new Array();
+      coord[i][0] = tmpCoord[i][0]; coord[i][1] = tmpCoord[i][1];
+      coord[i][3] = i;
+    }
+    var currentState = createState(A);
+    var stateList = new Array();
+    stateList.push(currentState);
+    graphWidget.setAnimationDuration(0);
+    graphWidget.startAnimation(stateList);
   }
 
   this.grahamScan = function() {
     popuatePseudocode(2);
+    //graphWidget.transition().duration(0);
+    graphWidget.setAnimationDuration(500);
     for (var i=0; i < 150; i++) {
       try {        
           graphWidget.removeEdge(i);
@@ -1179,6 +1222,7 @@ var Geometry = function() {
       return true;
     }
     var P0 = 0;
+    /*
     // find P0 with biggest Y and biggest X
     for (var i=1; i < N; i++) {
       if ((coord[i][1] > coord[P0][1]) || (coord[i][1] == coord[P0][1] && coord[i][0] > coord[P0][0])) {
@@ -1200,7 +1244,7 @@ var Geometry = function() {
           A[j] = tmp1;
         }
       }
-
+    */
     var stateList = new Array();
     var currentState = createState(A);
     // TODO: highlight indexing process here.
