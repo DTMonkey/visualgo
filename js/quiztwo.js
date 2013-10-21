@@ -5,6 +5,18 @@ var qnJSONArr = new Array; //of JSON objects for each qn
 var questionList = new Array(); //of real (jumbled) question numbers - maps 1-20 to the real qn nos. (1-indexing, 0 is undefined)
 var currentQn; //the unjumbled qn no (from php)
 var localQnNo; //1-based
+var noAnswered = 0;
+
+function startTest() {
+	//TODO: load questions
+	localQnNo = 1;
+	showQn(localQnNo);
+}
+
+function showQn(q) { //q is local qn no
+	$('#qn-no').html(q+".");
+	currentQn = questionList[localQnNo];
+}
 
 function submitTest() {
 	//TODO: send result to server
@@ -63,10 +75,10 @@ $(document).ready (function() {
 	$('#start-test').click(function() {
 		$('#instructions-screen').fadeOut("fast");
 		$('#test-screen').fadeIn("fast");
+		$('#submit-test').hide();
 		return false;
 	});
-	//TODO: load questions
-	localQnNo = 1;
+	startTest();
 	
 	/*-------QN NAVIGATION-------*/
 	//populate html with 20 numbers
@@ -79,14 +91,14 @@ $(document).ready (function() {
 		$('#question-nav .qnno').removeClass('selected');
 		$(this).addClass('selected');
 		localQnNo = parseInt($(this).html());
-		showQn(questionList[localQnNo]);
+		showQn(localQnNo);
 	});
 	$('#prev-qn').click(function() {
 		if(localQnNo > 1) {
 			localQnNo--;
 			$('#question-nav .qnno').removeClass('selected');
 			$('#question-nav .qnno').eq(localQnNo-1).addClass('selected'); //eq uses zero-indexing
-			showQn(questionList[localQnNo]);
+			showQn(localQnNo);
 		}
 	});
 	$('#next-qn').click(function() {
@@ -94,7 +106,7 @@ $(document).ready (function() {
 			localQnNo++;
 			$('#question-nav .qnno').removeClass('selected');
 			$('#question-nav .qnno').eq(localQnNo-1).addClass('selected'); //eq uses zero-indexing
-			showQn(questionList[localQnNo]);
+			showQn(localQnNo);
 		}
 	});
 
