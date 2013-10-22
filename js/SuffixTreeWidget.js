@@ -589,17 +589,31 @@ var SuffixTreeWidget = function() {
   // .index of input that will be used to match later (>0)
   // .-1 when not match from the beginning
   // .-2 when match
-  // .-3 when match at the beginning but not match all
+  // .1  when partial match
+  /*
   function isPrefix(input, input_idx, node_label) {
     if (node_label=='') return 0;
     var j = 0, i;
     for (i= input_idx; i < input.length; i++) {
-      if (input[i] != node_label[j]) return -1;
+      if (input[i] != node_label[j]) return -1; // not match
       j++;
       if (j == node_label.length) break;
     } 
-    if (input.length - input_idx > node_label.length) return i;
-    if (input.length - input_idx <= node_label.length) return -2;
+    //if (input.length - input_idx > node_label.length) return i;
+    //if (input.length - input_idx <= node_label.length) return -2;
+    if ()
+  }
+*/
+
+  function isPrefix(input, input_idx, node_label) {
+    if (node_label=='') return 0;
+    if (input[input_idx] != node_label[0]) return -1; // no match
+    var j=1, i;
+    for (i=input_idx+1; i < input.length; i++) {      
+      if (j == node_label.length) return i-1;
+      if (input[i] == node_label[j]) j++;  
+    }
+    return -2;
   }
 
   function prepareStDriver() {
@@ -1133,7 +1147,8 @@ var SuffixTreeWidget = function() {
       //(path_label, node_label, x, y, match_flag)
       processQueue.push(new Node4(node_label + node_label_cur, node_label_cur, draw_data[node_label + node_label_cur].x, draw_data[node_label + node_label_cur].y, is_prefix));
       if (is_prefix >= 0) {
-        processTreeForSearch(T2, "", myStr, Txt.substring(w.left, w.right+1), input, is_prefix+1);
+        //processTreeForSearch(T2, "", myStr, Txt.substring(w.left, w.right+1), input, is_prefix+1);
+        processTreeForSearch(T2, "", myStr, node_label + node_label_cur, input, is_prefix+1);
         return;
       }
       else if (is_prefix == -2) {
