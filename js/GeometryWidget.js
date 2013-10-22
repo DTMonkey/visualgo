@@ -661,10 +661,14 @@ var Geometry = function() {
 
     var dist = 0, over_dist = 0;
     var prevs = new Array();
+    var prev_es = new Array();
     for (var i=0; i < Object.size(coord); i++) {
       currentState = createState(A);
       for (var j=0; j < Object.size(prevs); j++) {
         currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+      }
+      for (var j=0; j < Object.size(prev_es); j++) {
+        currentState["el"][prev_es[j]]["state"] = EDGE_TRAVERSED;
       }
       var v0 = isUsed(coord[i][0], coord[i][1]);
       var k = (i == Object.size(coord) -1) ? 0 : i+1;
@@ -674,6 +678,8 @@ var Geometry = function() {
       prevs.push(v0);prevs.push(v1);
       var e = getEdgeConnectTwoVertex(v0, v1);
       currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
+      //currentState["el"][1]["state"] = EDGE_TRAVERSED;      
+      prev_es.push(e);
       dist = dist2P(coord[i][0], coord[i][1], coord[k][0], coord[k][1]);
       over_dist += dist;
       currentState["status"] = "Distance between these 2 vertices = " + dist.toFixed(2) + ". result = " + over_dist.toFixed(2) + ".";
@@ -683,6 +689,9 @@ var Geometry = function() {
     currentState = createState(A);
     for (var j=0; j < Object.size(prevs); j++) {
       currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+    }
+    for (var j=0; j < Object.size(prev_es); j++) {
+      currentState["el"][prev_es[j]]["state"] = EDGE_TRAVERSED;
     }
     //currentState["lineNo"] = 2;
     currentState["status"] = "result = " + over_dist.toFixed(2) + ".";
@@ -705,6 +714,7 @@ var Geometry = function() {
     popuatePseudocode(1);
     var currentState = createState(A);
     var prevs = new Array();
+    var prev_es = new Array();
     if (!isPolygon) {
       currentState["status"] = "Not a polygon yet. Please finish drawing";
       stateList.push(currentState);
@@ -744,6 +754,9 @@ var Geometry = function() {
       for (var j=0; j < Object.size(prevs); j++) {
         currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
       }
+      for (var j=0; j < Object.size(prev_es); j++) {
+        currentState["el"][prev_es[j]]["state"] = EDGE_TRAVERSED;
+      }
       v0 = isUsed(coord[i][0], coord[i][1]);
       prevs.push(v0);
       var k = (i == Object.size(coord) -1) ? 0 : i+1;
@@ -755,7 +768,9 @@ var Geometry = function() {
       v2 = isUsed(coord[l][0], coord[l][1]);
       e = getEdgeConnectTwoVertex(v0, v1);
       currentState["el"][e]["state"] = EDGE_HIGHLIGHTED;
+      prev_es.push(e);
       e1 = getEdgeConnectTwoVertex(v1, v2);
+      prev_es.push(e1);
       currentState["el"][e1]["state"] = EDGE_HIGHLIGHTED;
       currentState["vl"][v0]["state"] = VERTEX_HIGHLIGHTED;
       currentState["vl"][v1]["state"] = VERTEX_HIGHLIGHTED;
@@ -783,6 +798,9 @@ var Geometry = function() {
     currentState = createState(A);
     for (var j=0; j < Object.size(prevs); j++) {
       currentState["vl"][prevs[j]]["state"] = VERTEX_TRAVERSED;
+    }
+    for (var j=0; j < Object.size(prev_es); j++) {
+      currentState["el"][prev_es[j]]["state"] = EDGE_TRAVERSED;
     }
     currentState["status"] = "Polygon is convex.";
     currentState["lineNo"] = 7;
@@ -1409,7 +1427,7 @@ var Geometry = function() {
         document.getElementById('code3').innerHTML = '&nbsp&nbspresult += dist(P[i], P[(i+1) % sz]';
         break;
       case 1: // isConvex
-        document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex // sz =  size of P';
+        document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex';
         document.getElementById('code2').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
         document.getElementById('code3').innerHTML = 'for (i=1; i < sz -1; i++)';
         document.getElementById('code4').innerHTML = '&nbsp&nbsptmp = (i+2 == sz ? 1: i+2)';
