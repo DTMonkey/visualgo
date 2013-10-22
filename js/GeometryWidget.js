@@ -45,7 +45,7 @@ var Geometry = function() {
    var isCheckingPointInside = false;
    var cutPolygonState = 0;
    var isPreviousPointInsde = false;
-
+   var isPolygon = false;
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -87,6 +87,7 @@ var Geometry = function() {
     isCheckingPointInside = false;
     cutPolygonState = 0;
     isPreviousPointInsde = false;
+    isPolygon = false;
   }
 
   function addExtraEdge() {    
@@ -380,6 +381,7 @@ var Geometry = function() {
               if (cutPolygonState > 0) return;
               addIndirectedEdge(mousedown_node, ii, ++amountEdge, EDGE_TYPE_UDE, 0, true);
               //edgeList["#e" + amountEdge] = 
+              isPolygon = true;
               mainSvg.on("mousedown", null);
             }
           }
@@ -455,6 +457,7 @@ var Geometry = function() {
                   if (cutPolygonState > 0) return;
                   addIndirectedEdge(mousedown_node, ii, ++amountEdge, EDGE_TYPE_UDE, 0, true);
                   mainSvg.on("mousedown", null);
+                  isPolygon = true;
                 }
               }       
             });
@@ -641,9 +644,17 @@ var Geometry = function() {
     }
     */
 
+
     var stateList = new Array();
     var currentState = createState(A);
     popuatePseudocode(0);
+    if (!isPolygon) {
+      currentState["status"] = "Not a polygon yet. Please finish drawing";
+      stateList.push(currentState);
+      graphWidget.startAnimation(stateList);
+      return;
+    }
+
     currentState["status"] = "Start. result = 0";
     currentState["lineNo"] = 1;
     stateList.push(currentState);
@@ -694,6 +705,12 @@ var Geometry = function() {
     popuatePseudocode(1);
     var currentState = createState(A);
     var prevs = new Array();
+    if (!isPolygon) {
+      currentState["status"] = "Not a polygon yet. Please finish drawing";
+      stateList.push(currentState);
+      //graphWidget.startAnimation(stateList);
+      return;
+    }
 
     currentState["status"] = "Start";
     //currentState["lineNo"] = 2;
