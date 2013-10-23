@@ -34,6 +34,7 @@ markerSvg.append("marker")
               .attr('fill', ARROW_FILL);
 
 // GraphEdgeWidget object
+// TODO: Better implementation of edge weight
 
 var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, weight){
   if(weight == null || isNaN(weight)) weight = 1;
@@ -130,6 +131,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     attributeList["weight"]["font-size"] = 0;
   }
 
+  // DEPRECATED
+  /*
   this.defaultEdge = function(){
     var key;
 
@@ -165,6 +168,7 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
       attributeList["weight"][key] = graphEdgeProperties["weight"]["traversed"][key];
     }
   }
+  */
 
   this.stateEdge = function(stateName){
     var key;
@@ -178,6 +182,8 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     }
   }
 
+  // Removes the edge (no animation)
+  // If you want animation, hide & redraw the edge first, then call this function
   this.removeEdge = function(){
     graphVertexA.removeEdge(self);
     graphVertexB.removeEdge(self);
@@ -453,7 +459,6 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
               .attr("fill", attributeList["weight"]["fill"])
               .attr("font-family", attributeList["weight"]["font-family"])
               .attr("font-size", attributeList["weight"]["font-size"])
-              //.attr("font-size", 16)
               .attr("font-weight", attributeList["weight"]["font-weight"])
               .attr("text-anchor", attributeList["weight"]["text-anchor"]);
               

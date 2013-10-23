@@ -1,39 +1,51 @@
-// Variables that SHOULD NOT be modified that can be defined without the HTML elements
+/* 
+ * Variables that SHOULD NOT be modified once initialized
+ * These variables can be defined without the HTML elements,
+ * and SHOULD be defined before calling any of the visualization scripts
+ * Make sure you know what you're doing before modifying this file
+ */
 
-var OBJ_HIDDEN = -1;
+const OBJ_HIDDEN = -1;
 
-var VERTEX_SHAPE_CIRCLE = "circle";
-var VERTEX_SHAPE_RECT = "rect";
+const VERTEX_SHAPE_CIRCLE = "circle";
+const VERTEX_SHAPE_RECT = "rect";
+// const VERTEX_SHAPE_ELLIPSE = "ellipse"; // Currently not implemented
+// IDEA: VERTEX_SHAPE_POLYLINE (Very low priority, might not be backward-compatible if implemented)
 
-var VERTEX_DEFAULT = "default";
-var VERTEX_HIGHLIGHTED = "highlighted";
-var VERTEX_TRAVERSED = "traversed";
-var VERTEX_RESULT = "result";
-var VERTEX_BLUE_FILL = "blueFill";
-var VERTEX_GREEN_FILL = "greenFill";
-var VERTEX_PINK_FILL = "pinkFill";
-var VERTEX_RED_FILL = "redFill";
-var VERTEX_GREY_OUTLINE = "greyOutline";
+const VERTEX_DEFAULT = "default";
+const VERTEX_HIGHLIGHTED = "highlighted";
+const VERTEX_TRAVERSED = "traversed";
+const VERTEX_RESULT = "result";
+const VERTEX_BLUE_FILL = "blueFill";
+const VERTEX_GREEN_FILL = "greenFill";
+const VERTEX_GREY_FILL = "greyFill";
+const VERTEX_PINK_FILL = "pinkFill";
+const VERTEX_RED_FILL = "redFill";
+const VERTEX_BLUE_OUTLINE = "blueOutline";
+const VERTEX_GREEN_OUTLINE = "greenOutline";
+const VERTEX_GREY_OUTLINE = "greyOutline";
+const VERTEX_PINK_OUTLINE = "pinkOutline";
+const VERTEX_RED_OUTLINE = "redOutline";
 
-var EDGE_DEFAULT = "default";
-var EDGE_HIGHLIGHTED = "highlighted";
-var EDGE_TRAVERSED = "traversed";
-var EDGE_BLUE = "blue";
-var EDGE_PINK = "pink";
-var EDGE_RED = "red";
-var EDGE_GREEN = "green";
-var EDGE_GREY = "grey";
+const EDGE_DEFAULT = "default";
+const EDGE_HIGHLIGHTED = "highlighted";
+const EDGE_TRAVERSED = "traversed";
+const EDGE_BLUE = "blue";
+const EDGE_GREEN = "green";
+const EDGE_GREY = "grey";
+const EDGE_PINK = "pink";
+const EDGE_RED = "red";
 
-var EDGE_TYPE_UDE = 0;
-var EDGE_TYPE_DE = 1;
-var EDGE_TYPE_BDE = 2;
+const EDGE_TYPE_UDE = 0;
+const EDGE_TYPE_DE = 1;
+const EDGE_TYPE_BDE = 2;
 
-var NO_ITERATION = -1;
-var NO_STATELIST = {};
+const NO_ITERATION = -1;
+const NO_STATELIST = {};
 
-var ANIMATION_PLAY = 1;
-var ANIMATION_PAUSE = 0;
-var ANIMATION_STOP = -1;
+const ANIMATION_PLAY = 1;
+const ANIMATION_PAUSE = 0;
+const ANIMATION_STOP = -1;
 
-var UPDATE_FORWARD = true;
-var UPDATE_BACKWARD = false;
+const UPDATE_FORWARD = true;
+const UPDATE_BACKWARD = false;

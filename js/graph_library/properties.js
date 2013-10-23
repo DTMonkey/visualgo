@@ -1,17 +1,22 @@
 /*
+ * Contains visualization properties (SVG objects size, color, etc.)
+ * Make sure to add the corresponding constants to the constant.js file
+ */
+
+/*
  * Widget
  */
 
-var MAIN_SVG_WIDTH = 900;
-var MAIN_SVG_HEIGHT = 500;
-var PSEUDOCODE_SVG_WIDTH = 300;
-var PSEUDOCODE_SVG_HEIGHT = 400;
+const MAIN_SVG_WIDTH = 900;
+const MAIN_SVG_HEIGHT = 500;
+const PSEUDOCODE_SVG_WIDTH = 300;
+const PSEUDOCODE_SVG_HEIGHT = 400;
 
 /*
  * GraphVertexWidget
  */
 
-var graphVertexProperties = {
+const graphVertexProperties = {
   "innerVertex":{
     "r": 14,
     "width":30,
@@ -229,7 +234,7 @@ var graphVertexProperties = {
  * GraphEdgeWidget
  */
 
-var graphEdgeProperties = {
+const graphEdgeProperties = {
   "animateHighlightedPath":{
       "stroke": surpriseColour,
       "stroke-width": 10
@@ -332,9 +337,10 @@ var graphEdgeProperties = {
 
 /*
  * marker.js
+ * Currently this file doesn't exist; markers are placed in GraphEdgeWidget.js
  */
 
-var ARROW_MARKER_WIDTH = 3;
-var ARROW_MARKER_HEIGHT = 3;
-var ARROW_REFX = 9;
-var ARROW_FILL = "#333";
+const ARROW_MARKER_WIDTH = 3;
+const ARROW_MARKER_HEIGHT = 3;
+const ARROW_REFX = 9;
+const ARROW_FILL = "#333";

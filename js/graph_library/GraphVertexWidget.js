@@ -1,4 +1,4 @@
-// Defines ONE node object
+// Defines ONE vertex object
 // Set styles in properties.js and the CSS files!!!
 
 var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNumber){
@@ -21,7 +21,7 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
       "fill": null,
       "r": null,
       "width": null,
-      "hieght": null,
+      "height": null,
       "stroke": null,
       "stroke-width": null
     },
@@ -35,7 +35,7 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
       "fill": null,
       "r": null,
       "width": null,
-      "hieght": null,
+      "height": null,
       "stroke": null,
       "stroke-width": null
     },
@@ -161,6 +161,8 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
     text.remove();
   }
 
+  // DEPRECATED
+  /*
   this.highlightVertex = function(){
     var key;
 
@@ -209,7 +211,6 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
     }
   }
 
-
   this.defaultVertex = function(){
     var key;
 
@@ -225,6 +226,7 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
       attributeList["text"][key] = graphVertexProperties["text"]["default"][key];
     }
   }
+  */
 
   this.stateVertex = function(stateName){
     var key;

@@ -5,6 +5,18 @@
 // Ivan: Most (if not all) functions will be changed to accomodate new library (D3.js)
 //       Only the algorithm & high-level design will be retained
 
+/* 
+ * TODO: Currently animation stuffs (play, pause, etc.) is tied to GraphWidget,
+ *       which means visualizations not related to graphs cannot be animated
+ *       Think of a way to separate the functions, preferably to another object
+ *       (perhaps to the currently stub Widget.js?)
+ *
+ * TODO: There's currently GraphDSWidget.js built on top of this file which allows graph drawing
+ *       Make graph drawing capabilities one of the backend library to allow visualizations 
+ *       requiring drawing capabilities to be built on it
+ */
+
+
 var vertexSvg = mainSvg.append("g")
                       .attr("id", "vertex");
 
@@ -36,6 +48,8 @@ var GraphWidget = function(){
   //       false means the element will remain hidden until told to appear
   // Duration: duration of the show animation, only used when show is true
 
+  // Adds a CIRCLE vertex
+  // TODO: Merge with addRectVertex
   this.addVertex = function(cx, cy, vertexText, vertexClassNumber, show){
     if(show != false) show = true;
 
@@ -50,6 +64,8 @@ var GraphWidget = function(){
     }
   }
 
+  // Adds a RECTANGULAR vertex
+  // TODO: Merge with addVertex
   this.addRectVertex = function(rx, ry, vertexText, vertexClassNumber, show){
     if(show != false) show = true;
 
@@ -108,7 +124,7 @@ var GraphWidget = function(){
     delete vertexUpdateList[vertexClassNumber];
   }
 
-  // graphState oject is equivalent to one element of the statelist.
+  // graphState object is equivalent to one element of the statelist.
   // See comments below this function
   this.updateGraph = function(graphState, duration){
     if(duration == null || isNaN(duration)) duration = animationDuration;
@@ -118,8 +134,8 @@ var GraphWidget = function(){
   /* 
    * stateList: List of JS object containing the states of the objects in the graph
    * Structure of stateList: List of JS object with the following keys and values:
-   *                            - vl: JS object with vertex texts as key and corresponding state positions and constants as value
-   *                            - el: JS object with edge IDs as keys and corresponding state connections constants as value
+   *                            - vl: JS object with vertex ID as keys and corresponding state positions and constants as value
+   *                            - el: JS object with edge ID as keys and corresponding state connections constants as value
    *
    * Objects not present in the i-th iteration stateList will be hidden until the animation stops, where it will be removed
    * New objects present in the i-th iteration stateList will be automatically created
@@ -157,6 +173,16 @@ var GraphWidget = function(){
    *
    * Optional contents of "el":
    * - displayWeight  : Determines whether weight should be shown. True or false
+   */
+
+  /*
+   * Notes:
+   * - Vertex's elements will only affect vertexes that has that element
+   *   (example: radius will only affect circular vertex, width and height will only affect rectangular vertex)
+   *   Think of each vertex as an SVG element and see which components are present
+   * - The optional contents has to be defined for EACH state objects
+   *   For example, if you define a custom radius in state 1 and didn't define it in state 2,
+   *   the vertex will revert to default radius upon reaching state 2
    */
 
   this.startAnimation = function(stateList){
@@ -299,6 +325,7 @@ var GraphWidget = function(){
     return animationDuration;
   }
 
+  // Get the current state object of the animation. Useful to reproduce the graph.
   // DO NOT CALL THIS FUNCTION WHEN ANIMATION IS NOT STARTED YET
   this.getCurrentState = function(){
     return animationStateList[currentIteration];

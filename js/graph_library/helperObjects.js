@@ -1,3 +1,8 @@
+/*
+ * Data structures to assist internal implementation of algorithmic visualizations
+ */
+
+// Make sure to check the type of the objects passed in to avoid bugs (especially if used for comparisons)
 var ObjectPair = function(objectOne, objectTwo){
 	this.getFirst = function(){
 		return objectOne;
@@ -26,6 +31,7 @@ ObjectPair.compare = function(objPairOne, objPairTwo){
 	}
 }
 
+// Make sure to check the type of the objects passed in to avoid bugs (especially if used for comparisons)
 var ObjectTriple = function(objectOne, objectTwo, objectThree){
 	this.getFirst = function(){
 		return objectOne;
