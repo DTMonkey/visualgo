@@ -1284,16 +1284,29 @@ var Geometry = function() {
     var currentState = createState(A);
     // TODO: highlight indexing process here.
     for (var i = 0; i < N; i++) {
+      var ed;
+      if (i == 1) {
+        addIndirectedEdge(0, i, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      } else if (i > 1) {
+        var tmp = "#e" + (amountEdge-1).toString();
+        edgeList[tmp][1] = i;
+      }
       currentState = createState(A);
+      if (i) {
+        //currentState["el"][amountEdge-1]["state"] = "EDGE_HIGHLIGHTED";
+        //graphWidget.removeEdge(amountEdge-1);
+        //delete edgeList["#e" + (amountEdge-1).toString()];
+      }
       currentState["status"] = "Start indexing the vertices."
       currentState["lineNo"] = 1;
       currentState["vl"][i]["text"] = i;
-      currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;      
       for (var j=0; j < i; j++)
         currentState["vl"][j]["text"] = j;
       //currentState["vl"][coord[i][2]]["state"] = VERTEX_HIGHLIGHTED;
       stateList.push(currentState);
     }
+    delete edgeList["#e" + (amountEdge-1).toString()];
     currentState = createState(A);
     currentState["status"] = "Finish indexing the vertices."
     for (var j=0; j < N; j++)
@@ -1322,7 +1335,7 @@ var Geometry = function() {
     currentState["el"][e1]["animateHighlighted"] = true;
     //currentState["el"][1]["animateHighlighted"] = true;
     var e2 = getEdgeConnectTwoVertex(0, 1);
-    //currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
+    currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
     //currentState["el"][e2]["animateHighlighted"] = true;
     //currentState["el"][e2]["state"] = EDGE_HIGHLIGHTED;
     // highlight edges
@@ -1484,7 +1497,6 @@ var Geometry = function() {
     //return;
     $('#current-action').show();
     $('#current-action p').html("Cut polygon");
-    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
     triggerRightPanels();
     isPlaying = true;
     popuatePseudocode(4);
@@ -1573,6 +1585,7 @@ var Geometry = function() {
     graphWidget.startAnimation(stateList);
 
     cutPolygonState = 0;
+    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
   }
 
   // no animation version, used for cut polygon
@@ -1607,7 +1620,6 @@ var Geometry = function() {
   function goPointInside() {
     $('#current-action').show();
     $('#current-action p').html("Check point is inside polygon");
-    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
     triggerRightPanels();
     isPlaying = true;
     var stateList = new Array();
@@ -1692,6 +1704,7 @@ var Geometry = function() {
     graphWidget.startAnimation(stateList);    
     isCheckingPointInside = false;
     isPreviousPointInsde = true;
+    $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
   }
 
 }
