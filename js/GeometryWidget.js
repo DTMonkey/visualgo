@@ -62,6 +62,7 @@ var Geometry = function() {
 
   mainSvg.attr("height", screenHeight);
   mainSvg.attr("width", screenWidth);
+  //x.attr("style", "width:200");
   function resetEverything() {
     coord = new Array();
     A = new Array();
@@ -1707,5 +1708,6 @@ var Geometry = function() {
     $('#progress-bar').slider( "option", "max", graphWidget.getTotalIteration()-1);
   }
 
-}
 
+
+}

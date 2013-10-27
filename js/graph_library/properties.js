@@ -38,6 +38,10 @@ const graphVertexProperties = {
       "fill": "#f7e81e",
       "stroke": "#fff"
     },
+    "rect": {
+      "fill": "#eee",
+      "stroke": "#fff"
+    },
 	"greenFill":{
       "fill": "#52bc69",
       "stroke": "#fff"
@@ -99,6 +103,10 @@ const graphVertexProperties = {
     "result":{
       "fill": "#f7e81e",
       "stroke": "#f7e81e"
+    },
+    "rect":{
+      "fill": "#333",
+      "stroke": "#333"
     },
 	"greenFill":{
       "fill": "#52bc69",
@@ -166,6 +174,12 @@ const graphVertexProperties = {
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
+    },
+    "rect":{
+      "fill": "#333",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "left"
     },
 	"greenFill":{
       "fill": "#fff",

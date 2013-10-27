@@ -1,0 +1,103 @@
+@charset "utf-8";
+
+#actions { height: 145px; width: 150px; }
+	#actions-hide {
+		padding: 64px 15px 65px 14px;
+	}
+
+/*all action pullout (input) stuff here*/
+
+#graham-go {
+	position: fixed;
+	bottom: 96px;
+	left: 196px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#graham-go p {
+			padding: 6px 8px 6px;
+		}
+
+
+
+
+/*all tutorial stuff here*/
+#heap-tutorial-1 {
+	top: 60px;
+	left: 60px;
+	width: 250px;
+}
+#heap-tutorial-2 {
+	bottom: 230px;
+	left: 60px;
+	width: 220px;
+}
+	#heap-tutorial-2:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#heap-tutorial-3 {
+	top: 300px;
+	left: 50%;
+	width: 200px;
+	margin-left: -110px;
+}
+	#heap-tutorial-3:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+#heap-tutorial-4 {
+	bottom: 335px;
+	right: 150px;
+	width: 200px;
+}
+	#heap-tutorial-4:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#heap-tutorial-5 {
+	bottom: 275px;
+	right: 170px;
+	width: 180px;
+}
+	#heap-tutorial-5:before {
+		top: 100%;
+		left: 20%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#heap-tutorial-6 {
+	bottom: 70px;
+	left: 50%;
+	width: 220px;
+	margin-left: -120px;
+}
+	#heap-tutorial-6:before {
+		top: 100%;
+		left: 50%;
+		border-top-color: black;
+		margin-left: -10px;
+	}
+#heap-tutorial-7 {
+	top: 70px;
+	right: 60px;
+	width: 150px;
+}
+	#heap-tutorial-7:before {
+		bottom: 100%;
+		left: 50%;
+		border-bottom-color: black;
+		margin-left: -10px;
+	}
+
+.rect1 {
+	fill: #2ebbd1;;
+	width: 200px;
+}

@@ -78,6 +78,11 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
     attributeList["innerVertex"]["stroke-width"] = graphVertexProperties["innerVertex"]["stroke-width"];
 
     attributeList["text"]["font-size"] = graphVertexProperties["text"]["font-size"];
+    if (vertexShape == "rect_long") {
+      attributeList["outerVertex"]["width"] = 200;  
+      attributeList["innerVertex"]["width"] = 198;
+    }
+
   }
 
   this.hideVertex = function(){
@@ -279,8 +284,10 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
 
   // Initialize vertex and draw them, but the object will not be visible due to the radius of the vertex circle set to 0
   function init(){
-    outerVertex = vertexSvg.append(vertexShape);
-    innerVertex = vertexSvg.append(vertexShape);
+    var tmp_vertexShape = vertexShape;
+    if (vertexShape == "rect_long") tmp_vertexShape = "rect";
+    outerVertex = vertexSvg.append(tmp_vertexShape);
+    innerVertex = vertexSvg.append(tmp_vertexShape);
     text = vertexTextSvg.append("text");
 
     attributeList["innerVertex"]["class"] = "v" + vertexClassNumber
@@ -315,6 +322,9 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
     attributeList["text"]["font-size"] = 0;
     attributeList["text"]["font-weight"] = graphVertexProperties["text"]["default"]["font-weight"];
     attributeList["text"]["text-anchor"] = graphVertexProperties["text"]["default"]["text-anchor"];
+    if (vertexShape == "rect_long") {
+      attributeList["text"]["text-anchor"] = "left";      
+    }
     attributeList["text"]["text"] = vertexText;
 
     innerVertex.attr("class", attributeList["innerVertex"]["class"]);

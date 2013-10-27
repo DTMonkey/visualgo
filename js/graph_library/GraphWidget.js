@@ -66,11 +66,12 @@ var GraphWidget = function(){
 
   // Adds a RECTANGULAR vertex
   // TODO: Merge with addVertex
-  this.addRectVertex = function(rx, ry, vertexText, vertexClassNumber, show){
+  this.addRectVertex = function(rx, ry, vertexText, vertexClassNumber, show, rect_type){
     if(show != false) show = true;
 
     console.log(VERTEX_SHAPE_RECT);
-    var newVertex = new GraphVertexWidget(rx,ry,VERTEX_SHAPE_RECT,vertexText,vertexClassNumber);
+    if (typeof(rect_type) == "undefined") rect_type = VERTEX_SHAPE_RECT;
+    var newVertex = new GraphVertexWidget(rx,ry,rect_type,vertexText,vertexClassNumber);
 
     vertexList[vertexClassNumber] = newVertex;
     vertexUpdateList[vertexClassNumber] = false;
