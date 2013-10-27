@@ -30,6 +30,10 @@ const graphVertexProperties = {
       "fill": surpriseColour,
       "stroke": "#fff"
     },
+    "highlighted_rect":{
+      "fill": surpriseColour,
+      "stroke": "#fff"
+    },
     "traversed":{
       "fill": "#eee",
       "stroke": "#fff"
@@ -95,6 +99,10 @@ const graphVertexProperties = {
     "highlighted":{
       "fill": surpriseColour,
       "stroke": surpriseColour
+    },
+    "highlighted_rect":{
+      "fill": surpriseColour,
+      "stroke": "#333"
     },
     "traversed":{
       "fill": surpriseColour,
@@ -162,6 +170,12 @@ const graphVertexProperties = {
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
+    },
+    "highlighted_rect":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "left"
     },
     "traversed":{
       "fill": surpriseColour,

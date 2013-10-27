@@ -14,6 +14,7 @@ const VERTEX_SHAPE_RECT = "rect";
 
 const VERTEX_DEFAULT = "default";
 const VERTEX_HIGHLIGHTED = "highlighted";
+const VERTEX_HIGHLIGHTED_RECT = "highlighted_rect";
 const VERTEX_TRAVERSED = "traversed";
 const VERTEX_RESULT = "result";
 const VERTEX_RECT = "rect";

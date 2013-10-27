@@ -175,6 +175,21 @@
         }
     }
 
+    function goSearch() {
+        try {
+            if(isPlaying) { stop(); }
+        } catch(err) {}
+        setTimeout( function() {
+            if ((mode=="exploration")&&saWidget.goSearch()) {
+                $('#current-action').show();
+                $('#current-action p').html("Search "+ $('#search_inp').val());
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);   
+    }
 
     //player controls
     var isPaused = false;

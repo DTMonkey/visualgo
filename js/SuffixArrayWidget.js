@@ -48,6 +48,8 @@ var SuffixArrayWidget = function() {
   var isPolygon = false;
   var coord_idx = new Array();
   var coord_data = new Array();
+  var suffix_table = new Array();
+  var SA = new Array();
 
   mainSvg.style("class", "unselectable");
 
@@ -61,7 +63,7 @@ var SuffixArrayWidget = function() {
     A = new Array();
     amountVertex = 0;
     amountEdge = 0;
-    graphWidget = new GraphWidget();
+    //graphWidget = new GraphWidget();
     stateList = [];
     edgeGenerator = d3.svg.line()
     .x(function(d){return d.x;})
@@ -84,9 +86,11 @@ var SuffixArrayWidget = function() {
     isPolygon = false;
     coord_idx = new Array();
     coord_data = new Array();
+    suffix_table = new Array();
+    SA = new Array();
   }
 
-  function createState() {
+  function createState(lower_bound) {
     var state = {
       "vl":{},
       "el":{},
@@ -114,9 +118,19 @@ var SuffixArrayWidget = function() {
         state["vl"][key]["cx"] = coord_idx[i][j];
         state["vl"][key]["cy"] = 50 + i*30;
         state["vl"][key]["text"] = coord_data[i][j];
-
       }
     }
+    /*
+    if (typeof(lower_bound)!= "undefined") {
+      var key = "lower_bound";
+      state["vl"][key] = {};
+      state["vl"][key]["state"] = VERTEX_RECT;
+      state["vl"][key]["x"] = coord_idx[lower_bound][Object.size(coord_idx[0])-1] + 200;
+      state["vl"][key]["y"] = 50 + 30*(lower_bound+1);
+      state["vl"][key]["text"] = "Lower bound";    
+    }
+    */
+
     return state;
   }
 
@@ -148,7 +162,7 @@ var SuffixArrayWidget = function() {
 
   function colorRow(currentState, row_id) {
     for (var i=0; i < Object.size(coord_idx[0]); i++) {
-      currentState["vl"][row_id.toString() + "_" + i.toString()]["state"] = VERTEX_HIGHLIGHTED;
+      currentState["vl"][row_id.toString() + "_" + i.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
     }
   }
 
@@ -172,6 +186,8 @@ var SuffixArrayWidget = function() {
   }
 
   this.clrscr = function() {
+    //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
+
   //  graphWidget.addRectVertex(270, 50, "i", "0_0", true, "rect");
   //  graphWidget.addRectVertex(300, 50, "SA[i]", "0_1", true, "rect_long");
   //  graphWidget.addRectVertex(500, 50, "LCP[i]", "0_2", true, "rect_long");
@@ -216,12 +232,12 @@ var SuffixArrayWidget = function() {
 
   function stringCmp(a, b) {
     for (var i=0; i<Math.min(a.length, b.length); i++) {
-      if (a[i] < b[i]) return 1;
-      else if (a[i] > b[i]) return -1;
+      if (a[i] < b[i]) return -1;
+      else if (a[i] > b[i]) return 1;
     }
     if (a.length == b.length) return 0;
-    else if (a.length > b.length) return -1;
-    return 1;
+    else if (a.length > b.length) return 1;
+    return -1;
   }
 
   this.constructSA_bad = function(T) {
@@ -229,8 +245,8 @@ var SuffixArrayWidget = function() {
     var data = ["SA[i]", "LCP[i]", "Suffix"];
     addRow(data);
  
-    var suffix_table = new Array();
-    var SA = new Array();
+    suffix_table = new Array();
+    SA = new Array();
     for (var i=0; i < T.length; i++) {
       suffix_table.push(T.substring(i));
       SA.push(i);
@@ -261,6 +277,9 @@ var SuffixArrayWidget = function() {
       addRow(tmp);
     }
 
+    //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
+
+
     /*
     var currentState = createState();
     var stateList = new Array();
@@ -269,6 +288,113 @@ var SuffixArrayWidget = function() {
     stateList.push(currentState);    
     graphWidget.startAnimation(stateList);
     */
+  }
+
+  function strncmp(str1, str2, n) {
+    str1 = str1.substring(0, n);
+    str2 = str2.substring(0, n);
+    return ( ( str1 == str2 ) ? 0 :(( str1 > str2 ) ? 1 : -1 ));
+  }
+
+  this.goSearch = function() {
+    var P = document.getElementById("search_inp").value;
+    var T = document.getElementById("arrv1").value;
+    popuatePseudocode(0);
+    var stateList = new Array();
+    // find lower bound
+    var currentState = createState();
+    currentState["status"] = "Find lower bound.";
+    currentState["lineNo"] = 1;
+    stateList.push(currentState);
+    var lo = 0, hi = T.length - 1, mid = lo;
+    while (lo < hi) {
+      mid =  Math.floor((lo + hi) / 2);
+      currentState = createState();
+      currentState["status"] = "Low: " + lo + ". High: " + hi + ". Mid: " + mid;
+      currentState["lineNo"] = 
+      colorRow(currentState, lo + 1); colorRow(currentState, hi + 1); colorRow(currentState, mid + 1);
+      stateList.push(currentState);
+      currentState = createState();
+      colorRow(currentState, lo + 1); colorRow(currentState, hi + 1); colorRow(currentState, mid + 1);
+      var res = strncmp(T.substring(SA[mid]), P, P.length);
+      if (res >= 0) {
+        hi = mid;
+        currentState["status"] = "P is smaller or equal, adjusting High";
+      }
+      else {
+        lo = mid + 1;
+        currentState["status"] = "P is bigger, adjusting Low";
+      }
+      currentState["lineNo"] = 1;
+      stateList.push(currentState);
+    }
+    if (strncmp(T.substring(SA[lo]), P, P.length) != 0) {
+      alert("not found");
+      return;
+    }
+    var lower_bound = lo;
+    currentState = createState();
+    currentState["status"] = "Lower bound is highlighted";
+    currentState["lineNo"] = 1;
+    colorRow(currentState, lower_bound);
+    //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
+    //currentState["vl"]["lower_bound"]["stroke"] = "#eeeeee";
+
+    /*
+    mainSvg
+       .append("text")
+       .attr("id", "lower_bound")
+       .attr("class", "edgelabel")
+       .attr("x", coord_idx[4][Object.size(coord_idx[0])-1] + 190)
+       .attr("y", 50 + 30*(4+1))
+       .attr("dx", 1)
+       .attr("dy", ".35em")
+       .attr("text-anchor", "left")     
+       .text(function(d) { return "Lower bound" });
+    */
+    stateList.push(currentState);
+    currentState = createState();
+    currentState["status"] = "Find upper bound.";
+    currentState["lineNo"] = 2;
+    stateList.push(currentState);
+    // find upper bound
+    var lo = 0, hi = T.length - 1, mid = lo;
+    while (lo < hi) {
+      mid =  Math.floor((lo + hi) / 2);
+      currentState = createState();
+      currentState["status"] = "Low: " + lo + ". High: " + hi + ". Mid: " + mid;
+      currentState["lineNo"] = 2;
+      colorRow(currentState, lo + 1); colorRow(currentState, hi + 1); colorRow(currentState, mid + 1);
+      stateList.push(currentState);
+      currentState = createState();
+      colorRow(currentState, lo + 1); colorRow(currentState, hi + 1); colorRow(currentState, mid + 1);
+      var res = strncmp(T.substring(SA[mid]), P, P.length);
+      if (res > 0) {
+        hi = mid;
+        currentState["status"] = "P is smaller, adjusting High";
+      }
+      else {
+        lo = mid + 1;
+        currentState["status"] = "P is bigger or equal, adjusting Low";
+      }
+      currentState["lineNo"] = 2;
+      stateList.push(currentState);
+    }
+    if (strncmp(T.substring(SA[hi]), P, P.length) != 0) hi--;
+    var h_bound = hi;
+    var currentState = createState();
+    colorRow(currentState, h_bound);
+    currentState["status"] = "Upper bound is highlighted";
+    currentState["lineNo"] = 2;
+    stateList.push(currentState);
+    var currentState = createState();
+    currentState["status"] = "Results are highlighted from lower bound to upper bound.";
+    currentState["lineNo"] = 3;
+    for (var i=lower_bound+1; i < h_bound+2; i++) colorRow(currentState, i);
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+
+    return true;
   }
 
   // Javascript addon: get size of an object
@@ -283,10 +409,10 @@ var SuffixArrayWidget = function() {
 
   function popuatePseudocode(act) {
     switch (act) {
-      case 0: // Perimeter
-        document.getElementById('code1').innerHTML = 'result = 0, sz = size of P';
-        document.getElementById('code2').innerHTML = 'for (i=0; i < sz; i++)';
-        document.getElementById('code3').innerHTML = '&nbsp&nbspresult += dist(P[i], P[(i+1) % sz]';
+      case 0: // Search
+        document.getElementById('code1').innerHTML = 'find lower bound';
+        document.getElementById('code2').innerHTML = 'find upper bound';
+        document.getElementById('code3').innerHTML = 'report results';
         break;
       case 1: // isConvex
         document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex';
