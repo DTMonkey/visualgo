@@ -191,6 +191,22 @@
         }, 500);   
     }
 
+    function buildLRS() {
+        try {
+            if(isPlaying) { stop(); }
+        } catch(err) {}
+        setTimeout( function() {
+            if ((mode=="exploration")&&saWidget.goLRS()) {
+                $('#current-action').show();
+                $('#current-action p').html("LRS");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);      
+    }
+
     //player controls
     var isPaused = false;
     function isAtEnd() {

@@ -50,6 +50,7 @@ var SuffixArrayWidget = function() {
   var coord_data = new Array();
   var suffix_table = new Array();
   var SA = new Array();
+  var LCP = new Array();
 
   mainSvg.style("class", "unselectable");
 
@@ -88,6 +89,7 @@ var SuffixArrayWidget = function() {
     coord_data = new Array();
     suffix_table = new Array();
     SA = new Array();
+    LCP = new Array();
   }
 
   function createState(lower_bound) {
@@ -165,6 +167,13 @@ var SuffixArrayWidget = function() {
       currentState["vl"][row_id.toString() + "_" + i.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
     }
   }
+
+  function colorResultRow(currentState, row_id) {
+    for (var i=0; i < Object.size(coord_idx[0]); i++) {
+      currentState["vl"][row_id.toString() + "_" + i.toString()]["state"] = VERTEX_RESULT_RECT;
+    }
+  }
+
 
   function addRow(data) {
     var sz = Object.size(coord_idx);
@@ -264,7 +273,7 @@ var SuffixArrayWidget = function() {
       }
 
     // LCP slow
-    var LCP = new Array();
+    LCP = new Array();
     LCP.push(0);
     for (var i=1; i < Object.size(SA); i++) {
       var L = 0;
@@ -397,6 +406,57 @@ var SuffixArrayWidget = function() {
     return true;
   }
 
+  this.goLRS = function() {
+    popuatePseudocode(1);
+    var currentState = createState();
+    var stateList = new Array();
+    currentState["status"] = "Start. Max = 0. Max rows will be colored by green";
+    currentState["lineNo"] = 1;
+    stateList.push(currentState);
+    var max = 0, save = new Array();
+    for (var i=0; i < Object.size(LCP); i++) {
+      var currentState = createState();
+      colorRow(currentState, i+1);
+      currentState["status"] = "Checking this LCP";
+      currentState["lineNo"] = 3;
+      for (var j=0; j < Object.size(save); j++) {
+        colorResultRow(currentState, save[j]+1);
+      }
+      stateList.push(currentState);
+      currentState = createState();
+      currentState["status"] = "LCP[i] = " + LCP[i] + ", ";
+      if (LCP[i] > max) {
+        currentState["status"] += "Bigger than max. Update max.";
+        max = LCP[i];
+        save = new Array();
+        save.push(i);
+        currentState["lineNo"] = 4;
+      } else if (LCP[i] == max) {
+        currentState["status"] = "Equal to max. Update max";
+        save.push(i);
+        currentState["lineNo"] =  4;
+      } else {
+        currentState["status"] = "Smaller than max. Contiue";
+        currentState["lineNo"] = 2;
+        colorRow(currentState, i+1);
+      }
+      for (var j=0; j < Object.size(save); j++) {
+        colorResultRow(currentState, save[j]+1);
+      }
+      stateList.push(currentState);
+    }
+    currentState = createState();
+    currentState["status"] = "Finish.";
+    currentState["lineNo"] = 5;
+    for (var j=0; j < Object.size(save); j++) {
+      colorResultRow(currentState, save[j]+1);
+    }
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
+
+
   // Javascript addon: get size of an object
   Object.size = function(obj) {
     var size = 0, key;
@@ -414,14 +474,12 @@ var SuffixArrayWidget = function() {
         document.getElementById('code2').innerHTML = 'find upper bound';
         document.getElementById('code3').innerHTML = 'report results';
         break;
-      case 1: // isConvex
-        document.getElementById('code1').innerHTML = 'if (sz < 3) polygon is convex';
-        document.getElementById('code2').innerHTML = 'isLeft = ccw(P[0], P[1], P[2])';
-        document.getElementById('code3').innerHTML = 'for (i=1; i < sz -1; i++)';
-        document.getElementById('code4').innerHTML = '&nbsp&nbsptmp = (i+2 == sz ? 1: i+2)';
-        document.getElementById('code5').innerHTML = '&nbsp&nbspif ccw(P[i], P[i+1], P[tmp]) != isLeft';
-        document.getElementById('code6').innerHTML = '&nbsp&nbsp&nbsp&nbsppolygon is not convex';
-        document.getElementById('code7').innerHTML = 'polygon is convex';
+      case 1: // LCP
+        document.getElementById('code1').innerHTML = 'max = 0, result = array';
+        document.getElementById('code2').innerHTML = 'for i=0 to LCP.size() -1';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspif (LCP[i] >= max)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbspupdate max, result';
+        document.getElementById('code5').innerHTML = 'return result';
         break;
       case 2: // graham scan
         document.getElementById('code1').innerHTML = 'indexing the vertices'

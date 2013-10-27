@@ -17,6 +17,7 @@ const VERTEX_HIGHLIGHTED = "highlighted";
 const VERTEX_HIGHLIGHTED_RECT = "highlighted_rect";
 const VERTEX_TRAVERSED = "traversed";
 const VERTEX_RESULT = "result";
+const VERTEX_RESULT_RECT = "result_rect";
 const VERTEX_RECT = "rect";
 const VERTEX_BLUE_FILL = "blueFill";
 const VERTEX_GREEN_FILL = "greenFill";
