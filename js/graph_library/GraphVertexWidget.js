@@ -81,6 +81,9 @@ var GraphVertexWidget = function(cx, cy, vertexShape, vertexText, vertexClassNum
     if (vertexShape == "rect_long") {
       attributeList["outerVertex"]["width"] = 200;  
       attributeList["innerVertex"]["width"] = 198;
+    } else if (vertexShape == "rect") {
+      attributeList["outerVertex"]["width"] = 80;  
+      attributeList["innerVertex"]["width"] = 78;
     }
 
   }

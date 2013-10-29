@@ -68,7 +68,7 @@
         <div id="search-go" class="execAction" onclick=goSearch()><p>GO</p></div>        
         <div id="search-err" class="err"></div>
 
-        <div id="lcs-input"><input type="text" id="s1" autocomplete="off" value="GATAGACA$" style="border-right: 1px solid #777;"/><input type="text" id="s2" autocomplete="off" value="CATA#" /></div>
+        <div id="lcs-input"><input type="text" id="s1" autocomplete="off" value="CATA#" style="border-right: 1px solid #777;"/><input type="text" id="s2" autocomplete="off" value="GATAGACA$" /></div>
         <div id="lcs-go" class="execAction" onclick=LCS()><p>GO</p></div>        
         <div id="lcs-err" class="err"></div>
     </div>
@@ -207,6 +207,21 @@
         }, 500);      
     }
 
+    function LCS() {
+        try {
+            if(isPlaying) { stop(); }
+        } catch(err) {}
+        setTimeout( function() {
+            if ((mode=="exploration")&&saWidget.goLCS()) {
+                $('#current-action').show();
+                $('#current-action p').html("LRS");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeLCS();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);      
+    }
     //player controls
     var isPaused = false;
     function isAtEnd() {

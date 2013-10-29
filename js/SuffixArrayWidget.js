@@ -174,11 +174,31 @@ var SuffixArrayWidget = function() {
     }
   }
 
+  // Note: data.size must = no of rows
+  function addColumn(data) {
+    for (var i=0; i < Object.size(data); i++) {
+      var tmp = new Array();
+      tmp.push(data[i]);
+      appendRow(i, tmp);
+    }
+  }
+
+  function appendRow(row_id, data) {
+    var cur_y = 50 + 30*row_id;
+    var sz = Object.size(coord_idx[row_id]);
+    for (var i=1; i <= Object.size(data); i++) {
+      coord_idx[row_id][sz] = coord_idx[row_id][sz-1] + 200;
+      coord_data[row_id][sz] = data[i-1];
+      //if (i==1) coord_idx[row_id][sz] =coord_idx[row_id][sz-1] + 30;
+      graphWidget.addRectVertex(coord_idx[row_id][sz], cur_y, data[i-1], row_id.toString() + "_" + sz.toString(), true, "rect_long");
+      sz++;
+    }
+  }
 
   function addRow(data) {
     var sz = Object.size(coord_idx);
     coord_idx[sz] = new Array();
-    coord_idx[sz][0] = 270;
+    coord_idx[sz][0] = 70;
     coord_data[sz] = new Array();
     var cur_y = 50 + 30*sz;
     //coord_idx[sz][0][1] = cur_y;
@@ -189,7 +209,7 @@ var SuffixArrayWidget = function() {
     for (var i=1; i <= Object.size(data); i++) {
       coord_idx[sz][i] = coord_idx[sz][i-1] + 200;
       coord_data[sz][i] = data[i-1];
-      if (i==1) coord_idx[sz][i] =coord_idx[sz][i-1] + 30;
+      if (i==1) coord_idx[sz][i] =coord_idx[sz][i-1] + 50;
       graphWidget.addRectVertex(coord_idx[sz][i], cur_y, data[i-1], sz.toString() + "_" + i.toString(), true, "rect_long");
     }
   }
@@ -286,6 +306,8 @@ var SuffixArrayWidget = function() {
       addRow(tmp);
     }
 
+    var data = ["test", "test", "test", "test", "test", "test", "test", "test", "test"];
+    //addColumn(data);
     //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
 
 
@@ -436,7 +458,7 @@ var SuffixArrayWidget = function() {
         save.push(i);
         currentState["lineNo"] =  4;
       } else {
-        currentState["status"] = "Smaller than max. Contiue";
+        currentState["status"] = "Smaller than max. Continue";
         currentState["lineNo"] = 2;
         colorRow(currentState, i+1);
       }
@@ -456,6 +478,71 @@ var SuffixArrayWidget = function() {
     return true;
   }
 
+  this.goLCS = function() {
+    var owner = new Array();
+    popuatePseudocode(2);
+    var s1 = document.getElementById("s1").value, s2 = document.getElementById("s2").value;
+    var T = s1 + s2;
+    this.constructSA_bad(T);
+    owner.push("Owner");
+    for (var i=0; i < Object.size(SA); i++) {
+      var tmp = T.substring(SA[i]);
+      if (tmp.indexOf("#") == -1) {
+        owner.push(2);
+      } else owner.push(1);
+    }
+    addColumn(owner);
+    owner = owner.splice(1);
+
+    var currentState = createState();
+    var stateList = new Array();
+    var max = 0;
+    var save = new Array();
+    currentState["status"] = "Start";
+    currentState["lineNo"] = 1;
+    stateList.push(currentState);
+    currentState = createState();
+    currentState["status"] = "Start at index 1";
+    currentState["lineNo"] = 2; 
+    colorRow(currentState, 2);
+    stateList.push(currentState);
+    for (var i=1; i < Object.size(SA); i++) {
+      currentState = createState();
+      colorRow(currentState, i+1);
+      if (owner[i] == owner[i-1]) {
+        currentState["status"] = "Same owner as previous index. Continue.";
+        currentState["lineNo"] = 3;
+      } else {
+        currentState["status"] = "Different owner as previous index. ";
+        currentState["lineNo"] = 4;
+        if (LCP[i] > max) {
+          max = LCP[i];
+          currentState["status"] += "LCP[i]=" + LCP[i].toString() + " max=" + max.toString() + ". Update max.";
+          save = new Array();
+          save.push(i);
+        } else if (LCP[i] == max) {
+          save.push(i);
+          currentState["status"] += "LCP[i]=" + LCP[i].toString() + " max=" + max.toString() + ". Update result.";
+        } else {
+          currentState["status"] += "LCP[i]=" + LCP[i].toString() + " max=" + max.toString() + ". Continue.";          
+        }
+      }
+      for (var j=0; j < Object.size(save); j++) {
+        colorResultRow(currentState, save[j]+1);
+      }
+      stateList.push(currentState);
+    }
+    currentState = createState();
+    currentState["status"] = "Finish.";
+    currentState["lineNo"] = 5;
+    for (var j=0; j < Object.size(save); j++) {
+      colorResultRow(currentState, save[j]+1);
+    }
+    stateList.push(currentState);
+
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
 
   // Javascript addon: get size of an object
   Object.size = function(obj) {
@@ -474,21 +561,19 @@ var SuffixArrayWidget = function() {
         document.getElementById('code2').innerHTML = 'find upper bound';
         document.getElementById('code3').innerHTML = 'report results';
         break;
-      case 1: // LCP
+      case 1: // LRS
         document.getElementById('code1').innerHTML = 'max = 0, result = array';
         document.getElementById('code2').innerHTML = 'for i=0 to LCP.size() -1';
         document.getElementById('code3').innerHTML = '&nbsp&nbspif (LCP[i] >= max)';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbspupdate max, result';
         document.getElementById('code5').innerHTML = 'return result';
         break;
-      case 2: // graham scan
-        document.getElementById('code1').innerHTML = 'indexing the vertices'
-        document.getElementById('code2').innerHTML = 'push P[N-1], P[0], P[1] into stack S';
-        document.getElementById('code3').innerHTML = 'while (i < N) // i = 2, N = size of P ';
-        document.getElementById('code4').innerHTML = '&nbsp&nbspif (ccw(S[S.size() - 1-1], S[S.size() - 1], P[i])';
-        document.getElementById('code5').innerHTML = '&nbsp&nbsp&nbsp&nbsppush P[i] into stack and increase i';
-        document.getElementById('code6').innerHTML = '&nbsp&nbspelse pop from S';
-        document.getElementById('code7').innerHTML = 'S is the result';
+      case 2: // LCS
+        document.getElementById('code1').innerHTML = 'max = 0, result = null'
+        document.getElementById('code2').innerHTML = 'for i from 1 to T.length';
+        document.getElementById('code3').innerHTML = '&nbsp&nbspif (owner[i] == owner[i-1] continue';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp&if (LCP[i] >= max) update max, result';
+        document.getElementById('code5').innerHTML = 'return result';
         break;
       case 3: // check point inside polygon
         document.getElementById('code1').innerHTML = 'for (i=0; i < P.size() -1; i++)'
