@@ -8,10 +8,9 @@
 <link rel="stylesheet" href="css/normalize.css">
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/viz.css">
-<link rel="stylesheet" href="css/quiztwo.css">
+<link rel="stylesheet" href="css/revelio.css">
 
 <!--js-->
-<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
 <script src="js/jquery-1.10.2.js"></script>
 <script src="js/common.js"></script>
 <script src="js/d3/d3.v3.js"></script>
@@ -48,7 +47,8 @@
     <ul id="instructions">
 		<li><strong>You have 1 (one) attempt only.</strong></li>
 		<li>You have 40 minutes to do this test. When the time is up, the test will be submitted automatically.</li>
-		<li>Do not refresh your browser, go back, or close the window while taking the test.</li>
+		<li>Do not refresh your browser, go back, open another window, or close the window while taking the test.</li>
+        <li>Note: the graphs shown in different questions may look similar but may not be the same. Be careful.</li>
 		<li>Your score is only valid if you are physically present in the lab.</li>
 		<li>You are not allowed to discuss the questions or answers until 5pm today, even with your fellow lab group mates.</li>
 		<li>In the case of any disputes, the decision of the lecturer is final.</li>
@@ -56,31 +56,40 @@
     <div id="start-test">Start the test</div>
 </div>
 
+<div id="gdluck-screen">
+	GOOD LUCK<br/>and<br/>BE CAREFUL!
+</div>
+
 <div id="test-screen">
 	<div id="qn-no"></div>
-	<div id="qn-text">Piggyback null blob case printf I'm sorry Dave, I'm afraid I can't do that. Pragma mainframe stack cd foad kilo giga I'm compiling sudo afk for true piggyback rsa d00dz system grep flush irc mailbomb new man pages emacs. Gnu wombat client false salt ssh buffer packet sniffer default linux James T. Kirk?</div>
+	<div id="qn-text">
+    	<p></p>
+    	<div id='undo-ans' style="margin-right: 8px;">UNDO</div>
+        <div id='clear-ans'>CLEAR</div>
+        <div id="current-selection"></div>
+    </div>
+    <div id="viz"></div>
 
 	<div id="info">
-        <div id="student-name">Rose Marie Tan</div>
-        <div id="time-left">23: 59</div>
+        <div id="student-name"></div>
+        <div id="time-left"></div>
         <div id="submit-test">Submit Quiz</div>
     </div>
     <div id="submit-check" class="overlays">
     	<p></p>
         <div id="submit-yes1" class="button">Yes</div><!--
         --><div id="submit-no1" class="button">No</div><!--
-        --><div id="submit-yes2" class="button">I said yes, didn't I?</div><!--
-        --><div id="submit-no2" class="button">Fine, I'll check again</div>
+        --><div id="submit-no2" class="button">Fine, I'll check again</div><!--
+        --><div id="submit-yes2" class="button">I said yes!</div>
     </div>
-
 	<div id="question-nav"></div> <!--20 <a.qnno> generated in js-->
 </div>
 
 <div id="result-screen">
-	<div id="result-name">Rose Marie Tan</div>
+	<div id="result-name"></div>
     you scored 
-    <div id="score">17 out of 20</div>
-    Thank you for taking Online Quiz 2!
+    <div id="score"></div>
+    Please show this screen to your TA.
 </div>
     
 <div id="left-bar"></div>
@@ -105,7 +114,7 @@
 <script src="js/graph_library/GraphWidget.js"></script>
 <script src="js/graph_library/GraphVertexWidget.js"></script>
 <script src="js/graph_library/GraphEdgeWidget.js"></script>
-<script src="js/quiztwo.js"></script>
+<script src="js/revelio.js"></script>
 
 </body>
 </html>

@@ -68,9 +68,24 @@
 		cursor: pointer;
 	}
 		#start-test:hover { background: black; }
+	
+#gdluck-screen {
+	display: none;
+	position: fixed;
+	height: 150px;
+	width: 500px;
+	top: 50%;
+	left: 50%;
+	margin-top: -75px;
+	margin-left: -250px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 30px;
+}
 		
 #test-screen {
 	display: none;
+	height: 20px;
 }
 	#qn-no {
 		position: fixed;
@@ -85,9 +100,33 @@
 		position: fixed;
 		top: 60px;
 		left: 130px;
-		font-size: 14px;
-		width: 300px;
+		font-size: 16px;
+		width: 800px;
 	}
+	#current-selection {
+		padding-top: 20px;
+	}
+	#undo-ans , #clear-ans {
+		display: inline-block;
+		margin-top: 20px;
+		margin-right: 10px;
+		padding: 5px 8px;
+		background: #df3939;
+		color: white;
+		font-size: 14px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+		#undo-ans:hover, #clear-ans:hover { background: black; }
+	#viz { }
+		svg { 
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			margin-left: -450px;
+			margin-top: -125px;
+			z-index: -15;
+		}
 	
 	#question-nav {
 		width: 100%;
@@ -134,6 +173,7 @@
 		position: fixed;
 		top: 60px;
 		right: 60px;
+		width: 200px;
 		text-align: right;
 	}
 		#info #student-name { font-size: 16px; text-transform: uppercase; }
@@ -170,8 +210,8 @@
 			#submit-check .button:hover { background: black; }
 			#submit-yes1 { background: #227faf; margin-right: 5px; width: 50px; }
 			#submit-no1 { background: #df3939; width: 50px; }
-			#submit-yes2 { background: #227faf; margin-right: 5px; width: 114px; }
-			#submit-no2 { background: #df3939; width: 114px; }
+			#submit-yes2 { background: #227faf; width: 114px; }
+			#submit-no2 { background: #df3939; margin-right: 5px; width: 114px; }
 			
 #result-screen {
 	display: none;

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Reset Online Quiz 2</title>
+
+<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+<style>
+body { background: #eeeeee; font-family: "PT Sans"; font-size: 13px; }
+#container {
+	position: fixed;
+	width: 600px;
+	height: 300px;
+	top: 50%;
+	left: 50%;
+	margin-left: -300px;
+	margin-top: -150px;
+	text-align: center;
+}
+	h1 { margin-bottom: 30px; }
+	input { border: none; outline: none; margin: 0px; }
+		input[type=text], input[type=password] {
+			color: #888;
+			box-shadow: 0px 0px 3px #929292 inset;
+			padding: 7px 10px;
+			font-size: 14px;
+			margin: 5px;
+			width: 218px;
+		}
+		#reset {
+			margin: 30px 5px 0px 5px;
+			padding: 7px 10px;
+			color: white;
+			font-weight: bold;
+			cursor: pointer;
+			background: #227faf; 
+		}
+			#reset:hover { background: black; }
+		#message { margin-top: 30px; font-size: 15px; }
+</style>
+
+<script src="js/jquery-1.10.2.js"></script>
+<script>
+$(document).ready (function() {
+	$('#aidee').focusin(function() {
+		$(this).css('box-shadow','0px 0px 3px #227faf inset');
+		if ($(this).val() == "Student ID") {
+			$(this).css('color','black');
+			$(this).val("");
+		}
+	}).focusout(function() {
+		$(this).css('box-shadow','0px 0px 3px #929292 inset');
+		if ($(this).val() == "") {
+			$(this).css('color','#888');
+			$(this).val("Student ID");
+		}
+	});
+	$('#pwd').focusin(function() {
+		$(this).css('box-shadow','0px 0px 3px #227faf inset');
+		if ($(this).val() == "TA password") {
+			$(this).attr('type','password');
+			$(this).css('color','black');
+			$(this).val("");
+		}
+	}).focusout(function() {
+		$(this).css('box-shadow','0px 0px 3px #929292 inset');
+		if ($(this).val() == "") {
+			$(this).css('color','#888');
+			$(this).attr('type','text');
+			$(this).val("TA password");
+		}
+	});
+	
+	$('#reset').click(function() {
+		var id = $('#aidee').val();
+		var pw = $('#pwd').val();
+		//authenticate
+		$.ajax({
+			url: "http://algorithmics.comp.nus.edu.sg/~onlinequiz/quiz2.php?uid="+id+"&tapwd="+pw+"&mode=4"
+		}).done(function(data) {
+			$('#message').html(data);
+			$('#aidee').css('color','#888').val("Student ID");
+			$('#pwd').css('color','#888').attr('type','text').val("TA password");
+		});
+		return false;
+	});
+});
+</script>
+
+</head>
+
+<body>
+    <div id="container">
+        <h1>Attempt reset</h1>
+        <form>
+            <input id="aidee" type="text" autocomplete="off" value="Student ID"/><br/>
+            <input id="pwd" type="text" autocomplete="off" value="TA password"/><br/>
+            <input id="reset" type="submit" value="Reset"/>
+        </form>
+        <div id="message"></div>
+    </div>
+</body>
+
+</html>
