@@ -168,11 +168,16 @@
             if(isPlaying) { stop(); }
         } 
         catch (err) {} 
-        if (mode=="exploration") {
-            saWidget.constructSA_bad(document.getElementById("arrv1").value);
-            closeBuild();
-            isPlaying = false;
-        }
+        setTimeout( function() {
+            if ((mode=="exploration")&&saWidget.constructSA(document.getElementById("arrv1").value)) {
+                $('#current-action').show();
+                $('#current-action p').html("Build suffix array");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeBuild();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500); 
     }
 
     function goSearch() {

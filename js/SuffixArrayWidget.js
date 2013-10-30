@@ -51,7 +51,8 @@ var SuffixArrayWidget = function() {
   var suffix_table = new Array();
   var SA = new Array();
   var LCP = new Array();
-
+  var c, r = 0;
+  var tempSA = new Array(), SA = new Array(), RA = new Array(), tempRA = new Array();
   mainSvg.style("class", "unselectable");
 
   mainSvg.attr("height", screenHeight);
@@ -90,6 +91,7 @@ var SuffixArrayWidget = function() {
     suffix_table = new Array();
     SA = new Array();
     LCP = new Array();
+    tempSA = new Array(), SA = new Array(), RA = new Array(), tempRA = new Array();
   }
 
   function createState(lower_bound) {
@@ -106,19 +108,19 @@ var SuffixArrayWidget = function() {
         state["vl"][key] = {};
         state["vl"][key]["state"] = VERTEX_RECT;
         if (i == 0 && j == 0) {
-          state["vl"][key]["cx"] = 270;
-          state["vl"][key]["cy"] = 50 + i*30;
+          state["vl"][key]["cx"] = 120;
+          state["vl"][key]["cy"] = 40 + i*30;
           state["vl"][key]["text"] = "i";        
           continue;  
         }
         if (j == 0) {
-          state["vl"][key]["cx"] = 270;
-          state["vl"][key]["cy"] = 50 + i*30;
+          state["vl"][key]["cx"] = 120;
+          state["vl"][key]["cy"] = 40 + i*30;
           state["vl"][key]["text"] = i-1;    
           continue;
         }        
         state["vl"][key]["cx"] = coord_idx[i][j];
-        state["vl"][key]["cy"] = 50 + i*30;
+        state["vl"][key]["cy"] = 40 + i*30;
         state["vl"][key]["text"] = coord_data[i][j];
       }
     }
@@ -162,6 +164,12 @@ var SuffixArrayWidget = function() {
    return -1;
   }
 
+  function colorColumn(currentState, column_id) {
+    for (var i=0; i < Object.size(coord_idx); i++) {
+      currentState["vl"][i.toString() + "_" + column_id.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
+    }
+  }
+
   function colorRow(currentState, row_id) {
     for (var i=0; i < Object.size(coord_idx[0]); i++) {
       currentState["vl"][row_id.toString() + "_" + i.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
@@ -198,18 +206,18 @@ var SuffixArrayWidget = function() {
   function addRow(data) {
     var sz = Object.size(coord_idx);
     coord_idx[sz] = new Array();
-    coord_idx[sz][0] = 70;
+    coord_idx[sz][0] = 120;
     coord_data[sz] = new Array();
-    var cur_y = 50 + 30*sz;
+    var cur_y = 40 + 30*sz;
     //coord_idx[sz][0][1] = cur_y;
     if (sz==0)
-      graphWidget.addRectVertex(270, cur_y, "i",  sz.toString() + "_0", true, "rect");
+      graphWidget.addRectVertex(120, cur_y, "i",  sz.toString() + "_0", true, "rect");
     else 
-      graphWidget.addRectVertex(270, cur_y, (sz-1).toString(),  sz.toString() + "_0", true, "rect");
+      graphWidget.addRectVertex(120, cur_y, (sz-1).toString(),  sz.toString() + "_0", true, "rect");
     for (var i=1; i <= Object.size(data); i++) {
       coord_idx[sz][i] = coord_idx[sz][i-1] + 200;
       coord_data[sz][i] = data[i-1];
-      if (i==1) coord_idx[sz][i] =coord_idx[sz][i-1] + 50;
+      if (i==1) coord_idx[sz][i] = coord_idx[sz][i-1] + 50;
       graphWidget.addRectVertex(coord_idx[sz][i], cur_y, data[i-1], sz.toString() + "_" + i.toString(), true, "rect_long");
     }
   }
@@ -269,12 +277,142 @@ var SuffixArrayWidget = function() {
     return -1;
   }
 
+  
+  function countingSort(T,k) {
+    var SAText = T;
+    var n = SAText.length;
+    var i, sum, maxi = Math.max(300, n);        // up to 255 ASCII chars or length of n
+    //memset(c, 0, sizeof c);                               // clear frequency table
+    c = new Array();
+    for (var i=0; i < 300; i++) c.push(0);
+    for (i = 0; i < n; i++)                    // count the frequency of each rank
+      c[i + k < n ? RA[i + k] : 0]++;
+    sum = 0;
+    for (i = 0; i < maxi; i++) {                     
+      var t = c[i]; c[i] = sum; sum += t;
+    }
+    for (i = 0; i < n; i++)               // shuffle the suffix array if necessary
+      tempSA[c[SA[i] + k < n ? RA[SA[i] + k] : 0]++] = SA[i];
+    for (i = 0; i < n; i++)                          // update the suffix array SA
+      SA[i] = tempSA[i];
+  }
+
+  this.constructSA = function(T) {              // this version can go up to 100000 characters
+    clearScreen();
+    popuatePseudocode(3);
+    var i, k, r;
+    var currentState = createState();
+    var stateList = new Array();
+    var n = T.length;
+
+    var data = ["SA[i]", "Suffix", "RA[SA[i]]", "RA[SA[i]+k]", "tempRA[i]"];
+    addRow(data);
+    for (i = 0; i < n; i++) { 
+      RA.push(T.charCodeAt(i));
+      SA.push(i);
+      var tmp = new Array();
+      tmp.push(i);
+      tmp.push(T.substring(i));
+      tmp.push(T.charCodeAt(i));
+      tmp.push(T.charCodeAt(i));      
+      tmp.push(0);
+      addRow(tmp);
+      tempRA.push(0);
+    }
+    currentState = createState();
+    currentState["status"] = "Initialize SA[] and RA[]";
+    currentState["lineNo"] = 1; 
+    stateList.push(currentState);
+    
+
+    for (k = 1; k < n; k <<= 1) {            // repeat sorting process log n times
+      var SA_old = deepCopy(SA);
+      countingSort(T, k);       // actually radix sort: sort based on the second item
+      countingSort(T, 0);               // then (stable) sort based on the first item
+      for (i=0; i < n; i++) {
+        if (k==1) {
+          coord_data[i+1][1] = SA[i];
+          coord_data[i+1][2] = T.substring(SA[i]);
+          coord_data[i+1][3] = T.charCodeAt(SA[i]);
+          if (SA[i] < n-1)
+            coord_data[i+1][4] = T.charCodeAt([SA[i]+1]);
+          else coord_data[i+1][4] = 0;
+        } else {
+          coord_data[i+1][1] = SA[i];
+          coord_data[i+1][2] = T.substring(SA[i]);
+          coord_data[i+1][3] = RA[SA[i]];
+          coord_data[i+1][4] = RA[SA[i]+k];
+          if (SA[i]+k >=n) coord_data[i+1][4] = 0;
+          coord_data[i+1][5] = RA[SA[i]];
+        }
+      }
+      currentState = createState();
+      currentState["lineNo"] = 2;
+      currentState["status"] = "k=" + k + ". Sort based on ranking pair. Changed rows are colored";
+      for (i=0; i < Object.size(SA_old); i++) {
+        if (SA_old[i] != SA[i]) {
+          colorRow(currentState, i+1);
+        }
+      }
+      stateList.push(currentState);
+      currentState = createState();
+      currentState["status"] = "k=" + k + ". Reranking process";
+      currentState["lineNo"] = 3;
+      stateList.push(currentState);
+      tempRA[SA[0]] = r = 0;                  // re-ranking; start from rank r = 0
+      for (i = 1; i < n; i++) {                    // compare adjacent suffices
+        if (RA[SA[i]] == RA[SA[i-1]] && RA[SA[i]+k] == RA[SA[i-1]+k]) { // same rank
+          coord_data[i+1][5] = r;
+          tempRA[SA[i]] = r
+          currentState = createState();
+          colorRow(currentState, i+1);
+          currentState["status"] = "k=" + k + ". Same pair as previous, keep rank";
+          currentState["lineNo"] = 4;
+          stateList.push(currentState);
+        } else {
+          coord_data[i+1][5] = ++r;
+          tempRA[SA[i]] = r;
+          currentState = createState();
+          colorRow(currentState, i+1);
+          currentState["lineNo"] = 5;
+          currentState["status"] = "k=" + k + ". Different pair as previous, increase rank";
+          stateList.push(currentState);
+        }
+      }
+      for (i = 0; i < n; i++) {                          // update the rank array RA
+        RA[i] = tempRA[i];
+        coord_data[i+1][3] = coord_data[i+1][5];
+      }
+      currentState = createState();
+      currentState["status"] = "Updating RA[] from tempRA[]";
+      currentState["lineNo"] = 6; 
+      colorColumn(currentState, 3); colorColumn(currentState, 5);
+      stateList.push(currentState);
+      if (RA[SA[n-1]] == n-1) {
+        currentState = createState();
+        currentState["status"] = "RA[SA[n-1] == n-1. Finish ranking";
+        currentState["lineNo"] = 7;
+        stateList.push(currentState);
+        break;
+      }
+    } 
+    currentState = createState();
+    currentState["status"] = "Finish.";
+    stateList.push(currentState);
+    graphWidget.startAnimation(stateList);
+    return true;
+  }
+
+
   this.constructSA_bad = function(T) {
     clearScreen();
+    //constructSA(T.length, T);
+    //return;
     var data = ["SA[i]", "LCP[i]", "Suffix"];
     addRow(data);
  
     suffix_table = new Array();
+    
     SA = new Array();
     for (var i=0; i < T.length; i++) {
       suffix_table.push(T.substring(i));
@@ -291,7 +429,7 @@ var SuffixArrayWidget = function() {
           SA[j] = tmp;
         }
       }
-
+    
     // LCP slow
     LCP = new Array();
     LCP.push(0);
@@ -575,12 +713,14 @@ var SuffixArrayWidget = function() {
         document.getElementById('code4').innerHTML = '&nbsp&nbsp&if (LCP[i] >= max) update max, result';
         document.getElementById('code5').innerHTML = 'return result';
         break;
-      case 3: // check point inside polygon
-        document.getElementById('code1').innerHTML = 'for (i=0; i < P.size() -1; i++)'
-        document.getElementById('code2').innerHTML = '&nbsp&nbsp&nbsp&nbspif ccw(p, P[i], P[i+1]';
-        document.getElementById('code3').innerHTML = '&nbsp&nbsp&nbsp&nbspsum += angle(P[i], p, P[i+1])';
-        document.getElementById('code4').innerHTML = '&nbsp&nbsp  else sum -= angle(P[i], p, P[i+1])';
-        document.getElementById('code5').innerHTML = 'return fabs(fabs(sum) - 2*PI) < EPS';
+      case 3: // constructSA
+        document.getElementById('code1').innerHTML = 'for (k = 1; k < n; k <<= 1)'
+        document.getElementById('code2').innerHTML = '&nbsp&nbspsort based on raking pair';
+        document.getElementById('code3').innerHTML = '&nbsp&nbsp  for (i = 1; i < n; i++)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbsp  if ranking pair is different';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp&nbspincrease rank';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp  updating RAp[ from tempRA[]  ';
+        document.getElementById('code7').innerHTML = 'finish';
         break;
       case 4: // cut polygon
         document.getElementById('code1').innerHTML = 'for (point i in polygon)'
