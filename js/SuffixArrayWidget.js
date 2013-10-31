@@ -53,6 +53,8 @@ var SuffixArrayWidget = function() {
   var LCP = new Array();
   var c, r = 0;
   var tempSA = new Array(), SA = new Array(), RA = new Array(), tempRA = new Array();
+  var previous_option = null;
+
   mainSvg.style("class", "unselectable");
 
   mainSvg.attr("height", screenHeight);
@@ -92,6 +94,7 @@ var SuffixArrayWidget = function() {
     SA = new Array();
     LCP = new Array();
     tempSA = new Array(), SA = new Array(), RA = new Array(), tempRA = new Array();
+    previous_option = null;
   }
 
   function createState(lower_bound) {

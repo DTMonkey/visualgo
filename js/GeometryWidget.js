@@ -46,6 +46,7 @@ var Geometry = function() {
    var cutPolygonState = 0;
    var isPreviousPointInsde = false;
    var isPolygon = false;
+   var previous_option = null;
 
    mainSvg.style("class", "unselectable");
    mainSvg.append('svg:defs').append('svg:marker')
@@ -89,6 +90,7 @@ var Geometry = function() {
     cutPolygonState = 0;
     isPreviousPointInsde = false;
     isPolygon = false;
+    previous_option = null;
   }
 
   function addExtraEdge() {    
@@ -636,6 +638,26 @@ var Geometry = function() {
     return null;
   }
 
+  // redraw the polygon
+  function refresh(k) {
+    var tmp_coord = new Array();
+    for (var i=0; i < Object.size(coord)-k; i++) {
+      tmp_coord.push(coord[i]);
+    }      
+    clearScreen();
+    for (var i=0; i < Object.size(tmp_coord); i++) {
+      var tmp = tmp_coord[i];
+      doclick2(tmp);
+      if (i > 0) {
+        addIndirectedEdge(i-1, i, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+      }
+      if (i == Object.size(tmp_coord)-1) {
+        addIndirectedEdge(i, 0, ++amountEdge, EDGE_TYPE_UDE, 0, true);
+      }
+    }
+    isPolygon = true;
+  }
+
   this.findPerimeter = function() {
     /*
     if (isPreviousPointInsde) {
@@ -645,7 +667,18 @@ var Geometry = function() {
     }
     */
 
+    if (previous_option == "grahamScan") {
+      if (!isPolygon)
+        alert("Please clear screen and draw your polygon first.");
+      return;
+    } else if (previous_option == "goPointInside") {
+      refresh(1);  
+    }    
+    else if (previous_option == "goCutPolygon") {
+      refresh(4);
+    }
 
+    previous_option = "findPerimeter";
     var stateList = new Array();
     var currentState = createState(A);
     popuatePseudocode(0);
@@ -655,6 +688,8 @@ var Geometry = function() {
       graphWidget.startAnimation(stateList);
       return;
     }
+    mainSvg.on("mousedown", null);
+
 
     currentState["status"] = "Start. result = 0";
     currentState["lineNo"] = 1;
@@ -694,10 +729,14 @@ var Geometry = function() {
     for (var j=0; j < Object.size(prev_es); j++) {
       currentState["el"][prev_es[j]]["state"] = EDGE_TRAVERSED;
     }
-    //currentState["lineNo"] = 2;
     currentState["status"] = "result = " + over_dist.toFixed(2) + ".";
     stateList.push(currentState);
+    currentState = createState(A);
+    currentState["status"] = "Finish.";
+    stateList.push(currentState);
+
     graphWidget.startAnimation(stateList);
+
     return true;
   }
 
@@ -710,6 +749,17 @@ var Geometry = function() {
   }
 
   this.isConvex = function() {
+    if (previous_option == "grahamScan") {
+      if (!isPolygon)
+        alert("Please clear screen and draw your polygon first.");
+      return;
+    } else if (previous_option == "goPointInside") {
+      refresh(1);  
+    }    
+    else if (previous_option == "goCutPolygon") {
+      refresh(4);
+    }
+    previous_option = "isConvex";
     var sz = Object.size(coord);
     var stateList = new Array();
     popuatePseudocode(1);
@@ -805,6 +855,9 @@ var Geometry = function() {
     }
     currentState["status"] = "Polygon is convex.";
     currentState["lineNo"] = 7;
+    stateList.push(currentState);
+    currentState = createState(A);
+    currentState["status"] = "Finish.";
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
     return true;
@@ -1244,6 +1297,7 @@ var Geometry = function() {
   }
 
   this.grahamScan = function() {
+    previous_option = "grahamScan";
     popuatePseudocode(2);
     //graphWidget.transition().duration(0);
     graphWidget.setAnimationDuration(500);
@@ -1486,7 +1540,19 @@ var Geometry = function() {
   }
 
   this.doCutPolygon = function() {
-    cutPolygonState = 1;
+    if (previous_option == "goPointInside") {
+      refresh(1);
+      //this.doCutPolygon();
+    } else if (previous_option == "goCutPolygon") {
+      refresh(4);
+      //this.doCutPolygon();
+    } else if (previous_option == "grahamScan") {
+      if (!isPolygon) {
+        alert("Please clear screen and draw your polygon first.");
+        return;
+      }
+    }    
+    cutPolygonState = 1;    
     mainSvg.on("mousedown", function (d) { 
       mousedown_event = this;
       doMouseDown();
@@ -1496,6 +1562,7 @@ var Geometry = function() {
 
   function goCutPolygon() {
     //return;
+    previous_option = "goCutPolygon";
     $('#current-action').show();
     $('#current-action p').html("Cut polygon");
     triggerRightPanels();
@@ -1603,11 +1670,24 @@ var Geometry = function() {
   }
 
   this.checkPointInsidePolygon = function() {
+    if (previous_option == "goPointInside") {
+      refresh(1);
+      //this.checkPointInsidePolygon();
+    } else if (previous_option == "goCutPolygon") {
+      refresh(4);
+      //this.checkPointInsidePolygon();
+    } else if (previous_option == "grahamScan") {
+      if (!isPolygon) {
+        alert("Please clear screen and draw your polygon first.");
+        return;
+      }
+    }    
     isCheckingPointInside = true;
     mainSvg.on("mousedown", function (d) { 
       mousedown_event = this;
       doMouseDown();
     });
+
     return true;
   }
 
@@ -1619,6 +1699,8 @@ var Geometry = function() {
   }
 
   function goPointInside() {
+
+    previous_option = "goPointInside";
     $('#current-action').show();
     $('#current-action p').html("Check point is inside polygon");
     triggerRightPanels();
