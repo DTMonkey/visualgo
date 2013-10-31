@@ -556,6 +556,8 @@ var SuffixArrayWidget = function() {
 
   this.goLRS = function() {
     popuatePseudocode(1);
+    var T = document.getElementById("arrv1").value;
+    this.constructSA_bad(T);
     var currentState = createState();
     var stateList = new Array();
     currentState["status"] = "Start. Max = 0. Max rows will be colored by green";

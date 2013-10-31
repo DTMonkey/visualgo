@@ -38,7 +38,7 @@
 
 #search-input {
 	position: fixed;
-	bottom: 119px;
+	bottom: 152px;
 	left: 226px;
 	background: #777;
 	width: 0px;
@@ -52,7 +52,7 @@
 	}
 	#search-go {
 		position: fixed;
-		bottom: 119px;
+		bottom: 152px;
 		left: 426px;
 		width: 0px;
 		background: #777;
@@ -65,11 +65,11 @@
 
 #lcs-input {
 	position: fixed;
-	bottom: 60px;
+	bottom: 96px;
 	left: 226px;
 	background: #777;
 	width: 0px;
-	height: 32px;
+	height: 30px;
 	overflow: hidden;
 	background: none;
 }
@@ -77,16 +77,18 @@
 		width: 78px;
 		background: black;
 		color: white;
-		padding: 8px;
+		padding: 9px;
+		height: 14px;
 	}
 	#lcs-go {
 		position: fixed;
-		bottom: 60px;
-		left: 415px;
+		bottom: 96px;
+		left: 419px;
 		width: 0px;
 		background: #777;
 		color: white;
 		overflow: hidden;
+		height: 30px;
 	}
 		#lcs-go p {
 			padding: 8px 8px 7px;
