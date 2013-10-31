@@ -1,103 +1,203 @@
 @charset "utf-8";
 
-#actions { height: 145px; width: 150px; }
+#actions { height: 145px; width: 180px; }
 	#actions-hide {
-		padding: 64px 15px 65px 14px;
+		padding: 64px 15px 64px 14px;
 	}
 
 /*all action pullout (input) stuff here*/
 
-#graham-go {
+#build-input {
 	position: fixed;
-	bottom: 96px;
-	left: 196px;
+	bottom: 178px;
+	left: 226px;
 	background: #777;
 	width: 0px;
 	overflow: hidden;
 }
-	#graham-go p {
-			padding: 6px 8px 6px;
+	#build-input input {
+		width: 200px;
+		background: black;
+		color: white;
+		padding: 6px;
+		height: 14px;
+	}
+	#build-go {
+		position: fixed;
+		bottom: 178px;
+		left: 427px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+		height: 26px;
+	}
+		#build-go p {
+			padding: 5px 8px 7px;
 		}
 
+#search-input {
+	position: fixed;
+	bottom: 119px;
+	left: 226px;
+	background: #777;
+	width: 0px;
+	overflow: hidden;
+}
+	#search-input input {
+		width: 200px;
+		background: black;
+		color: white;
+		padding: 6px 8px 5px;
+	}
+	#search-go {
+		position: fixed;
+		bottom: 119px;
+		left: 426px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#search-go p {
+			padding: 5px 8px;
+		}		
 
+#lcs-input {
+	position: fixed;
+	bottom: 60px;
+	left: 226px;
+	background: #777;
+	width: 0px;
+	height: 32px;
+	overflow: hidden;
+	background: none;
+}
+	#lcs-input input {
+		width: 78px;
+		background: black;
+		color: white;
+		padding: 8px;
+	}
+	#lcs-go {
+		position: fixed;
+		bottom: 60px;
+		left: 415px;
+		width: 0px;
+		background: #777;
+		color: white;
+		overflow: hidden;
+	}
+		#lcs-go p {
+			padding: 8px 8px 7px;
+		}
+	
+/*all action pullout (error) stuff here*/
+.err {
+	position: fixed;
+	color: red;
+}
+#build-err {
+	bottom: 146px;
+	left: 468px;
+	padding: 8px 0px 7px;
+}
+#search-err {
+	bottom: 119px;
+	left: 468px;
+	padding: 5px 0px;
+}
+#lcs-err {
+	bottom: 60px;
+	left: 460px;
+	padding: 8px 0px 7px;
+}
 
-
-/*all tutorial stuff here*/
-#heap-tutorial-1 {
+/*tutorial dialogs*/
+#suffixtree-tutorial-1 {
 	top: 60px;
 	left: 60px;
 	width: 250px;
 }
-#heap-tutorial-2 {
-	bottom: 230px;
+#suffixtree-tutorial-2 {
+	bottom: 200px;
 	left: 60px;
 	width: 220px;
 }
-	#heap-tutorial-2:before {
+	#suffixtree-tutorial-2:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-3 {
-	top: 300px;
+#suffixtree-tutorial-3 {
+	top: 400px;
 	left: 50%;
 	width: 200px;
 	margin-left: -110px;
 }
-	#heap-tutorial-3:before {
+	#suffixtree-tutorial-3:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-4 {
+#suffixtree-tutorial-4 {
 	bottom: 335px;
 	right: 150px;
 	width: 200px;
 }
-	#heap-tutorial-4:before {
+	#suffixtree-tutorial-4:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-5 {
+#suffixtree-tutorial-5 {
 	bottom: 275px;
 	right: 170px;
 	width: 180px;
 }
-	#heap-tutorial-5:before {
+	#suffixtree-tutorial-5:before {
 		top: 100%;
 		left: 20%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-6 {
+#suffixtree-tutorial-6 {
 	bottom: 70px;
 	left: 50%;
 	width: 220px;
 	margin-left: -120px;
 }
-	#heap-tutorial-6:before {
+	#suffixtree-tutorial-6:before {
 		top: 100%;
 		left: 50%;
 		border-top-color: black;
 		margin-left: -10px;
 	}
-#heap-tutorial-7 {
+#suffixtree-tutorial-7 {
 	top: 70px;
 	right: 60px;
 	width: 150px;
 }
-	#heap-tutorial-7:before {
+	#suffixtree-tutorial-7:before {
 		bottom: 100%;
 		left: 50%;
 		border-bottom-color: black;
 		margin-left: -10px;
 	}
 
-.rect1 {
-	fill: #2ebbd1;;
-	width: 200px;
+/*others*/
+.background {
+  fill: none;
+  pointer-events: all;
+}
+
+.lcs_first {
+	fill: #2ebbd1;
+}
+
+.lcs_second {
+	fill: #52bc69;
 }

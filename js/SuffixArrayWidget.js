@@ -406,14 +406,7 @@ var SuffixArrayWidget = function() {
     return true;
   }
 
-
-  this.constructSA_bad = function(T) {
-    clearScreen();
-    //constructSA(T.length, T);
-    //return;
-    var data = ["SA[i]", "LCP[i]", "Suffix"];
-    addRow(data);
- 
+  function buildSA(T) {
     suffix_table = new Array();
     
     SA = new Array();
@@ -432,7 +425,13 @@ var SuffixArrayWidget = function() {
           SA[j] = tmp;
         }
       }
-    
+  }
+
+  this.constructSA_bad = function(T) {
+    clearScreen();
+    var data = ["SA[i]", "LCP[i]", "Suffix"];
+    addRow(data);
+    buildSA(T);
     // LCP slow
     LCP = new Array();
     LCP.push(0);
@@ -446,20 +445,6 @@ var SuffixArrayWidget = function() {
       tmp.push(SA[i]); tmp.push(LCP[i]); tmp.push(suffix_table[i]);
       addRow(tmp);
     }
-
-    var data = ["test", "test", "test", "test", "test", "test", "test", "test", "test"];
-    //addColumn(data);
-    //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
-
-
-    /*
-    var currentState = createState();
-    var stateList = new Array();
-    currentState["vl"]["4_2"]["state"] = VERTEX_HIGHLIGHTED;
-    colorRow(currentState, 6);
-    stateList.push(currentState);    
-    graphWidget.startAnimation(stateList);
-    */
   }
 
   function strncmp(str1, str2, n) {
@@ -685,6 +670,89 @@ var SuffixArrayWidget = function() {
     return true;
   }
 
+  this.goLCP = function() {
+    var T = document.getElementById("arrv1").value;
+    clearScreen();
+    popuatePseudocode(4);
+    var i, k, r;
+    var currentState = createState();
+    var stateList = new Array();
+    var n = T.length;
+
+    var data = ["SA[i]", "Phi[i]", "PLCP[i]", "Suffix", "LCP[i]"];
+    addRow(data);
+    buildSA(T);
+
+    var Phi = new Array();
+    for (i = 0; i < n; i++) {
+      Phi.push(0);
+    }
+    Phi[SA[0]] = -1;
+    for (i = 1; i < n; i++) {
+      Phi[SA[i]] = SA[i-1];
+    }
+
+    for (i = 0; i < n; i++) { 
+      var tmp = new Array();
+      //tmp.push(i);
+      tmp.push(i);
+      tmp.push(0);
+      tmp.push(0);
+      tmp.push(T.substring(i));
+      tmp.push(0);
+      addRow(tmp);
+    }
+    currentState = createState();
+    currentState["status"] = "Initialize";
+    currentState["lineNo"] = 1; 
+    stateList.push(currentState);
+
+
+    for (i = 0; i < n; i++) {
+      coord_data[i+1][2] = Phi[i];
+      currentState = createState();      
+      currentState["status"] = "Updating Phi[" + i.toString() + "]";
+      currentState["lineNo"] = 2;
+      colorRow(currentState, i+1);
+      stateList.push(currentState);
+    }
+
+    var L = 0, PLCP = new Array();
+    for (i = 0; i < n; i++) {
+      if (Phi[i] == -1) {
+        PLCP[i] = 0;
+        continue;
+      }
+      while (T[i + L] == T[Phi[i] + L]) L++;
+      PLCP[i] = L;
+      L = L > 1 ? L - 1 : 0;
+    }
+    for (i = 0; i < n; i++) {
+      coord_data[i+1][3] = PLCP[i];
+      currentState = createState();
+      colorRow(currentState, i+1);
+      currentState["status"] = "Updating PLCP[i]. L=" + PLCP[i].toString();
+      currentState["lineNo"] = 5;
+      stateList.push(currentState);
+    }
+
+    for (i =0; i < n; i++) {
+      coord_data[i+1][5] = PLCP[SA[i]];
+      currentState = createState();
+      colorRow(currentState, i+1);
+      currentState["status"] = "Updating LCP[i]";
+      currentState["lineNo"] = 7; 
+      stateList.push(currentState);
+    }
+
+    currentState = createState();
+    currentState["status"] = "Finish."
+    stateList.push(currentState);   
+    graphWidget.startAnimation(stateList);
+    return true; 
+  }
+
+
   // Javascript addon: get size of an object
   Object.size = function(obj) {
     var size = 0, key;
@@ -725,12 +793,14 @@ var SuffixArrayWidget = function() {
         document.getElementById('code6').innerHTML = '&nbsp&nbsp  updating RAp[ from tempRA[]  ';
         document.getElementById('code7').innerHTML = 'finish';
         break;
-      case 4: // cut polygon
-        document.getElementById('code1').innerHTML = 'for (point i in polygon)'
-        document.getElementById('code2').innerHTML = '&nbsp if left1 > -EPS //left1 = cross(A,B,i)';
-        document.getElementById('code3').innerHTML = '&nbsp&nbspadd i to result';
-        document.getElementById('code4').innerHTML = '&nbsp if left1*left2 < -EPS //left2 = cross(A,B,i+1)';
-        document.getElementById('code5').innerHTML = '&nbsp&nbsp  add intersection to result';
+      case 4: // LCP
+        document.getElementById('code1').innerHTML = 'for (i = 1; i < n; i++)'
+        document.getElementById('code2').innerHTML = '&nbsp  Phi[SA[i]] = SA[i-1]';
+        document.getElementById('code3').innerHTML = '&nbspfor (i = L = 0; i < n; i++)';
+        document.getElementById('code4').innerHTML = '&nbsp&nbsp  if (Phi[i]==-1) PLCP[i]=0, continue';
+        document.getElementById('code5').innerHTML = '&nbsp&nbsp  increase L properly';
+        document.getElementById('code6').innerHTML = '&nbsp&nbsp  L = max(L-1,0)';
+        document.getElementById('code7').innerHTML = 'update LCP';
         break;
     } 
   }

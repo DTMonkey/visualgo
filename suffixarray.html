@@ -9,14 +9,14 @@
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/viz.css">
 
-<link rel="stylesheet" href="css/suffix_tree.css">
+<link rel="stylesheet" href="css/suffix_array.css">
 
 <!--js-->
 <script src="js/jquery-1.10.2.js"></script>
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
 <script src="js/suffix_tree_actions.js"></script>
-<script src="//connect.facebook.net/en_US/all.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
 <script src="js/d3/d3.v3.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <!--suffix tree scripts are below-->
@@ -52,10 +52,11 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-        <p id="build" style="padding-top: 10px;">Build Suffix Array</p>
+        <p id="build" class="execAction">Build Suffix Array</p>
         <p id="search">Search</p>
         <p id="LRS" class="execAction" onclick=buildLRS()>Longest Repeated Substring</p>
-        <p id="LCS" style="padding-bottom: 10px;">Longest Common Substring</p>
+        <p id="LCS" class="execAction">Longest Common Substring</p>
+        <p id="LCP" class="execAction" onclick=doLCP()>Longest Common Prefix</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -227,6 +228,24 @@
             }
         }, 500);      
     }
+
+    function doLCP() {
+        try {
+            if(isPlaying) { stop(); }
+        } catch(err) {}
+        setTimeout( function() {
+            if ((mode=="exploration")&&saWidget.goLCP()) {
+                $('#current-action').show();
+                $('#current-action p').html("LCP");
+                $('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+                closeSearch();
+                triggerRightPanels();
+                isPlaying = true;
+            }
+        }, 500);      
+    }
+
+
     //player controls
     var isPaused = false;
     function isAtEnd() {
