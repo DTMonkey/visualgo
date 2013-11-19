@@ -65,7 +65,7 @@
 
 #lcs-input {
 	position: fixed;
-	bottom: 96px;
+	bottom: 68px;
 	left: 226px;
 	background: #777;
 	width: 0px;
@@ -82,7 +82,7 @@
 	}
 	#lcs-go {
 		position: fixed;
-		bottom: 96px;
+		bottom: 68px;
 		left: 419px;
 		width: 0px;
 		background: #777;

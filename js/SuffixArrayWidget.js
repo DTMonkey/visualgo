@@ -167,6 +167,10 @@ var SuffixArrayWidget = function() {
    return -1;
   }
 
+  function colorNode(currentState, row_id, column_id) {
+    currentState["vl"][row_id.toString() + "_" + column_id.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
+  }
+
   function colorColumn(currentState, column_id) {
     for (var i=0; i < Object.size(coord_idx); i++) {
       currentState["vl"][i.toString() + "_" + column_id.toString()]["state"] = VERTEX_HIGHLIGHTED_RECT;
@@ -386,10 +390,12 @@ var SuffixArrayWidget = function() {
         RA[i] = tempRA[i];
         coord_data[i+1][3] = coord_data[i+1][5];
       }
+
       currentState = createState();
       currentState["status"] = "Updating RA[] from tempRA[]";
       currentState["lineNo"] = 6; 
-      colorColumn(currentState, 3); colorColumn(currentState, 5);
+      colorColumn(currentState, 3); 
+      colorColumn(currentState, 5);
       stateList.push(currentState);
       if (RA[SA[n-1]] == n-1) {
         currentState = createState();
@@ -457,6 +463,7 @@ var SuffixArrayWidget = function() {
     var P = document.getElementById("search_inp").value;
     var T = document.getElementById("arrv1").value;
     popuatePseudocode(0);
+    this.constructSA_bad(T);
     var stateList = new Array();
     // find lower bound
     var currentState = createState();
@@ -493,7 +500,7 @@ var SuffixArrayWidget = function() {
     currentState = createState();
     currentState["status"] = "Lower bound is highlighted";
     currentState["lineNo"] = 1;
-    colorRow(currentState, lower_bound);
+    colorRow(currentState, lower_bound+1);
     //graphWidget.addRectVertex(coord_idx[4][Object.size(coord_idx[0])-1] + 200, 50 + 30*(4+1), "Lower bound", "lbound", true, "rect_long");
     //currentState["vl"]["lower_bound"]["stroke"] = "#eeeeee";
 
@@ -540,7 +547,7 @@ var SuffixArrayWidget = function() {
     if (strncmp(T.substring(SA[hi]), P, P.length) != 0) hi--;
     var h_bound = hi;
     var currentState = createState();
-    colorRow(currentState, h_bound);
+    colorRow(currentState, h_bound+1);
     currentState["status"] = "Upper bound is highlighted";
     currentState["lineNo"] = 2;
     stateList.push(currentState);
@@ -697,7 +704,7 @@ var SuffixArrayWidget = function() {
     for (i = 0; i < n; i++) { 
       var tmp = new Array();
       //tmp.push(i);
-      tmp.push(i);
+      tmp.push(SA[i]);
       tmp.push(0);
       tmp.push(0);
       tmp.push(T.substring(i));
@@ -710,12 +717,14 @@ var SuffixArrayWidget = function() {
     stateList.push(currentState);
 
 
-    for (i = 0; i < n; i++) {
-      coord_data[i+1][2] = Phi[i];
+    for (i = 1; i < n; i++) {
+      coord_data[SA[i]+1][2] = Phi[SA[i]];
       currentState = createState();      
       currentState["status"] = "Updating Phi[" + i.toString() + "]";
       currentState["lineNo"] = 2;
-      colorRow(currentState, i+1);
+      //colorRow(currentState, i+1);
+      colorNode(currentState, i, 1);
+      colorNode(currentState, SA[i]+1, 2);
       stateList.push(currentState);
     }
 
@@ -741,7 +750,9 @@ var SuffixArrayWidget = function() {
     for (i =0; i < n; i++) {
       coord_data[i+1][5] = PLCP[SA[i]];
       currentState = createState();
-      colorRow(currentState, i+1);
+      //colorRow(currentState, i+1);
+      colorNode(currentState, i+1, 5);
+      colorNode(currentState, SA[i]+1, 3);
       currentState["status"] = "Updating LCP[i]";
       currentState["lineNo"] = 7; 
       stateList.push(currentState);
@@ -771,6 +782,10 @@ var SuffixArrayWidget = function() {
         document.getElementById('code1').innerHTML = 'find lower bound';
         document.getElementById('code2').innerHTML = 'find upper bound';
         document.getElementById('code3').innerHTML = 'report results';
+        document.getElementById('code4').innerHTML = '';
+        document.getElementById('code5').innerHTML = '';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
         break;
       case 1: // LRS
         document.getElementById('code1').innerHTML = 'max = 0, result = array';
@@ -778,6 +793,8 @@ var SuffixArrayWidget = function() {
         document.getElementById('code3').innerHTML = '&nbsp&nbspif (LCP[i] >= max)';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp&nbsp&nbspupdate max, result';
         document.getElementById('code5').innerHTML = 'return result';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
         break;
       case 2: // LCS
         document.getElementById('code1').innerHTML = 'max = 0, result = null'
@@ -785,6 +802,8 @@ var SuffixArrayWidget = function() {
         document.getElementById('code3').innerHTML = '&nbsp&nbspif (owner[i] == owner[i-1] continue';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp&if (LCP[i] >= max) update max, result';
         document.getElementById('code5').innerHTML = 'return result';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
         break;
       case 3: // constructSA
         document.getElementById('code1').innerHTML = 'for (k = 1; k < n; k <<= 1)'
@@ -802,7 +821,7 @@ var SuffixArrayWidget = function() {
         document.getElementById('code4').innerHTML = '&nbsp&nbsp  if (Phi[i]==-1) PLCP[i]=0, continue';
         document.getElementById('code5').innerHTML = '&nbsp&nbsp  increase L properly';
         document.getElementById('code6').innerHTML = '&nbsp&nbsp  L = max(L-1,0)';
-        document.getElementById('code7').innerHTML = 'update LCP';
+        document.getElementById('code7').innerHTML = 'update LCP[i] = PLCP[SA[i]] // i from 0 to n';
         break;
     } 
   }

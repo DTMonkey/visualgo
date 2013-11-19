@@ -54,9 +54,9 @@
     <div id="actions" class="panel">
         <p id="build" class="execAction">Build Suffix Array</p>
         <p id="search">Search</p>
+        <p id="LCP" class="execAction" onclick=doLCP()>Longest Common Prefix</p>
         <p id="LRS" class="execAction" onclick=buildLRS()>Longest Repeated Substring</p>
         <p id="LCS" class="execAction">Longest Common Substring</p>
-        <p id="LCP" class="execAction" onclick=doLCP()>Longest Common Prefix</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
@@ -162,7 +162,7 @@
 
     var saWidget = new SuffixArrayWidget();
     var gw = saWidget.getGraphWidget();
-   // saWidget.buildSuffixTree(document.getElementById("arrv1").value);
+    saWidget.constructSA_bad(document.getElementById("arrv1").value);
 
     function buildSuffixTree() {
         try {
