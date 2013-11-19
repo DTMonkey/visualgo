@@ -89,7 +89,7 @@
 				</div> 
     </div>
     <div style="float:left">
-    	<input id="direct_checkbox" type="checkbox" value="Submit" style="vertical-align: middle" checked="true" onclick="switchDirectIndirect()" >Directed </input>
+    	<input id="direct_checkbox" type="checkbox" value="Submit" style="vertical-align: middle" onclick="switchDirectIndirect()" >Directed </input>
     </div>
 	<div > 
 			<div style="float:left" left="100px"> 
@@ -172,7 +172,7 @@
 
     <div id="current-action" class="panel"><p></p></div>
     
-    <div id="actions" class="panel">
+    <div id="actions" class="panel" style="height:165px">
         <p id="tree_graph" class="execAction" onclick=clearScreen()>Clear</p>
 		<p id="tree_graph" class="execAction" onclick=showTree()>Tree</p>
 		<p id="tree_graph" class="execAction" onclick=showStar()>Star</p>
@@ -183,7 +183,7 @@
 		<p id="tree_graph" class="execAction" onclick=showK5()>K5</p>
 
 	</div>
-    <div id="actions-hide" class="panel-hide"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-hide" class="panel-hide" style="height:36px"><img src="http://rosemarietan.com/fyp/img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <!--put all the extra action pullouts (input) and error messages here-->
     
     <div id="status" class="panel"><p></p></div>
@@ -212,13 +212,6 @@
     <a id="trigger-terms">Terms of use</a>
 </div>
 
-<div id="media-controls">
-	<span id="previous" class="media-control-button" title="step backward" onclick=gw.forcePrevious(250)><img src="http://rosemarietan.com/fyp/img/prevFrame.png" alt="previous frame" /></span>
-    <span id="pause" class="media-control-button" title="pause" onclick=pause()><img src="http://rosemarietan.com/fyp/img/pause.png" alt="pause" /></span>
-    <span id="play" class="media-control-button" title="play" onclick=play()><img src="http://rosemarietan.com/fyp/img/play.png" alt="play" /></span>
-    <span id="next" class="media-control-button" title="step forward" onclick=gw.forceNext(250)><img src="http://rosemarietan.com/fyp/img/nextFrame.png" alt="next frame" /></span>
-    <span id="stop" class="media-control-button" title="end animation" onclick=stop()><img src="http://rosemarietan.com/fyp/img/stop_red.png" alt="stop" /></span>
-</div>
 
 <div id="dark-overlay"></div>
 

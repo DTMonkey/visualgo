@@ -53,6 +53,8 @@ var Graph = function() {
    .attr('fill', '#000');
    mainSvg.style("cursor", "crosshair");
 
+   mainSvg.attr("style", "height:290px");
+
   function resetEverything() {
     coord = new Array();
     A = new Array();
@@ -78,7 +80,7 @@ var Graph = function() {
 
   function addExtraEdge() {
     if (document.getElementById("direct_checkbox").checked)
-      addDirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
+      addDirectedEdge(1, 2, ++amountEdge, EDGE_TYPE_UDE, 1, true);
     else addIndirectedEdge(1, 1, ++amountEdge, EDGE_TYPE_UDE, 1, true);
     mainSvg.select("#e" + amountEdge.toString()).style("visibility", "hidden");      
   }
@@ -339,9 +341,11 @@ var Graph = function() {
                 for (var i=1; i <= Object.size(edgeList); i++) {
                   var tmp_edge_id = tmp_e + i.toString();
                   console.log(edgeList[tmp_edge_id]);
+                  if (typeof(edgeList[tmp_edge_id]) != "undefined")
                   if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
                     mainSvg.select(tmp_edge_id).style("visibility", "hidden");
                     mainSvg.select("#w_e" + i.toString()).remove();
+                    delete edgeList["#e" + i.toString()];
                   }
                 }            
                 var islast = true;
@@ -409,9 +413,11 @@ var Graph = function() {
                   for (var i=1; i <= Object.size(edgeList); i++) {
                     var tmp_edge_id = tmp_e + i.toString();
                     console.log(edgeList[tmp_edge_id]);
+                    if (typeof(edgeList[tmp_edge_id]) != "undefined")
                     if (edgeList[tmp_edge_id][0] == current_id_num || edgeList[tmp_edge_id][1] == current_id_num) {
                       mainSvg.select(tmp_edge_id).style("visibility", "hidden");
                       mainSvg.select("#w_e" + i.toString()).remove();
+                      delete edgeList["#e" + i.toString()];        
                     }
                   }  
                   coord[current_id_num][0] = -1;
@@ -642,6 +648,15 @@ var Graph = function() {
       // move1 == false, new vertex is created
       //alert(cur[0] + " " + cur[1]);
       //cur = d3.mouse
+
+      var b0 = mainSvg.selectAll(".v" + iu.toString());
+      b0.remove();
+      amountVertex--;
+      coord[amountVertex] = new Array();
+      var tt = new Array();
+      //t.push(cx); t.push(cy);
+      doclick2(cur);
+/*
       var b = mainSvg.selectAll(".v" + iu.toString());
       var text_content = b[0][2].textContent;
       b[0] = b[0].splice(2,1);
@@ -725,6 +740,7 @@ var Graph = function() {
                   return;
                 }      
               });
+*/
 
     }
 
@@ -1567,16 +1583,21 @@ var Graph = function() {
   function clearScreen() {
     var i;
 
-    // remove edges first
-    for (i = 1; i <= amountEdge; i++){
-      graphWidget.removeEdge(i);
+    for (i = 0; i <= 500; i++) {
+      try {
+        graphWidget.removeEdge(i);
+      } catch(err) {}
+    }
+    
+    for (i = 0; i <= 500; i++) {
+      try {
+        graphWidget.removeVertex(i);
+      } catch(err) {}
     }
 
-    // remove vertices after removing edges
-    for (i = 1; i < amountVertex; i++){
-      graphWidget.removeVertex(A[i].getSecond());
-    }
-
+    try {
+      graphWidget.removeVertex(0);
+    } catch (err) {}
     mainSvg.selectAll(".edgelabel").remove();
     mainSvg.selectAll("text").remove();
     amountVertex = 0;
@@ -1745,6 +1766,7 @@ var Graph = function() {
     var tmp = "#e";
     for (var i=1; i <= Object.size(edgeList); i++) {
       var edge_id = tmp + i.toString();
+      if (typeof(edgeList[edge_id]) == "undefined") continue;
       var from_vertex_id = edgeList[edge_id][0];
       var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
       var from_vertex_content = target[0][2].textContent;
@@ -1776,6 +1798,7 @@ var Graph = function() {
     var tmp = "#e", count = 0;
     for (var i=1; i <= Object.size(edgeList); i++) {
       var edge_id = tmp + i.toString();
+      if (typeof(edgeList[edge_id]) == "undefined") continue;
       var from_vertex_id = edgeList[edge_id][0];
       var target = mainSvg.selectAll(".v" + from_vertex_id.toString());
       if (typeof(target[0][2]) == "undefined") continue;

@@ -26,12 +26,16 @@ const graphVertexProperties = {
       "fill": "#eee",
       "stroke": "#fff"
     },
+    "normal_blue":{
+      "fill": "#2ebbd1",
+      "stroke": "#fff"
+    },
     "highlighted":{
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "stroke": "#fff"
     },
     "highlighted_rect":{
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "stroke": "#fff"
     },
     "traversed":{
@@ -100,17 +104,21 @@ const graphVertexProperties = {
       "fill": "#333",
       "stroke": "#333"
     },
+    "normal_blue":{
+      "fill": "#2ebbd1",
+      "stroke": "#333"
+    },
     "highlighted":{
-      "fill": surpriseColour,
-      "stroke": surpriseColour
+      "fill": "#ff8a27",
+      "stroke": "#ff8a27"
     },
     "highlighted_rect":{
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "stroke": "#333"
     },
     "traversed":{
-      "fill": surpriseColour,
-      "stroke": surpriseColour
+      "fill": "#ff8a27",
+      "stroke": "#ff8a27"
     },
     "result":{
       "fill": "#f7e81e",
@@ -173,6 +181,12 @@ const graphVertexProperties = {
       "font-weight": "bold",
       "text-anchor": "middle"
     },
+    "normal_blue":{
+      "fill": "#fff",
+      "font-family": "'PT Sans', sans-serif",
+      "font-weight": "bold",
+      "text-anchor": "middle"
+    },
     "highlighted":{
       "fill": "#fff",
       "font-family": "'PT Sans', sans-serif",
@@ -186,7 +200,7 @@ const graphVertexProperties = {
       "text-anchor": "left"
     },
     "traversed":{
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
@@ -278,7 +292,7 @@ const graphVertexProperties = {
 
 const graphEdgeProperties = {
   "animateHighlightedPath":{
-      "stroke": surpriseColour,
+      "stroke": "#ff8a27",
       "stroke-width": 10
   },
   "path":{
@@ -287,10 +301,10 @@ const graphEdgeProperties = {
       "stroke": "#333"
     },
     "highlighted":{
-      "stroke": surpriseColour
+      "stroke": "#ff8a27"
     },
     "traversed":{
-      "stroke": surpriseColour
+      "stroke": "#ff8a27"
     },
 	"green":{
       "stroke": "#52bc69"
@@ -321,7 +335,7 @@ const graphEdgeProperties = {
     "highlighted":{
       "startOffset": "75%",
       "dy": -3,
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"
@@ -329,7 +343,7 @@ const graphEdgeProperties = {
     "traversed":{
       "startOffset": "75%",
       "dy": -3,
-      "fill": surpriseColour,
+      "fill": "#ff8a27",
       "font-family": "'PT Sans', sans-serif",
       "font-weight": "bold",
       "text-anchor": "middle"

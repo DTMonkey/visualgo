@@ -13,6 +13,8 @@ const VERTEX_SHAPE_RECT = "rect";
 // IDEA: VERTEX_SHAPE_POLYLINE (Very low priority, might not be backward-compatible if implemented)
 
 const VERTEX_DEFAULT = "default";
+const VERTEX_NORMAL_BLUE = "normal_blue";
+const VERTEX_NORMAL_GREEN = "normal_green";
 const VERTEX_HIGHLIGHTED = "highlighted";
 const VERTEX_HIGHLIGHTED_RECT = "highlighted_rect";
 const VERTEX_TRAVERSED = "traversed";

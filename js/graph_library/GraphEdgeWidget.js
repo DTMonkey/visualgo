@@ -315,10 +315,12 @@ var GraphEdgeWidget = function(graphVertexA, graphVertexB, edgeIdNumber, type, w
     line.attr("id", attributeList["path"]["id"])
         .attr("class", attributeList["path"]["class"]);
 
+    try {
+    if (attributeList["path"]["d"] != "MNaN,NaNLNaN,NaN")
     line.attr("d", attributeList["path"]["d"])
         .attr("stroke", attributeList["path"]["stroke"])
         .attr("stroke-width", attributeList["path"]["stroke-width"]);
-
+    } catch(err) {}
     weightText = edgeWeightSvg.append("text");
 
     weightText.attr("id", attributeList["weight"]["id"]);
