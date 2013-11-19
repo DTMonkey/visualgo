@@ -1000,6 +1000,43 @@ var SuffixTreeWidget = function() {
     if (!foundResult) {
       processQueue.push(-1);
     }
+    var stack = new Array(), prev = new Array();
+    var tmpProcessQ = new Array();
+    var isGoingUp = new Array();
+    tmpProcessQ[0] = processQueue[0];
+    stack.push(processQueue[0]);
+    var is_popping = false;
+    for (var i=1; i < processQueue.length; i++) {
+      var top = stack[stack.length-1];
+      var next_node = processQueue[i];
+      if ((draw_data[next_node.path_label].parent_index == top.path_label) && !is_popping) {
+        stack.push(next_node);
+        is_popping = false;
+        tmpProcessQ.push(next_node);
+      } else {
+        while (true) {
+          stack.pop();
+          is_popping = true;
+          top = stack[stack.length-1];
+          if (draw_data[next_node.path_label].parent_index == top.path_label) {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+            tmpProcessQ.push(next_node);
+            stack.push(next_node);
+            is_popping = false;
+            break;
+          } else {
+            tmpProcessQ.push(top);
+            isGoingUp[tmpProcessQ.length-1] = true;
+          }
+        }
+      }
+    }
+    processQueue = tmpProcessQ;
+
+
+
+
     var prev = new Array();
     var prev_edge = new Array();
     var curState = createState(A);
@@ -1048,7 +1085,22 @@ var SuffixTreeWidget = function() {
       var node = processQueue[i];      
       var node_idx = null;
       node_idx = parseInt(draw_data[node.path_label].class_id);
-      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      if (isGoingUp[i]) {
+        currentState = createState(A);
+        currentState["status"] = "Going back.";
+        for (var j=0; j < prev.length; j++) {
+          currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
+        }
+        for (var w=0; w < Object.size(prev_edge); w++) {
+          currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
+        }
+        currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;      
+        stateList.push(currentState);
+        continue;
+      }
+
+
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;      
       for (var w=0; w < Object.size(prev_edge); w++) {
         currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
       }
@@ -1395,7 +1447,7 @@ var SuffixTreeWidget = function() {
     var stateList = new Array();
     // Determine whether an inside vertex contains both strings
     processQueueLRS = new Array();
-    stGeneralDriver(true);
+    var internals = stGeneralDriver(true);
     populatePseudocode(2);
     // TODO: remove color of inside vertex that belongs to 1 string here
     /*
@@ -1424,7 +1476,7 @@ var SuffixTreeWidget = function() {
     var currentState = createState(A);
     currentState["status"] = "Start from root.";
     currentState["lineNo"] = 1;
-    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    //currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     stateList.push(currentState);
 
     var stack = new Array(), prev = new Array();
@@ -1473,7 +1525,7 @@ var SuffixTreeWidget = function() {
       var node = processQueueLRS[i];      
       var node_idx = null;
       node_idx = parseInt(draw_data[node.path_label].class_id);
-      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      
       var edgeId = 0;
       
       for (var w=1; w <= Object.size(edgeList); w++) {
@@ -1493,6 +1545,7 @@ var SuffixTreeWidget = function() {
         currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
       }
       prev.push(node_idx);
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
 
       if (isGoingUp[i]) {
         currentState["status"] = "Going back.";
@@ -1506,6 +1559,7 @@ var SuffixTreeWidget = function() {
         stateList.push(currentState);
         currentState = createState(A);
         currentState["status"] = "Going back.";
+        currentState["lineNo"] = 1;
         for (var w=0; w < Object.size(prev_edge); w++) {
           currentState["el"][prev_edge[w]]["state"]= EDGE_TRAVERSED;
         }
@@ -1529,9 +1583,11 @@ var SuffixTreeWidget = function() {
           currentState["vl"][string2s[k]]["state"] = VERTEX_GREEN_FILL; 
         }
         stateList.push(currentState);
+        continue;
       } else if (node.is_leaf) {
         currentState["status"] = "This is a leaf node, going back.";
         currentState["lineNo"] = 1;
+        currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
         //currentState["lineNo"] = 4;
         for (var k=0; k < Object.size(string1s); k++) {
           currentState["vl"][string1s[k]]["state"] = VERTEX_BLUE_FILL; 
@@ -1552,6 +1608,7 @@ var SuffixTreeWidget = function() {
         }
       }
       if (isGoingUp[i]) currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
+      currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
       stateList.push(currentState);
     }
     currentState = createState(A);
@@ -1572,7 +1629,7 @@ var SuffixTreeWidget = function() {
 
 
     // ends
-    stGeneralDriver();
+    stGeneralDriver(true);
     populatePseudocode(3);
     processQueueLRS = new Array();
     processQueueLRS.push(new NodeLRS('', draw_data[''].x, draw_data[''].y, false));
@@ -1582,11 +1639,29 @@ var SuffixTreeWidget = function() {
 
     var currentState = createState(A);
     currentState["status"] = "Current max vertex will be yellow colored.";
-    stateList.push(currentState);
+    for (var i=0; i < Object.size(internals); i++) {
+      var node_idx = null;
+      var node = internals[i];
+      node_idx = parseInt(draw_data[node].class_id);
+      if (draw_data[node].color == "orchid")
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_BLUE;
+      else 
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_GREEN;
+    }
+    stateList.push(currentState);    
     currentState = createState(A);
     currentState["status"] = "Start from root.";
-    currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
+    //currentState["vl"][6]["state"] = VERTEX_HIGHLIGHTED;
     currentState["lineNo"] = 2;
+    for (var i=0; i < Object.size(internals); i++) {
+      var node_idx = null;
+      var node = internals[i];
+      node_idx = parseInt(draw_data[node].class_id);
+      if (draw_data[node].color == "orchid")
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_BLUE;
+      else 
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_GREEN;
+    }
     stateList.push(currentState);
 
     var stack = new Array(), prev = new Array();
@@ -1631,6 +1706,15 @@ var SuffixTreeWidget = function() {
       var currentState = createState(A);
       var node = processQueueLRS[i];      
       var node_idx = null;
+      for (var j0=0; j0 < Object.size(internals); j0++) {
+        var node_idx = null;
+        var node1 = internals[j0];
+        node_idx = parseInt(draw_data[node1].class_id);
+        if (draw_data[node1].color == "orchid")
+          currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_BLUE;
+        else 
+          currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_GREEN;
+      }
       node_idx = parseInt(draw_data[node.path_label].class_id);
       currentState["vl"][node_idx]["state"]= VERTEX_HIGHLIGHTED;
       for (var w=0; w < Object.size(prev_edge); w++) {
@@ -1660,18 +1744,19 @@ var SuffixTreeWidget = function() {
         currentState["lineNo"] = 5;
       } else {
         currentState["status"] = "Path label: " + node.path_label + ". ";
-        currentState["lineNo"] = 6;
+        currentState["lineNo"] = 6;        
         if (node.path_label.length > max.length) {
           max = node.path_label;
           results = [];
           results.push(node.path_label);
           currentState["status"]+= "Longer than current max. Updating max";
-        } else if (node.path_label.length == max.length) {
+        } else if (node.path_label.length == max.length && node.path_label != max) {
           results.push(node.path_label);
           currentState["status"]+= "Equal to current max. Updating max";
-        } else {
+        } else if (node.path_label != max) {
           currentState["status"]+= "Smaller than current max.";
         }
+      
       }
       for (var j=0; j<results.length; j++) {
         var tmp_idx = parseInt(draw_data[results[j]].class_id);
@@ -1688,13 +1773,22 @@ var SuffixTreeWidget = function() {
       if (i>0) currentState["status"]+= ", ";
       currentState["status"]+= results[i] + " ";
     }
+    for (var i=0; i < Object.size(internals); i++) {
+      var node_idx = null;
+      var node = internals[i];
+      node_idx = parseInt(draw_data[node].class_id);
+      if (draw_data[node].color == "orchid")
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_BLUE;
+      else 
+        currentState["vl"][node_idx]["state"]= VERTEX_NORMAL_GREEN;
+    }
     for (var j=0; j < prev.length; j++) {
       currentState["vl"][prev[j]]["state"]= VERTEX_TRAVERSED;
     }
     for (var j=0; j<results.length; j++) {
       var tmp_idx = parseInt(draw_data[results[j]].class_id);
       currentState["vl"][tmp_idx]["state"] = VERTEX_RESULT;
-    }
+    }    
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
     return true;
@@ -1788,6 +1882,7 @@ var SuffixTreeWidget = function() {
         else tmp_vertex.attr("class", "lcs_second");
       }
     } else {
+      var internals = new Array();
       for (var i in draw_data) {
         var tmp_vertex = mainSvg.selectAll(".v" + draw_data[i].class_id.toString());
         tmp_vertex[0] = tmp_vertex[0].splice(0,2);
@@ -1800,13 +1895,18 @@ var SuffixTreeWidget = function() {
             break;
           }
         }
-        if (isInternal) continue;
+        if (isInternal) {
+          //tmp_vertex.attr("class", "lcs_internal");
+          if (draw_data[i].color != "black")
+            internals.push(i);
+          continue;
+        }
         if (draw_data[i].color == "black") continue;
         if (draw_data[i].color == "orchid")
           tmp_vertex.attr("class", "lcs_first");
         else tmp_vertex.attr("class", "lcs_second");
       }
-
+      return internals;
     }
 
   }//stGeneralDriver

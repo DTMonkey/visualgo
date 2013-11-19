@@ -54,15 +54,15 @@
 
     <div id="current-action" class="panel"><p></p></div>
     
-    <div id="actions" class="panel">
+    <div id="actions" class="panel" style="height:164px">
         <p id="clear" class="execAction" onclick=clearScreen()>Clear</p>
 		<p id="perimeter" class="execAction" onclick=perimeter()>Perimeter</p>
 		<p id="is_convex" class="execAction" onclick=isConvex()>isConvex</p>
-        <p id="graham">Graham Scan</p>
         <p id="cut_polygon" class="execAction" onclick=cutPolygon()>Cut polygon</p>
         <p id="point_inside" class="execAction" onclick=checkPointInsidePolygon()>Check point inside</p>
+        <p id="graham">Graham Scan</p>
 	</div>
-    <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
+    <div id="actions-hide" class="panel-hide" style="height:35px"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
     <div id="actions-extras">
     <!--put all the extra action pullouts (input) and error messages here-->
         <div id="graham-go" class="execAction" onclick=goGrahamScan()><p>GO</p></div>
@@ -171,7 +171,7 @@
     }
 
     function goGrahamScan() {
-        //if(isPlaying) { stop(); }
+        if(isPlaying) { stop(); }
         //clearScreen();
         isPlaying = true;
         var gw = GeometryWidget.getGraphWidget();
