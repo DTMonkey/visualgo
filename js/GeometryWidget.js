@@ -1165,6 +1165,15 @@ var Geometry = function() {
       } catch(err) {}
     }
 
+
+    try {
+      mainSvg.selectAll(".ude").remove();
+    } catch(err) {}
+
+    try {
+      //graphWidget.selectAll(".path").remove();
+    } catch(err) {}
+  
     try {
       graphWidget.removeVertex(0);
     } catch (err) {}
@@ -1221,6 +1230,9 @@ var Geometry = function() {
 
   this.initGrahamScan = function() {
     clearScreen();
+    $('#current-action p').html("Graham Scan");
+    popuatePseudocode(2);
+
     for (var i=0; i < 150; i++) {
       try {        
           graphWidget.removeVertex(i);
@@ -1338,28 +1350,31 @@ var Geometry = function() {
     var stateList = new Array();
     var currentState = createState(A);
     // TODO: highlight indexing process here.
-    for (var i = 0; i < N; i++) {
+    var k = 0;
+    while (k < N) {
       var ed;
-      if (i == 1) {
-        addIndirectedEdge(0, i, amountEdge++, EDGE_TYPE_UDE, 1, true);
-      } else if (i > 1) {
+      if (k == 1) {
+        addIndirectedEdge(0, k, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      } else if (k > 1) {
         var tmp = "#e" + (amountEdge-1).toString();
-        edgeList[tmp][1] = i;
+        edgeList[tmp][1] = k;
+        //edgeList[1][tmp] = i;
       }
       currentState = createState(A);
-      if (i) {
-        //currentState["el"][amountEdge-1]["state"] = "EDGE_HIGHLIGHTED";
+      if (k) {
+        currentState["el"][amountEdge-1]["state"] = EDGE_HIGHLIGHTED;
         //graphWidget.removeEdge(amountEdge-1);
         //delete edgeList["#e" + (amountEdge-1).toString()];
       }
       currentState["status"] = "Start indexing the vertices."
       currentState["lineNo"] = 1;
-      currentState["vl"][i]["text"] = i;
-      currentState["vl"][i]["state"] = VERTEX_HIGHLIGHTED;      
-      for (var j=0; j < i; j++)
+      currentState["vl"][k]["text"] = k;
+      currentState["vl"][k]["state"] = VERTEX_HIGHLIGHTED;      
+      for (var j=0; j < k; j++)
         currentState["vl"][j]["text"] = j;
-      //currentState["vl"][coord[i][2]]["state"] = VERTEX_HIGHLIGHTED;
+      //currentState["vl"][coord[k][2]]["state"] = VERTEX_HIGHLIGHTED;
       stateList.push(currentState);
+      k++;
     }
     delete edgeList["#e" + (amountEdge-1).toString()];
     currentState = createState(A);
@@ -1482,7 +1497,6 @@ var Geometry = function() {
     currentState["lineNo"] = 7;
     stateList.push(currentState);
     graphWidget.startAnimation(stateList);
-
     // result is in S
     return true;
   }
@@ -1518,13 +1532,17 @@ var Geometry = function() {
         document.getElementById('code3').innerHTML = '&nbsp&nbsp&nbsp&nbspsum += angle(P[i], p, P[i+1])';
         document.getElementById('code4').innerHTML = '&nbsp&nbsp  else sum -= angle(P[i], p, P[i+1])';
         document.getElementById('code5').innerHTML = 'return fabs(fabs(sum) - 2*PI) < EPS';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
         break;
       case 4: // cut polygon
         document.getElementById('code1').innerHTML = 'for (point i in polygon)'
-        document.getElementById('code2').innerHTML = '&nbsp if left1 > -EPS //left1 = cross(A,B,i)';
-        document.getElementById('code3').innerHTML = '&nbsp&nbspadd i to result';
-        document.getElementById('code4').innerHTML = '&nbsp if left1*left2 < -EPS //left2 = cross(A,B,i+1)';
+        document.getElementById('code2').innerHTML = '&nbspif left1 > -EPS //left1 = cross(A,B,i)';
+        document.getElementById('code3').innerHTML = '&nbsp&nbsp add i to result';
+        document.getElementById('code4').innerHTML = '&nbspif left1*left2 < -EPS //left2=cross(A,B,i+1)';
         document.getElementById('code5').innerHTML = '&nbsp&nbsp  add intersection to result';
+        document.getElementById('code6').innerHTML = '';
+        document.getElementById('code7').innerHTML = '';
         break;
     } 
   }
@@ -1562,6 +1580,7 @@ var Geometry = function() {
 
   function goCutPolygon() {
     //return;
+    mainSvg.on("mousedown", null);
     previous_option = "goCutPolygon";
     $('#current-action').show();
     $('#current-action p').html("Cut polygon");
@@ -1725,9 +1744,11 @@ var Geometry = function() {
         if (typeof(e) == "undefined") continue;
         delete edgeList["#e" + prev_edges[t].toString()];        
       } 
-      addIndirectedEdge(v0, vl, amountEdge++, EDGE_TYPE_UDE, 1, true);
-      prev_edges.push(amountEdge-1);
+      //addIndirectedEdge(vl, v0, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      //prev_edges.push(amountEdge-1);
       addIndirectedEdge(vl, v1, amountEdge++, EDGE_TYPE_UDE, 1, true);
+      prev_edges.push(amountEdge-1);
+      addIndirectedEdge(vl, v0, amountEdge++, EDGE_TYPE_UDE, 1, true);
       prev_edges.push(amountEdge-1);
       currentState = createState(A);
 

@@ -9,7 +9,7 @@
 
 #graham-go {
 	position: fixed;
-	bottom: 96px;
+	bottom: 60px;
 	left: 196px;
 	background: #777;
 	width: 0px;
@@ -18,6 +18,8 @@
 	#graham-go p {
 			padding: 6px 8px 6px;
 		}
+
+
 
 
 /*all tutorial stuff here*/
