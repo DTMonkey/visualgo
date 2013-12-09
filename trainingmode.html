@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Training Mode</title>
+
+<!--css-->
+<link rel="stylesheet" href="css/normalize.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/viz.css">
+<link rel="stylesheet" href="css/trainingmode.css">
+
+<!--js-->
+<script src="js/external/jquery-1.10.2.js"></script>
+<script src="js/external/d3.v3.js"></script>
+<script src="js/common.js"></script>
+<!--more scripts are below-->
+
+<!--fonts-->
+<link href="fonts/silkscreen/stylesheet.css" rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+
+<div id="top-bar">
+	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
+    <span id="title">
+    	<a class="selected-viz" style="cursor: default;">Training Mode</a>&nbsp&nbsp
+    </span>
+</div>
+
+<div id="topics-screen">
+	<h1>Select the topics you want to practise:</h1>
+    
+    <div style="width: 100%; overflow: auto;">
+        <div class="topic topic-selected"><img src="img/bst.jpg"/>Binary Search Tree/AVL Tree</div>
+        <div class="topic"><img src="img/heap.jpg"/>Binary Heap</div>
+        <div class="topic"><img src="img/union.jpg"/>Union Find Disjoint Sets</div>
+        <div class="topic"><img src="img/bitmask.jpg"/>Bitmask</div>
+        <div class="topic"><img src="img/graphs.jpg"/>Graph Data Structures</div>
+        <div class="topic"><img src="img/bst.jpg"/>Graph Traversal</div> <!--dummy image because bfs/dfs thumbnail not made yet-->
+        <div class="topic"><img src="img/mst.jpg"/>Minimum Spanning Tree</div>
+        <div class="topic"><img src="img/sssp.jpg"/>Single-Source Shortest Path</div>
+    </div>
+    
+    <div id="start-training">Start training!</div>
+</div>
+
+<div id="test-screen">
+	<div id="qn-no"></div>
+	<div id="qn-text">
+    	<p></p>
+    	<div id='undo-ans' style="margin-right: 8px;">UNDO</div>
+        <div id='clear-ans'>CLEAR</div>
+        <div id="current-selection"></div>
+    </div>
+    <div id="viz"></div>
+
+	<div id="info">
+        <div id="student-name"></div>
+        <div id="time-left"></div>
+        <div id="submit-test">Submit Quiz</div>
+    </div>
+    <div id="submit-check" class="overlays">
+    	<p></p>
+        <div id="submit-yes1" class="button">Yes</div><!--
+        --><div id="submit-no1" class="button">No</div><!--
+        --><div id="submit-no2" class="button">Fine, I'll check again</div><!--
+        --><div id="submit-yes2" class="button">I said yes!</div>
+    </div>
+	<div id="question-nav"></div> <!--20 <a.qnno> generated in js-->
+</div>
+
+<div id="result-screen">
+	<div id="result-name"></div>
+    you scored 
+    <div id="score"></div>
+    Please show this screen to your TA.
+</div>
+    
+<div id="left-bar"></div>
+<div id="right-bar"></div>
+<!-- Bottom bar and overlay popups -->
+<div id="bottom-bar">
+	<a id="trigger-about">About</a>
+    <a id="trigger-team">Team</a>
+    <a id="trigger-terms">Terms of use</a>
+</div>
+
+<div id="dark-overlay"></div>
+<div id="about" class="overlays"></div>
+<div id="team" class="overlays"></div>
+<div id="termsofuse" class="overlays"></div>
+
+<script src="js/graph_library/constant.js"></script>
+<script src="js/graph_library/properties.js"></script>
+<script src="js/graph_library/helperObjects.js"></script>
+<script src="js/graph_library/misc.js"></script>
+<script src="js/graph_library/Widget.js"></script>
+<script src="js/graph_library/GraphWidget.js"></script>
+<script src="js/graph_library/GraphVertexWidget.js"></script>
+<script src="js/graph_library/GraphEdgeWidget.js"></script>
+<script src="js/test/trainingmode.js"></script>
+
+</body>
+</html>
