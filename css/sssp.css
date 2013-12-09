@@ -1,10 +1,5 @@
 @charset "utf-8";
 
-#actions { height: 118px; width: 150px; }
-	#actions-hide {
-		padding: 51px 15px 51px 14px;
-	}
-
 /*all action pullout (input) stuff here*/
 #samples-submenu {
 	position: fixed;

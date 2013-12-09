@@ -1,10 +1,5 @@
 @charset "utf-8";
 
-#actions { height: 145px; width: 180px; }
-	#actions-hide {
-		padding: 64px 15px 64px 14px;
-	}
-
 /*all action pullout (input) stuff here*/
 
 #build-input {

@@ -1,10 +1,5 @@
 @charset "utf-8";
 
-#actions { height: 145px; width: 120px; }
-	#actions-hide {
-		padding: 64px 15px 65px 14px;
-	}
-	
 #viz {
 	padding-top: 60px;
 }

@@ -198,6 +198,8 @@ html { overflow-y: auto; } /*override common.css*/
 	#actions-hide {
 		bottom: 60px;
 		left: 0px;
+		padding-left: 14px;
+		padding-right: 15px;
 	}
 	
 #status {

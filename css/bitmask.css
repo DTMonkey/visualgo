@@ -1,10 +1,5 @@
 @charset "utf-8";
 
-#actions { height: 172px; width: 150px; } /*normal line is 27px*/
-	#actions-hide {
-		padding: 78px 15px 78px 14px; /*arrow height = 16*/
-	}
-
 #viz {
 	width: 900px;
 	height: 400px;

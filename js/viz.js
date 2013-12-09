@@ -85,6 +85,14 @@ function triggerRightPanels() {
 }
 
 $( document ).ready(function() {
+	var actionsHeight = ($('#actions p').length)*27 + 10;
+	$('#actions').css('height', actionsHeight);
+	$('#actions').css('width', actionsWidth);
+	var actionsHideTop = Math.floor((actionsHeight - 16)/2);
+	var actionsHideBottom = (actionsHeight - 16) - actionsHideTop;
+	$('#actions-hide').css('padding-top', actionsHideTop);
+	$('#actions-hide').css('padding-bottom', actionsHideBottom);
+	
 	$('#current-action').hide();
 	$('#actions-hide img').addClass('rotateRight');
 	
