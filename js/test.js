@@ -253,18 +253,18 @@ function clientsideTimeUpdate() {
 /***** after submit functions *****/
 function endTest() {
 	///*
-	var score = -1;
+	var score = 6;
 	if(score>=0) {
 		var attemptNo = 1;
 		if(attemptNo == 1) {
 			$('#try-again').css('display','inline-block');
 			$('#nope').css('display','inline-block');
-			$('#result').html(studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
+			$('#result').html("Rose Marie Tan" + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>You have 1 more attempt.<br/>Do you want to try again?");
 			$('#result-note').html("(The score from your final attempt will be recorded.)");
 		} else if(attemptNo==2) {
 			$('#try-again').css('display','none');
 			$('#nope').css('display','none');
-			$('#result').html("<div style='padding-top:50px;'>" + studentname + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br/>Please show your TA this screen before you leave.<div>");
+			$('#result').html("<div style='padding-top:50px;'>" + "Rose Marie Tan" + ", you scored <div style='padding: 10px 0px; font-size: 36px; font-weight: bold;'>"+score+" out of 10</div>This score will be recorded.<br/>Please show your TA this screen before you leave.<div>");
 			$('#result-note').html("");
 		}
 		clearInterval(infoRefresh);

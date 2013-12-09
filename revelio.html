@@ -2,7 +2,7 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Online Quiz 2</title>
+<title>Online Quiz 2 - The Answer Key</title>
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
@@ -26,70 +26,34 @@
 <div id="top-bar">
 	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-    	<a class="selected-viz" style="cursor: default;">Online Quiz 2</a>&nbsp&nbsp
+    	<a class="selected-viz" style="cursor: default;">Online Quiz 2 - The Answer Key</a>&nbsp&nbsp
     </span>
 </div>
 
 <div id="login-screen">
-	<h2>Are you ready for</h2>
-	<h1>Online quiz 2?</h1>
+	<h2>Answer Key for</h2>
+	<h1>Online quiz 2</h1>
     <form>
     	<input id="login-id" type="text" value="user id" autocomplete="off"/><br/>
         <input id="login-pw" type="text" value="password"/><br/>
-        <input id="login-yes" type="submit" value="Yes, log me in!" /><!--
-        --><input id="login-no" type="submit" value="No! D:" />
+        <input id="login-yes" type="submit" value="Log in" />
         <div id="login-err"></div>
     </form>
-</div>
-
-<div id="instructions-screen">
-	<h3>Instructions</h3>
-    <ul id="instructions">
-		<li><strong>You have 1 (one) attempt only.</strong></li>
-		<li>You have 40 minutes to do this test. When the time is up, the test will be submitted automatically.</li>
-		<li>Do not refresh your browser, go back, open another window, or close the window while taking the test.</li>
-        <li>Note: the graphs shown in different questions may look similar but may not be the same. Be careful.</li>
-		<li>Your score is only valid if you are physically present in the lab.</li>
-		<li>You are not allowed to discuss the questions or answers until 5pm today, even with your fellow lab group mates.</li>
-		<li>In the case of any disputes, the decision of the lecturer is final.</li>
-	</ul>
-    <div id="start-test">Start the test</div>
-</div>
-
-<div id="gdluck-screen">
-	GOOD LUCK<br/>and<br/>BE CAREFUL!
 </div>
 
 <div id="test-screen">
 	<div id="qn-no"></div>
 	<div id="qn-text">
     	<p></p>
-    	<div id='undo-ans' style="margin-right: 8px;">UNDO</div>
-        <div id='clear-ans'>CLEAR</div>
         <div id="current-selection"></div>
+        <div id="ans-key"></div>
     </div>
     <div id="viz"></div>
 
 	<div id="info">
         <div id="student-name"></div>
-        <div id="time-left"></div>
-        <div id="submit-test">Submit Quiz</div>
-    </div>
-    <div id="submit-check" class="overlays">
-    	<p></p>
-        <div id="submit-yes1" class="button">Yes</div><!--
-        --><div id="submit-no1" class="button">No</div><!--
-        --><div id="submit-no2" class="button">Fine, I'll check again</div><!--
-        --><div id="submit-yes2" class="button">I said yes!</div>
     </div>
 	<div id="question-nav"></div> <!--20 <a.qnno> generated in js-->
-</div>
-
-<div id="result-screen">
-	<div id="result-name"></div>
-    you scored 
-    <div id="score"></div>
-    Please show this screen to your TA.
 </div>
     
 <div id="left-bar"></div>
