@@ -2,23 +2,22 @@
 <head>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Visualizations - Union Find Disjoint Sets</title>
+<title>Visualizations - Name</title>
 
 <!--css-->
 <link rel="stylesheet" href="css/normalize.css">
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/viz.css">
 
-<link rel="stylesheet" href="css/ufds.css">
+<link rel="stylesheet" href="css/[nameofvisualisation].css">
 
 <!--js-->
-<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
 <script src="js/external/jquery-1.10.2.js"></script>
 <script src="js/external/jquery-ui.js"></script>
 <script src="js/external/d3.v3.js"></script>
 <script src="js/viz.js"></script>
 <script src="js/common.js"></script>
-<script src="js/actions/ufds_actions.js"></script>
+<script src="js/actions/[name_of_visualisation]_actions.js"></script>
 <script src="//connect.facebook.net/en_US/all.js"></script>
 <!-- more scripts are below-->
 
@@ -33,7 +32,7 @@
 <div id="top-bar">
 	<a id="home" href="index.html">we<span class="colour">need</span>a<span class="colour">name</span></a>
     <span id="title">
-    	<a class="selected-viz">Union-Find Disjoint Sets</a>
+    	<a class="selected-viz">[Name]</a>
     </span>
     <a id="fb-login" href="#" target="_blank">Facebook connect</a>
     <span id="trick">
@@ -52,30 +51,28 @@
     <div id="current-action" class="panel"><p></p></div>
     
     <div id="actions" class="panel">
-    	<p id="init">Initialize (N)</p>
-        <p id="sample">Samples</p>
-		<p id="find">FindSet (i)</p>
-        <p id="isSameSet">isSameSet (i,j)</p>
-		<p id="union">UnionSet (i,j)</p>
+		<p id="buildv1">Build Heap - O(n log n)</p>
+		<p id="buildv2">Build Heap - O(n)</p>
+		<p id="insert">Insert</p>
+		<p id="extractmax" class="execAction" onclick=extractmax()>Extract Max</p>
+		<p id="heapsort" class="execAction" onclick=heapsort()>HeapSort</p>
     </div>
     <div id="actions-hide" class="panel-hide"><img src="img/arrow_white_right.png" title="show/hide actions panel"/></div>
-    <!--put all the extra action pullouts (input) and error messages here-->
     <div id="actions-extras">
-    	<div id="init-input"><input type="text" id="arrn" autocomplete="off" value="10" /></div>
-        <div id="init-go" class="execAction" onclick=init()><p>GO</p></div>
-        <div id="init-err" class="err"></div>
-        <div id="sample-input"><input type="text" id="arrver" autocomplete="off" value="2" title="choose a sample number"/></div>
-        <div id="sample-go" class="execAction" onclick=sample()><p>GO</p></div>
-        <div id="sample-err" class="err"></div>
-    	<div id="find-input"><input type="text" id="arrfindi" autocomplete="off" value="0" /></div>
-        <div id="find-go" class="execAction" onclick=find()><p>GO</p></div>
-        <div id="find-err" class="err"></div>
-        <div id="isSameSet-input"><input type="text" style="border-right: 1px solid #777" id="arrissameseti" autocomplete="off" value="0" /><input type="text" id="arrissamesetj" autocomplete="off" value="5" /></div>
-		<div id="isSameSet-go" class="execAction" onclick=issameset()><p>GO</p></div>
-        <div id="isSameSet-err" class="err"></div>
-    	<div id="union-input"><input type="text" style="border-right: 1px solid #777" id="arrunioni" autocomplete="off" value="0" /><input type="text" id="arrunionj" autocomplete="off" value="5" /></div>
-        <div id="union-go" class="execAction" onclick=union()><p>GO</p></div>
-        <div id="union-err" class="err"></div>
+    <!--put all the extra action pullouts (input) and error messages here-->
+    	<div id="buildv1-input"><input type="text" id="arrv1" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
+        <div id="buildv1-go" class="execAction" onclick=buildv1()><p>GO</p></div>
+        <div id="buildv1-sample" class="execAction" onclick=buildv1Sample()><p>Sorted sample</p></div>
+        <div id="buildv1-err" class="err"></div>
+        <div id="buildv2-input"><input type="text" id="arrv2" autocomplete="off" value="2,7,26,25,19,17,1,90,3,36" /></div>
+        <div id="buildv2-go" class="execAction" onclick=buildv2()><p>GO</p></div>
+        <div id="buildv2-sample" class="execAction" onclick=buildv2Sample()><p>Sorted sample</p></div>
+        <div id="buildv2-err" class="err"></div>
+        <div id="insert-input"><input type="text" id="v" autocomplete="off" value=26 /></div>
+        <div id="insert-go" class="execAction" onclick=insert()><p>GO</p></div>
+        <div id="insert-err" class="err"></div>
+        <div id="extractmax-err" class="err"></div>
+        <div id="heapsort-err" class="err"></div>
     </div>
     
     <div id="status" class="panel"><p></p></div>
@@ -118,6 +115,38 @@
 <div id="team" class="overlays"></div>
 <div id="termsofuse" class="overlays"></div>
 
+<!--tutorial dialogs here-->
+<div id="heap-tutorial-1" class="tutorial-dialog">
+	A Binary Max Heap is a <strong>complete binary tree</strong> (all levels except the last are fully filled, and the last level is filled from left to right) that maintains the <strong>heap property</strong> (each node is greater than each of its children).
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-2" class="tutorial-dialog">
+	All available operations on the Heap will be shown here. Select an action and provide the necessary input, and the action will be animated in the visualisation area.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-3" class="tutorial-dialog">
+	View the visualisation here!
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-4" class="tutorial-dialog">
+	As the action is being carried out, each step will be described in the status panel.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-5" class="tutorial-dialog">
+	You can also follow the psuedocode highlights to trace the algorithm.
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-6" class="tutorial-dialog">
+	Control the animation with the player controls! Keyboard shortcuts are:<br/>
+    <div style="margin-top: 8px;"><strong>Spacebar:</strong> play/pause/replay</div>
+    <strong>Left/right arrows:</strong> step backward/step forward<br/>
+    <strong>-/+:</strong> decrease/increase speed<br/>
+    <div class="tutorial-next">Next<img src="img/arrow_white_right.png"/></div>
+</div>
+<div id="heap-tutorial-7" class="tutorial-dialog">
+	Return to "Exploration Mode" to start exploring!
+</div>
+
 <script src="js/graph_library/constant.js"></script>
 <script src="js/graph_library/properties.js"></script>
 <script src="js/graph_library/helperObjects.js"></script>
@@ -126,81 +155,122 @@
 <script src="js/graph_library/GraphWidget.js"></script>
 <script src="js/graph_library/GraphVertexWidget.js"></script>
 <script src="js/graph_library/GraphEdgeWidget.js"></script>
-<script src="js/widgets/UFDSWidget.js"></script>
+<script src="js/widgets/[NameOfVisualisation]Widget.js"></script>
 
 <script type="text/javascript">
+	//start by showing actions panel
 	$('#play').hide();
 
-	var ufdsWidget = new UFDS();
-	var gw = ufdsWidget.getGraphWidget();
-	
-	function init() {
+	var heapWidget = new Heap();
+	var gw = heapWidget.getGraphWidget();
+		
+	function buildv1() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			var N = parseInt(document.getElementById("arrn").value);
-			if (N < 0 || N > 12) {
-				$('#init-err').html('The valid range for N is [0..12]');
-			} else{
-				ufdsWidget.initArray(N);
-				closeInit();
-				hideStatusPanel();
-				hideCodetracePanel();
+			if ((mode=="exploration")&&heapWidget.buildV1(document.getElementById("arrv1").value.split(","))) {
+				$('#current-action').show();
+				$('#current-action p').html("Build heap - O(n log n): "+ $('#arrv1').val());
+				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+				closeBuildv1(); //in heap_actions.js
+				triggerRightPanels();
+				isPlaying = true; //in viz.js
 			}
 		}, 500);
 	}
 	
-	function sample() {
+	function buildv1Sample() {
 		if(isPlaying) {	stop(); }
-			setTimeout( function() {
-			var ver = parseInt(document.getElementById("arrver").value);
-			if (ufdsWidget.sampleArray(ver)) {
-				closeSample();
+		setTimeout( function() {
+			var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
+			if ((mode=="exploration")&&heapWidget.buildV1(stringArr.split(","))) {
+				$('#current-action').show();
+				$('#current-action p').html("Build heap - O(n log n): sorted sample 1 - 31");
+				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+				closeBuildv1(); //in heap_actions.js
+				triggerRightPanels();
+				isPlaying = true; //in viz.js
 			}
-		}, 100);
+		}, 500);
+	}
+	
+	function buildv2() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			if ((mode=="exploration")&&heapWidget.buildV2(document.getElementById("arrv2").value.split(","))) {
+				$('#current-action').show();
+				$('#current-action p').html("Build heap - O(n): "+ $('#arrv2').val());
+				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+				closeBuildv2();
+				triggerRightPanels();
+				isPlaying = true;
+			}
+		}, 500);
+	}
+	
+	function buildv2Sample() {
+		if(isPlaying) {	stop(); }
+		setTimeout( function() {
+			var stringArr = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
+			if ((mode=="exploration")&&heapWidget.buildV2(stringArr.split(","))) {
+				$('#current-action').show();
+				$('#current-action p').html("Build heap - O(n): sorted sample 1 - 31");
+				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
+				closeBuildv2(); //in heap_actions.js
+				triggerRightPanels();
+				isPlaying = true; //in viz.js
+			}
+		}, 500);
 	}
 		
-	function find() {
+	function insert() {
 		if(isPlaying) {	stop(); }
 		setTimeout( function() {
-			if (ufdsWidget.findSet(document.getElementById("arrfindi").value, true)) {
+			if ((mode=="exploration")&&heapWidget.insert(parseInt(document.getElementById("v").value), true)) {
 				$('#current-action').show();
-				$('#current-action p').html("Find("+ $('#arrfindi').val() + ")");
+				$('#current-action p').html("Insert "+ $('#v').val());
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeFind();
+				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
+				document.getElementById("v").value=1+Math.floor(Math.random()*98); // 1..99
 			}
 		}, 500);
 	}
-
-	function issameset() {
+	
+	function extractmax() {
 		if(isPlaying) {	stop(); }
-			setTimeout( function() {
-			if (ufdsWidget.isSameSet(document.getElementById("arrissameseti").value, document.getElementById("arrissamesetj").value, true)) {
+		setTimeout( function() {
+			if ((mode=="exploration")&&heapWidget.extractMax(true)) {
 				$('#current-action').show();
-				$('#current-action p').html("isSameSet(" + $('#arrissameseti').val() + "," + $('#arrissamesetj').val() + ")");
+				$('#current-action p').html("Extract max");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeIsSameSet();
+				$('#extractmax-err').html("");
+				closeBuildv1();
+				closeBuildv2();
+				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
 			}
 		}, 500);
 	}
-
-	function union() {
+	
+	function heapsort() {
 		if(isPlaying) {	stop(); }
-			setTimeout( function() {
-			if (ufdsWidget.unionSet(document.getElementById("arrunioni").value, document.getElementById("arrunionj").value, true)) {
+		setTimeout( function() {
+			if ((mode=="exploration")&&heapWidget.heapSort()) {
 				$('#current-action').show();
-				$('#current-action p').html("Union(" + $('#arrunioni').val() + "," + $('#arrunionj').val() + ")");
+				$('#current-action p').html("Heapsort");
 				$('#progress-bar').slider( "option", "max", gw.getTotalIteration()-1);
-				closeUnion();
+				$('#heapsort-err').html("");
+				closeBuildv1();
+				closeBuildv2();
+				closeInsert();
 				triggerRightPanels();
 				isPlaying = true;
 			}
 		}, 500);
 	}
-
+	
 	//playback controls might fit better in viz.js, but put here in case some viz does not use GraphWidgetNew.js
 	var isPaused = false;
 	function isAtEnd() {
@@ -257,7 +327,6 @@
 		isPlaying = false;
 		$('#pause').show();
 		$('#play').hide();
-		$('#current-action').hide();
 	}
 	
 	//shortcut keys for playback controls

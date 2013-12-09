@@ -193,6 +193,8 @@ html { overflow-y: auto; } /*override common.css*/
 }
 	#actions p { padding: 5px 10px; cursor: pointer; }
 		#actions p:hover { background: black; color: white;}
+	#actions p:first-of-type { padding-top: 10px; }
+	#actions p:last-of-type { padding-bottom: 10px; }
 	#actions-hide {
 		bottom: 60px;
 		left: 0px;

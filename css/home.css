@@ -110,6 +110,7 @@ h2 {
 			text-align: center;
 		}
 		#list li a.thumbnail img { width: 100%; }
+			#list li a.thumbnail img.static { width: 100%; position: absolute; top: 0px; }
 		
 	#list li .info { margin: 0px 0px 0px 10px; }
 		#list li .info h3 {

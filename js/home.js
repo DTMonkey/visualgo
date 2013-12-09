@@ -2,13 +2,9 @@ $( document ).ready(function() {
 	
 	//thumbnail image animation on hover	
 	$('a.thumbnail').hover(function() {
-		var gifsrc = $(this).children('img').attr("src");
-		gifsrc = gifsrc.split(".")[0] + ".gif";
-		$(this).children('img').attr("src", gifsrc);
+		$(this).children('img.static').hide();
 	}, function() {
-		var jpgsrc = $(this).children('img').attr("src");
-		jpgsrc = jpgsrc.split(".")[0] + ".jpg";
-		$(this).children('img').attr("src", jpgsrc);
+		$(this).children('img.static').show();
 	});
 	
 	//tags
