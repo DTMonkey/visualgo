@@ -2,6 +2,8 @@
  * Sync this file with the PHP file Constant.php
  */
 
+const SITE_PREFIX = "http://algorithmics.comp.nus.edu.sg/~onlinequiz/Test.php";
+
 const QUESTION_TOPIC_BST = "BST";
 const QUESTION_TOPIC_HEAP = "Heap";
 
