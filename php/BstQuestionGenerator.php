@@ -5,6 +5,16 @@
     public function __construct(){
     }
 
+    public function seedRng($seed){
+      $this->rngSeed = $seed;
+      mt_srand($rngSeed);
+    }
+
+    public function removeSeed(){
+      $this->rngSeed = NULL;
+      mt_srand();
+    }
+
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
@@ -20,6 +30,12 @@
       if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkSearchSequenceQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkTraversalSequenceQuestion($qObj, $userAns);
       else return false;
+    }
+
+    protected function generateBst($seed){
+      $bst = new BST();
+      $bst->seedRng($seed);
+      return $bst;
     }
 
     protected function generateSearchSequenceQuestion($bstSize){
