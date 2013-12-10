@@ -2,13 +2,36 @@
   require 'Everything.php';
 
   $bstQuestionGen = new BstQuestionGenerator();
-  $qArr = ($bstQuestionGen->generateQuestion(1));
-  $q1 = $qArr[0];
 
-  echo($q1->toJsonObject());
-  $correctness = $bstQuestionGen->checkAnswer($q1, array(1,2,3));
-  echo gettype($correctness);
-  // echo();
+  $qArr = array();
+  $aArr = array();
+  $aCorrectness = array();
+  $score = 0;
 
-  // echo("Hello world!");
+  $mode = $_GET["mode"];
+  if($mode == MODE_GENERATE_QUESTIONS){
+    $qAmt = $_GET["qAmt"];
+
+    $qArr = ($bstQuestionGen->generateQuestion($qAmt));
+    $qArrJson = array();
+
+    for($i = 0; $i < count($qArr);$i++){
+      $qArrJson[] = $qArr[$i]->toJsonObject();
+    }
+
+    echo arrayOfJsonStringEncoder($qArrJson);
+  }
+
+  else if($mode == MODE_CHECK_ANSWERS){
+    $ansArrJson = $get["ansArr"];
+    $aArr = json_decode($ansArrJson);
+    $score = 0;
+
+    for($i = 0; $i < count($qArr);$i++){
+      $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
+      if($aCorrectness[$i]) $score++;
+    }
+
+    echo($score);
+  }
 ?>

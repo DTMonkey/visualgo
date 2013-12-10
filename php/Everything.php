@@ -4,4 +4,5 @@
   require 'BST.php';
   require 'BstQuestionGenerator.php';
   require 'Constant.php';
+  require 'Misc.php';
 ?>

@@ -4,7 +4,12 @@
     }
 
     public function generateQuestion($amt){
-      return array($this->generateSearchSequenceQuestion()); // Stub
+      $questions = array();
+      for($i = 0; $i < $amt; $i++){
+        $questions[] = $this->generateSearchSequenceQuestion();
+      }
+      
+      return $questions;
     }
 
     public function checkAnswer($qObj, $userAns){

@@ -6,8 +6,11 @@
 
   const QUESTION_SUB_TYPE_NONE = "";
 
-  const ANSWER_TYPE_VERTEX = "v";
+  const ANSWER_TYPE_VERTEX = "vertex";
 
   const ANSWER_AMT_ONE = 1;
   const ANSWER_AMT_MULTIPLE = 2;
+
+  const MODE_GENERATE_QUESTIONS = 1;
+  const MODE_CHECK_ANSWERS = 2;
 ?>
