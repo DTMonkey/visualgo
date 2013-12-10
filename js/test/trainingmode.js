@@ -35,7 +35,7 @@ function submitTraining() {
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
 	//later use AJAX
-	return 15;
+	return 10;
 }
 
 function init() {
@@ -84,6 +84,7 @@ function getQnsAndStart() {
 		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns
 	}).done(function(data) {
 		data = JSON.parse(data);
+		console.log(data);
 		for(var i=1; i<=nQns; i++) {
 			extractInfo(i, data[i-1]);
 		}

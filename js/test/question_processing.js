@@ -10,7 +10,11 @@ function extractQnText(topic, type, params) { //returns string
 		case QUESTION_TOPIC_BST:
 			switch(type) {
 				case QUESTION_TYPE_SEARCH:
-					return "Click the sequence of vertices from the root when the search for integer "+params.value+ " is executed on this BST."
+					return BST_SEARCH.replace('|value|', params.value);
+					break;
+				case QUESTION_TYPE_TRAVERSAL:
+					return BST_TRAVERSAL.replace('|subtype|', params.subtype);
+					break;
 			}
 			break;
 		default: //nothing
