@@ -1,5 +1,5 @@
 var gw = new GraphWidget();
-var sitePrefix = "http://algorithmics.comp.nus.edu.sg/~onlinequiz/quiz2.php";
+var sitePrefix = "http://rosemarietan.com/fyp/php/Test.php";
 
 //The following arrays use 1-based indexing. Index 0 is a dummy value.
 var qnTextArr = new Array(); //of question text for each qn
@@ -80,29 +80,28 @@ function prepareQnNav(n) { //n is the number of questions
 
 //this function gets all the qn data, and displays the ui for qn 1
 function getQnsAndStart() {
-	//get text
-	//later use AJAX
-	for(var i=1; i<=nQns; i++) { qnTextArr[i] = "Is this a dummy question?"; }
-	//get graphs
-	//later use AJAX
-	for(var i=1; i<=nQns; i++) { qnGraphArr[i] = jQuery.parseJSON('{"vl":{"0":{"cx":450,"cy":50,"text":"21","state":0},"1":{"cx":225,"cy":100,"text":"18","state":0},"2":{"cx":675,"cy":100,"text":"50","state":0},"3":{"cx":112.5,"cy":150,"text":"4","state":0},"4":{"cx":337.5,"cy":150,"text":"19","state":0},"5":{"cx":562.5,"cy":150,"text":"23","state":0},"6":{"cx":787.5,"cy":150,"text":"71","state":1},"7":{"cx":168.75,"cy":200,"text":"17","state":0}},"el":{"1":{"vertexA":0,"vertexB":1,"type":0,"weight":1,"state":0,"animateHighlighted":false},"2":{"vertexA":0,"vertexB":2,"type":0,"weight":1,"state":0,"animateHighlighted":false},"3":{"vertexA":1,"vertexB":3,"type":0,"weight":1,"state":0,"animateHighlighted":false},"4":{"vertexA":1,"vertexB":4,"type":0,"weight":1,"state":0,"animateHighlighted":false},"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"6":{"vertexA":2,"vertexB":6,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":3,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"The current BST","lineNo":0}'); }
-	//get input type
-	//later use AJAX
-	for(var i=1; i<=nQns; i++) { qnTypeArr[i] = i%4; if(qnTypeArr[i]==0) qnTypeArr[i]=4;}
+	$.ajax({
+		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns
+	}).done(function(data) {
+		data = JSON.parse(data);
+		for(var i=1; i<=nQns; i++) {
+			extractInfo(i, data[i-1]);
+		}
+		
+		//switch screens
+		$('#topics-screen').fadeOut("fast");
+		$('#test-screen').fadeIn("fast");
+		$('#submit-test').hide();
+		
+		//show first question
+		gw.startAnimation(qnGraphArr); //start graph widget
+		gw.pause();
+		qnNo = 1; //start with qn 1
+		showQn(qnNo);
+	});
 	
 	//start timer
 	//later use AJAX
-	
-	//switch screens
-	$('#topics-screen').fadeOut("fast");
-	$('#test-screen').fadeIn("fast");
-	$('#submit-test').hide();
-	
-	//show first question
-	gw.startAnimation(qnGraphArr); //start graph widget
-	gw.pause();
-	qnNo = 1; //start with qn 1
-	showQn(qnNo);
 }
 
 function showQn(q) { //q is qn no	
