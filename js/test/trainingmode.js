@@ -21,7 +21,8 @@ function submitTraining() {
 	//get score
 	ansArr.shift();
 	var ansStr = ansArr.join('&ans[]=');
-	var queryStr = sitePrefix+"?uid="+studentid+"&pwd="+studentpw+"&mode=3&ans[]="+ansStr;
+	var queryStr = sitePrefix+"?mode="+MODE_CHECK_ANSWERS+"&ans[]="+ansStr;
+	console.log(queryStr);
 	$.ajax({
 		url: queryStr
 	}).done(function(score) {
@@ -34,8 +35,8 @@ function submitTraining() {
 
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
-	//later use AJAX
-	return 10;
+	//how many questions?
+	return 15;
 }
 
 function init() {
@@ -84,7 +85,6 @@ function getQnsAndStart() {
 		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns
 	}).done(function(data) {
 		data = JSON.parse(data);
-		console.log(data);
 		for(var i=1; i<=nQns; i++) {
 			extractInfo(i, data[i-1]);
 		}
@@ -196,41 +196,7 @@ $(document).ready (function() {
 
 	/*-------SUBMIT QUIZ-------*/
 	$('#submit-test').click(function() {
-		$('#dark-overlay').fadeIn("fast", function() {
-			$('#submit-check').fadeIn("fast");
-			$('#submit-yes1').show(); $('#submit-no1').show();
-			$('#submit-yes2').hide(); $('#submit-no2').hide();
-			$('#submit-check p').html('You only have 1 attempt on this quiz. Are you sure you want to submit it?');
-		});
-	});
-	$('#submit-yes1').click(function() {
-		$('#submit-yes1').hide(); $('#submit-no1').hide();
-		$('#submit-yes2').show(); $('#submit-no2').show();
-		var minLeft = Math.floor(timeLeft/60);
-		var secLeft = timeLeft%60;
-		var showTime;
-		if(minLeft < 1) {
-			showTime = secLeft.toString() + " seconds";
-		} else {
-			showTime = minLeft.toString() + " minutes";
-		}
-		$('#submit-check p').html('Are you really really sure? You still have '+showTime+' left.');
-	});
-	$('#submit-no1').click(function() {
-		$('#submit-check').fadeOut("fast", function() {
-			$('#dark-overlay').fadeOut("fast");
-		});
-	});
-	$('#submit-yes2').click(function() {
-		$('#submit-check').fadeOut("fast", function() {
-			$('#dark-overlay').fadeOut("fast");
-		});
-		submitTest();
-	});
-	$('#submit-no2').click(function() {
-		$('#submit-check').fadeOut("fast", function() {
-			$('#dark-overlay').fadeOut("fast");
-		});
+		submitTraining();
 	});
 	
 });

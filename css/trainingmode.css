@@ -159,10 +159,6 @@
 			cursor: pointer;
 		}
 			#submit-check .button:hover { background: black; }
-			#submit-yes1 { background: #227faf; margin-right: 5px; width: 50px; }
-			#submit-no1 { background: #df3939; width: 50px; }
-			#submit-yes2 { background: #227faf; width: 114px; }
-			#submit-no2 { background: #df3939; margin-right: 5px; width: 114px; }
 			
 #result-screen {
 	display: none;

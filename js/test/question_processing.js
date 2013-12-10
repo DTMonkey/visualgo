@@ -15,6 +15,12 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_TRAVERSAL:
 					return BST_TRAVERSAL.replace('|subtype|', params.subtype);
 					break;
+				case QUESTION_TYPE_SUCCESSOR:
+					return BST_SUCCESSOR.replace('|value|', params.value);
+					break;
+				case QUESTION_TYPE_PREDECESSOR:
+					return BST_PREDECESSOR.replace('|value|', params.value);
+					break;
 			}
 			break;
 		default: //nothing
