@@ -46,7 +46,7 @@
       $insertionSequence = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,100);
+        $newElement = mt_rand(1,99);
         if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
           $insertionSequence[] = $newElement;
