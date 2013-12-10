@@ -18,7 +18,7 @@
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        $questions[] = $this->generateSearchSequenceQuestion(5);
+        // $questions[] = $this->generateSearchSequenceQuestion(5);
         if($i < $amt/2) $questions[] = $this->generateSearchSequenceQuestion(5);
         else $questions[] = $this->generateTraversalSequenceQuestion(5);
       }

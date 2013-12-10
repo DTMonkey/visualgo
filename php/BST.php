@@ -58,11 +58,57 @@
     }
 
     public function successor($val){
+      $successorSequence = array();
 
+      $node = $this->elements[$val];
+      if(is_null($node)) return $successorSequence;
+
+      $successorSequence[] = $val;
+
+      if(!is_null($node->rightChild)){
+        $node = $node->rightChild;
+        while(!is_null($node->leftChild)){
+          $successorSequence[] = $node->value;
+          $node = $node->leftChild;
+        }
+        $successorSequence[] = $node->value;
+      }
+      else{
+        while(!is_null($node->parent)){
+          $node = $node->parent;
+          $successorSequence[] = $node->value;
+          if($node->value > $val) break;
+        }
+      }
+
+      return $successorSequence;
     }
 
     public function predecessor($val){
-      
+      $predecessorSequence = array();
+
+      $node = $this->elements[$val];
+      if(is_null($node)) return $predecessorSequence;
+
+      $predecessorSequence[] = $val;
+
+      if(!is_null($node->leftChild)){
+        $node = $node->leftChild;
+        while(!is_null($node->rightChild)){
+          $predecessorSequence[] = $node->value;
+          $node = $node->rightChild;
+        }
+        $predecessorSequence[] = $node->value;
+      }
+      else{
+        while(!is_null($node->parent)){
+          $node = $node->parent;
+          $predecessorSequence[] = $node->value;
+          if($node->value < $val) break;
+        }
+      }
+
+      return $predecessorSequence;
     }
 
     public function search($val){
