@@ -1,9 +1,4 @@
 <?php
-  require QuestionGeneratorInterface.php;
-  require QuestionObject.php;
-  require BST.php;
-  require Constant.php;
-
   class BstQuestionGenerator implements QuestionGeneratorInterface{
     public function __construct(){
     }
@@ -12,7 +7,7 @@
       return array($this->generateSearchSequenceQuestion()); // Stub
     }
 
-    public function checkAns($qObj,$userAns){
+    public function checkAnswer($qObj, $userAns){
       if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkSearchSequenceQuestion($qObj, $userAns);
     }
 
@@ -41,6 +36,8 @@
       $bst = $qObj->internalDS;
       $varToBeSearched = $qObj->qParams["value"];
       $ans = $bst->search($varToBeSearched);
+
+      // echo implode(",",$ans);
 
       return $ans === $userAns;
     }

@@ -5,29 +5,29 @@
     protected $elements;
 
     public function __construct(){
-      $root = NULL;
-      $height = 0;
-      $elements = array();
+      $this->root = NULL;
+      $this->height = 0;
+      $this->elements = array();
     }
 
     public function getAllElements(){
-      return array_keys($elements);
+      return array_keys($this->elements);
     }
 
     public function toGraphState(){
       $graphState = array("vl" => array(), "el" => array());
 
-      foreach($elements as $key => $value){
+      foreach($this->elements as $key => $value){
         $vertexState = array(
           "cxPercentage" => $value->cxPercentage,
           "cyPercentage" => $value->cyPercentage,
           "text" => $value->value
           );
         $graphState["vl"] += array($key => $vertexState);
-        if($root != $value->value){
-          $edgeState = $array(
-            "vertexA" => $value->parent->value;
-            "vertexB" => $value->value;
+        if($this->root != $value->value){
+          $edgeState = array(
+            "vertexA" => $value->parent->value,
+            "vertexB" => $value->value
             );
           $graphState["el"] += array($key => $edgeState);
         }
@@ -38,7 +38,7 @@
 
     public function insertRandomElements($amt){
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(0,100);
+        $newElement = mt_rand(1,100);
         if(!array_key_exists($newElement, $elements)){
           $this->insert($newElement);
         }
@@ -70,16 +70,16 @@
       $cyPercent = 10;
       $xDifferencePercent = 50;
 
-      $elements += array($val => $newNode);
+      $this->elements[$val] = $newNode;
 
-      if(is_null($root)){
-        $root = $val;
+      if(is_null($this->root)){
+        $this->root = $val;
         $height = 1;
       }
 
       else{
         $parentNode = NULL;
-        $node = $root;
+        $node = $this->elements[$this->root];
 
         do{
           $xDifferencePercent/=2;
@@ -96,9 +96,9 @@
         }while(!is_null($node));
 
         if($newNode->value > $parentNode->value){
-          $parent->rightChild = $newNode;
+          $parentNode->rightChild = $newNode;
         }
-        else $parent->leftChild = $newNode;
+        else $parentNode->leftChild = $newNode;
 
         $newNode->parent = $parentNode;
         $newNode->$height = 1 + $parentNode->height;
@@ -107,7 +107,6 @@
       $newNode->cxPercentage = $cxPercent;
       $newNode->cyPercentage = $cyPercent;
     }
-
   }
 
   class BSTNode{
@@ -120,11 +119,11 @@
     protected $cyPercentage;
 
     function __construct($val){
-      $value = $val;
-      $height = 1;
-      $parent = NULL;
-      $leftChild = NULL;
-      $rightChild = NULL;
+      $this->value = $val;
+      $this->height = 1;
+      $this->parent = NULL;
+      $this->leftChild = NULL;
+      $this->rightChild = NULL;
     }
 
     public function __get($property) {

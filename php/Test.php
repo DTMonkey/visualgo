@@ -1,11 +1,13 @@
 <?php
-  require BstQuestionGenerator.php;
-  require QuestionObject.php;
+  require 'Everything.php';
 
   $bstQuestionGen = new BstQuestionGenerator();
-  $q1 = ($bstQuestionGen->generateQuestions(1))[1];
+  $qArr = ($bstQuestionGen->generateQuestion(1));
+  $q1 = $qArr[0];
 
   echo($q1->toJsonObject());
-  echo();
-  echo();
+  // $bstQuestionGen->checkAnswer($q1, [1,2,3]);
+  // echo();
+
+  // echo("Hello world!");
 ?>

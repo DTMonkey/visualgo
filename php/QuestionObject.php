@@ -16,6 +16,7 @@
    * - Check answer
    * - Getter and setter
    */
+
   class QuestionObject{
     private $qTopic;
     private $qType;
@@ -29,18 +30,18 @@
     private $graphState;
     private $internalDS;
 
-    public __construct(){
-      $qTopic = NULL;
-      $qType = NULL;
-      $qSubType = NULL;
-      $qParams = NULL;
-      $aType = NULL;
-      $aParams = NULL;
-      $aAmt = NULL;
-      $ordered = NULL;
-      $allowNoAnswer = NULL;
-      $graphState = NULL;
-      $internalDS = NULL;
+    public function __construct(){
+      $this->qTopic = NULL;
+      $this->qType = NULL;
+      $this->qSubType = NULL;
+      $this->qParams = NULL;
+      $this->aType = NULL;
+      $this->aParams = NULL;
+      $this->aAmt = NULL;
+      $this->ordered = NULL;
+      $this->allowNoAnswer = NULL;
+      $this->graphState = NULL;
+      $this->internalDS = NULL;
     }
 
     public function __get($property) {
@@ -59,16 +60,16 @@
 
     public function toJsonObject(){
       $arr = array(
-        "qTopic" => $qTopic;
-        "qType" => $qType;
-        "qSubType" => $qSubType;
-        "qParams" => $qParams;
-        "aType" => $aType;
-        "aParams" => $aParams;
-        "aAmt" => $aAmt;
-        "ordered" => $ordered;
-        "allowNoAnswer" => $allowNoAnswer;
-        "graphState" => $graphState;
+        "qTopic" => $this->qTopic,
+        "qType" => $this->qType,
+        "qSubType" => $this->qSubType,
+        "qParams" => $this->qParams,
+        "aType" => $this->aType,
+        "aParams" => $this->aParams,
+        "aAmt" => $this->aAmt,
+        "ordered" => $this->ordered,
+        "allowNoAnswer" => $this->allowNoAnswer,
+        "graphState" => $this->graphState
         );
       return json_encode($arr);
     }
