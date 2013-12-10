@@ -19,9 +19,10 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/3) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/3) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        if($i < $amt/4) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/4) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/4) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else $questions[] = $this->generatePredecessorSequenceQuestion(5);
       }
 
       return $questions;
@@ -124,6 +125,38 @@
     protected function checkSuccessorSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
       $varWhoseSuccessorIsToBeSearched = $qObj->qParams->value;
+      $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
+
+      echo implode(",",$ans);
+
+      return $ans === $userAns;
+    }
+
+    protected function generatePredecessorSequenceQuestion($bstSize){
+      $bst = new BST();
+      $bst->insertRandomElements($bstSize);
+      $bstContent = $bst->getAllElements();
+      sort($bstContent);
+      array_shift($bstContent);
+      $varWhosePredecessorIsToBeSearched = $bstContent[array_rand($bstContent)];
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_PREDECESSOR;
+      $qObj->qParams = array("value" => $varWhoseSuccessorIsToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkPredecessorSequenceQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $varWhosePredecessorIsToBeSearched = $qObj->qParams->value;
       $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
 
       echo implode(",",$ans);
