@@ -5,9 +5,15 @@
     protected $elements;
 
     public function __construct(){
-      $this->root = NULL;
-      $this->height = 0;
-      $this->elements = array();
+      $this->init();
+    }
+
+    public function seedRng($seed){
+      mt_srand($seed);
+    }
+
+    public function clearAll(){
+      $this->init();
     }
 
     public function getAllElements(){
@@ -37,13 +43,18 @@
     }
 
     public function insertRandomElements($amt){
+      $insertionSequence = array();
+
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,100);
         if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
+          $insertionSequence[] = $newElement;
         }
         else $i--;
       }
+
+      return $insertionSequence;
     }
 
     public function search($val){
@@ -63,6 +74,45 @@
       if($node->value == $val) array_push($searchSequence,$val);
 
       return $searchSequence;
+    }
+
+    public function inorderTraversal(){
+      $traversalSequence = array();
+      $this->inorderTraversalRec($this->elements[$this->root], $traversalSequence);
+      return $traversalSequence;
+    }
+
+    protected function inorderTraversalRec($node, &$traversalSequence){
+      if(is_null($node)) return;
+      $this->inorderTraversalRec($node->leftChild, $traversalSequence);
+      $traversalSequence[] = $node->value;
+      $this->inorderTraversalRec($node->rightChild, $traversalSequence);
+    }
+
+    public function preorderTraversal(){
+      $traversalSequence = array();
+      $this->preorderTraversalRec($this->elements[$this->root], $traversalSequence);
+      return $traversalSequence;
+    }
+
+    protected function preorderTraversalRec($node, &$traversalSequence){
+      if(is_null($node)) return;
+      $traversalSequence[] = $node->value;
+      $this->preorderTraversalRec($node->leftChild, $traversalSequence);
+      $this->preorderTraversalRec($node->rightChild, $traversalSequence);
+    }
+
+    public function postorderTraversal(){
+      $traversalSequence = array();
+      $this->postorderTraversalRec($this->elements[$this->root], $traversalSequence);
+      return $traversalSequence;
+    }
+
+    protected function postorderTraversalRec($node, &$traversalSequence){
+      if(is_null($node)) return;
+      $this->postorderTraversalRec($node->leftChild, $traversalSequence);
+      $this->postorderTraversalRec($node->rightChild, $traversalSequence);
+      $traversalSequence[] = $node->value;
     }
 
     public function insert($val){
@@ -107,6 +157,12 @@
 
       $newNode->cxPercentage = $cxPercent;
       $newNode->cyPercentage = $cyPercent;
+    }
+
+    protected function init(){
+      $this->root = NULL;
+      $this->height = 0;
+      $this->elements = array();
     }
   }
 
