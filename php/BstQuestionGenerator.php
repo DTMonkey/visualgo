@@ -19,8 +19,9 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/2) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else $questions[] = $this->generateTraversalSequenceQuestion(5);
+        if($i < $amt/3) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/3) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else $questions[] = $this->generateSuccessorSequenceQuestion(5);
       }
 
       return $questions;
@@ -71,13 +72,11 @@
     protected function generateTraversalSequenceQuestion($bstSize){
       $bst = new BST();
       $bst->insertRandomElements($bstSize);
-      $bstContent = $bst->getAllElements();
-      $varToBeSearched = $bstContent[array_rand($bstContent)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_TRAVERSAL;
-      $qObj->qParams = array("value" => $varToBeSearched,"subtype" => QUESTION_SUB_TYPE_INORDER_TRAVERSAL);
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_INORDER_TRAVERSAL);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -94,6 +93,38 @@
       if($qObj->qParams->subtype == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
       else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_PREORDER_TRAVERSAL) $ans = $bst->preorderTraversal();
       else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL) $ans = $bst->postorderTraversal();
+
+      echo implode(",",$ans);
+
+      return $ans === $userAns;
+    }
+
+    protected function generateSuccessorSequenceQuestion($bstSize){
+      $bst = new BST();
+      $bst->insertRandomElements($bstSize);
+      $bstContent = $bst->getAllElements();
+      sort($bstContent);
+      array_pop($bstContent);
+      $varWhoseSuccessorIsToBeSearched = $bstContent[array_rand($bstContent)];
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_SUCCESSOR;
+      $qObj->qParams = array("value" => $varWhoseSuccessorIsToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkSuccessorSequenceQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $varWhoseSuccessorIsToBeSearched = $qObj->qParams->value;
+      $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
 
       echo implode(",",$ans);
 
