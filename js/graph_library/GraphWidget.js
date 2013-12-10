@@ -373,7 +373,8 @@ var GraphWidget = function(){
       currentVertex.showVertex();
 
       if(currentVertexState[key]["state"] == OBJ_HIDDEN) currentVertex.hideVertex();
-      else currentVertex.stateVertex(currentVertexState[key]["state"]);
+      else if(currentVertexState[key]["state"] != null) currentVertex.stateVertex(currentVertexState[key]["state"]);
+      else currentVertex.stateVertex(VERTEX_DEFAULT);
 
       currentVertex.moveVertex(currentVertexState[key]["cx"], currentVertexState[key]["cy"]);
       currentVertex.changeText(currentVertexState[key]["text"]);
@@ -418,7 +419,8 @@ var GraphWidget = function(){
         currentEdge.showEdge();
 
         if(currentEdgeState[key]["state"] == OBJ_HIDDEN) currentEdge.hideEdge();
-        else currentEdge.stateEdge(currentEdgeState[key]["state"]);
+        else if(currentEdgeState[key]["state"] != null) currentEdge.stateEdge(currentEdgeState[key]["state"]);
+        else currentEdge.stateEdge(EDGE_DEFAULT);
 
         currentEdge.hideWeight();
         if(currentEdgeState[key]["state"] != OBJ_HIDDEN && currentEdgeState[key]["displayWeight"] != null && currentEdgeState[key]["displayWeight"]){
@@ -427,11 +429,11 @@ var GraphWidget = function(){
 
         currentEdge.changeVertexA(vertexList[currentEdgeState[key]["vertexA"]]);
         currentEdge.changeVertexB(vertexList[currentEdgeState[key]["vertexB"]]);
-        currentEdge.changeType(currentEdgeState[key]["type"]);
-        currentEdge.changeWeight(currentEdgeState[key]["weight"]);
+        if(currentEdgeState[key]["type"] != null)currentEdge.changeType(currentEdgeState[key]["type"]);
+        if(currentEdgeState[key]["weight"] != null)currentEdge.changeWeight(currentEdgeState[key]["weight"]);
 
         currentEdge.refreshPath();
-        if(!currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
+        if(currentEdgeState[key]["animateHighlighted"] == null || !currentEdgeState[key]["animateHighlighted"]) currentEdge.redraw(duration);
         else{
           currentEdge.animateHighlighted(duration*0.9);
         }
