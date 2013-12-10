@@ -1,5 +1,7 @@
 <?php
   class BstQuestionGenerator implements QuestionGeneratorInterface{
+    protected $rngSeed;
+
     public function __construct(){
     }
 
@@ -29,8 +31,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_SEARCH;
-      $qObj->qSubType = QUESTION_SUB_TYPE_NONE;
-      $qObj->qParams = array("value" => $varToBeSearched);
+      $qObj->qParams = array("value" => $varToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -60,7 +61,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_TRAVERSAL;
-      $qObj->qSubType = QUESTION_SUB_TYPE_INORDER_TRAVERSAL;
+      $qObj->qParams = array("value" => $varToBeSearched,"subtype" => QUESTION_SUB_TYPE_INORDER_TRAVERSAL);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -74,9 +75,9 @@
     protected function checkTraversalSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
       $ans;
-      if($qObj->qSubType == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
-      else if($qObj->qSubType == QUESTION_SUB_TYPE_PREORDER_TRAVERSAL) $ans = $bst->preorderTraversal();
-      else if($qObj->qSubType == QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL) $ans = $bst->postorderTraversal();
+      if($qObj->qParams->subtype == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
+      else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_PREORDER_TRAVERSAL) $ans = $bst->preorderTraversal();
+      else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL) $ans = $bst->postorderTraversal();
 
       echo implode(",",$ans);
 

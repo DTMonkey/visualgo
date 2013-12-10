@@ -57,6 +57,14 @@
       return $insertionSequence;
     }
 
+    public function successor($val){
+
+    }
+
+    public function predecessor($val){
+      
+    }
+
     public function search($val){
       $searchSequence = array();
 

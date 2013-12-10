@@ -20,7 +20,6 @@
   class QuestionObject{
     private $qTopic;
     private $qType;
-    private $qSubType;
     private $qParams; // Misc. values, such as the node being searched in BST search sequence question
     private $aType;
     private $aParams; // Misc. values, such as MCQ choices, range, etc.
@@ -33,7 +32,6 @@
     public function __construct(){
       $this->qTopic = NULL;
       $this->qType = NULL;
-      $this->qSubType = NULL;
       $this->qParams = NULL;
       $this->aType = NULL;
       $this->aParams = NULL;
@@ -62,7 +60,6 @@
       $arr = array(
         "qTopic" => $this->qTopic,
         "qType" => $this->qType,
-        "qSubType" => $this->qSubType,
         "qParams" => $this->qParams,
         "aType" => $this->aType,
         "aParams" => $this->aParams,
