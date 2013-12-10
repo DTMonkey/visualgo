@@ -143,7 +143,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_PREDECESSOR;
-      $qObj->qParams = array("value" => $varWhoseSuccessorIsToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("value" => $varWhosePredecessorIsToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;

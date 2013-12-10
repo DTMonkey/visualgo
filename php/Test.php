@@ -23,7 +23,8 @@
   }
 
   else if($mode == MODE_CHECK_ANSWERS){
-    $aArrJson = $get["aArr"];
+    $aArrJson = $_GET["aArr"];
+    echo implode("|",$aArrJson);
     $aArr = json_decode($ansArrJson);
     $score = 0;
 

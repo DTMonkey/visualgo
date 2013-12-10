@@ -57,6 +57,18 @@
       return $insertionSequence;
     }
 
+    public function generateRandomBst($amt){
+
+    }
+
+    public function generateRandomUniformBst($amt){
+
+    }
+
+    public function generateLinkedListBst($amt){
+
+    }
+
     public function successor($val){
       $successorSequence = array();
 

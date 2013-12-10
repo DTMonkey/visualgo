@@ -1,5 +1,5 @@
 <?php
-  class AVL extends BST{
+  class AVL{
     
   }
 ?>
