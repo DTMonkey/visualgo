@@ -39,7 +39,7 @@
     public function insertRandomElements($amt){
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,100);
-        if(!array_key_exists($newElement, $elements)){
+        if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
         }
         else $i--;
@@ -49,17 +49,18 @@
     public function search($val){
       $searchSequence = array();
 
-      $node = $root;
+      $node = $this->elements[$this->root];
 
       while(!is_null($node) && $node->value != $val){
-        $currentValue = $node->value;
-        $searchSequence[] = $currentValue;
+        array_push($searchSequence,$node->value);
 
-        if($val > $currentValue){
+        if($val > $node->value){
           $node = $node->rightChild;
         }
         else $node = $node->leftChild;
       }
+
+      if($node->value == $val) array_push($searchSequence,$val);
 
       return $searchSequence;
     }

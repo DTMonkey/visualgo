@@ -6,7 +6,8 @@
   $q1 = $qArr[0];
 
   echo($q1->toJsonObject());
-  // $bstQuestionGen->checkAnswer($q1, [1,2,3]);
+  $correctness = $bstQuestionGen->checkAnswer($q1, array(1,2,3));
+  echo gettype($correctness);
   // echo();
 
   // echo("Hello world!");
