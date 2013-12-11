@@ -2,7 +2,7 @@ function showAnswerInterface(q, mode) {
 	if(mode == "TRAINING") {
 		//reset all unclickable
 		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
-		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click');
+		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
 		$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 		
 		switch(qnTypeArr[q]) {
@@ -99,12 +99,13 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
-			case 5: //MCQ				
+			case 5: //MCQ			
 				//display mcq options
 				$('#mcq').show();
 				for(var i=0; i<qnParamsArr[q].length; i++) {
 					$("#mcq").append('<div class="mcq-option"><span class="box"></span><span class="option">'+qnParamsArr[q][i][0]+'</span></div>');
 				}
+				$('.mcq-option .box').css('cursor','pointer');
 				
 				//record answer
 				$('.mcq-option .box').click(function() {
@@ -129,9 +130,18 @@ function showAnswerInterface(q, mode) {
 	} else if(mode=="ANSWER") {
 		//reset all unclickable
 		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
 		$('#current-selection').html("").hide();
 		
 		gw.jumpToIteration(q,1);
+		switch(qnTypeArr[q]) {
+			case 5: //MCQ {
+				$('#mcq').show();
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					$("#mcq").append('<div class="mcq-option"><span class="box"></span><span class="option">'+qnParamsArr[q][i][0]+'</span></div>');
+				}
+				break;
+		}
 		showRecordedAns(q);
 	}
 }

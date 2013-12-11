@@ -6,7 +6,7 @@ var MODE = "TRAINING";
 var qnTextArr = new Array(); //of question text for each qn
 var qnGraphArr = new Array(); //of JSON objects for each qn
 var qnTypeArr = new Array(); //of each qn's input type, for UI display and answer recording
-var qnParamsArr = new Array(); //false when no params, array of key-val options for mcqs
+var qnParamsArr = new Array(); //empty when no params, array of key-val options for mcqs
 var ansArr = new Array(); //answers to be sent to server
 
 var seed = "1280733249";
