@@ -360,48 +360,10 @@
       if(!(in_array($val1, $allKeys) && in_array($val2, $allKeys))) return $this->isValidBst;
 
       $node1 = $this->elements[$val1];
-      $heightNode1 = $node1->height;
-      $parentNode1 = $node1->parent;
-      $leftChildNode1 = $node1->leftChild;
-      $rightChildNode1 = $node1->rightChild;
-      $cxPercentageNode1 = $node1->cxPercentage;
-      $cyPercentageNode1 = $node1->cyPercentage;
-
       $node2 = $this->elements[$val2];
-      $heightNode2 = $node2->height;
-      $parentNode2 = $node1->parent;
-      $leftChildNode2 = $node1->leftChild;
-      $rightChildNode2 = $node1->rightChild;
-      $cxPercentageNode2 = $node2->cxPercentage;
-      $cyPercentageNode2 = $node2->cyPercentage;
-
-      $node1->parent = $parentNode2;
-      $node1->leftChild = $leftChildNode2;
-      $node1->rightChild = $rightChildNode2;
-      $node1->height = $heightNode2;
-      $node1->cxPercentage = $cxPercentageNode2;
-      $node1->cyPercentage = $cyPercentageNode2;
-
-      $leftChildNode2->parent = $node1;
-      $rightChildNode2->parent = $node1;
-      if($node2->value > $parentNode2->value){
-        $parentNode2->rightChild = $node1;
-      }
-      else $parentNode2->leftChild = $node1;
-
-      $node2->parent = $parentNode1;
-      $node2->leftChild = $leftChildNode1;
-      $node2->rightChild = $rightChildNode1;
-      $node2->height = $heightNode1;
-      $node2->cxPercentage = $cxPercentageNode1;
-      $node2->cyPercentage = $cyPercentageNode1;
-
-      $leftChildNode1->parent = $node2;
-      $rightChildNode1->parent = $node2;
-      if($node1->value > $parentNode1->value){
-        $parentNode1->rightChild = $node2;
-      }
-      else $parentNode1->leftChild = $node2;
+      
+      $node1->value = $val2;
+      $node2->value = $val1;
 
       $this->isValidBst = false;
 
