@@ -2,17 +2,27 @@
   require 'Everything.php';
 
   $bstQuestionGen = new BstQuestionGenerator();
+  // $bstQuestionGen->seedRng(5342);
 
+  $qSeed = 0;
   $qArr = array();
   $aArr = array();
   $aCorrectness = array();
   $score = 0;
 
   $mode = $_GET["mode"];
+
+  if($mode == MODE_GENERATE_SEED){
+    echo(mt_rand());
+  }
+
   if($mode == MODE_GENERATE_QUESTIONS){
     $qAmt = $_GET["qAmt"];
+    $qSeed = $_GET["seed"];
 
+    $bstQuestionGen->seedRng($qSeed);
     $qArr = ($bstQuestionGen->generateQuestion($qAmt));
+
     $qArrJson = array();
 
     for($i = 0; $i < count($qArr);$i++){
@@ -23,10 +33,19 @@
   }
 
   else if($mode == MODE_CHECK_ANSWERS){
-    $aArrJson = $_GET["ans"];
-    echo implode("|",$aArrJson);
-    $aArr = json_decode($ansArrJson);
+    $aArrCsv = $_GET["ans"];
+    $qSeed = $_GET["seed"];
+    // echo implode("|",$aArrCsv);
+    for($i = 0; $i < count($aArrCsv); $i++){
+      $aArr[] = explode(",",$aArrCsv);
+    }
     $score = 0;
+
+    $bstQuestionGen->seedRng($qSeed);
+    $qArr = ($bstQuestionGen->generateQuestion($qAmt));
+
+    // echo(count($qArr));
+    // echo $qArr[0]->toJsonObject;
 
     for($i = 0; $i < count($qArr);$i++){
       $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);

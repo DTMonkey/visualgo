@@ -70,5 +70,23 @@
         );
       return json_encode($arr);
     }
+
+    public static function fromJsonObject($jsonStr){
+      $qObj = new QuestionObject();
+      $qObjJson = json_decode($jsonStr);
+
+      $qObj->qTopic = NULL;
+      $qObj->qType = NULL;
+      $qObj->qParams = NULL;
+      $qObj->aType = NULL;
+      $qObj->aParams = NULL;
+      $qObj->aAmt = NULL;
+      $qObj->ordered = NULL;
+      $qObj->allowNoAnswer = NULL;
+      $qObj->graphState = NULL;
+      $qObj->internalDS = NULL;
+
+      return $qObj;
+    }
   }
 ?>

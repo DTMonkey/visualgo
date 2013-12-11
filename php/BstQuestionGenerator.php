@@ -31,20 +31,23 @@
     public function checkAnswer($qObj, $userAns){
       if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkSearchSequenceQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkTraversalSequenceQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkSuccessorSequenceQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkTraversalPredecessorQuestion($qObj, $userAns);
       else return false;
     }
 
-    protected function generateBst($seed){
-      $bst = new BST();
+    protected function generateBst(){
+      $bst = new Bst();
+      $seed = mt_rand();
       $bst->seedRng($seed);
       return $bst;
     }
 
     protected function generateSearchSequenceQuestion($bstSize){
-      $bst = new BST();
-      $bst->insertRandomElements($bstSize);
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
-      $varToBeSearched = $bstContent[array_rand($bstContent)];
+      $varToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -65,14 +68,14 @@
       $varToBeSearched = $qObj->qParams["value"];
       $ans = $bst->search($varToBeSearched);
 
-      // echo implode(",",$ans);
+      echo implode(",",$ans);
 
       return $ans === $userAns;
     }
 
     protected function generateTraversalSequenceQuestion($bstSize){
-      $bst = new BST();
-      $bst->insertRandomElements($bstSize);
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -101,12 +104,12 @@
     }
 
     protected function generateSuccessorSequenceQuestion($bstSize){
-      $bst = new BST();
-      $bst->insertRandomElements($bstSize);
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_pop($bstContent);
-      $varWhoseSuccessorIsToBeSearched = $bstContent[array_rand($bstContent)];
+      $varWhoseSuccessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -133,12 +136,12 @@
     }
 
     protected function generatePredecessorSequenceQuestion($bstSize){
-      $bst = new BST();
-      $bst->insertRandomElements($bstSize);
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_shift($bstContent);
-      $varWhosePredecessorIsToBeSearched = $bstContent[array_rand($bstContent)];
+      $varWhosePredecessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;

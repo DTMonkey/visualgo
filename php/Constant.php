@@ -17,6 +17,7 @@
   const ANSWER_AMT_ONE = 1;
   const ANSWER_AMT_MULTIPLE = 2;
 
+  const MODE_GENERATE_SEED = 0;
   const MODE_GENERATE_QUESTIONS = 1;
   const MODE_CHECK_ANSWERS = 2;
 ?>

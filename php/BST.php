@@ -58,15 +58,44 @@
     }
 
     public function generateRandomBst($amt){
+      $insertionSequence = array();
 
+      for($i = 0; $i < $amt; $i++){
+        $newElement = mt_rand(1,99);
+        if(!array_key_exists($newElement, $this->elements)){
+          $this->insert($newElement);
+          $insertionSequence[] = $newElement;
+        }
+        else $i--;
+      }
+
+      return $insertionSequence;
     }
 
     public function generateRandomUniformBst($amt){
-
+      
     }
 
-    public function generateLinkedListBst($amt){
+    public function generateLinkedListBst($amt, $direction){
+      $insertionSequence = array();
+      $tempInsertionSequence = array();
 
+      for($i = 0; $i < $amt; $i++){
+        $newElement = mt_rand(1,99);
+        if(!array_key_exists($newElement, $tempInsertionSequence)){
+          $tempInsertionSequence[$newElement] = true;
+        }
+        else $i--;
+      }
+
+      if($direction == BST_LINKED_LIST_ASCENDING) $insertionSequence = sort(array_keys($tempInsertionSequence));
+      else $insertionSequence = rsort(array_keys($tempInsertionSequence));
+
+      foreach($insertionSequence as $value){
+        $this->insert($value);
+      }
+
+      return $insertionSequence;
     }
 
     public function successor($val){
