@@ -21,6 +21,12 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_PREDECESSOR:
 					return BST_PREDECESSOR.replace('|value|', params.value);
 					break;
+				case QUESTION_TYPE_MIN_VALUE:
+					return BST_MIN;
+					break;
+				case QUESTION_TYPE_MAX_VALUE:
+					return BST_MAX;
+					break;
 			}
 			break;
 		default: //nothing

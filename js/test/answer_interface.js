@@ -103,6 +103,8 @@ function showAnswerInterface(q, mode) {
 	} else if(mode=="ANSWER") {
 		//reset all unclickable
 		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+		$('#current-selection').html("").hide();
+		
 		gw.jumpToIteration(q,1);
 		showRecordedAns(q);
 	}
