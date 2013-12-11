@@ -41,8 +41,8 @@
         $graphState["vl"] += array($key => $vertexState);
         if($this->root != $value->value){
           $edgeState = array(
-            "vertexA" => $value->parent->value,
-            "vertexB" => $value->value
+            "vertexA" => $value->parent->key,
+            "vertexB" => $value->key
             );
           $graphState["el"] += array($key => $edgeState);
         }
@@ -420,6 +420,7 @@
   }
 
   class BSTNode{
+    protected $key;
     protected $value;
     protected $height;
     protected $parent;
@@ -429,6 +430,7 @@
     protected $cyPercentage;
 
     function __construct($val){
+      $this->key = $val;
       $this->value = $val;
       $this->height = 1;
       $this->parent = NULL;
