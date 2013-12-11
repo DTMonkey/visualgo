@@ -3,6 +3,7 @@
     protected $root;
     protected $height;
     protected $elements;
+    protected $isValidBst;
 
     public function __construct(){
       $this->init();
@@ -22,6 +23,10 @@
 
     public function getHeight(){
       return $this->height;
+    }
+
+    public function isValid(){
+      return $this->isValidBst;
     }
 
     public function toGraphState(){
@@ -350,10 +355,56 @@
       unset($this->elements[$val]);
     }
 
+    public function swap($val1, $val2){
+      $allKeys = $this->getAllElements();
+      if(!(in_array($val1, $allKeys) && in_array($val2, $allKeys))) return $this->isValidBst;
+
+      $node1 = $this->elements[$val1];
+      $heightNode1 = $node1->height;
+      $parentNode1 = $node1->parent;
+      $leftChildNode1 = $node1->leftChild;
+      $rightChildNode1 = $node1->rightChild;
+
+      $node2 = $this->elements[$val2];
+      $heightNode2 = $node2->height;
+      $parentNode2 = $node1->parent;
+      $leftChildNode2 = $node1->leftChild;
+      $rightChildNode2 = $node1->rightChild;
+
+      $node1->parent = $parentNode2;
+      $node1->leftChild = $leftChildNode2;
+      $node1->rightChild = $rightChildNode2;
+      $node1->height = $heightNode2;
+
+      $leftChildNode2->parent = $node1;
+      $rightChildNode2->parent = $node1;
+      if($node2->value > $parentNode2->value){
+        $parentNode2->rightChild = $node1;
+      }
+      else $parentNode2->leftChild = $node1;
+
+      $node2->parent = $parentNode1;
+      $node2->leftChild = $leftChildNode1;
+      $node2->rightChild = $rightChildNode1;
+      $node2->height = $heightNode1;
+
+      $leftChildNode1->parent = $node2;
+      $rightChildNode1->parent = $node2;
+      if($node1->value > $parentNode1->value){
+        $parentNode1->rightChild = $node2;
+      }
+      else $parentNode1->leftChild = $node2;
+
+      $this->isValidBst = false;
+
+      return $this->isValidBst;
+    }
+
     protected function init(){
       $this->root = NULL;
       $this->height = 0;
       $this->elements = array();
+      $this->isValidBst = true;
     }
 
     // Recursively updates height of itself and the nodes above it until root

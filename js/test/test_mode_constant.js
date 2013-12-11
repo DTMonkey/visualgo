@@ -14,6 +14,7 @@ const QUESTION_TYPE_PREDECESSOR = "Predecessor";
 const QUESTION_TYPE_MIN_VALUE = "MinVal";
 const QUESTION_TYPE_MAX_VALUE = "MaxVal";
 const QUESTION_TYPE_DELETION = "Deletion";
+const QUESTION_TYPE_SWAP = "Swap";
 
 const QUESTION_SUB_TYPE_NONE = "";
 const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";
@@ -21,6 +22,7 @@ const QUESTION_SUB_TYPE_PREORDER_TRAVERSAL = "preorder";
 const QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL = "postorder";
 
 const ANSWER_TYPE_VERTEX = "vertex";
+const ANSWER_TYPE_MCQ = "mcq";
 
 const ANSWER_AMT_ONE = 1;
 const ANSWER_AMT_MULTIPLE = 2;

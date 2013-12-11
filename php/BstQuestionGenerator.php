@@ -19,12 +19,13 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/6) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/6) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/6) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else if($i < $amt*4/6) $questions[] = $this->generatePredecessorSequenceQuestion(5);
-        else if($i < $amt*5/6) $questions[] = $this->generateMinValueQuestion(5);
-        else  $questions[] = $this->generateMaxValueQuestion(5);
+        if($i < $amt/7) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/7) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/7) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else if($i < $amt*4/7) $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        else if($i < $amt*5/7) $questions[] = $this->generateMinValueQuestion(5);
+        else if($i < $amt*6/7) $questions[] = $this->generateMaxValueQuestion(5);
+        else  $questions[] = $this->generateSwapQuestion(5);
       }
 
       return $questions;
@@ -296,6 +297,42 @@
         }
         if($bst->height() != $originalHeight - 1) $correctness = false;
       }
+
+      return $correctness;
+    }
+
+    protected function generateSwapQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
+      $bstContent = $bst->getAllElements();
+      $bstElement1 = mt_rand(0, count($bstContent)-1);
+      $bstElement2 = $bstElement1;
+      while($bstElement2 == $bstElement1){
+        $bstElement2 = mt_rand(0, count($bstContent)-1);
+      }
+      $bst->swap($bstContent[$bstElement1], $bstContent[$bstElement2]);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_SWAP;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_MCQ;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->aParams = array("Valid" => BST_SWAP_ANS_VALID, "Not Valid" => BST_SWAP_ANS_INVALID);
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkSwapQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+
+      $correctness = false;
+      if($bst->isValid() && $userAns[0] == BST_SWAP_ANS_VALID) $correctness = true;
+      else if(!($bst->isValid()) && $userAns[0] == BST_SWAP_ANS_INVALID) $correctness = true;
 
       return $correctness;
     }
