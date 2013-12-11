@@ -39,6 +39,8 @@
       else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkPredecessorSequenceQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkMinValueQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkSwapQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkIsAvlQuestion($qObj, $userAns);
       else return false;
     }
 
