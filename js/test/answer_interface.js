@@ -2,6 +2,7 @@ function showAnswerInterface(q, mode) {
 	if(mode == "TRAINING") {
 		//reset all unclickable
 		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click');
 		$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 		
 		switch(qnTypeArr[q]) {
@@ -98,6 +99,31 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
+			case 5: //MCQ				
+				//display mcq options
+				$('#mcq').show();
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					$("#mcq").append('<div class="mcq-option"><span class="box"></span><span class="option">'+qnParamsArr[q][i][0]+'</span></div>');
+				}
+				
+				//record answer
+				$('.mcq-option .box').click(function() {
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					
+					var optionText = $(this).next().html();
+					for(var i=0; i<qnParamsArr[q].length; i++) {
+						if(qnParamsArr[q][i][0] == optionText) {
+							setAns(q,qnParamsArr[q][i][1]);
+						}
+					}
+					
+					//highlight as answered
+					$('.mcq-option .box').css('background', '#ddd');
+					showRecordedAns(q);
+				});
+				break;
+				
 			default: //none
 		}
 	} else if(mode=="ANSWER") {
@@ -150,6 +176,21 @@ function showRecordedAns(q) {
 				}
 			}, 50);
 			printCurrentSelection(q);
+			break;
+			
+		case 5: //MCQ
+			var optionVal = parseInt(ans);
+			var optionText = "";
+			for(var i=0; i<qnParamsArr[q].length; i++) {
+				if(qnParamsArr[q][i][1] == optionVal) {
+					optionText = qnParamsArr[q][i][0];
+				}
+			}
+			$('.mcq-option .option').each(function() {
+				if($(this).html()== optionText) {
+					$(this).prev().css('background', surpriseColour);
+				}
+			});
 			break;
 			
 		default: //nothing

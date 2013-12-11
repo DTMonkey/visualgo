@@ -1,6 +1,7 @@
 function extractInfo(q, qnJSON) {
 	qnTextArr[q] = extractQnText(qnJSON.qTopic, qnJSON.qType, qnJSON.qParams);
-	qnTypeArr[q] = extractQnType(qnJSON.aType, qnJSON.aAmt, qnJSON.aParams);
+	qnTypeArr[q] = extractQnType(qnJSON.aType, qnJSON.aAmt);
+	qnParamsArr[q] = extractQnParams(qnJSON.aParams);
 	//add additional extraction for allowNoAnswer
 	qnGraphArr[q] = extractQnGraph(qnJSON.graphState);
 }
@@ -27,13 +28,19 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_MAX_VALUE:
 					return BST_MAX;
 					break;
+				case QUESTION_TYPE_SWAP:
+					return BST_SWAP;
+					break;
+				case QUESTION_TYPE_IS_AVL:
+					return BST_IS_AVL;
+					break;
 			}
 			break;
 		default: //nothing
 	}
 }
 
-function extractQnType(type, amt, params) {
+function extractQnType(type, amt) {
 	switch(type) {
 		case ANSWER_TYPE_VERTEX:
 			if(amt==ANSWER_AMT_ONE) {
@@ -42,9 +49,20 @@ function extractQnType(type, amt, params) {
 				return 3;
 			}
 			break;
+		case ANSWER_TYPE_MCQ:
+			return 5;
+			break;
 		default: //nothing
 	}
 	//to add more
+}
+
+function extractQnParams(params) {
+	var toReturn = new Array();
+	for(var key in params) {
+		toReturn.push([key,params[key]]);
+	}
+	return toReturn;
 }
 
 function extractQnGraph(graph) {

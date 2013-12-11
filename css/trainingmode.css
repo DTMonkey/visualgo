@@ -55,6 +55,25 @@
 		font-size: 16px;
 		width: 800px;
 	}
+	#mcq {
+		margin-top: 15px;
+	}
+		.mcq-option {
+			margin-top: 5px;
+		}
+			.mcq-option .box {
+				display: inline-block;
+				background: #ddd;
+				width: 20px;
+				height: 20px;
+				vertical-align: middle;
+				margin-right: 10px;
+				cursor: pointer;
+			}
+			.mcq-option .option {
+				font-size: 16px;
+				vertical-align: middle;
+			}
 	#current-selection { padding-top: 20px; }
 	#ans-key { padding-top: 10px; }
 	#undo-ans , #clear-ans {
@@ -65,7 +84,7 @@
 		background: #df3939;
 		color: white;
 		font-size: 14px;
-		font-weight: bold;
+		font-weight: normal;
 		cursor: pointer;
 	}
 		#undo-ans:hover, #clear-ans:hover { background: black; }
