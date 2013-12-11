@@ -35,9 +35,10 @@
   else if($mode == MODE_CHECK_ANSWERS){
     $aArrCsv = $_GET["ans"];
     $qSeed = $_GET["seed"];
+    $qAmt = $_GET["qAmt"];
     // echo implode("|",$aArrCsv);
     for($i = 0; $i < count($aArrCsv); $i++){
-      $aArr[] = explode(",",$aArrCsv);
+      $aArr[] = explode(",",$aArrCsv[$i]);
     }
     $score = 0;
 

@@ -68,9 +68,18 @@
       $varToBeSearched = $qObj->qParams["value"];
       $ans = $bst->search($varToBeSearched);
 
-      echo implode(",",$ans);
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
 
-      return $ans === $userAns;
+      return $correctness;
     }
 
     protected function generateTraversalSequenceQuestion($bstSize){
@@ -94,13 +103,22 @@
     protected function checkTraversalSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
       $ans;
-      if($qObj->qParams->subtype == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
-      else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_PREORDER_TRAVERSAL) $ans = $bst->preorderTraversal();
-      else if($qObj->qParams->subtype == QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL) $ans = $bst->postorderTraversal();
+      if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
+      else if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_PREORDER_TRAVERSAL) $ans = $bst->preorderTraversal();
+      else if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL) $ans = $bst->postorderTraversal();
 
-      echo implode(",",$ans);
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
 
-      return $ans === $userAns;
+      return $correctness;
     }
 
     protected function generateSuccessorSequenceQuestion($bstSize){
@@ -127,12 +145,21 @@
 
     protected function checkSuccessorSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
-      $varWhoseSuccessorIsToBeSearched = $qObj->qParams->value;
+      $varWhoseSuccessorIsToBeSearched = $qObj->qParams["value"];
       $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
 
-      echo implode(",",$ans);
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
 
-      return $ans === $userAns;
+      return $correctness;
     }
 
     protected function generatePredecessorSequenceQuestion($bstSize){
@@ -159,12 +186,21 @@
 
     protected function checkPredecessorSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
-      $varWhosePredecessorIsToBeSearched = $qObj->qParams->value;
+      $varWhosePredecessorIsToBeSearched = $qObj->qParams["value"];
       $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
 
-      echo implode(",",$ans);
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
 
-      return $ans === $userAns;
+      return $correctness;
     }
   }
 ?>
