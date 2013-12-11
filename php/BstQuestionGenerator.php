@@ -19,13 +19,14 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/7) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/7) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/7) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else if($i < $amt*4/7) $questions[] = $this->generatePredecessorSequenceQuestion(5);
-        else if($i < $amt*5/7) $questions[] = $this->generateMinValueQuestion(5);
-        else if($i < $amt*6/7) $questions[] = $this->generateMaxValueQuestion(5);
-        else  $questions[] = $this->generateSwapQuestion(5);
+        if($i < $amt/8) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/8) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/8) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else if($i < $amt*4/8) $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        else if($i < $amt*5/8) $questions[] = $this->generateMinValueQuestion(5);
+        else if($i < $amt*6/8) $questions[] = $this->generateMaxValueQuestion(5);
+        else if($i < $amt*7/8) $questions[] = $this->generateSwapQuestion(5);
+        else  $questions[] = $this->generateIsAvlQuestion(5);
       }
 
       return $questions;
@@ -333,6 +334,35 @@
       $correctness = false;
       if($bst->isValid() && $userAns[0] == BST_SWAP_ANS_VALID) $correctness = true;
       else if(!($bst->isValid()) && $userAns[0] == BST_SWAP_ANS_INVALID) $correctness = true;
+
+      return $correctness;
+    }
+
+    protected function generateIsAvlQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_IS_AVL;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_MCQ;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->aParams = array("Yes" => BST_IS_AVL_ANS_YES, "No" => BST_IS_AVL_ANS_NO);
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkIsAvlQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+
+      $correctness = false;
+      if($bst->isAvl() && $userAns[0] == BST_IS_AVL_ANS_YES) $correctness = true;
+      else if(!($bst->isAvl()) && $userAns[0] == BST_IS_AVL_ANS_NO) $correctness = true;
 
       return $correctness;
     }

@@ -11,6 +11,7 @@
   const QUESTION_TYPE_MAX_VALUE = "MaxVal";
   const QUESTION_TYPE_DELETION = "Deletion";
   const QUESTION_TYPE_SWAP = "Swap";
+  const QUESTION_TYPE_IS_AVL = "isAvl";
 
   const QUESTION_SUB_TYPE_NONE = "";
   const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";
@@ -33,4 +34,7 @@
 
   const BST_SWAP_ANS_VALID = 0;
   const BST_SWAP_ANS_INVALID = 1;
+
+  const BST_IS_AVL_ANS_YES = 0;
+  const BST_IS_AVL_ANS_NO = 1;
 ?>

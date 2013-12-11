@@ -15,6 +15,7 @@ const QUESTION_TYPE_MIN_VALUE = "MinVal";
 const QUESTION_TYPE_MAX_VALUE = "MaxVal";
 const QUESTION_TYPE_DELETION = "Deletion";
 const QUESTION_TYPE_SWAP = "Swap";
+const QUESTION_TYPE_IS_AVL = "isAvl";
 
 const QUESTION_SUB_TYPE_NONE = "";
 const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";

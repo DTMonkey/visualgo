@@ -121,6 +121,33 @@
       return $temp[0];
     }
 
+    public function isAvl(){
+      $isAvl = true;
+
+      foreach($this->elements as $key => $node){
+        $noLeftChild = is_null($node->leftChild);
+        $noRightChild = is_null($node->rightChild);
+        $isRoot = is_null($node->parent);
+
+        $leftChildHeight = -1;
+        $rightChildHeight = -1;
+
+        if(!$noRightChild){
+          $rightChildHeight = $node->rightChild->height;
+        }
+        if(!$noLeftChild){
+          $leftChildHeight = $node->leftChild->height;
+        }
+
+        if(abs($leftChildHeight-$rightChildHeight) > 2){
+          $isAvl = false;
+          break;
+        }
+      }
+
+      return $isAvl;
+    }
+
     public function successor($val){
       $successorSequence = array();
 
