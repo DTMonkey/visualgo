@@ -35,6 +35,6 @@
   const BST_SWAP_ANS_VALID = 0;
   const BST_SWAP_ANS_INVALID = 1;
 
-  const BST_IS_AVL_ANS_YES = 0;
-  const BST_IS_AVL_ANS_NO = 1;
+  const BST_IS_AVL_ANS_VALID = 0;
+  const BST_IS_AVL_ANS_INVALID = 1;
 ?>

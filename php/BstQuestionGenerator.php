@@ -321,7 +321,7 @@
       $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_MCQ;
       $qObj->aAmt = ANSWER_AMT_ONE;
-      $qObj->aParams = array("Valid" => BST_SWAP_ANS_VALID, "Not Valid" => BST_SWAP_ANS_INVALID);
+      $qObj->aParams = array("Valid" => BST_SWAP_ANS_VALID, "Invalid" => BST_SWAP_ANS_INVALID);
       $qObj->ordered = false;
       $qObj->allowNoAnswer = false;
       $qObj->graphState = $bst->toGraphState();
@@ -350,7 +350,7 @@
       $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_MCQ;
       $qObj->aAmt = ANSWER_AMT_ONE;
-      $qObj->aParams = array("Yes" => BST_IS_AVL_ANS_YES, "No" => BST_IS_AVL_ANS_NO);
+      $qObj->aParams = array("Valid" => BST_IS_AVL_ANS_VALID, "Invalid" => BST_IS_AVL_ANS_INVALID);
       $qObj->ordered = false;
       $qObj->allowNoAnswer = false;
       $qObj->graphState = $bst->toGraphState();
@@ -363,8 +363,8 @@
       $bst = $qObj->internalDS;
 
       $correctness = false;
-      if($bst->isAvl() && $userAns[0] == BST_IS_AVL_ANS_YES) $correctness = true;
-      else if(!($bst->isAvl()) && $userAns[0] == BST_IS_AVL_ANS_NO) $correctness = true;
+      if($bst->isAvl() && $userAns[0] == BST_IS_AVL_ANS_VALID) $correctness = true;
+      else if(!($bst->isAvl()) && $userAns[0] == BST_IS_AVL_ANS_INVALID) $correctness = true;
 
       return $correctness;
     }
