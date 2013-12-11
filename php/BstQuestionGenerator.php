@@ -191,7 +191,7 @@
     protected function checkPredecessorSequenceQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
       $varWhosePredecessorIsToBeSearched = $qObj->qParams["value"];
-      $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
+      $ans = $bst->predecessor($varWhosePredecessorIsToBeSearched);
 
       $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
@@ -261,6 +261,41 @@
       $correctness = true;
       if(count($userAns) > 1) $correctness = false;
       else if($userAns[0] != $maxVal) $correctness = false;
+
+      return $correctness;
+    }
+
+    protected function generateDeletionQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_DELETION;
+      $qObj->qParams = array("maxAmt" => 3, "subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkDeletionQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $originalHeight = $bst->getHeight();
+      $maxAmt = $qObj->qParams["maxAmt"];
+
+      $correctness = true;
+      if(count($userAns) > $maxAmt) $correctness = false;
+      else{
+        foreach($userAns as $value){
+          $bst->delete($value);
+        }
+        if($bst->height() != $originalHeight - 1) $correctness = false;
+      }
 
       return $correctness;
     }
