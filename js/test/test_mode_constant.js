@@ -11,6 +11,8 @@ const QUESTION_TYPE_SEARCH = "Search";
 const QUESTION_TYPE_TRAVERSAL = "Traversal";
 const QUESTION_TYPE_SUCCESSOR = "Successor";
 const QUESTION_TYPE_PREDECESSOR = "Predecessor";
+const QUESTION_TYPE_MIN_VALUE = "MinVal";
+const QUESTION_TYPE_MAX_VALUE = "MaxVal";
 
 const QUESTION_SUB_TYPE_NONE = "";
 const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";

@@ -19,10 +19,12 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/4) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/4) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/4) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        if($i < $amt/6) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/6) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/6) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else if($i < $amt*4/6) $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        else if($i < $amt*5/6) $questions[] = $this->generateMinValueQuestion(5);
+        else  $questions[] = $this->generateMaxValueQuestion(5);
       }
 
       return $questions;
@@ -32,7 +34,9 @@
       if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkSearchSequenceQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkTraversalSequenceQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkSuccessorSequenceQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkTraversalPredecessorQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkPredecessorSequenceQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkMinValueQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
       else return false;
     }
 
@@ -199,6 +203,64 @@
           }
         }
       }
+
+      return $correctness;
+    }
+
+    protected function generateMinValueQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_ASCENDING);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_MIN_VALUE;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkMinValueQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $minVal = $bst->getMinValue();
+
+      $correctness = true;
+      if(count($userAns) > 1) $correctness = false;
+      else if($userAns[0] != $minVal) $correctness = false;
+
+      return $correctness;
+    }
+
+    protected function generateMaxValueQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_DESCENDING);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_MAX_VALUE;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkMaxValueQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $maxVal = $bst->getMaxValue();
+
+      $correctness = true;
+      if(count($userAns) > 1) $correctness = false;
+      else if($userAns[0] != $maxVal) $correctness = false;
 
       return $correctness;
     }

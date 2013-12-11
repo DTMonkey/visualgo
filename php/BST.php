@@ -73,7 +73,7 @@
     }
 
     public function generateRandomUniformBst($amt){
-      
+
     }
 
     public function generateLinkedListBst($amt, $direction){
@@ -88,14 +88,28 @@
         else $i--;
       }
 
-      if($direction == BST_LINKED_LIST_ASCENDING) $insertionSequence = sort(array_keys($tempInsertionSequence));
-      else $insertionSequence = rsort(array_keys($tempInsertionSequence));
+      $insertionSequence = array_keys($tempInsertionSequence);
+
+      if($direction == BST_LINKED_LIST_ASCENDING) sort($insertionSequence);
+      else rsort($insertionSequence);
 
       foreach($insertionSequence as $value){
         $this->insert($value);
       }
 
       return $insertionSequence;
+    }
+
+    public function getMinValue(){
+      $temp = array_keys($this->elements);
+      sort($temp);
+      return $temp[0];
+    }
+
+    public function getMaxValue(){
+      $temp = array_keys($this->elements);
+      rsort($temp);
+      return $temp[0];
     }
 
     public function successor($val){
