@@ -1,108 +1,116 @@
-function showAnswerInterface(q) {
-	//reset all unclickable
-	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
-	$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
-	
-	switch(qnTypeArr[q]) {
-		case 1: //single vertex
-			$('#vertexText text, #vertex circle').css('cursor','pointer');
+function showAnswerInterface(q, mode) {
+	if(mode == "TRAINING") {
+		//reset all unclickable
+		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+		$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 		
-			$('#vertexText text, #vertex circle').click( function() {
-				var vertexClass = $(this).attr('class');
-				
-				//find vertex number
-				var vertexClassNo = parseInt(vertexClass.substr(1));
-				var vNo = parseInt(qnGraphArr[q].vl[vertexClassNo].text);
-				
-				//mark as answered
-				$('#question-nav .qnno').eq(q-1).addClass('answered');
-				setAns(q,vNo);
-				
-				//highlight as answered
-				gw.jumpToIteration(q,1);
-				showRecordedAns(q);
-			});
-			break;
+		switch(qnTypeArr[q]) {
+			case 1: //single vertex
+				$('#vertexText text, #vertex circle').css('cursor','pointer');
 			
-		case 2: //single edge
-			$('#edge path').css('cursor','pointer');
-		
-			$('#edge path').click( function() {
-				var edgeID = $(this).attr('id');
+				$('#vertexText text, #vertex circle').click( function() {
+					var vertexClass = $(this).attr('class');
+					
+					//find vertex number
+					var vertexClassNo = parseInt(vertexClass.substr(1));
+					var vNo = parseInt(qnGraphArr[q].vl[vertexClassNo].text);
+					
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					setAns(q,vNo);
+					
+					//highlight as answered
+					gw.jumpToIteration(q,1);
+					showRecordedAns(q);
+				});
+				break;
+				
+			case 2: //single edge
+				$('#edge path').css('cursor','pointer');
 			
-				//find vertices it joins
-				var edgeIDNo = parseInt(edgeID.substr(1));
-				var vertexA = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexA].text);
-				var vertexB = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexB].text);
+				$('#edge path').click( function() {
+					var edgeID = $(this).attr('id');
+				
+					//find vertices it joins
+					var edgeIDNo = parseInt(edgeID.substr(1));
+					var vertexA = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexA].text);
+					var vertexB = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexB].text);
+				
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					setAns(q,[vertexA, vertexB]);
+					
+					//highlight as answered
+					gw.jumpToIteration(q,1);
+					showRecordedAns(q);
+				});
+				break;
+				
+			case 3: //multiple vertices
+				$('#vertexText text, #vertex circle').css('cursor','pointer');
+				$('#undo-ans').show(); $('#clear-ans').show();
+				
+				$('#vertexText text, #vertex circle').click( function() {
+					var vertexList = ansArr[q]; if(vertexList==false) vertexList=new Array();
+					var vertexClass = $(this).attr('class');
+					
+					//find vertex number
+					var vertexClassNo = parseInt(vertexClass.substr(1));
+					var vNo = parseInt(qnGraphArr[q].vl[vertexClassNo].text);
+					
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					if(vertexList.indexOf(vNo) == -1) {
+						vertexList.push(vNo);
+						setAns(q,vertexList);
+						printCurrentSelection(q);
+					}
+					
+					//highlight as answered
+					showRecordedAns(q);
+				});
+				break;
 			
-				//mark as answered
-				$('#question-nav .qnno').eq(q-1).addClass('answered');
-				setAns(q,[vertexA, vertexB]);
+			case 4: //multiple edges
+				$('#edge path').css('cursor','pointer');
+				$('#undo-ans').show(); $('#clear-ans').show();
 				
-				//highlight as answered
-				gw.jumpToIteration(q,1);
-				showRecordedAns(q);
-			});
-			break;
-			
-		case 3: //multiple vertices
-			$('#vertexText text, #vertex circle').css('cursor','pointer');
-			$('#undo-ans').show(); $('#clear-ans').show();
-			
-			$('#vertexText text, #vertex circle').click( function() {
-				var vertexList = ansArr[q]; if(vertexList==false) vertexList=new Array();
-				var vertexClass = $(this).attr('class');
+				$('#edge path').click( function() {
+					var edgeID = $(this).attr('id');
+					var edgeList = ansArr[q]; if(edgeList==false) edgeList=new Array();
+					
+					//find vertices it joins
+					var edgeIDNo = parseInt(edgeID.substr(1));
+					var vertexA = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexA].text);
+					var vertexB = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexB].text);
+					var newEdge = [vertexA, vertexB];
+					
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					if(!containsEdge(edgeList, newEdge)) {
+						edgeList.push(newEdge);
+						setAns(q,edgeList);
+						printCurrentSelection(q);
+					}
+					
+					//highlight as answered
+					showRecordedAns(q);
+				});
+				break;
 				
-				//find vertex number
-				var vertexClassNo = parseInt(vertexClass.substr(1));
-				var vNo = parseInt(qnGraphArr[q].vl[vertexClassNo].text);
-				
-				//mark as answered
-				$('#question-nav .qnno').eq(q-1).addClass('answered');
-				if(vertexList.indexOf(vNo) == -1) {
-					vertexList.push(vNo);
-					setAns(q,vertexList);
-					printCurrentSelection(q);
-				}
-				
-				//highlight as answered
-				showRecordedAns(q);
-			});
-			break;
-		
-		case 4: //multiple edges
-			$('#edge path').css('cursor','pointer');
-			$('#undo-ans').show(); $('#clear-ans').show();
-			
-			$('#edge path').click( function() {
-				var edgeID = $(this).attr('id');
-				var edgeList = ansArr[q]; if(edgeList==false) edgeList=new Array();
-				
-				//find vertices it joins
-				var edgeIDNo = parseInt(edgeID.substr(1));
-				var vertexA = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexA].text);
-				var vertexB = parseInt(qnGraphArr[q].vl[qnGraphArr[q].el[edgeIDNo].vertexB].text);
-				var newEdge = [vertexA, vertexB];
-				
-				//mark as answered
-				$('#question-nav .qnno').eq(q-1).addClass('answered');
-				if(!containsEdge(edgeList, newEdge)) {
-					edgeList.push(newEdge);
-					setAns(q,edgeList);
-					printCurrentSelection(q);
-				}
-				
-				//highlight as answered
-				showRecordedAns(q);
-			});
-			break;
-			
-		default: //none
+			default: //none
+		}
+	} else if(mode=="ANSWER") {
+		//reset all unclickable
+		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+		gw.jumpToIteration(q,1);
+		showRecordedAns(q);
 	}
 }
 
 function showRecordedAns(q) {
 	var ans = ansArr[q].toString();
+	//alert(ans);
 	switch(qnTypeArr[q]) {
 		case 1: //single vertex
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));

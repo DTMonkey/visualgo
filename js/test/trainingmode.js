@@ -1,5 +1,6 @@
 var gw = new GraphWidget();
-var sitePrefix = "http://rosemarietan.com/fyp/php/Test.php";
+var sitePrefix = document.URL.replace("/trainingmode.html","")+"/php/Test.php";
+var MODE = "TRAINING";
 
 //The following arrays use 1-based indexing. Index 0 is a dummy value.
 var qnTextArr = new Array(); //of question text for each qn
@@ -7,6 +8,7 @@ var qnGraphArr = new Array(); //of JSON objects for each qn
 var qnTypeArr = new Array(); //of each qn's input type, for UI display and answer recording
 var ansArr = new Array(); //answers to be sent to server
 
+var seed = "1280733249";
 var qnNo; //1-based
 var nQns; //total number of questions
 var nAnswered = 0;
@@ -21,8 +23,8 @@ function submitTraining() {
 	//get score
 	ansArr.shift();
 	var ansStr = ansArr.join('&ans[]=');
-	var queryStr = sitePrefix+"?mode="+MODE_CHECK_ANSWERS+"&ans[]="+ansStr;
-	console.log(queryStr);
+	var queryStr = sitePrefix+"?mode="+MODE_CHECK_ANSWERS+"&ans[]="+ansStr+"&seed="+seed+"&qAmt="+nQns;
+	console.log(queryStr); //to remove later
 	$.ajax({
 		url: queryStr
 	}).done(function(score) {
@@ -36,7 +38,7 @@ function submitTraining() {
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
 	//how many questions?
-	return 15;
+	return 10;
 }
 
 function init() {
@@ -82,7 +84,7 @@ function prepareQnNav(n) { //n is the number of questions
 //this function gets all the qn data, and displays the ui for qn 1
 function getQnsAndStart() {
 	$.ajax({
-		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns
+		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns+"&seed="+seed
 	}).done(function(data) {
 		data = JSON.parse(data);
 		for(var i=1; i<=nQns; i++) {
@@ -92,6 +94,7 @@ function getQnsAndStart() {
 		//switch screens
 		$('#topics-screen').fadeOut("fast");
 		$('#test-screen').fadeIn("fast");
+		$('#ans-key').hide();
 		$('#submit-test').hide();
 		
 		//show first question
@@ -109,7 +112,7 @@ function showQn(q) { //q is qn no
 	$('#qn-no').html(q+".");
 	$('#qn-text p').html(qnTextArr[q]);
 	gw.jumpToIteration(q,1);
-	showAnswerInterface(q);
+	showAnswerInterface(q, MODE);
 	if(ansArr[q]) { //if it has been answered (recall unanswered = false)
 		showRecordedAns(q);
 	}
@@ -128,6 +131,7 @@ function clearAns(q) { //q is localQnNo
 	if(ansArr[q] != false) {
 		nAnswered--;
 	}
+	$('#current-selection').html("").hide();
 	ansArr[q] = false;
 	checkComplete();
 }
@@ -141,6 +145,8 @@ function checkComplete() {
 }
 
 $(document).ready (function() {
+	
+	$('#question-nav').css("background-color", surpriseColour);
 	
 	/*-------TOPIC SELECTION-------*/
 	$('#topics-screen .topic').each(function() {
@@ -198,5 +204,26 @@ $(document).ready (function() {
 	$('#submit-test').click(function() {
 		submitTraining();
 	});
-	
+	$('#goto-answer').css("background-color", surpriseColour);
+	$('#goto-answer').hover(function() {
+		$(this).css("background-color", "black");
+	}, function() {
+		$(this).css("background-color", surpriseColour);
+	});
+	$('#goto-answer').click(function() {
+		MODE = "ANSWER";
+		$('#result-screen').fadeOut('fast');
+		$('#test-screen').fadeIn('fast');
+		$('#ans-key').show();
+		$('#undo-ans').hide();
+		$('#clear-ans').hide();
+		$('#info').hide();
+		
+		ansArr.unshift(false);
+		
+		$('#question-nav .qnno').removeClass('selected');
+		$('#question-nav .qnno').eq(0).addClass('selected');
+		qnNo = 1; //start with qn 1
+		showQn(qnNo);
+	});	
 });
