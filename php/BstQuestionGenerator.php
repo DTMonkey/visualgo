@@ -315,6 +315,39 @@
       return $correctness;
     }
 
+    protected function generateHeightQuestion($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_HEIGHT;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_FILL_BLANK;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkHeightQuestion($qObj, $userAns){
+      $bst = $qObj->internalDS;
+
+      $correctness = true;
+      if(count($userAns) > $maxAmt) $correctness = false;
+      else{
+        foreach($userAns as $value){
+          $bst->delete($value);
+        }
+        if($bst->height() != $originalHeight - 1) $correctness = false;
+      }
+
+      return $correctness;
+    }
+
     protected function generateSwapQuestion($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);

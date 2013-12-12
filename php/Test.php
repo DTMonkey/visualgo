@@ -50,9 +50,13 @@
 
     for($i = 0; $i < count($qArr);$i++){
       $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
-      if($aCorrectness[$i]) $score++;
+      if($aCorrectness[$i]){
+        $score++;
+        echo 1;
+      }
+      else echo 0;
     }
 
-    echo($score);
+    // echo($score);
   }
 ?>
