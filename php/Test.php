@@ -59,9 +59,9 @@
       $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
       if($aCorrectness[$i]){
         $score++;
-        echo 1;
+        // echo 1;
       }
-      else echo 0;
+      // else echo 0;
     }
 
     echo($score);
