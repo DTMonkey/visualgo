@@ -11,10 +11,12 @@
 
     public function insert($val){
       parent::insert($val);
-      $this->balance($this->elements[$val]);
+      return $this->balance($this->elements[$val]);
     }
 
     public function delete($val){
+      $rotationOccurred = 0;
+
       $node = $this->elements[$val];
       $noLeftChild = is_null($node->leftChild);
       $noRightChild = is_null($node->rightChild);
@@ -30,7 +32,7 @@
           else $parentNode->leftChild = NULL;
 
           $this->updateHeightUp($parentNode);
-          $this->balance($parentNode);
+          $rotationOccurred = $this->balance($parentNode);
         }
       }
 
@@ -44,7 +46,7 @@
         else $parentNode->leftChild = $rightChildNode;
 
         $this->updateHeightUp($parentNode);
-        $this->balance($parentNode);
+        $rotationOccurred = $this->balance($parentNode);
       }
 
       else if($noRightChild){
@@ -57,7 +59,7 @@
         else $parentNode->leftChild = $leftChildNode;
 
         $this->updateHeightUp($parentNode);
-        $this->balance($parentNode);
+        $rotationOccurred = $this->balance($parentNode);
       }
 
       else{
@@ -88,13 +90,16 @@
         else $parentNode->leftChild = $successorNode;
 
         $this->updateHeightUp($successorParentNode);
-        $this->balance($successorParentNode);
+        $rotationOccurred = $this->balance($successorParentNode);
       }
 
       unset($this->elements[$val]);
+      return $rotationOccurred;
     }
 
     protected function balance($node){
+      $rotationOccurred = 0;
+
       $isRoot = is_null($node->parent);
       $noLeftChild = is_null($node->leftChild);
       $noRightChild = is_null($node->rightChild);
@@ -106,6 +111,7 @@
       if(!$noRightChild) $balanceFactorRight = $this->checkBalanceFactor($node->right);
 
       if($balanceFactor == 2){
+        $rotationOccurred++;
         if($balanceFactorLeft == 1 || $balanceFactorLeft == 0){
           $this->rotateRight($node);
         }
@@ -117,6 +123,7 @@
       }
 
       else if($balanceFactor == -2){
+        $rotationOccurred++;
         if($balanceFactorRight == 1){
           $this->rotateRight($node->right);
           $this->rotateLeft($node);
@@ -126,7 +133,7 @@
         }
       }
 
-      if(!$isRoot) $this->balance($node->parent);
+      return $rotationOccurred + $isRoot? 0:$this->balance($node->parent);
     }
 
     protected function checkBalanceFactor($node){

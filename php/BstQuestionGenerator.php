@@ -26,7 +26,8 @@
         else if($i < $amt*5/8) $questions[] = $this->generateMinValueQuestion(5);
         else if($i < $amt*6/8) $questions[] = $this->generateMaxValueQuestion(5);
         else if($i < $amt*7/8) $questions[] = $this->generateSwapQuestion(5);
-        else  $questions[] = $this->generateIsAvlQuestion(5);
+        else if($i < $amt*7/8) $questions[] = $this->generateIsAvlQuestion(5);
+        else  $questions[] = $this->generateAvlRotationQuestion(5);
       }
 
       return $questions;
@@ -41,6 +42,7 @@
       else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkSwapQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkIsAvlQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION) return $this->checkAvlRotationQuestion($qObj, $userAns);
       else return false;
     }
 
@@ -377,14 +379,20 @@
     }
 
     protected function generateAvlRotationQuestion($avlSize){
-      $avl = generateAvl();
+      $avl = $this->generateAvl();
       $avl->generateRandomBst($avlSize);
+      $avlContent = $avl->getAllElements();
       $choice = array();
+
+      while(count($choice) < 5){
+        $elementsToBeInserted = mt_rand(1,99);
+        if(!in_array($elementsToBeInserted, $avlContent)) $choice[] = $elementsToBeInserted;
+      }
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_AVL_ROTATION;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_INSERTION);
       $qObj->aType = ANSWER_TYPE_MCQ;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->aParams = $choice;
@@ -397,7 +405,19 @@
     }
 
     protected function checkAvlRotationQuestion($qObj, $userAns){
+      $avl = $qObj->internalDS;
 
+      $correctness = false;
+      $rotations = 0;
+      if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
+        foreach($userAns as $val){
+          if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_INSERTION) $rotations += $avl->insert($val);
+          else $rotations += $avl->delete($val);
+        }
+        if($rotations == $qObj->qParams["rotationAmt"]) $correctness = true;
+      }
+
+      return $correctness;
     }
 
     protected function generateAvlHeightQuestion($avlSize){
