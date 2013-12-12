@@ -49,19 +49,19 @@
     // echo $qArr[0]->toJsonObject;
 
     for($i = 0; $i < count($qArr);$i++){
-      if($aArr[$i] == UNANSWERED){
+      if($aArr[$i][0] == UNANSWERED){
         $aCorrectness[$i] = false;
         continue;
       }
-      else if($aArr[$i] == NO_ANSWER){
+      else if($aArr[$i][0] == NO_ANSWER){
         $aArr[$i] = array();
       }
       $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
       if($aCorrectness[$i]){
         $score++;
-        // echo 1;
+        echo 1;
       }
-      // else echo 0;
+      else echo 0;
     }
 
     echo($score);

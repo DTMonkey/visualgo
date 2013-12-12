@@ -48,4 +48,6 @@
 
   const BST_IS_AVL_ANS_VALID = 0;
   const BST_IS_AVL_ANS_INVALID = 1;
+
+  const INFINITY = 1000000000;
 ?>
