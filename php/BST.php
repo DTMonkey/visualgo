@@ -33,13 +33,14 @@
       $graphState = array("vl" => array(), "el" => array());
 
       foreach($this->elements as $key => $value){
+        $isRoot = is_null($value->parent);
         $vertexState = array(
           "cxPercentage" => $value->cxPercentage,
           "cyPercentage" => $value->cyPercentage,
           "text" => $value->value
           );
         $graphState["vl"] += array($key => $vertexState);
-        if($this->root != $value->value){
+        if(!$isRoot){
           $edgeState = array(
             "vertexA" => $value->parent->key,
             "vertexB" => $value->key
