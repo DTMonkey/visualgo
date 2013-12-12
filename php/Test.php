@@ -56,6 +56,7 @@
       else if($aArr[$i][0] == NO_ANSWER){
         $aArr[$i] = array();
       }
+      // echo($i);
       $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
       if($aCorrectness[$i]){
         $score++;
@@ -64,6 +65,6 @@
       // else echo 0;
     }
 
-    echo($score);
+    echo $score;
   }
 ?>

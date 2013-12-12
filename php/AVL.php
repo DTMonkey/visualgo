@@ -148,7 +148,8 @@
       else if($noRightChild) $node->height = $node->leftChild->height + 1;
       else $node->height = max($node->rightChild->height, $node->leftChild->height) + 1;
 
-      return $rotationOccurred + $isRoot? 0:$this->balance($node->parent);
+      // if($rotationOccurred > 0) echo "rotationOccurred ";
+      return $rotationOccurred + ($isRoot? 0:$this->balance($node->parent));
     }
 
     protected function checkBalanceFactor($node){
@@ -161,11 +162,15 @@
 
       if(!$noRightChild){
         $rightChildHeight = $node->rightChild->height;
+        // echo $node->rightChild->value." ";
       }
       if(!$noLeftChild){
         $leftChildHeight = $node->leftChild->height;
       }
       // echo $node->value." ".$leftChildHeight." ".$rightChildHeight.",";
+      // if($node->value == 46 && $node->rightChild->value == 85){
+        // echo $node->rightChild->height." ".$node->rightChild->leftChild->height." ".$node->rightChild->rightChild->height;
+      // }
       return $leftChildHeight-$rightChildHeight;
     }
 

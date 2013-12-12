@@ -439,8 +439,10 @@
       $rotations = 0;
       if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
         foreach($userAns as $val){
+          // echo $val." ";
           $rotations += $avl->insert($val);
         }
+        // echo $rotations;
         if($rotations == $qObj->qParams["rotationAmt"]) $correctness = true;
       }
 
@@ -475,7 +477,7 @@
 
     protected function checkAvlRotationDeleteQuestion($qObj, $userAns){
       $avl = $qObj->internalDS;
-
+      echo "aaa";
       $correctness = false;
       $rotations = 0;
       if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
