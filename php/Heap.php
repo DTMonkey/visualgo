@@ -7,6 +7,51 @@
       $this->heapArr[] = INFINITY;
     }
 
+    public function seedRng($seed){
+      mt_srand($seed);
+    }
+
+    public function buildRandomHeap($amt){
+      $values = array();
+
+      for($i = 0; $i < $amt; $i++){
+        $newElement = mt_rand(1,99);
+        if(!in_array($newElement, $values){
+          $values[] = $newElement;
+        }
+        else $i--;
+      }
+
+      $this->heapify($values);
+    }
+
+    public function buildUnshiftedHeap($amt){
+      $values = array();
+
+      for($i = 0; $i < $amt; $i++){
+        $newElement = mt_rand(1,99);
+        if(!in_array($newElement, $values){
+          $values[] = $newElement;
+        }
+        else $i--;
+      }
+    }
+
+    public function heapify($arr){
+      $this->heapArr = array_merge($this->heapArr, $arr);
+
+      $shiftedDown = array();
+
+      for($i = count($this->heapArr)-1; $i >= 1; $i--){
+        $value = $this->heapArr[$i];
+        $shiftDownSequence = array();
+        $this->shiftDown($i);
+        if(count($shiftDownSequence)>0) $shiftedDown[] = $value;
+      }
+
+      return $shiftedDown;
+    }
+
     public function toGraphState(){
       $graphState = array("vl" => array(), "el" => array());
 
@@ -52,17 +97,20 @@
     }
 
     public function insert($val){
+      $shiftUpSequence = array();
       if(in_array($val, $this->heapArr)) return;
       $this->heapArr[] = $val;
-      $this->shiftUp(count($this->heapArr) - 1);
+      $this->shiftUp(count($this->heapArr) - 1, $shiftUpSequence);
+      return $shiftUpSequence;
     }
 
     public function extractMax(){
+      $shiftDownSequence = array();
       $maxValue = $this->heapArr[1];
       $this->heapArr[1] = $this->heapArr[count($this->heapArr)-1];
       unset($this->heapArr[count($this->heapArr)-1];
       $this->shiftDown(1);
-      return $maxValue;
+      return $shiftDownSequence;
     }
 
     public function heapSort(){
@@ -75,29 +123,37 @@
       return count($this->heapArr) - 1;
     }
 
-    protected function shiftUp($i){
+    protected function shiftUp($i, &$shiftUpSequence){
       if($this->heapArr[$i] > $this->heapArr[$this->parent($i)]){
+        $shiftUpSequence[] = $$this->heapArr[$this->parent($i)];
         $temp = $this->heapArr[$i];
         $this->heapArr[$i] = $this->heapArr[$this->parent($i)];
         $this->heapArr[$this->parent($i)] = $temp;
-        $this->shiftUp($this->parent($i));
+        $this->shiftUp($this->parent($i), $shiftUpSequence);
       }
     }
 
-    protected function shiftDown($i){
+    protected function shiftDown($i, &$shiftDownSequence){
+      $leftChild = -1;
+      $rightChild = -1;
+
+      if($this->left($i) > count($this->heapArr)-1) return;
+
       $leftChild = $this->heapArr[$this->left($i)];
-      $rightChild = $this->heapArr[$this->right($i)];
+      if($this->right($i) > count($this->heapArr)-1) $rightChild = $this->heapArr[$this->right($i)];
       if($this->heapArr[$i] < max($leftChild, $rightChild)){
         $temp = $this->heapArr[$i];
         if($leftChild > $rightChild){
+          $shiftDownSequence[] = $this->heapArr[$this->left($i)];
           $this->heapArr[$i] = $this->heapArr[$this->left($i)];
           $this->heapArr[$this->left($i)] = $temp;
-          $this->shiftDown($this->left($i));
+          $this->shiftDown($this->left($i), $shiftDownSequence);
         }
-        else{
+        else if($rightChild != -1){
+          $shiftDownSequence[] = $this->heapArr[$this->right($i)];
           $this->heapArr[$i] = $this->heapArr[$this->right($i)];
           $this->heapArr[$this->right($i)] = $temp;
-          $this->shiftDown($this->right($i));
+          $this->shiftDown($this->right($i), $shiftDownSequence);
         }
         
       }
