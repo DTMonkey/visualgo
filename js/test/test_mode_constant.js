@@ -16,6 +16,8 @@ const QUESTION_TYPE_MAX_VALUE = "MaxVal";
 const QUESTION_TYPE_DELETION = "Deletion";
 const QUESTION_TYPE_SWAP = "Swap";
 const QUESTION_TYPE_IS_AVL = "isAvl";
+const QUESTION_TYPE_AVL_ROTATION = "avlRotation";
+const QUESTION_TYPE_AVL_HEIGHT = "avlHeight";
 
 const QUESTION_SUB_TYPE_NONE = "";
 const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";

@@ -51,6 +51,13 @@
       return $bst;
     }
 
+    protected function generateAvl(){
+      $avl = new AVL();
+      $seed = mt_rand();
+      $avl->seedRng($seed);
+      return $avl;
+    }
+
     protected function generateSearchSequenceQuestion($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
@@ -367,6 +374,38 @@
       else if(!($bst->isAvl()) && $userAns[0] == BST_IS_AVL_ANS_INVALID) $correctness = true;
 
       return $correctness;
+    }
+
+    protected function generateAvlRotationQuestion($avlSize){
+      $avl = generateAvl();
+      $avl->generateRandomBst($avlSize);
+      $choice = array();
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_AVL_ROTATION;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_MCQ;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->aParams = $choice;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $avl->toGraphState();
+      $qObj->internalDS = $avl;
+
+      return $qObj;
+    }
+
+    protected function checkAvlRotationQuestion($qObj, $userAns){
+
+    }
+
+    protected function generateAvlHeightQuestion($avlSize){
+
+    }
+
+    protected function checkAvlHeightQuestion($qObj, $userAns){
+
     }
   }
 ?>

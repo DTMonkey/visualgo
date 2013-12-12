@@ -1,4 +1,5 @@
 <?php
+  // AVL doesn't implement generateLinkedListBst; change from inheritence to interface
   class AVL extends BST{
     public function __construct() {
       parent::__construct();

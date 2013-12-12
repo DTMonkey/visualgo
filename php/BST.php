@@ -82,7 +82,30 @@
     }
 
     public function generateRandomUniformBst($amt){
+      $insertionSequence = array();
+      $tempInsertionSequence = array();
 
+      for($i = 0; $i < $amt; $i++){
+        $newElement = mt_rand(1,99);
+        if(!array_key_exists($newElement, $tempInsertionSequence)){
+          $tempInsertionSequence[$newElement] = true;
+        }
+        else $i--;
+      }
+
+      $temp = array_keys($tempInsertionSequence);
+      sort($temp);
+
+      for($i = count($temp)/2; $i >= 0; $i--){
+        $this->insert($temp[$i]);
+        $insertionSequence[] = $temp[$i];
+        if(($i != count($temp) - $i) && $i != 0){
+          $this->insert($temp[count($temp) - $i]);
+          $insertionSequence[] = $temp[count($temp) - $i];
+        }
+      }
+
+      return $insertionSequence;
     }
 
     public function generateLinkedListBst($amt, $direction){
