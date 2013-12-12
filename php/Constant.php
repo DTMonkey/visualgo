@@ -36,6 +36,9 @@
   const MODE_GENERATE_QUESTIONS = 1;
   const MODE_CHECK_ANSWERS = 2;
 
+  const UNANSWERED = "unanswered";
+  const NO_ANSWER = "noAnswer";
+
   // Keep inside PHP
   const BST_LINKED_LIST_ASCENDING = true;
   const BST_LINKED_LIST_DESCENDING = false;

@@ -19,16 +19,17 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/10) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/10) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/10) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else if($i < $amt*4/10) $questions[] = $this->generatePredecessorSequenceQuestion(5);
-        else if($i < $amt*5/10) $questions[] = $this->generateMinValueQuestion(5);
-        else if($i < $amt*6/10) $questions[] = $this->generateMaxValueQuestion(5);
-        else if($i < $amt*7/10) $questions[] = $this->generateSwapQuestion(5);
-        else if($i < $amt*8/10) $questions[] = $this->generateIsAvlQuestion(5);
-        else if($i < $amt*9/10) $questions[] = $this->generateAvlRotationInsertQuestion(5);
-        else  $questions[] = $this->generateAvlRotationDeleteQuestion(5);
+        if($i < $amt/11) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/11) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/11) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else if($i < $amt*4/11) $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        else if($i < $amt*5/11) $questions[] = $this->generateMinValueQuestion(5);
+        else if($i < $amt*6/11) $questions[] = $this->generateMaxValueQuestion(5);
+        else if($i < $amt*7/11) $questions[] = $this->generateSwapQuestion(5);
+        else if($i < $amt*8/11) $questions[] = $this->generateIsAvlQuestion(5);
+        else if($i < $amt*9/11) $questions[] = $this->generateAvlRotationInsertQuestion(5);
+        else if($i < $amt*10/11) $questions[] = $this->generateAvlRotationDeleteQuestion(5);
+        else  $questions[] = $this->generateHeightQuestion(5);
       }
 
       return $questions;
@@ -43,6 +44,7 @@
       else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkSwapQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkIsAvlQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkHeightQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAvlRotationInsertQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAvlRotationDeleteQuestion($qObj, $userAns);
       else return false;
@@ -323,10 +325,10 @@
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_HEIGHT;
       $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
-      $qObj->aType = ANSWER_TYPE_FILL_BLANK;
-      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->aType = ANSWER_TYPE_FILL_BLANKS;
+      $qObj->aAmt = ANSWER_AMT_ONE;
       $qObj->ordered = false;
-      $qObj->allowNoAnswer = true;
+      $qObj->allowNoAnswer = false;
       $qObj->graphState = $bst->toGraphState();
       $qObj->internalDS = $bst;
 
@@ -336,16 +338,7 @@
     protected function checkHeightQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
 
-      $correctness = true;
-      if(count($userAns) > $maxAmt) $correctness = false;
-      else{
-        foreach($userAns as $value){
-          $bst->delete($value);
-        }
-        if($bst->height() != $originalHeight - 1) $correctness = false;
-      }
-
-      return $correctness;
+      return $bst->getHeight() == $userAns[0];
     }
 
     protected function generateSwapQuestion($bstSize){
