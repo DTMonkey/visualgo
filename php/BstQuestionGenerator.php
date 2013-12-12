@@ -386,7 +386,7 @@
 
       while(count($choice) < 5){
         $elementsToBeInserted = mt_rand(1,99);
-        if(!in_array($elementsToBeInserted, $avlContent)) $choice[] = $elementsToBeInserted;
+        if(!in_array($elementsToBeInserted, $avlContent)) $choice[$elementsToBeInserted] = $elementsToBeInserted;
       }
 
       $qObj = new QuestionObject();

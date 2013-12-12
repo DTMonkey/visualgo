@@ -467,6 +467,23 @@
       $node->height = max($leftChildHeight,$rightChildHeight) + 1;
       if($isRoot) $this->height = $node->height;
     }
+
+    protected function updateCoordinate(){
+      $this->updateCoordinateRec($this->elements[$this->root], 50, 10, 25);
+    }
+
+    protected function updateCoordinateRec($node, $cxPercentage, $cyPercentage, $cxDifferencePercent){
+      $noLeftChild = is_null($node->leftChild);
+      $noRightChild = is_null($node->rightChild);
+
+      // echo $node->value." ".$cxPercentage." ".$cyPercentage.",";
+
+      $node->cxPercentage = $cxPercentage;
+      $node->cyPercentage = $cyPercentage;
+
+      if(!$noLeftChild) $this->updateCoordinateRec($node->leftChild, $cxPercentage - $cxDifferencePercent, $cyPercentage + 10, $cxDifferencePercent/2);
+      if(!$noRightChild) $this->updateCoordinateRec($node->rightChild, $cxPercentage + $cxDifferencePercent, $cyPercentage + 10, $cxDifferencePercent/2);
+    }
   }
 
   class BSTNode{

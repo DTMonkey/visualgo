@@ -11,7 +11,9 @@
 
     public function insert($val){
       parent::insert($val);
-      return $this->balance($this->elements[$val]);
+      $rotationAmt = $this->balance($this->elements[$val]);
+      $this->updateCoordinate();
+      return $rotationAmt;
     }
 
     public function delete($val){
@@ -94,6 +96,7 @@
       }
 
       unset($this->elements[$val]);
+      $this->updateCoordinate();
       return $rotationOccurred;
     }
 
@@ -107,31 +110,43 @@
       $balanceFactor = $this->checkBalanceFactor($node);
       $balanceFactorLeft = 0;
       $balanceFactorRight = 0;
-      if(!$noLeftChild) $balanceFactorLeft = $this->checkBalanceFactor($node->left);
-      if(!$noRightChild) $balanceFactorRight = $this->checkBalanceFactor($node->right);
+      if(!$noLeftChild) $balanceFactorLeft = $this->checkBalanceFactor($node->leftChild);
+      if(!$noRightChild) $balanceFactorRight = $this->checkBalanceFactor($node->rightChild);
 
       if($balanceFactor == 2){
+        // echo("rotation2 ".$node->value." ".$balanceFactor." ".$balanceFactorLeft." ");
         $rotationOccurred++;
         if($balanceFactorLeft == 1 || $balanceFactorLeft == 0){
           $this->rotateRight($node);
         }
 
         else if($balanceFactorLeft == -1){
-          $this->rotateLeft($node->left);
+          $this->rotateLeft($node->leftChild);
           $this->rotateRight($node);
         }
       }
 
       else if($balanceFactor == -2){
+        // echo("rotation-2 ".$node->value." ".$balanceFactor." ".$balanceFactorRight." ");
         $rotationOccurred++;
         if($balanceFactorRight == 1){
-          $this->rotateRight($node->right);
+          $this->rotateRight($node->rightChild);
           $this->rotateLeft($node);
         }
         else if($balanceFactorRight == 0 || $balanceFactorRight == -1){
           $this->rotateLeft($node);
         }
       }
+
+      $noLeftChild = is_null($node->leftChild);
+      $noRightChild = is_null($node->rightChild);
+
+      if($noLeftChild && $noRightChild){
+        $node->height = 0;
+      }
+      else if($noLeftChild) $node->height = $node->rightChild->height + 1;
+      else if($noRightChild) $node->height = $node->leftChild->height + 1;
+      else $node->height = max($node->rightChild->height, $node->leftChild->height) + 1;
 
       return $rotationOccurred + $isRoot? 0:$this->balance($node->parent);
     }
@@ -141,7 +156,7 @@
       $noLeftChild = is_null($node->leftChild);
       $noRightChild = is_null($node->rightChild);
 
-      $leftCildHeight = -1;
+      $leftChildHeight = -1;
       $rightChildHeight = -1;
 
       if(!$noRightChild){
@@ -150,40 +165,50 @@
       if(!$noLeftChild){
         $leftChildHeight = $node->leftChild->height;
       }
-
+      // echo $node->value." ".$leftChildHeight." ".$rightChildHeight.",";
       return $leftChildHeight-$rightChildHeight;
     }
 
     protected function rotateLeft($node){
+      $isRoot = is_null($node->parent);
+
       $rightChildNode = $node->rightChild;
       $parentNode = $node->parent;
       $rightChildLeftNode = $rightChildNode->leftChild;
 
       $rightChildNode->parent = $parentNode;
-      if($rightChildNode->value > $parentNode->value){
-        $parentNode->rightChild = $rightChildNode;
+      if(!$isRoot){
+        if($rightChildNode->value > $parentNode->value){
+          $parentNode->rightChild = $rightChildNode;
+        }
+        else $parentNode->leftChild = $rightChildNode;
       }
-      else $parentNode->leftChild = $rightChildNode;
       $node->parent = $rightChildNode;
       $node->rightChild = $rightChildLeftNode;
       if(!is_null($rightChildLeftNode)) $rightChildLeftNode->parent = $node;
       $rightChildNode->leftChild = $node;
+      if($isRoot) $this->root = $rightChildNode->value;
     }
 
     protected function rotateRight($node){
+      $isRoot = is_null($node->parent);
+
       $leftChildNode = $node->leftChild;
       $parentNode = $node->parent;
       $leftChildRightNode = $leftChildNode->rightChild;
 
       $leftChildNode->parent = $parentNode;
-      if($leftChildNode->value > $parentNode->value){
-        $parentNode->rightChild = $leftChildNode;
+      if(!$isRoot){
+        if($leftChildNode->value > $parentNode->value){
+          $parentNode->rightChild = $leftChildNode;
+        }
+        else $parentNode->leftChild = $leftChildNode;
       }
-      else $parentNode->leftChild = $leftChildNode;
       $node->parent = $leftChildNode;
       $node->leftChild = $leftChildRightNode;
       if(!is_null($leftChildRightNode)) $leftChildRightNode->parent = $node;
       $leftChildNode->rightChild = $node;
+      if($isRoot) $this->root = $leftChildNode->value;
     }
   }
 ?>
