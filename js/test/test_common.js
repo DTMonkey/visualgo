@@ -109,11 +109,10 @@ $(document).ready (function() {
 		if(currAns.length <= 1) {
 			$('#question-nav .qnno').eq(qnNo-1).removeClass('answered');
 			clearAns(qnNo);
-			gw.jumpToIteration(qnNo,1);
+			showRecordedAns(qnNo);
 		} else {
 			currAns.pop();
 			setAns(qnNo, currAns);
-			gw.jumpToIteration(qnNo,1);
 			showRecordedAns(qnNo);
 		}
 		printCurrentSelection(qnNo);
@@ -122,7 +121,7 @@ $(document).ready (function() {
 	$('#clear-ans').click(function() {
 		$('#question-nav .qnno').eq(qnNo-1).removeClass('answered');
 		clearAns(qnNo);
-		gw.jumpToIteration(qnNo,1);
+		showRecordedAns(qnNo);
 		printCurrentSelection(qnNo);
 	});
 

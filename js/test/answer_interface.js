@@ -30,7 +30,6 @@ function showAnswerInterface(q, mode) {
 					setAns(q,vNo);
 					
 					//highlight as answered
-					gw.jumpToIteration(q,1);
 					showRecordedAns(q);
 				});
 				break;
@@ -51,7 +50,6 @@ function showAnswerInterface(q, mode) {
 					setAns(q,[vertexA, vertexB]);
 					
 					//highlight as answered
-					gw.jumpToIteration(q,1);
 					showRecordedAns(q);
 				});
 				break;
@@ -61,7 +59,7 @@ function showAnswerInterface(q, mode) {
 				$('#undo-ans').show(); $('#clear-ans').show();
 				
 				$('#vertexText text, #vertex circle').click( function() {
-					var vertexList = ansArr[q]; if(vertexList==false) vertexList=new Array();
+					var vertexList = ansArr[q]; if(vertexList==UNANSWERED) vertexList=new Array();
 					var vertexClass = $(this).attr('class');
 					
 					//find vertex number
@@ -73,7 +71,6 @@ function showAnswerInterface(q, mode) {
 					if(vertexList.indexOf(vNo) == -1) {
 						vertexList.push(vNo);
 						setAns(q,vertexList);
-						printCurrentSelection(q);
 					}
 					
 					//highlight as answered
@@ -87,7 +84,7 @@ function showAnswerInterface(q, mode) {
 				
 				$('#edge path').click( function() {
 					var edgeID = $(this).attr('id');
-					var edgeList = ansArr[q]; if(edgeList==false) edgeList=new Array();
+					var edgeList = ansArr[q]; if(edgeList==UNANSWERED) edgeList=new Array();
 					
 					//find vertices it joins
 					var edgeIDNo = parseInt(edgeID.substr(1));
@@ -100,7 +97,6 @@ function showAnswerInterface(q, mode) {
 					if(!containsEdge(edgeList, newEdge)) {
 						edgeList.push(newEdge);
 						setAns(q,edgeList);
-						printCurrentSelection(q);
 					}
 					
 					//highlight as answered
@@ -154,7 +150,6 @@ function showAnswerInterface(q, mode) {
 					}
 					
 					//highlight as answered
-					$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
 					showRecordedAns(q);
 				});
 				break;
@@ -166,21 +161,27 @@ function showAnswerInterface(q, mode) {
 					$("#subset").append('<span class="faux-v">'+qnParamsArr[q][i][0]+'</span>');
 				}
 				$('#subset .faux-v').css('cursor','pointer');
+				$('#undo-ans').show(); $('#clear-ans').show();
 				
 				//record answer
 				$('#subset .faux-v').click(function() {
+					var vertexList = ansArr[q]; if(vertexList==UNANSWERED) vertexList=new Array();
 					//mark as answered
 					$('#question-nav .qnno').eq(q-1).addClass('answered');
 					
 					var optionText = $(this).html();
+					var optionVal;
 					for(var i=0; i<qnParamsArr[q].length; i++) {
 						if(qnParamsArr[q][i][0] == optionText) {
-							setAns(q,qnParamsArr[q][i][1]);
+							optionVal = qnParamsArr[q][i][1];
 						}
+					}
+					if(vertexList.indexOf(optionVal) == -1) {
+						vertexList.push(optionVal);
+						setAns(q,vertexList);
 					}
 					
 					//highlight as answered
-					$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
 					showRecordedAns(q);
 				});
 				break;
@@ -212,6 +213,7 @@ function showRecordedAns(q) {
 	//alert(ans);
 	switch(qnTypeArr[q]) {
 		case INTERFACE_SINGLE_V: //single vertex
+			gw.jumpToIteration(qnNo,1);
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<verticesToHighlight.length; i++) {
@@ -221,6 +223,7 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_SINGLE_E: //single edge
+			gw.jumpToIteration(qnNo,1);
 			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<edgesToHighlight.length; i++) {
@@ -230,6 +233,7 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_MULT_V: //multiple vertices
+			gw.jumpToIteration(qnNo,1);
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<verticesToHighlight.length; i++) {
@@ -240,6 +244,7 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_MULT_E: //multiple edges
+			gw.jumpToIteration(qnNo,1);
 			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<edgesToHighlight.length; i++) {
@@ -265,11 +270,13 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_SUBSET_SINGLE:
+			$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
 			var optionVal = parseInt(ans);
 			var optionText = "";
 			for(var i=0; i<qnParamsArr[q].length; i++) {
 				if(qnParamsArr[q][i][1] == optionVal) {
 					optionText = qnParamsArr[q][i][0];
+					break;
 				}
 			}
 			$('#subset .faux-v').each(function() {
@@ -280,18 +287,24 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_SUBSET_MULT:
-			var optionVal = parseInt(ans);
-			var optionText = "";
-			for(var i=0; i<qnParamsArr[q].length; i++) {
-				if(qnParamsArr[q][i][1] == optionVal) {
-					optionText = qnParamsArr[q][i][0];
+			$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
+			var fauxVToHighlight = ans.split(",");
+			for(var i=0; i<fauxVToHighlight.length; i++) {
+				var optionVal = fauxVToHighlight[i];
+				var optionText = "";
+				for(var j=0; j<qnParamsArr[q].length; j++) {
+					if(qnParamsArr[q][j][1] == optionVal) {
+						optionText = qnParamsArr[q][j][0];
+						break;
+					}
 				}
+				$('#subset .faux-v').each(function() {
+					if($(this).html()== optionText) {
+						$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
+					}
+				});
 			}
-			$('#subset .faux-v').each(function() {
-				if($(this).html()== optionText) {
-					$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
-				}
-			});
+			printCurrentSelection(q);
 			break;
 			
 		default: //nothing
@@ -304,10 +317,11 @@ function printCurrentSelection(q) {
 		$('#current-selection').html("").hide();
 	} else {
 		switch(qnTypeArr[q]) {
-			case 3:
+			case INTERFACE_MULT_V:
+			case INTERFACE_SUBSET_MULT:
 				$('#current-selection').html("Your answer is: &nbsp;&nbsp;<strong>"+thisList.join(" , ")+"</strong>").show();
 				break;
-			case 4:
+			case INTERFACE_MULT_E:
 				var temp ="";
 				for(var i=0; i<thisList.length; i++) {
 					temp += "( "+thisList[i][0]+" , "+thisList[i][1]+" ) , ";
