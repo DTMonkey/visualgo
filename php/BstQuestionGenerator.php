@@ -19,15 +19,16 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/8) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/8) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/8) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else if($i < $amt*4/8) $questions[] = $this->generatePredecessorSequenceQuestion(5);
-        else if($i < $amt*5/8) $questions[] = $this->generateMinValueQuestion(5);
-        else if($i < $amt*6/8) $questions[] = $this->generateMaxValueQuestion(5);
-        else if($i < $amt*7/8) $questions[] = $this->generateSwapQuestion(5);
-        else if($i < $amt*7/8) $questions[] = $this->generateIsAvlQuestion(5);
-        else  $questions[] = $this->generateAvlRotationQuestion(5);
+        if($i < $amt/10) $questions[] = $this->generateSearchSequenceQuestion(5);
+        else if($i < $amt*2/10) $questions[] = $this->generateTraversalSequenceQuestion(5);
+        else if($i < $amt*3/10) $questions[] = $this->generateSuccessorSequenceQuestion(5);
+        else if($i < $amt*4/10) $questions[] = $this->generatePredecessorSequenceQuestion(5);
+        else if($i < $amt*5/10) $questions[] = $this->generateMinValueQuestion(5);
+        else if($i < $amt*6/10) $questions[] = $this->generateMaxValueQuestion(5);
+        else if($i < $amt*7/10) $questions[] = $this->generateSwapQuestion(5);
+        else if($i < $amt*8/10) $questions[] = $this->generateIsAvlQuestion(5);
+        else if($i < $amt*9/10) $questions[] = $this->generateAvlRotationInsertQuestion(5);
+        else  $questions[] = $this->generateAvlRotationDeleteQuestion(5);
       }
 
       return $questions;
@@ -42,7 +43,8 @@
       else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkSwapQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkIsAvlQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION) return $this->checkAvlRotationQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAvlRotationInsertQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAvlRotationDeleteQuestion($qObj, $userAns);
       else return false;
     }
 
@@ -378,7 +380,7 @@
       return $correctness;
     }
 
-    protected function generateAvlRotationQuestion($avlSize){
+    protected function generateAvlRotationInsertQuestion($avlSize){
       $avl = $this->generateAvl();
       $avl->generateRandomBst($avlSize);
       $avlContent = $avl->getAllElements();
@@ -391,9 +393,9 @@
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
-      $qObj->qType = QUESTION_TYPE_AVL_ROTATION;
-      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_INSERTION);
-      $qObj->aType = ANSWER_TYPE_MCQ;
+      $qObj->qType = QUESTION_TYPE_AVL_ROTATION_INSERT;
+      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX_MCQ;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->aParams = $choice;
       $qObj->ordered = true;
@@ -404,15 +406,55 @@
       return $qObj;
     }
 
-    protected function checkAvlRotationQuestion($qObj, $userAns){
+    protected function checkAvlRotationInsertQuestion($qObj, $userAns){
       $avl = $qObj->internalDS;
 
       $correctness = false;
       $rotations = 0;
       if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
         foreach($userAns as $val){
-          if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_INSERTION) $rotations += $avl->insert($val);
-          else $rotations += $avl->delete($val);
+          $rotations += $avl->insert($val);
+        }
+        if($rotations == $qObj->qParams["rotationAmt"]) $correctness = true;
+      }
+
+      return $correctness;
+    }
+
+    protected function generateAvlRotationDeleteQuestion($avlSize){
+      $avl = $this->generateAvl();
+      $avl->generateRandomBst($avlSize);
+      $avlContent = $avl->getAllElements();
+      $choice = array();
+
+      while(count($choice) < 5){
+        $elementsToBeInserted = mt_rand(1,99);
+        if(!in_array($elementsToBeInserted, $avlContent)) $choice[$elementsToBeInserted] = $elementsToBeInserted;
+      }
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_AVL_ROTATION_DELETE;
+      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->aParams = $choice;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $avl->toGraphState();
+      $qObj->internalDS = $avl;
+
+      return $qObj;
+    }
+
+    protected function checkAvlRotationDeleteQuestion($qObj, $userAns){
+      $avl = $qObj->internalDS;
+
+      $correctness = false;
+      $rotations = 0;
+      if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
+        foreach($userAns as $val){
+          $rotations += $avl->delete($val);
         }
         if($rotations == $qObj->qParams["rotationAmt"]) $correctness = true;
       }

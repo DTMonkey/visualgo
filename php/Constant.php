@@ -12,7 +12,8 @@
   const QUESTION_TYPE_DELETION = "Deletion";
   const QUESTION_TYPE_SWAP = "Swap";
   const QUESTION_TYPE_IS_AVL = "isAvl";
-  const QUESTION_TYPE_AVL_ROTATION = "avlRotation";
+  const QUESTION_TYPE_AVL_ROTATION_INSERT = "avlRotationInsert";
+  const QUESTION_TYPE_AVL_ROTATION_DELETE = "avlRotationDelete";
   const QUESTION_TYPE_AVL_HEIGHT = "avlHeight";
 
   const QUESTION_SUB_TYPE_NONE = "";
@@ -23,6 +24,7 @@
   const QUESTION_SUB_TYPE_DELETION = "delete";
 
   const ANSWER_TYPE_VERTEX = "vertex";
+  const ANSWER_TYPE_VERTEX_MCQ = "vertexMcq";
   const ANSWER_TYPE_MCQ = "mcq";
 
   const ANSWER_AMT_ONE = 1;

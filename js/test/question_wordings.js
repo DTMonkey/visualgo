@@ -7,5 +7,6 @@ const BST_MAX = "What is the value of the maximum element in this BST?";
 const BST_DELETION = "Given the normal BST (not AVL) as shown in the picture, delete at most |maxAmt| vertices such that the height of the BST decreases by 1!";
 const BST_SWAP = "Is the graph in the picture a valid BST?";
 const BST_IS_AVL = "Is the graph in the picture a valid AVL?";
-const BST_AVL_ROTATION = "Given the AVL as shown in the picture, |subtype| at least |limitBtm| vertices and at most |limitTop| vertices such that |rotationAmt| rotations occur!";
+const BST_AVL_ROTATION_INSERT = "Given the AVL as shown in the picture, insert at least |limitBtm| vertices and at most |limitTop| vertices such that |rotationAmt| rotations occur!";
+const BST_AVL_ROTATION_DELETE = "Given the AVL as shown in the picture, delete at least |limitBtm| vertices and at most |limitTop| vertices such that |rotationAmt| rotations occur!";
 const BST_AVL_HEIGHT = "";
