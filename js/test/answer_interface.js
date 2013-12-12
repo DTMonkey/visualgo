@@ -1,12 +1,21 @@
+const INTERFACE_SINGLE_V = 1;
+const INTERFACE_SINGLE_E = 2;
+const INTERFACE_MULT_V = 3;
+const INTERFACE_MULT_E = 4;
+const INTERFACE_MCQ = 5;
+const INTERFACE_SUBSET_SINGLE = 6;
+const INTERFACE_SUBSET_MULT = 7;
+
 function showAnswerInterface(q, mode) {
+	//reset all unclickable
+	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
+	$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
+	$('#subset').html("").hide(); $('#subset .faux-v').unbind('click').css('cursor','auto');
+	$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
+	
 	if(mode == "TRAINING") {
-		//reset all unclickable
-		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
-		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
-		$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
-		
 		switch(qnTypeArr[q]) {
-			case 1: //single vertex
+			case INTERFACE_SINGLE_V:
 				$('#vertexText text, #vertex circle').css('cursor','pointer');
 			
 				$('#vertexText text, #vertex circle').click( function() {
@@ -26,7 +35,7 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
-			case 2: //single edge
+			case INTERFACE_SINGLE_E:
 				$('#edge path').css('cursor','pointer');
 			
 				$('#edge path').click( function() {
@@ -47,7 +56,7 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
-			case 3: //multiple vertices
+			case INTERFACE_MULT_V:
 				$('#vertexText text, #vertex circle').css('cursor','pointer');
 				$('#undo-ans').show(); $('#clear-ans').show();
 				
@@ -72,7 +81,7 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 			
-			case 4: //multiple edges
+			case INTERFACE_MULT_E:
 				$('#edge path').css('cursor','pointer');
 				$('#undo-ans').show(); $('#clear-ans').show();
 				
@@ -99,7 +108,7 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
-			case 5: //MCQ			
+			case INTERFACE_MCQ:	
 				//display mcq options
 				$('#mcq').show();
 				for(var i=0; i<qnParamsArr[q].length; i++) {
@@ -124,23 +133,75 @@ function showAnswerInterface(q, mode) {
 					showRecordedAns(q);
 				});
 				break;
+			
+			case INTERFACE_SUBSET_SINGLE:
+				$('#subset').show();
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					$("#subset").append('<span class="faux-v">'+qnParamsArr[q][i][0]+'</span>');
+				}
+				$('#subset .faux-v').css('cursor','pointer');
+				
+				//record answer
+				$('#subset .faux-v').click(function() {
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					
+					var optionText = $(this).html();
+					for(var i=0; i<qnParamsArr[q].length; i++) {
+						if(qnParamsArr[q][i][0] == optionText) {
+							setAns(q,qnParamsArr[q][i][1]);
+						}
+					}
+					
+					//highlight as answered
+					$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
+					showRecordedAns(q);
+				});
+				break;
+				
+			case INTERFACE_SUBSET_MULT:
+				//display options
+				$('#subset').show();
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					$("#subset").append('<span class="faux-v">'+qnParamsArr[q][i][0]+'</span>');
+				}
+				$('#subset .faux-v').css('cursor','pointer');
+				
+				//record answer
+				$('#subset .faux-v').click(function() {
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					
+					var optionText = $(this).html();
+					for(var i=0; i<qnParamsArr[q].length; i++) {
+						if(qnParamsArr[q][i][0] == optionText) {
+							setAns(q,qnParamsArr[q][i][1]);
+						}
+					}
+					
+					//highlight as answered
+					$('#subset .faux-v').css('background', '#eee').css('color', 'black').css('border', '3px solid black');
+					showRecordedAns(q);
+				});
+				break;
 				
 			default: //none
 		}
 	} else if(mode=="ANSWER") {
-		//reset all unclickable
-		$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
-		$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
-		$('#current-selection').html("").hide();
-		
 		gw.jumpToIteration(q,1);
 		switch(qnTypeArr[q]) {
-			case 5: //MCQ
+			case INTERFACE_MCQ:
 				$('#mcq').show();
 				for(var i=0; i<qnParamsArr[q].length; i++) {
 					$("#mcq").append('<div class="mcq-option"><span class="box"></span><span class="option">'+qnParamsArr[q][i][0]+'</span></div>');
 				}
 				break;
+			case INTERFACE_SUBSET_SINGLE:
+			case INTERFACE_SUBSET_MULT:
+				$('#subset').show();
+				for(var i=0; i<qnParamsArr[q].length; i++) {
+					$("#subset").append('<span class="faux-v">'+qnParamsArr[q][i][0]+'</span>');
+				}
 		}
 		showRecordedAns(q);
 	}
@@ -150,7 +211,7 @@ function showRecordedAns(q) {
 	var ans = ansArr[q].toString();
 	//alert(ans);
 	switch(qnTypeArr[q]) {
-		case 1: //single vertex
+		case INTERFACE_SINGLE_V: //single vertex
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<verticesToHighlight.length; i++) {
@@ -159,7 +220,7 @@ function showRecordedAns(q) {
 			}, 50);
 			break;
 			
-		case 2: //single edge
+		case INTERFACE_SINGLE_E: //single edge
 			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<edgesToHighlight.length; i++) {
@@ -168,7 +229,7 @@ function showRecordedAns(q) {
 			}, 50);
 			break;
 			
-		case 3: //multiple vertices
+		case INTERFACE_MULT_V: //multiple vertices
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<verticesToHighlight.length; i++) {
@@ -178,7 +239,7 @@ function showRecordedAns(q) {
 			printCurrentSelection(q);
 			break;
 			
-		case 4: //multiple edges
+		case INTERFACE_MULT_E: //multiple edges
 			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<edgesToHighlight.length; i++) {
@@ -188,7 +249,7 @@ function showRecordedAns(q) {
 			printCurrentSelection(q);
 			break;
 			
-		case 5: //MCQ
+		case INTERFACE_MCQ: //MCQ
 			var optionVal = parseInt(ans);
 			var optionText = "";
 			for(var i=0; i<qnParamsArr[q].length; i++) {
@@ -199,6 +260,36 @@ function showRecordedAns(q) {
 			$('.mcq-option .option').each(function() {
 				if($(this).html()== optionText) {
 					$(this).prev().css('background', surpriseColour);
+				}
+			});
+			break;
+			
+		case INTERFACE_SUBSET_SINGLE:
+			var optionVal = parseInt(ans);
+			var optionText = "";
+			for(var i=0; i<qnParamsArr[q].length; i++) {
+				if(qnParamsArr[q][i][1] == optionVal) {
+					optionText = qnParamsArr[q][i][0];
+				}
+			}
+			$('#subset .faux-v').each(function() {
+				if($(this).html()== optionText) {
+					$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
+				}
+			});
+			break;
+			
+		case INTERFACE_SUBSET_MULT:
+			var optionVal = parseInt(ans);
+			var optionText = "";
+			for(var i=0; i<qnParamsArr[q].length; i++) {
+				if(qnParamsArr[q][i][1] == optionVal) {
+					optionText = qnParamsArr[q][i][0];
+				}
+			}
+			$('#subset .faux-v').each(function() {
+				if($(this).html()== optionText) {
+					$(this).css('background', surpriseColour).css('color', 'white').css('border', '3px solid '+surpriseColour);
 				}
 			});
 			break;

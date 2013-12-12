@@ -34,9 +34,12 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_IS_AVL:
 					return BST_IS_AVL;
 					break;
-				case QUESTION_TYPE_AVL_ROTATION:
-					return BST_AVL_ROTATION.replace('|subtype|', params.subtype)
-						.replace('|limitBtm|', params.limitBtm)
+				case QUESTION_TYPE_AVL_ROTATION_INSERT:
+					return BST_AVL_ROTATION_INSERT.replace('|limitBtm|', params.limitBtm)
+						.replace('|limitTop|', params.limitTop)
+						.replace('|rotationAmt|', params.rotationAmt);
+				case QUESTION_TYPE_AVL_ROTATION_DELETE:
+					return BST_AVL_ROTATION_DELETE.replace('|limitBtm|', params.limitBtm)
 						.replace('|limitTop|', params.limitTop)
 						.replace('|rotationAmt|', params.rotationAmt);
 				case QUESTION_TYPE_AVL_HEIGHT:
@@ -51,14 +54,20 @@ function extractQnType(type, amt) {
 	switch(type) {
 		case ANSWER_TYPE_VERTEX:
 			if(amt==ANSWER_AMT_ONE) {
-				return 1;
+				return INTERFACE_SINGLE_V;
 			} else if(amt==ANSWER_AMT_MULTIPLE) {
-				return 3;
+				return INTERFACE_MULT_V;
 			}
 			break;
 		case ANSWER_TYPE_MCQ:
-			return 5;
+			return INTERFACE_MCQ;
 			break;
+		case ANSWER_TYPE_VERTEX_MCQ:
+			if(amt==ANSWER_AMT_ONE) {
+				return INTERFACE_SUBSET_SINGLE;
+			} else if(amt==ANSWER_AMT_MULTIPLE) {
+				return INTERFACE_SUBSET_MULT;
+			}
 		default: //nothing
 	}
 	//to add more

@@ -35,10 +35,7 @@
 		cursor: pointer;
 	}
 		
-#test-screen {
-	display: none;
-	height: 20px;
-}
+#test-screen { display: none; height: 20px; }
 	#qn-no {
 		position: fixed;
 		top: 60px;
@@ -55,12 +52,8 @@
 		font-size: 16px;
 		width: 800px;
 	}
-	#mcq {
-		margin-top: 15px;
-	}
-		.mcq-option {
-			margin-top: 5px;
-		}
+	#mcq { margin-top: 15px; }
+		.mcq-option { margin-top: 5px; }
 			.mcq-option .box {
 				display: inline-block;
 				background: #ddd;
@@ -69,10 +62,19 @@
 				vertical-align: middle;
 				margin-right: 10px;
 			}
-			.mcq-option .option {
-				font-size: 16px;
-				vertical-align: middle;
-			}
+			.mcq-option .option { font-size: 16px; vertical-align: middle; }
+	#subset { margin-top: 20px; }
+		#subset .faux-v {
+			display: inline-block;
+			height: 28px;
+			width: 28px;
+			margin-right: 10px;
+			border-radius: 50px;
+			border: 3px solid black;
+			text-align: center;
+			line-height: 26px;
+			font-weight: bold;
+		}
 	#current-selection { padding-top: 20px; }
 	#ans-key { padding-top: 10px; }
 	#undo-ans , #clear-ans {
@@ -158,24 +160,6 @@
 			cursor: pointer;
 		}
 			#submit-test:hover { background: black; }
-			
-	#submit-check {
-		height: 100px;
-		width: 290px;
-		margin-top: -70px;
-		margin-left: -165px;
-		padding: 20px;
-		text-align: center;
-	}
-		#submit-check p { margin: 0px 0px 30px; padding: 0px; text-align: left; }
-		#submit-check .button {
-			display: inline-block;
-			padding: 7px 10px;
-			color: white;
-			font-weight: bold;
-			cursor: pointer;
-		}
-			#submit-check .button:hover { background: black; }
 			
 #result-screen {
 	display: none;

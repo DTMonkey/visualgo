@@ -26,7 +26,7 @@ function init() {
 	qnGraphArr[0] = jQuery.parseJSON('{"vl":{"0":{"cx":450,"cy":50,"text":"21","state":0},"1":{"cx":225,"cy":100,"text":"18","state":0},"2":{"cx":675,"cy":100,"text":"50","state":0},"3":{"cx":112.5,"cy":150,"text":"4","state":0},"4":{"cx":337.5,"cy":150,"text":"19","state":0},"5":{"cx":562.5,"cy":150,"text":"23","state":0},"6":{"cx":787.5,"cy":150,"text":"71","state":1},"7":{"cx":168.75,"cy":200,"text":"17","state":0}},"el":{"1":{"vertexA":0,"vertexB":1,"type":0,"weight":1,"state":0,"animateHighlighted":false},"2":{"vertexA":0,"vertexB":2,"type":0,"weight":1,"state":0,"animateHighlighted":false},"3":{"vertexA":1,"vertexB":3,"type":0,"weight":1,"state":0,"animateHighlighted":false},"4":{"vertexA":1,"vertexB":4,"type":0,"weight":1,"state":0,"animateHighlighted":false},"5":{"vertexA":2,"vertexB":5,"type":0,"weight":1,"state":0,"animateHighlighted":false},"6":{"vertexA":2,"vertexB":6,"type":0,"weight":1,"state":0,"animateHighlighted":false},"7":{"vertexA":3,"vertexB":7,"type":0,"weight":1,"state":0,"animateHighlighted":false}},"status":"The current BST","lineNo":0}');
 	qnTypeArr[0] = 0;
 	qnParamsArr[0] = false;
-	for(var i=0; i<=nQns; i++) { ansArr[i] = false; } //Initialise ansArr with all false - not answered yet
+	for(var i=0; i<=nQns; i++) { ansArr[i] = UNANSWERED; } //Initialise ansArr with all false - not answered yet
 	
 	prepareQnNav(nQns);
 }
@@ -73,7 +73,7 @@ function showQn(q) { //q is qn no
 
 /*-------ANSWER HANDLING FUNCTIONS-------*/
 function hasBeenAnswered(q) {
-	return !(typeof ansArr[q] == "boolean" && ansArr[q] == false);
+	return !(ansArr[q] == UNANSWERED);
 }
 
 function setAns(q, ans) { //q is localQnNo
@@ -89,7 +89,7 @@ function clearAns(q) { //q is localQnNo
 		nAnswered--;
 	}
 	$('#current-selection').html("").hide();
-	ansArr[q] = false;
+	ansArr[q] = UNANSWERED;
 	checkComplete();
 }
 
