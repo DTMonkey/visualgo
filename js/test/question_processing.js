@@ -34,6 +34,13 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_IS_AVL:
 					return BST_IS_AVL;
 					break;
+				case QUESTION_TYPE_AVL_ROTATION:
+					return BST_AVL_ROTATION.replace('|subtype|', params.subtype)
+						.replace('|limitBtm|', params.limitBtm)
+						.replace('|limitTop|', params.limitTop)
+						.replace('|rotationAmt|', params.rotationAmt);
+				case QUESTION_TYPE_AVL_HEIGHT:
+					return BST_AVL_HEIGHT;
 			}
 			break;
 		default: //nothing
@@ -80,20 +87,3 @@ function extractQnGraph(graph) {
 	}
 	return graph;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

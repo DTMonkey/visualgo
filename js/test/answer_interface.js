@@ -135,7 +135,7 @@ function showAnswerInterface(q, mode) {
 		
 		gw.jumpToIteration(q,1);
 		switch(qnTypeArr[q]) {
-			case 5: //MCQ {
+			case 5: //MCQ
 				$('#mcq').show();
 				for(var i=0; i<qnParamsArr[q].length; i++) {
 					$("#mcq").append('<div class="mcq-option"><span class="box"></span><span class="option">'+qnParamsArr[q][i][0]+'</span></div>');
