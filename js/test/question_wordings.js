@@ -11,3 +11,6 @@ const BST_HEIGHT = "What is the height of this BST?";
 const BST_AVL_ROTATION_INSERT = "Given the AVL as shown in the picture, insert at least |limitBtm| vertex/vertices and at most |limitTop| vertex/vertices such that |rotationAmt| rotation(s) occur(s)!";
 const BST_AVL_ROTATION_DELETE = "Given the AVL as shown in the picture, delete at least |limitBtm| vertex/vertices and at most |limitTop| vertex/vertices such that |rotationAmt| rotation(s) occur(s)!";
 const BST_AVL_HEIGHT = "";
+
+const HEAP_INSERTION = "An integer |value| is going to be inserted into the binary max heap as shown in the picture, click the sequence of vertices (the order matters) that will swap their content with vertex |value| during this insertion!";
+const HEAP_EXTRACT_MAX = "";

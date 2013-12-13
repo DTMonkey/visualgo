@@ -17,11 +17,29 @@
     }
 
     public function generateQuestion($amt){
+      $questions = array();
+      for($i = 0; $i < $amt; $i++){
+        // $questions[] = $this->generateQuestionSearchSequence(5);
+        // if($i < $amt/11) $questions[] = $this->generateQuestionSearchSequence(5);
+        // else if($i < $amt*2/11) $questions[] = $this->generateQuestionTraversalSequence(5);
+        // else if($i < $amt*3/11) $questions[] = $this->generateQuestionSuccessorSequence(5);
+        // else if($i < $amt*4/11) $questions[] = $this->generateQuestionPredecessorSequence(5);
+        // else if($i < $amt*5/11) $questions[] = $this->generateQuestionMinValue(5);
+        // else if($i < $amt*6/11) $questions[] = $this->generateQuestionMaxValue(5);
+        // else if($i < $amt*7/11) $questions[] = $this->generateQuestionSwapQuestion(5);
+        // else if($i < $amt*8/11) $questions[] = $this->generateQuestionIsAvl(5);
+        // else if($i < $amt*9/11) $questions[] = $this->generateQuestionAvlRotationInsert(5);
+        // else if($i < $amt*10/11) $questions[] = $this->generateQuestionAvlRotationDelete(5);
+        // else  $questions[] = $this->generateQuestionHeight(5);
+        $questions[] = $this->generateQuestionInsertion(5);
+      }
 
+      return $questions;
     }
 
     public function checkAnswer($qObj, $userAns){
-
+      if($qObj->qType == QUESTION_TYPE_INSERTION) return $this->checkAnswerInsertion($qObj, $userAns);
+      else return false;
     }
 
     protected function generateHeap(){
@@ -39,7 +57,7 @@
       return $userAns[0] == UNANSWERED;
     }
 
-    public function generateQuestionHeapInsert($heapSize){
+    public function generateQuestionInsertion($heapSize){
       $heap = $this->generateHeap();
       $heap->buildRandomHeap($heapSize);
       $heapContent = $heap->getAllElements();
@@ -62,7 +80,7 @@
       return $qObj;
     }
 
-    public function checkAnswerHeapInsert($qObj, $userAns){
+    public function checkAnswerInsertion($qObj, $userAns){
       $heap = $qObj->internalDS;
       $varToBeInserted = $qObj->qParams["value"];
       $ans = $heap->insert($varToBeInserted);
@@ -82,5 +100,3 @@
     }
   }
 ?>
-
-<!-- mode=2&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=unanswered&ans[]=12,17,32&ans[]=unanswered&ans[]=unanswered&ans[]=21&ans[]=unanswered&seed=1280733249&qAmt=20 -->

@@ -7,26 +7,33 @@ const SITE_PREFIX = "http://algorithmics.comp.nus.edu.sg/~onlinequiz/Test.php";
 const QUESTION_TOPIC_BST = "BST";
 const QUESTION_TOPIC_HEAP = "Heap";
 
-const QUESTION_TYPE_SEARCH = "Search";
-const QUESTION_TYPE_TRAVERSAL = "Traversal";
-const QUESTION_TYPE_SUCCESSOR = "Successor";
-const QUESTION_TYPE_PREDECESSOR = "Predecessor";
+// General in several data-structures
+const QUESTION_TYPE_DELETION = "Deletion";
+const QUESTION_TYPE_INSERTION = "Insertion";
 const QUESTION_TYPE_MIN_VALUE = "MinVal";
 const QUESTION_TYPE_MAX_VALUE = "MaxVal";
-const QUESTION_TYPE_DELETION = "Deletion";
-const QUESTION_TYPE_SWAP = "Swap";
-const QUESTION_TYPE_IS_AVL = "isAvl";
-const QUESTION_TYPE_HEIGHT = "Height";
+
+// BST-Specific
 const QUESTION_TYPE_AVL_ROTATION_INSERT = "avlRotationInsert";
 const QUESTION_TYPE_AVL_ROTATION_DELETE = "avlRotationDelete";
 const QUESTION_TYPE_AVL_HEIGHT = "avlHeight";
+const QUESTION_TYPE_HEIGHT = "Height";
+const QUESTION_TYPE_IS_AVL = "isAvl";
+const QUESTION_TYPE_PREDECESSOR = "Predecessor";
+const QUESTION_TYPE_SEARCH = "Search";
+const QUESTION_TYPE_SUCCESSOR = "Successor";
+const QUESTION_TYPE_SWAP = "Swap";
+const QUESTION_TYPE_TRAVERSAL = "Traversal";
 
+// General
 const QUESTION_SUB_TYPE_NONE = "";
-const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";
-const QUESTION_SUB_TYPE_PREORDER_TRAVERSAL = "preorder";
-const QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL = "postorder";
 const QUESTION_SUB_TYPE_INSERTION = "insert";
 const QUESTION_SUB_TYPE_DELETION = "delete";
+
+// BST-Specific
+const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";
+const QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL = "postorder";
+const QUESTION_SUB_TYPE_PREORDER_TRAVERSAL = "preorder";
 
 const ANSWER_TYPE_VERTEX = "vertex";
 const ANSWER_TYPE_VERTEX_MCQ = "vertexMcq";
