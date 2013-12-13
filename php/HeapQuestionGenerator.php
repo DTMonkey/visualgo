@@ -42,8 +42,15 @@
       else return false;
     }
 
-    protected function generateHeap(){
-      $heap = new Heap();
+    protected function generateMinHeap(){
+      $heap = new Heap(true);
+      $seed = mt_rand();
+      $heap->seedRng($seed);
+      return $heap;
+    }
+
+    protected function generateMaxHeap(){
+      $heap = new Heap(false);
       $seed = mt_rand();
       $heap->seedRng($seed);
       return $heap;
@@ -58,7 +65,7 @@
     }
 
     public function generateQuestionInsertion($heapSize){
-      $heap = $this->generateHeap();
+      $heap = $this->generateMaxHeap();
       $heap->buildRandomHeap($heapSize);
       $heapContent = $heap->getAllElements();
       $varToBeInserted = $heapContent[0];
@@ -69,7 +76,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
       $qObj->qType = QUESTION_TYPE_INSERTION;
-      $qObj->qParams = array("value" => $varToBeInserted,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("value" => $varToBeInserted,"subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -100,13 +107,13 @@
     }
 
     public function generateQuestionExtract($heapSize){
-      $heap = $this->generateHeap();
+      $heap = $this->generateMaxHeap();
       $heap->buildRandomHeap($heapSize);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
       $qObj->qType = QUESTION_TYPE_EXTRACT;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -136,7 +143,7 @@
     }
 
     public function generateQuestionHeapSort($heapSize){
-      $heap = $this->generateHeap();
+      $heap = $this->generateMaxHeap();
       $heap->buildRandomHeap($heapSize);
       $heapContent = $heap->getAllElements();
       $amt = mt_rand(1, count($heapContent)-2);
@@ -144,7 +151,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
       $qObj->qType = QUESTION_TYPE_HEAP_SORT;
-      $qObj->qParams = array("amt" = $amt, "subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("amt" = $amt, "subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = false;
@@ -177,13 +184,13 @@
     }
 
     public function generateQuestionHeapify($heapSize){
-      $heap = $this->generateHeap();
+      $heap = $this->generateMaxHeap();
       $heap->buildUnshiftedHeap($heapSize);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
       $qObj->qType = QUESTION_TYPE_HEAPIFY;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = false;

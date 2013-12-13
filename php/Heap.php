@@ -1,9 +1,11 @@
 <?php
   class Heap{
     protected $heapArr;
+    protected $min; // true means the heap is minimum heap
 
-    public function __construct(){
+    public function __construct($isMin){
       $this->init();
+      $min = $isMin;
     }
 
     public function clearAll(){
@@ -133,12 +135,24 @@
     }
 
     protected function shiftUp($i, &$shiftUpSequence){
-      if($this->heapArr[$i] > $this->heapArr[$this->parent($i)]){
-        $shiftUpSequence[] = $$this->heapArr[$this->parent($i)];
-        $temp = $this->heapArr[$i];
-        $this->heapArr[$i] = $this->heapArr[$this->parent($i)];
-        $this->heapArr[$this->parent($i)] = $temp;
-        $this->shiftUp($this->parent($i), $shiftUpSequence);
+      if($this->min){
+        if($this->heapArr[$i] < $this->heapArr[$this->parent($i)]){
+          $shiftUpSequence[] = $$this->heapArr[$this->parent($i)];
+          $temp = $this->heapArr[$i];
+          $this->heapArr[$i] = $this->heapArr[$this->parent($i)];
+          $this->heapArr[$this->parent($i)] = $temp;
+          $this->shiftUp($this->parent($i), $shiftUpSequence);
+        }
+      }
+
+      else{
+        if($this->heapArr[$i] > $this->heapArr[$this->parent($i)]){
+          $shiftUpSequence[] = $$this->heapArr[$this->parent($i)];
+          $temp = $this->heapArr[$i];
+          $this->heapArr[$i] = $this->heapArr[$this->parent($i)];
+          $this->heapArr[$this->parent($i)] = $temp;
+          $this->shiftUp($this->parent($i), $shiftUpSequence);
+        }
       }
     }
 
@@ -150,21 +164,39 @@
 
       $leftChild = $this->heapArr[$this->left($i)];
       if($this->right($i) > count($this->heapArr)-1) $rightChild = $this->heapArr[$this->right($i)];
-      if($this->heapArr[$i] < max($leftChild, $rightChild)){
-        $temp = $this->heapArr[$i];
-        if($leftChild > $rightChild){
-          $shiftDownSequence[] = $this->heapArr[$this->left($i)];
-          $this->heapArr[$i] = $this->heapArr[$this->left($i)];
-          $this->heapArr[$this->left($i)] = $temp;
-          $this->shiftDown($this->left($i), $shiftDownSequence);
+      if($this->min){
+        if($this->heapArr[$i] > min($leftChild, $rightChild)){
+          $temp = $this->heapArr[$i];
+          if($leftChild < $rightChild){
+            $shiftDownSequence[] = $this->heapArr[$this->left($i)];
+            $this->heapArr[$i] = $this->heapArr[$this->left($i)];
+            $this->heapArr[$this->left($i)] = $temp;
+            $this->shiftDown($this->left($i), $shiftDownSequence);
+          }
+          else if($rightChild != -1){
+            $shiftDownSequence[] = $this->heapArr[$this->right($i)];
+            $this->heapArr[$i] = $this->heapArr[$this->right($i)];
+            $this->heapArr[$this->right($i)] = $temp;
+            $this->shiftDown($this->right($i), $shiftDownSequence);
+          }
         }
-        else if($rightChild != -1){
-          $shiftDownSequence[] = $this->heapArr[$this->right($i)];
-          $this->heapArr[$i] = $this->heapArr[$this->right($i)];
-          $this->heapArr[$this->right($i)] = $temp;
-          $this->shiftDown($this->right($i), $shiftDownSequence);
+      }
+      else{
+        if($this->heapArr[$i] < max($leftChild, $rightChild)){
+          $temp = $this->heapArr[$i];
+          if($leftChild > $rightChild){
+            $shiftDownSequence[] = $this->heapArr[$this->left($i)];
+            $this->heapArr[$i] = $this->heapArr[$this->left($i)];
+            $this->heapArr[$this->left($i)] = $temp;
+            $this->shiftDown($this->left($i), $shiftDownSequence);
+          }
+          else if($rightChild != -1){
+            $shiftDownSequence[] = $this->heapArr[$this->right($i)];
+            $this->heapArr[$i] = $this->heapArr[$this->right($i)];
+            $this->heapArr[$this->right($i)] = $temp;
+            $this->shiftDown($this->right($i), $shiftDownSequence);
+          }
         }
-        
       }
     }
 

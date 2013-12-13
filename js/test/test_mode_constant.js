@@ -40,6 +40,10 @@ const QUESTION_SUB_TYPE_INORDER_TRAVERSAL = "inorder";
 const QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL = "postorder";
 const QUESTION_SUB_TYPE_PREORDER_TRAVERSAL = "preorder";
 
+// Heap-Specific
+const QUESTION_SUB_TYPE_MAX_HEAP = "max";
+const QUESTION_SUB_TYPE_MIN_HEAP = "min";
+
 const ANSWER_TYPE_VERTEX = "vertex";
 const ANSWER_TYPE_VERTEX_MCQ = "vertexMcq";
 const ANSWER_TYPE_MCQ = "mcq";
