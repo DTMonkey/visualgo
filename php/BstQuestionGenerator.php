@@ -506,7 +506,6 @@
 
     protected function checkAnswerAvlRotationDelete($qObj, $userAns){
       $avl = $qObj->internalDS;
-      echo "aaa";
       $correctness = false;
       $rotations = 0;
       if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){

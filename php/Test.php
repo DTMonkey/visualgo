@@ -28,13 +28,15 @@
 
     mt_srand($seed);
 
+    $qTopics = explode(",", $qTopics);
+
     $bstQuestionGen->seedRng(mt_rand());
     $heapQuestionGen->seedRng(mt_rand());
 
     $qArr = array();
     $qAmtTopic = array();
 
-    $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmt);
+    // $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmt);
 
     for($i = 0; $i < count($qTopics); $i++){
       $qAmtTopic[] = 1;
@@ -48,9 +50,8 @@
     }
 
     for($i = 0; $i < count($qTopics); $i++){
-      // if(array_key_exists($qTopics[$i], $questionGenerator))
-        // $qArr += $questionGenerator[$qTopics[$i]]->generateQuestion($qAmtTopic[$i]);
-      // $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmtTopic[$i]);
+      if(array_key_exists($qTopics[$i], $questionGenerator))
+        $qArr = array_merge($qArr, $questionGenerator[$qTopics[$i]]->generateQuestion($qAmtTopic[$i]));
     }
     
     $qArrJson = array();

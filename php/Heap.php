@@ -28,10 +28,12 @@
         $newElement = mt_rand(1,99);
         if(!in_array($newElement, $values)){
           $values[] = $newElement;
+          // echo $newElement." ";
         }
         else $i--;
       }
 
+      // echo "|";
       $this->heapify($values);
     }
 
@@ -151,7 +153,7 @@
       if($this->left($i) > count($this->heapArr)-1) return;
 
       $leftChild = $this->heapArr[$this->left($i)];
-      if($this->right($i) > count($this->heapArr)-1) $rightChild = $this->heapArr[$this->right($i)];
+      if($this->right($i) <= count($this->heapArr)-1) $rightChild = $this->heapArr[$this->right($i)];
       if($this->min){
         if($this->heapArr[$i] > min($leftChild, $rightChild)){
           $temp = $this->heapArr[$i];
