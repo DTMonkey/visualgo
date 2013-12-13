@@ -75,6 +75,15 @@
 			line-height: 26px;
 			font-weight: bold;
 		}
+	.number-input {
+		display: block;
+		width: 50px;
+		margin-top: 20px;
+		padding: 7px 10px;
+		box-shadow: #929292 0px 0px 3px inset;
+		font-size: 14px;
+		text-align: center;
+	}
 	#current-selection { padding-top: 20px; }
 	#ans-key { padding-top: 10px; }
 	#undo-ans , #clear-ans {

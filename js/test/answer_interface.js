@@ -5,12 +5,14 @@ const INTERFACE_MULT_E = 4;
 const INTERFACE_MCQ = 5;
 const INTERFACE_SUBSET_SINGLE = 6;
 const INTERFACE_SUBSET_MULT = 7;
+const INTERFACE_BLANK = 8;
 
 function showAnswerInterface(q, mode) {
 	//reset all unclickable
 	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
 	$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
 	$('#subset').html("").hide(); $('#subset .faux-v').unbind('click').css('cursor','auto');
+	$('.number-input').hide();
 	$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 	
 	if(mode == "TRAINING") {
@@ -186,6 +188,21 @@ function showAnswerInterface(q, mode) {
 				});
 				break;
 				
+			case INTERFACE_BLANK:
+				$('.number-input').show();
+				
+				//limit input to numbers
+				$('.number-input').change(function() {
+					var reg = /^\d+$/;
+					if(!reg.test($(this).val())) { $(this).val(""); }
+					else { //mark as answered
+						$('#question-nav .qnno').eq(q-1).addClass('answered');
+						setAns(q, parseInt($(this).val()));
+					}
+				});
+				
+				break;
+				
 			default: //none
 		}
 	} else if(mode=="ANSWER") {
@@ -203,6 +220,12 @@ function showAnswerInterface(q, mode) {
 				for(var i=0; i<qnParamsArr[q].length; i++) {
 					$("#subset").append('<span class="faux-v">'+qnParamsArr[q][i][0]+'</span>');
 				}
+				break;
+			case INTERFACE_BLANK:
+				$('.number-input').show();
+				//limit input to numbers
+				$('.number-input').attr('readonly','readonly');
+				break;
 		}
 		showRecordedAns(q);
 	}
@@ -233,7 +256,6 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_MULT_V: //multiple vertices
-			gw.jumpToIteration(qnNo,1);
 			var verticesToHighlight = getVClass(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<verticesToHighlight.length; i++) {
@@ -244,7 +266,6 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_MULT_E: //multiple edges
-			gw.jumpToIteration(qnNo,1);
 			var edgesToHighlight = getEID(qnGraphArr[q], ans.split(","));
 			setTimeout(function(){
 				for(var i=0; i<edgesToHighlight.length; i++) {

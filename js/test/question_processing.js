@@ -28,6 +28,10 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_AVL_HEIGHT: return BST_AVL_HEIGHT;
 			}
 			break;
+		case QUESTION_TOPIC_HEAP:
+			switch(type) {
+				
+			}
 		default: //nothing
 	}
 }
@@ -50,6 +54,8 @@ function extractQnType(type, amt) {
 			} else if(amt==ANSWER_AMT_MULTIPLE) {
 				return INTERFACE_SUBSET_MULT;
 			}
+		case ANSWER_TYPE_FILL_BLANKS:
+			return INTERFACE_BLANK;
 		default: //nothing
 	}
 	//to add more
