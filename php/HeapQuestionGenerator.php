@@ -19,26 +19,26 @@
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        // $questions[] = $this->generateQuestionSearchSequence(5);
-        // if($i < $amt/11) $questions[] = $this->generateQuestionSearchSequence(5);
-        // else if($i < $amt*2/11) $questions[] = $this->generateQuestionTraversalSequence(5);
-        // else if($i < $amt*3/11) $questions[] = $this->generateQuestionSuccessorSequence(5);
-        // else if($i < $amt*4/11) $questions[] = $this->generateQuestionPredecessorSequence(5);
-        // else if($i < $amt*5/11) $questions[] = $this->generateQuestionMinValue(5);
-        // else if($i < $amt*6/11) $questions[] = $this->generateQuestionMaxValue(5);
-        // else if($i < $amt*7/11) $questions[] = $this->generateQuestionSwapQuestion(5);
-        // else if($i < $amt*8/11) $questions[] = $this->generateQuestionIsAvl(5);
-        // else if($i < $amt*9/11) $questions[] = $this->generateQuestionAvlRotationInsert(5);
-        // else if($i < $amt*10/11) $questions[] = $this->generateQuestionAvlRotationDelete(5);
-        // else  $questions[] = $this->generateQuestionHeight(5);
-        $questions[] = $this->generateQuestionInsertion(5);
+        $heapSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
+
+        $potentialQuestions = array();
+
+        $potentialQuestions[] = $this->generateQuestionExtract($heapSize);
+        $potentialQuestions[] = $this->generateQuestionInsertion($heapSize);
+        $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
+        $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
+
+        $question[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
 
       return $questions;
     }
 
     public function checkAnswer($qObj, $userAns){
-      if($qObj->qType == QUESTION_TYPE_INSERTION) return $this->checkAnswerInsertion($qObj, $userAns);
+      if($qObj->qType == QUESTION_TYPE_EXTRACT) return $this->checkAnswerExtract($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_INSERTION) return $this->checkAnswerInsertion($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_HEAPIFY) return $this->checkAnswerHeapify($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_HEAP_SORT) return $this->checkAnswerHeapSort($qObj, $userAns);
       else return false;
     }
 
@@ -151,7 +151,7 @@
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
       $qObj->qType = QUESTION_TYPE_HEAP_SORT;
-      $qObj->qParams = array("amt" = $amt, "subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
+      $qObj->qParams = array("amt" => $amt, "subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = false;

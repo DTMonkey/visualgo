@@ -65,6 +65,9 @@
   const BST_IS_AVL_ANS_VALID = 0;
   const BST_IS_AVL_ANS_INVALID = 1;
 
+  const BST_SIZE_UPPER_BOUND = 10;
+  const BST_SIZE_LOWER_BOUND = 3;
+
   const BST_RANGE_UPPER_BOUND = 99;
   const BST_RANGE_LOWER_BOUND = 1;
 

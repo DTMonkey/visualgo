@@ -18,18 +18,23 @@
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        // $questions[] = $this->generateQuestionSearchSequence(5);
-        if($i < $amt/11) $questions[] = $this->generateQuestionSearchSequence(5);
-        else if($i < $amt*2/11) $questions[] = $this->generateQuestionTraversalSequence(5);
-        else if($i < $amt*3/11) $questions[] = $this->generateQuestionSuccessorSequence(5);
-        else if($i < $amt*4/11) $questions[] = $this->generateQuestionPredecessorSequence(5);
-        else if($i < $amt*5/11) $questions[] = $this->generateQuestionMinValue(5);
-        else if($i < $amt*6/11) $questions[] = $this->generateQuestionMaxValue(5);
-        else if($i < $amt*7/11) $questions[] = $this->generateQuestionSwapQuestion(5);
-        else if($i < $amt*8/11) $questions[] = $this->generateQuestionIsAvl(5);
-        else if($i < $amt*9/11) $questions[] = $this->generateQuestionAvlRotationInsert(5);
-        else if($i < $amt*10/11) $questions[] = $this->generateQuestionAvlRotationDelete(5);
-        else  $questions[] = $this->generateQuestionHeight(5);
+        $bstSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
+
+        $potentialQuestions = array();
+
+        $potentialQuestions[] = $this->generateQuestionSearchSequence($bstSize);
+        $potentialQuestions[] = $this->generateQuestionTraversalSequence($bstSize);
+        $potentialQuestions[] = $this->generateQuestionSuccessorSequence($bstSize);
+        $potentialQuestions[] = $this->generateQuestionPredecessorSequence($bstSize);
+        $potentialQuestions[] = $this->generateQuestionMinValue($bstSize);
+        $potentialQuestions[] = $this->generateQuestionMaxValue($bstSize);
+        $potentialQuestions[] = $this->generateQuestionSwapQuestion($bstSize);
+        $potentialQuestions[] = $this->generateQuestionIsAvl($bstSize);
+        $potentialQuestions[] = $this->generateQuestionAvlRotationInsert($bstSize);
+        $potentialQuestions[] = $this->generateQuestionAvlRotationDelete($bstSize);
+        $potentialQuestions[] = $this->generateQuestionHeight($bstSize);
+
+        $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
 
       return $questions;
@@ -114,11 +119,27 @@
     protected function generateQuestionTraversalSequence($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
+      $subtype;
+
+      switch(mt_rand(0,2)){
+        case 0:
+          $subtype = QUESTION_SUB_TYPE_INORDER_TRAVERSAL;
+          break;
+        case 1:
+          $subtype = QUESTION_SUB_TYPE_POSTORDER_TRAVERSAL;
+          break;
+        case 2:
+          $subtype = QUESTION_SUB_TYPE_PREORDER_TRAVERSAL;
+          break;
+        default:
+          $subtype = QUESTION_SUB_TYPE_INORDER_TRAVERSAL;
+          break;
+      }
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_TRAVERSAL;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_INORDER_TRAVERSAL);
+      $qObj->qParams = array("subtype" => $subtype);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
