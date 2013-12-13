@@ -2,7 +2,12 @@
   require 'Everything.php';
 
   $bstQuestionGen = new BstQuestionGenerator();
-  // $bstQuestionGen->seedRng(5342);
+  $heapQuestionGen = new HeapQuestionGenerator();
+
+  $questionGenerator = array(
+    QUESTION_TOPIC_BST => $bstQuestionGen,
+    QUESTION_TOPIC_HEAP => $heapQuestionGen
+    );
 
   $qSeed = 0;
   $qArr = array();
@@ -19,10 +24,35 @@
   if($mode == MODE_GENERATE_QUESTIONS){
     $qAmt = $_GET["qAmt"];
     $qSeed = $_GET["seed"];
+    $qTopics = $_GET["topics"];
 
-    $bstQuestionGen->seedRng($qSeed);
-    $qArr = ($bstQuestionGen->generateQuestion($qAmt));
+    mt_srand($seed);
 
+    $bstQuestionGen->seedRng(mt_rand());
+    $heapQuestionGen->seedRng(mt_rand());
+
+    $qArr = array();
+    $qAmtTopic = array();
+
+    $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmt);
+
+    for($i = 0; $i < count($qTopics); $i++){
+      $qAmtTopic[] = 1;
+      $qAmt--;
+    }
+
+    for($i = 0; $qAmt > 0; $i = ($i+1)%count($qAmtTopic)){
+      $addition = mt_rand(1, $qAmt);
+      $qAmt -= $addition;
+      $qAmtTopic[$i] += $addition;
+    }
+
+    for($i = 0; $i < count($qTopics); $i++){
+      // if(array_key_exists($qTopics[$i], $questionGenerator))
+        // $qArr += $questionGenerator[$qTopics[$i]]->generateQuestion($qAmtTopic[$i]);
+      // $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmtTopic[$i]);
+    }
+    
     $qArrJson = array();
 
     for($i = 0; $i < count($qArr);$i++){

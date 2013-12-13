@@ -55,7 +55,7 @@
       for($i = count($this->heapArr)-1; $i >= 1; $i--){
         $value = $this->heapArr[$i];
         $shiftDownSequence = array();
-        $this->shiftDown($i);
+        $this->shiftDown($i,$shiftDownSequence);
         if(count($shiftDownSequence)>0) $shiftedDown[] = $value;
       }
 
@@ -68,10 +68,14 @@
       for($i = 1; $i < count($this->heapArr); $i++){
         $level = (int)log($i,2);
         $nodeInLevel = (int)pow(2,$level);
+
+        // echo $i." ".$level." ".$nodeInLevel."|";
+        // echo $i." ".log($i, 2)."|";
+
         $vertexState = array(
-          "cxPercentage" => ($i/2)*(100/$nodeInLevel) + ($i - $i/2)*(100/($nodeInLevel*2)),
+          "cxPercentage" => (($i-$nodeInLevel)*2 + 1)*(100/($nodeInLevel*2)),
           "cyPercentage" => 10*($level + 1),
-          "text" => $value
+          "text" => $this->heapArr[$i]
           );
         $graphState["vl"] += array($i => $vertexState);
         if($i != 1){
@@ -83,27 +87,11 @@
         }
       }
 
-      foreach($this->heapArr as $value){
-        $vertexState = array(
-          "cxPercentage" => $value->cxPercentage,
-          "cyPercentage" => $value->cyPercentage,
-          "text" => $value
-          );
-        $graphState["vl"] += array($key => $vertexState);
-        if(!$isRoot){
-          $edgeState = array(
-            "vertexA" => $value->parent->key,
-            "vertexB" => $value->key
-            );
-          $graphState["el"] += array($key => $edgeState);
-        }
-      }
-
       return $graphState;
     }
 
     public function getAllElements(){
-      return $this->heapArr();
+      return $this->heapArr;
     }
 
     public function insert($val){

@@ -28,7 +28,7 @@
         $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
 
-        $question[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
+        $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
 
       return $questions;
