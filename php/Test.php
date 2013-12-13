@@ -26,12 +26,14 @@
     $qSeed = $_GET["seed"];
     $qTopics = $_GET["topics"];
 
+    // Question generator
     mt_srand($seed);
 
     $qTopics = explode(",", $qTopics);
 
-    $bstQuestionGen->seedRng(mt_rand());
-    $heapQuestionGen->seedRng(mt_rand());
+    foreach($questionGenerator as $key => $value){
+      $value->seedRng(mt_rand());
+    }
 
     $qArr = array();
     $qAmtTopic = array();
@@ -53,6 +55,7 @@
       if(array_key_exists($qTopics[$i], $questionGenerator))
         $qArr = array_merge($qArr, $questionGenerator[$qTopics[$i]]->generateQuestion($qAmtTopic[$i]));
     }
+    // End of question generator
     
     $qArrJson = array();
 
@@ -67,17 +70,43 @@
     $aArrCsv = $_GET["ans"];
     $qSeed = $_GET["seed"];
     $qAmt = $_GET["qAmt"];
+    $qTopics = $_GET["topics"];
     // echo implode("|",$aArrCsv);
     for($i = 0; $i < count($aArrCsv); $i++){
       $aArr[] = explode(",",$aArrCsv[$i]);
     }
     $score = 0;
 
-    $bstQuestionGen->seedRng($qSeed);
-    $qArr = ($bstQuestionGen->generateQuestion($qAmt));
+    // Question generator
+    mt_srand($seed);
 
-    // echo(count($qArr));
-    // echo $qArr[0]->toJsonObject;
+    $qTopics = explode(",", $qTopics);
+
+    foreach($questionGenerator as $key => $value){
+      $value->seedRng(mt_rand());
+    }
+
+    $qArr = array();
+    $qAmtTopic = array();
+
+    // $qArr += $questionGenerator[QUESTION_TOPIC_HEAP]->generateQuestion($qAmt);
+
+    for($i = 0; $i < count($qTopics); $i++){
+      $qAmtTopic[] = 1;
+      $qAmt--;
+    }
+
+    for($i = 0; $qAmt > 0; $i = ($i+1)%count($qAmtTopic)){
+      $addition = mt_rand(1, $qAmt);
+      $qAmt -= $addition;
+      $qAmtTopic[$i] += $addition;
+    }
+
+    for($i = 0; $i < count($qTopics); $i++){
+      if(array_key_exists($qTopics[$i], $questionGenerator))
+        $qArr = array_merge($qArr, $questionGenerator[$qTopics[$i]]->generateQuestion($qAmtTopic[$i]));
+    }
+    // End of question generator
 
     for($i = 0; $i < count($qArr);$i++){
       if($aArr[$i][0] == UNANSWERED){
@@ -88,7 +117,7 @@
         $aArr[$i] = array();
       }
       // echo($i);
-      $aCorrectness[$i] = $bstQuestionGen->checkAnswer($qArr[$i],$aArr[$i]);
+      $aCorrectness[$i] = $questionGenerator[$qArr[$i]->qTopic]->checkAnswer($qArr[$i],$aArr[$i]);
       if($aCorrectness[$i]){
         $score++;
         // echo 1;
