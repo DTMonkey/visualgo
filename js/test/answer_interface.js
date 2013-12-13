@@ -15,7 +15,7 @@ function showAnswerInterface(q, mode) {
 	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
 	$('#mcq').html("").hide(); $('.mcq-option .box').unbind('click').css('cursor','auto');
 	$('#subset').html("").hide(); $('#subset .faux-v').unbind('click').css('cursor','auto');
-	$('.number-input').hide();
+	$('.number-input').hide().unbind('change');
 	$('#undo-ans').hide(); $('#clear-ans').hide(); $('#current-selection').html("").hide();
 	
 	if(mode == "TRAINING") {
@@ -193,15 +193,21 @@ function showAnswerInterface(q, mode) {
 				break;
 				
 			case INTERFACE_BLANK:
-				$('.number-input').show();
+				$('.number-input').show().val("");
 				
 				//limit input to numbers
 				$('.number-input').change(function() {
+					var text = $(this).val();
 					var reg = /^\d+$/;
-					if(!reg.test($(this).val())) { $(this).val(""); }
-					else { //mark as answered
+					if(!reg.test(text)) { //not numeric value
+						$(this).val("");
+					} else { //mark as answered
 						$('#question-nav .qnno').eq(q-1).addClass('answered');
-						setAns(q, parseInt($(this).val()));
+						setAns(q, parseInt(text));
+					}
+					if($(this).val()=="") { //unanswered
+						$('#question-nav .qnno').eq(q-1).removeClass('answered');
+						clearAns(q);
 					}
 				});
 				
@@ -222,19 +228,13 @@ function showAnswerInterface(q, mode) {
 					//mark as answered
 					$('#question-nav .qnno').eq(q-1).addClass('answered');
 					setAns(q, NO_ANSWER);
-	
-					//highlight as answered
-					$('.mcq-option .box').css('background', '#ddd');
-					showRecordedAns(q);
 				} else { //
 					//mark as unanswered
 					$('#question-nav .qnno').eq(q-1).removeClass('answered');
-					setAns(q, UNANSWERED);
-	
-					//highlight as answered
-					$('.mcq-option .box').css('background', '#ddd');
-					showRecordedAns(q);
+					clearAns(q);
 				}
+				$('.mcq-option .box').css('background', '#ddd');
+				showRecordedAns(q);
 			});
 		}
 		
@@ -255,9 +255,7 @@ function showAnswerInterface(q, mode) {
 				}
 				break;
 			case INTERFACE_BLANK:
-				$('.number-input').show();
-				//limit input to numbers
-				$('.number-input').attr('readonly','readonly');
+				$('.number-input').show().val("").attr('readonly','readonly');
 				break;
 		}
 		//check for no answer option
@@ -372,6 +370,10 @@ function showRecordedAns(q) {
 				});
 			}
 			printCurrentSelection(q);
+			break;
+			
+		case INTERFACE_BLANK:
+			$('.number-input').val(parseInt(ans));
 			break;
 			
 		default: //nothing

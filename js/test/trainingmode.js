@@ -25,11 +25,11 @@ function submitTraining() {
 /*-------START TEST FUNCTIONS-------*/
 //this function gets all the qn data, and displays the ui for qn 1
 function getQnsAndStart() {
-	console.log(sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns+"&seed="+seed+"&topics="+topics.toString());
+	//console.log(sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns+"&seed="+seed+"&topics="+topics.toString());
 	$.ajax({
 		url: sitePrefix+"?mode="+MODE_GENERATE_QUESTIONS+"&qAmt="+nQns+"&seed="+seed+"&topics="+topics.toString()
 	}).done(function(data) {
-		console.log(data);
+		//console.log(data);
 		data = JSON.parse(data);
 		for(var i=1; i<=nQns; i++) {
 			extractInfo(i, data[i-1]);
