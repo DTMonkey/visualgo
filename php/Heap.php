@@ -16,7 +16,7 @@
 
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,99);
-        if(!in_array($newElement, $values){
+        if(!in_array($newElement, $values)){
           $values[] = $newElement;
         }
         else $i--;
@@ -30,7 +30,7 @@
 
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,99);
-        if(!in_array($newElement, $values){
+        if(!in_array($newElement, $values)){
           $values[] = $newElement;
         }
         else $i--;
@@ -58,7 +58,7 @@
       for($i = 1; $i < count($this->heapArr); $i++){
         $level = (int)log($i,2);
         $nodeInLevel = (int)pow(2,$level);
-        vertexState = array(
+        $vertexState = array(
           "cxPercentage" => ($i/2)*(100/$nodeInLevel) + ($i - $i/2)*(100/($nodeInLevel*2)),
           "cyPercentage" => 10*($level + 1),
           "text" => $value
@@ -92,7 +92,7 @@
       return $graphState;
     }
 
-    public function getHeapArray(){
+    public function getAllElements(){
       return $this->heapArr();
     }
 
@@ -108,7 +108,7 @@
       $shiftDownSequence = array();
       $maxValue = $this->heapArr[1];
       $this->heapArr[1] = $this->heapArr[count($this->heapArr)-1];
-      unset($this->heapArr[count($this->heapArr)-1];
+      unset($this->heapArr[count($this->heapArr)-1]);
       $this->shiftDown(1);
       return $shiftDownSequence;
     }

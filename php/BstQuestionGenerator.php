@@ -18,40 +18,40 @@
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        // $questions[] = $this->generateSearchSequenceQuestion(5);
-        if($i < $amt/11) $questions[] = $this->generateSearchSequenceQuestion(5);
-        else if($i < $amt*2/11) $questions[] = $this->generateTraversalSequenceQuestion(5);
-        else if($i < $amt*3/11) $questions[] = $this->generateSuccessorSequenceQuestion(5);
-        else if($i < $amt*4/11) $questions[] = $this->generatePredecessorSequenceQuestion(5);
-        else if($i < $amt*5/11) $questions[] = $this->generateMinValueQuestion(5);
-        else if($i < $amt*6/11) $questions[] = $this->generateMaxValueQuestion(5);
-        else if($i < $amt*7/11) $questions[] = $this->generateSwapQuestion(5);
-        else if($i < $amt*8/11) $questions[] = $this->generateIsAvlQuestion(5);
-        else if($i < $amt*9/11) $questions[] = $this->generateAvlRotationInsertQuestion(5);
-        else if($i < $amt*10/11) $questions[] = $this->generateAvlRotationDeleteQuestion(5);
-        else  $questions[] = $this->generateHeightQuestion(5);
+        // $questions[] = $this->generateQuestionSearchSequence(5);
+        if($i < $amt/11) $questions[] = $this->generateQuestionSearchSequence(5);
+        else if($i < $amt*2/11) $questions[] = $this->generateQuestionTraversalSequence(5);
+        else if($i < $amt*3/11) $questions[] = $this->generateQuestionSuccessorSequence(5);
+        else if($i < $amt*4/11) $questions[] = $this->generateQuestionPredecessorSequence(5);
+        else if($i < $amt*5/11) $questions[] = $this->generateQuestionMinValue(5);
+        else if($i < $amt*6/11) $questions[] = $this->generateQuestionMaxValue(5);
+        else if($i < $amt*7/11) $questions[] = $this->generateQuestionSwapQuestion(5);
+        else if($i < $amt*8/11) $questions[] = $this->generateQuestionIsAvl(5);
+        else if($i < $amt*9/11) $questions[] = $this->generateQuestionAvlRotationInsert(5);
+        else if($i < $amt*10/11) $questions[] = $this->generateQuestionAvlRotationDelete(5);
+        else  $questions[] = $this->generateQuestionHeight(5);
       }
 
       return $questions;
     }
 
     public function checkAnswer($qObj, $userAns){
-      if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkSearchSequenceQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkTraversalSequenceQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkSuccessorSequenceQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkPredecessorSequenceQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkMinValueQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkMaxValueQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkSwapQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkIsAvlQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkHeightQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAvlRotationInsertQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAvlRotationDeleteQuestion($qObj, $userAns);
+      if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkAnswerSearchSequence($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkAnswerTraversalSequence($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkAnswerSuccessorSequence($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkAnswerPredecessorSequence($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkAnswerMinValue($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkAnswerMaxValue($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
       else return false;
     }
 
     protected function generateBst(){
-      $bst = new Bst();
+      $bst = new BST();
       $seed = mt_rand();
       $bst->seedRng($seed);
       return $bst;
@@ -64,7 +64,15 @@
       return $avl;
     }
 
-    protected function generateSearchSequenceQuestion($bstSize){
+    protected function isNoAnswer($userAns){
+      return $userAns[0] == NO_ANSWER;
+    }
+
+    protected function isUnanswered($userAns){
+      return $userAns[0] == UNANSWERED;
+    }
+
+    protected function generateQuestionSearchSequence($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
@@ -84,7 +92,7 @@
       return $qObj;
     }
 
-    protected function checkSearchSequenceQuestion($qObj, $userAns){
+    protected function checkAnswerSearchSequence($qObj, $userAns){
       $bst = $qObj->internalDS;
       $varToBeSearched = $qObj->qParams["value"];
       $ans = $bst->search($varToBeSearched);
@@ -103,7 +111,7 @@
       return $correctness;
     }
 
-    protected function generateTraversalSequenceQuestion($bstSize){
+    protected function generateQuestionTraversalSequence($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
 
@@ -121,7 +129,7 @@
       return $qObj;
     }
 
-    protected function checkTraversalSequenceQuestion($qObj, $userAns){
+    protected function checkAnswerTraversalSequence($qObj, $userAns){
       $bst = $qObj->internalDS;
       $ans;
       if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_INORDER_TRAVERSAL) $ans = $bst->inorderTraversal();
@@ -142,7 +150,7 @@
       return $correctness;
     }
 
-    protected function generateSuccessorSequenceQuestion($bstSize){
+    protected function generateQuestionSuccessorSequence($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
@@ -164,7 +172,7 @@
       return $qObj;
     }
 
-    protected function checkSuccessorSequenceQuestion($qObj, $userAns){
+    protected function checkAnswerSuccessorSequence($qObj, $userAns){
       $bst = $qObj->internalDS;
       $varWhoseSuccessorIsToBeSearched = $qObj->qParams["value"];
       $ans = $bst->successor($varWhoseSuccessorIsToBeSearched);
@@ -183,7 +191,7 @@
       return $correctness;
     }
 
-    protected function generatePredecessorSequenceQuestion($bstSize){
+    protected function generateQuestionPredecessorSequence($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
@@ -205,7 +213,7 @@
       return $qObj;
     }
 
-    protected function checkPredecessorSequenceQuestion($qObj, $userAns){
+    protected function checkAnswerPredecessorSequence($qObj, $userAns){
       $bst = $qObj->internalDS;
       $varWhosePredecessorIsToBeSearched = $qObj->qParams["value"];
       $ans = $bst->predecessor($varWhosePredecessorIsToBeSearched);
@@ -224,7 +232,7 @@
       return $correctness;
     }
 
-    protected function generateMinValueQuestion($bstSize){
+    protected function generateQuestionMinValue($bstSize){
       $bst = $this->generateBst();
       $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_ASCENDING);
 
@@ -242,7 +250,7 @@
       return $qObj;
     }
 
-    protected function checkMinValueQuestion($qObj, $userAns){
+    protected function checkAnswerMinValue($qObj, $userAns){
       $bst = $qObj->internalDS;
       $minVal = $bst->getMinValue();
 
@@ -253,7 +261,7 @@
       return $correctness;
     }
 
-    protected function generateMaxValueQuestion($bstSize){
+    protected function generateQuestionMaxValue($bstSize){
       $bst = $this->generateBst();
       $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_DESCENDING);
 
@@ -271,7 +279,7 @@
       return $qObj;
     }
 
-    protected function checkMaxValueQuestion($qObj, $userAns){
+    protected function checkAnswerMaxValue($qObj, $userAns){
       $bst = $qObj->internalDS;
       $maxVal = $bst->getMaxValue();
 
@@ -282,7 +290,7 @@
       return $correctness;
     }
 
-    protected function generateDeletionQuestion($bstSize){
+    protected function generateQuestionDeletionQuestion($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
 
@@ -300,7 +308,7 @@
       return $qObj;
     }
 
-    protected function checkDeletionQuestion($qObj, $userAns){
+    protected function checkAnswerDeletionQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
       $originalHeight = $bst->getHeight();
       $maxAmt = $qObj->qParams["maxAmt"];
@@ -317,7 +325,7 @@
       return $correctness;
     }
 
-    protected function generateHeightQuestion($bstSize){
+    protected function generateQuestionHeight($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
 
@@ -335,13 +343,13 @@
       return $qObj;
     }
 
-    protected function checkHeightQuestion($qObj, $userAns){
+    protected function checkAnswerHeight($qObj, $userAns){
       $bst = $qObj->internalDS;
 
       return $bst->getHeight() == $userAns[0];
     }
 
-    protected function generateSwapQuestion($bstSize){
+    protected function generateQuestionSwapQuestion($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
       $bstContent = $bst->getAllElements();
@@ -367,7 +375,7 @@
       return $qObj;
     }
 
-    protected function checkSwapQuestion($qObj, $userAns){
+    protected function checkAnswerSwapQuestion($qObj, $userAns){
       $bst = $qObj->internalDS;
 
       $correctness = false;
@@ -377,7 +385,7 @@
       return $correctness;
     }
 
-    protected function generateIsAvlQuestion($bstSize){
+    protected function generateQuestionIsAvl($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize);
 
@@ -396,7 +404,7 @@
       return $qObj;
     }
 
-    protected function checkIsAvlQuestion($qObj, $userAns){
+    protected function checkAnswerIsAvl($qObj, $userAns){
       $bst = $qObj->internalDS;
 
       $correctness = false;
@@ -406,7 +414,7 @@
       return $correctness;
     }
 
-    protected function generateAvlRotationInsertQuestion($avlSize){
+    protected function generateQuestionAvlRotationInsert($avlSize){
       $avl = $this->generateAvl();
       $avl->generateRandomBst($avlSize);
       $avlContent = $avl->getAllElements();
@@ -432,7 +440,7 @@
       return $qObj;
     }
 
-    protected function checkAvlRotationInsertQuestion($qObj, $userAns){
+    protected function checkAnswerAvlRotationInsert($qObj, $userAns){
       $avl = $qObj->internalDS;
 
       $correctness = false;
@@ -449,7 +457,7 @@
       return $correctness;
     }
 
-    protected function generateAvlRotationDeleteQuestion($avlSize){
+    protected function generateQuestionAvlRotationDelete($avlSize){
       $avl = $this->generateAvl();
       $avl->generateRandomBst($avlSize);
       $avlContent = $avl->getAllElements();
@@ -475,7 +483,7 @@
       return $qObj;
     }
 
-    protected function checkAvlRotationDeleteQuestion($qObj, $userAns){
+    protected function checkAnswerAvlRotationDelete($qObj, $userAns){
       $avl = $qObj->internalDS;
       echo "aaa";
       $correctness = false;
@@ -490,11 +498,11 @@
       return $correctness;
     }
 
-    protected function generateAvlHeightQuestion($avlSize){
+    protected function generateQuestionAvlHeight($avlSize){
 
     }
 
-    protected function checkAvlHeightQuestion($qObj, $userAns){
+    protected function checkAnswerAvlHeight($qObj, $userAns){
 
     }
   }

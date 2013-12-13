@@ -9,6 +9,7 @@
   const QUESTION_TYPE_PREDECESSOR = "Predecessor";
   const QUESTION_TYPE_MIN_VALUE = "MinVal";
   const QUESTION_TYPE_MAX_VALUE = "MaxVal";
+  const QUESTION_TYPE_INSERTION = "Insertion";
   const QUESTION_TYPE_DELETION = "Deletion";
   const QUESTION_TYPE_SWAP = "Swap";
   const QUESTION_TYPE_IS_AVL = "isAvl";
@@ -48,6 +49,12 @@
 
   const BST_IS_AVL_ANS_VALID = 0;
   const BST_IS_AVL_ANS_INVALID = 1;
+
+  const BST_RANGE_UPPER_BOUND = 99;
+  const BST_RANGE_LOWER_BOUND = 1;
+
+  const HEAP_RANGE_UPPER_BOUND = 99;
+  const HEAP_RANGE_LOWER_BOUND = 1;
 
   const INFINITY = 1000000000;
 ?>
