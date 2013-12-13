@@ -19,7 +19,7 @@
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        $heapSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
+        $heapSize = mt_rand(HEAP_SIZE_LOWER_BOUND,HEAP_SIZE_UPPER_BOUND);
 
         $potentialQuestions = array();
 
