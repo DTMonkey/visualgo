@@ -21,6 +21,11 @@
   const QUESTION_TYPE_SWAP = "Swap";
   const QUESTION_TYPE_TRAVERSAL = "Traversal";
 
+  // Heap-Specific
+  const QUESTION_TYPE_EXTRACT = "extract";
+  const QUESTION_TYPE_HEAPIFY = "heapify";
+  const QUESTION_TYPE_HEAP_SORT = "heapSort";
+
   // General
   const QUESTION_SUB_TYPE_NONE = "";
   const QUESTION_SUB_TYPE_INSERTION = "insert";

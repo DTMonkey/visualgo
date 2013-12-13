@@ -3,6 +3,14 @@
     protected $heapArr;
 
     public function __construct(){
+      $this->init();
+    }
+
+    public function clearAll(){
+      $this->init();
+    }
+
+    protected function init(){
       $this->heapArr = array();
       $this->heapArr[] = INFINITY;
     }
@@ -113,9 +121,10 @@
       return $shiftDownSequence;
     }
 
-    public function heapSort(){
-      while(count($this->heapArr) > 1){
+    public function partialHeapSort($amt){
+      while(count($this->heapArr) > 1 && $amt > 0){
         $this->extractMax();
+        $amt--;
       }
     }
 

@@ -13,4 +13,6 @@ const BST_AVL_ROTATION_DELETE = "Given the AVL as shown in the picture, delete a
 const BST_AVL_HEIGHT = "";
 
 const HEAP_INSERTION = "An integer |value| is going to be inserted into the binary max heap as shown in the picture, click the sequence of vertices (the order matters) that will swap their content with vertex |value| during this insertion!";
-const HEAP_EXTRACT_MAX = "";
+const HEAP_EXTRACT_MAX = "We are performing ExtractMax operation to the binary max heap as shown in the picture, click the sequence of vertices (the order matters) that will swap their content with the leaf vertex that replaces the root node!";
+const HEAP_HEAP_SORT = "We perform |amt| ExtractMax operations to the binary max heap as shown in the picture, click all vertices (in any order) that will remain in the binary max heap after all these operations are executed!";
+const HEAP_HEAPIFY = "We perform Build Heap O(n) to the binary max heap as shown in the picture, click all vertices (in any order) that violates the property of a max heap and will be shifted down!";
