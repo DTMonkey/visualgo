@@ -7,6 +7,9 @@ const INTERFACE_SUBSET_SINGLE = 6;
 const INTERFACE_SUBSET_MULT = 7;
 const INTERFACE_BLANK = 8;
 
+const ALLOW_NO_ANS = 1;
+const DISALLOW_NO_ANS = 0;
+
 function showAnswerInterface(q, mode) {
 	//reset all unclickable
 	$('#vertexText text, #vertex circle, #edge path').unbind('click').css('cursor','auto');
@@ -61,7 +64,7 @@ function showAnswerInterface(q, mode) {
 				$('#undo-ans').show(); $('#clear-ans').show();
 				
 				$('#vertexText text, #vertex circle').click( function() {
-					var vertexList = ansArr[q]; if(vertexList==UNANSWERED) vertexList=new Array();
+					var vertexList = ansArr[q]; if(vertexList==UNANSWERED || vertexList==NO_ANSWER) vertexList=new Array();
 					var vertexClass = $(this).attr('class');
 					
 					//find vertex number
@@ -86,7 +89,7 @@ function showAnswerInterface(q, mode) {
 				
 				$('#edge path').click( function() {
 					var edgeID = $(this).attr('id');
-					var edgeList = ansArr[q]; if(edgeList==UNANSWERED) edgeList=new Array();
+					var edgeList = ansArr[q]; if(edgeList==UNANSWERED || vertexList==NO_ANSWER) edgeList=new Array();
 					
 					//find vertices it joins
 					var edgeIDNo = parseInt(edgeID.substr(1));
@@ -123,6 +126,7 @@ function showAnswerInterface(q, mode) {
 					for(var i=0; i<qnParamsArr[q].length; i++) {
 						if(qnParamsArr[q][i][0] == optionText) {
 							setAns(q,qnParamsArr[q][i][1]);
+							break;
 						}
 					}
 					
@@ -167,7 +171,7 @@ function showAnswerInterface(q, mode) {
 				
 				//record answer
 				$('#subset .faux-v').click(function() {
-					var vertexList = ansArr[q]; if(vertexList==UNANSWERED) vertexList=new Array();
+					var vertexList = ansArr[q]; if(vertexList==UNANSWERED || vertexList==NO_ANSWER) vertexList=new Array();
 					//mark as answered
 					$('#question-nav .qnno').eq(q-1).addClass('answered');
 					
@@ -205,6 +209,35 @@ function showAnswerInterface(q, mode) {
 				
 			default: //none
 		}
+		
+		//check for no answer option
+		if(qnNoAnsArr[q]) {
+			$('#mcq').show();
+			$("#mcq").append('<div class="mcq-option" id="no-answer"><span class="box"></span><span class="option">No answer</span></div>');
+			$('.mcq-option .box').css('cursor','pointer');
+			
+			//record answer
+			$('#no-answer').click(function() {
+				if(ansArr[q] != NO_ANSWER) {
+					//mark as answered
+					$('#question-nav .qnno').eq(q-1).addClass('answered');
+					setAns(q, NO_ANSWER);
+	
+					//highlight as answered
+					$('.mcq-option .box').css('background', '#ddd');
+					showRecordedAns(q);
+				} else { //
+					//mark as unanswered
+					$('#question-nav .qnno').eq(q-1).removeClass('answered');
+					setAns(q, UNANSWERED);
+	
+					//highlight as answered
+					$('.mcq-option .box').css('background', '#ddd');
+					showRecordedAns(q);
+				}
+			});
+		}
+		
 	} else if(mode=="ANSWER") {
 		gw.jumpToIteration(q,1);
 		switch(qnTypeArr[q]) {
@@ -227,13 +260,26 @@ function showAnswerInterface(q, mode) {
 				$('.number-input').attr('readonly','readonly');
 				break;
 		}
+		//check for no answer option
+		if(qnNoAnsArr[q]) {
+			$('#mcq').show();
+			$("#mcq").append('<div class="mcq-option" id="no-answer"><span class="box"></span><span class="option">No answer</span></div>');
+		}
 		showRecordedAns(q);
 	}
 }
 
 function showRecordedAns(q) {
 	var ans = ansArr[q].toString();
-	//alert(ans);
+	//check for no answer option
+	if(qnNoAnsArr[q]) {
+		if(ans == NO_ANSWER) {
+			$('#no-answer .box'). css('background', surpriseColour);
+			gw.jumpToIteration(qnNo,1);
+		} else {
+			$('#no-answer .box'). css('background', '#ddd');
+		}
+	}
 	switch(qnTypeArr[q]) {
 		case INTERFACE_SINGLE_V: //single vertex
 			gw.jumpToIteration(qnNo,1);
@@ -334,7 +380,7 @@ function showRecordedAns(q) {
 
 function printCurrentSelection(q) {
 	var thisList = ansArr[q];
-	if(thisList == -1) { //no answer
+	if(thisList == UNANSWERED || thisList == NO_ANSWER) { //no answer
 		$('#current-selection').html("").hide();
 	} else {
 		switch(qnTypeArr[q]) {

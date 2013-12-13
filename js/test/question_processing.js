@@ -2,7 +2,7 @@ function extractInfo(q, qnJSON) {
 	qnTextArr[q] = extractQnText(qnJSON.qTopic, qnJSON.qType, qnJSON.qParams);
 	qnTypeArr[q] = extractQnType(qnJSON.aType, qnJSON.aAmt);
 	qnParamsArr[q] = extractQnParams(qnJSON.aParams);
-	//add additional extraction for allowNoAnswer
+	qnNoAnsArr[q] = extractQnNoAns(qnJSON.allowNoAnswer);
 	qnGraphArr[q] = extractQnGraph(qnJSON.graphState);
 }
 
@@ -67,6 +67,11 @@ function extractQnParams(params) {
 		toReturn.push([key,params[key]]);
 	}
 	return toReturn;
+}
+
+function extractQnNoAns(allowNoAns) {
+	if(allowNoAns) { return ALLOW_NO_ANS; }
+	else return DISALLOW_NO_ANS;
 }
 
 function extractQnGraph(graph) {
