@@ -92,7 +92,7 @@
       $varToBeInserted = $qObj->qParams["value"];
       $ans = $heap->insert($varToBeInserted);
 
-      $correctness = false;
+      $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
@@ -128,7 +128,7 @@
       $heap = $qObj->internalDS;
       $ans = $heap->extractMax();
 
-      $correctness = false;
+      $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
@@ -164,12 +164,13 @@
 
     public function checkAnswerHeapSort($qObj, $userAns){
       $heap = $qObj->internalDS;
-      $ans = $heap->partialHeapSort($qObj->qParams["amt"]);
+      $heap->partialHeapSort($qObj->qParams["amt"]);
+      $ans = $heap->getAllElements();
       array_shift($ans);
       sort($ans);
       sort($userAns);
 
-      $correctness = false;
+      $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
@@ -209,7 +210,7 @@
       sort($ans);
       sort($userAns);
 
-      $correctness = false;
+      $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){

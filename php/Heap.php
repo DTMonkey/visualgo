@@ -109,7 +109,7 @@
       $maxValue = $this->heapArr[1];
       $this->heapArr[1] = $this->heapArr[count($this->heapArr)-1];
       unset($this->heapArr[count($this->heapArr)-1]);
-      $this->shiftDown(1);
+      $this->shiftDown(1, $shiftDownSequence);
       return $shiftDownSequence;
     }
 
@@ -137,7 +137,7 @@
 
       else{
         if($this->heapArr[$i] > $this->heapArr[$this->parent($i)]){
-          $shiftUpSequence[] = $$this->heapArr[$this->parent($i)];
+          $shiftUpSequence[] = $this->heapArr[$this->parent($i)];
           $temp = $this->heapArr[$i];
           $this->heapArr[$i] = $this->heapArr[$this->parent($i)];
           $this->heapArr[$this->parent($i)] = $temp;
