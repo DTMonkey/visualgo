@@ -30,7 +30,12 @@ function extractQnText(topic, type, params) { //returns string
 			break;
 		case QUESTION_TOPIC_HEAP:
 			switch(type) {
-				
+				case QUESTION_TYPE_INSERTION: return HEAP_INSERTION.replace(/\|value\|/g, params.value)
+																.replace('|subtype|', params.subtype);
+				case QUESTION_TYPE_EXTRACT: return HEAP_EXTRACT.replace('|subtype|', params.subtype);
+				case QUESTION_TYPE_HEAP_SORT: return HEAP_HEAP_SORT.replace(/\|amt\|/g, params.amt)
+																	.replace(/\|subtype\|/g, params.subtype);
+				case QUESTION_TYPE_HEAPIFY: return HEAP_HEAPIFY.replace(/\|subtype\|/g, params.subtype);
 			}
 		default: //nothing
 	}

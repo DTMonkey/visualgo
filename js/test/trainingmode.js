@@ -10,7 +10,7 @@ function submitTraining() {
 	//get score
 	ansArr.shift();
 	var ansStr = ansArr.join('&ans[]=');
-	var queryStr = sitePrefix+"?mode="+MODE_CHECK_ANSWERS+"&ans[]="+ansStr+"&seed="+seed+"&qAmt="+nQns;
+	var queryStr = sitePrefix+"?mode="+MODE_CHECK_ANSWERS+"&ans[]="+ansStr+"&seed="+seed+"&qAmt="+nQns+"&topics="+topics.toString();
 	console.log(queryStr); //to remove later
 	$.ajax({
 		url: queryStr

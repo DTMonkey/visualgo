@@ -223,7 +223,7 @@ function showAnswerInterface(q, mode) {
 			$('.mcq-option .box').css('cursor','pointer');
 			
 			//record answer
-			$('#no-answer').click(function() {
+			$('#no-answer .box').click(function() {
 				if(ansArr[q] != NO_ANSWER) {
 					//mark as answered
 					$('#question-nav .qnno').eq(q-1).addClass('answered');
