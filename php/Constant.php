@@ -16,7 +16,10 @@
   const QUESTION_TYPE_AVL_HEIGHT = "avlHeight";
   const QUESTION_TYPE_HEIGHT = "Height";
   const QUESTION_TYPE_IS_AVL = "isAvl";
+  const QUESTION_TYPE_INTERNAL = "Internal";
+  const QUESTION_TYPE_LEAVES = "Leaves";
   const QUESTION_TYPE_PREDECESSOR = "Predecessor";
+  const QUESTION_TYPE_ROOT = "Root";
   const QUESTION_TYPE_SEARCH = "Search";
   const QUESTION_TYPE_SUCCESSOR = "Successor";
   const QUESTION_TYPE_SWAP = "Swap";

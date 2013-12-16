@@ -3,6 +3,7 @@
     protected $rngSeed;
 
     public function __construct(){
+      // while (@ob_end_flush());
     }
 
     public function seedRng($seed){
@@ -35,6 +36,9 @@
         $potentialQuestions[] = $this->generateQuestionAvlRotationDelete($bstSize);
         $potentialQuestions[] = $this->generateQuestionHeight($bstSize);
         $potentialQuestions[] = $this->generateQuestionKthSmallestValue($bstSize);
+        $potentialQuestions[] = $this->generateQuestionRoot($bstSize);
+        $potentialQuestions[] = $this->generateQuestionLeaves($bstSize);
+        $potentialQuestions[] = $this->generateQuestionInternal($bstSize);
 
         $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
@@ -53,6 +57,9 @@
       else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
       else return false;
@@ -345,6 +352,109 @@
       return $correctness;
     }
 
+    protected function generateQuestionRoot($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_ROOT;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkAnswerRoot($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $root = $bst->getRoot();
+
+      $correctness = true;
+      if($userAns[0] != $root) $correctness = false;
+
+      return $correctness;
+    }
+
+    protected function generateQuestionLeaves($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_LEAVES;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkAnswerLeaves($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $ans = $bst->getAllLeaves();
+
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
+    }
+
+    protected function generateQuestionInternal($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_INTERNAL;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkAnswerInternal($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $ans = $bst->getAllInternal();
+
+      $correctness = true;
+      $ans = $bst->getAllLeaves();
+
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
+    }
+
     protected function generateQuestionDeletionQuestion($bstSize){
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
@@ -502,10 +612,8 @@
       $rotations = 0;
       if(count($userAns) >= $qObj->qParams["limitBtm"] && count($userAns) <= $qObj->qParams["limitTop"]){
         foreach($userAns as $val){
-          // echo $val." ";
           $rotations += $avl->insert($val);
         }
-        // echo $rotations;
         if($rotations == $qObj->qParams["rotationAmt"]) $correctness = true;
       }
 

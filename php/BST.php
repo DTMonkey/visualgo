@@ -7,6 +7,7 @@
 
     public function __construct(){
       $this->init();
+      // while (@ob_end_flush());
     }
 
     public function seedRng($seed){
@@ -83,7 +84,6 @@
         }
         else $i--;
       }
-
       return $insertionSequence;
     }
 
@@ -164,17 +164,31 @@
         $noRightChild = is_null($value->rightChild);
 
         if($noLeftChild && $noRightChild){
-
+          $leaves[] = $key;
         }
       }
+
+      return $leaves;
     }
 
     public function getRoot(){
       return $this->root;
     }
 
-    public function getAllInternalVertices(){
+    public function getAllInternal(){
+      $internal = array();
 
+      foreach($this->elements as $key => $value){
+        $noLeftChild = is_null($value->leftChild);
+        $noRightChild = is_null($value->rightChild);
+        $isRoot = is_null($value->parent);
+
+        if(!$isRoot && !($noLeftChild && $noRightChild)){
+          $internal[] = $key;
+        }
+      }
+
+      return $internal;
     }
 
     public function isAvl(){
@@ -372,7 +386,7 @@
         if($isRoot) $this->clearAll();
         else{
           $parentNode = $node->parent;
-          if($node->val > $parentNode->val){
+          if($node->value > $parentNode->value){
             $parentNode->rightChild = NULL;
           }
           else $parentNode->leftChild = NULL;
@@ -385,7 +399,7 @@
         $rightChildNode = $node->rightChild;
         $parentNode = $node->parent;
         $rightChildNode->parent = $parentNode;
-        if($node->val > $parentNode->val){
+        if($node->value > $parentNode->value){
             $parentNode->rightChild = $rightChildNode;
         }
         else $parentNode->leftChild = $rightChildNode;
@@ -397,7 +411,7 @@
         $leftChildNode = $node->leftChild;
         $parentNode = $node->parent;
         $leftChildNode->parent = $parentNode;
-        if($node->val > $parentNode->val){
+        if($node->value > $parentNode->value){
             $parentNode->rightChild = $leftChildNode;
         }
         else $parentNode->leftChild = $leftChildNode;
@@ -415,7 +429,7 @@
         $leftChildNode = $node->leftChild;
 
         $successorRightChildNode->parent = $successorParentNode;
-        if($successorNode->val > $successorParentNode->val){
+        if($successorNode->value > $successorParentNode->value){
             $successorParentNode->rightChild = $successorRightChildNode;
         }
         else $successorParentNode->leftChild = $successorRightChildNode;
@@ -427,7 +441,7 @@
 
         $leftChildNode->parent = $successorNode;
         $rightChildNode->parent = $successorNode;
-        if($successorNode->val > $parentNode->val){
+        if($successorNode->value > $parentNode->value){
             $parentNode->rightChild = $successorNode;
         }
         else $parentNode->leftChild = $successorNode;
