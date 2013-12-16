@@ -373,7 +373,7 @@ function showRecordedAns(q) {
 			break;
 			
 		case INTERFACE_BLANK:
-			if(ans == UNANASWERED) {
+			if(ans == UNANSWERED) {
 				$('.number-input').val(ans);
 			} else {
 				$('.number-input').val(parseInt(ans));

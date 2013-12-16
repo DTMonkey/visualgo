@@ -6,6 +6,7 @@
   require 'BstQuestionGenerator.php';
   require 'Heap.php';
   require 'HeapQuestionGenerator.php';
+  require 'BitmaskQuestionGenerator.php';
   require 'Constant.php';
   require 'Misc.php';
 ?>

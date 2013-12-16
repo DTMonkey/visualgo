@@ -2,6 +2,7 @@
   // Sync with JS file
   const QUESTION_TOPIC_BST = "BST";
   const QUESTION_TOPIC_HEAP = "Heap";
+  const QUESTION_TOPIC_BITMASK = "Bitmask";
 
   // General in several data-structures
   const QUESTION_TYPE_DELETION = "Deletion";
@@ -29,6 +30,12 @@
   const QUESTION_TYPE_EXTRACT = "extract";
   const QUESTION_TYPE_HEAPIFY = "heapify";
   const QUESTION_TYPE_HEAP_SORT = "heapSort";
+  
+  //Bitmask-Specific
+const QUESTION_TYPE_OPERATION = "operation";
+const QUESTION_TYPE_CONVERT = "convert";
+const QUESTION_TYPE_NUMBER_ON = "numberOn";
+const QUESTION_TYPE_LSONE = "LSOne";
 
   // General
   const QUESTION_SUB_TYPE_NONE = "";
@@ -43,6 +50,13 @@
   // Heap-Specific
   const QUESTION_SUB_TYPE_MAX_HEAP = "max";
   const QUESTION_SUB_TYPE_MIN_HEAP = "min";
+  
+  // Bitmask-Specific
+  const QUESTION_SUB_TYPE_AND = "AND";
+  const QUESTION_SUB_TYPE_OR = "OR";
+  const QUESTION_SUB_TYPE_XOR = "XOR";
+  const QUESTION_SUB_TYPE_BINARY = "binary";
+  const QUESTION_SUB_TYPE_DECIMAL = "integer";
 
   const ANSWER_TYPE_VERTEX = "vertex";
   const ANSWER_TYPE_VERTEX_MCQ = "vertexMcq";

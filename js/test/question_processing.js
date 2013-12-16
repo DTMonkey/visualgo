@@ -23,6 +23,9 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_K_SMALLEST_VALUE:	toReturn = BST_K_SMALLEST_VALUE; break;
 				case QUESTION_TYPE_AVL_ROTATION_INSERT:	toReturn = BST_AVL_ROTATION_INSERT; break;
 				case QUESTION_TYPE_AVL_ROTATION_DELETE:	toReturn = BST_AVL_ROTATION_DELETE; break;
+				case QUESTION_TYPE_LEAVES:		toReturn = BST_LEAVES; break;
+				case QUESTION_TYPE_ROOT:		toReturn = BST_ROOT; break;
+				case QUESTION_TYPE_INTERNAL:		toReturn = BST_INTERNAL; break;
 			}
 			break;
 		case QUESTION_TOPIC_HEAP:
@@ -31,6 +34,14 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_EXTRACT:		toReturn = HEAP_EXTRACT; break;
 				case QUESTION_TYPE_HEAP_SORT:	toReturn = HEAP_HEAP_SORT; break;
 				case QUESTION_TYPE_HEAPIFY:		toReturn = HEAP_HEAPIFY; break;
+			}
+			break;
+		case QUESTION_TOPIC_BITMASK:
+			switch(type) {
+				case QUESTION_TYPE_OPERATION:	toReturn = BITMASK_OPERATIONS; break;
+				case QUESTION_TYPE_CONVERT:		toReturn = BITMASK_CONVERT; break;
+				case QUESTION_TYPE_NUMBER_ON:	toReturn = BITMASK_NUMBER_ON; break;
+				case QUESTION_TYPE_LSONE:		toReturn = BITMASK_LSONE; break;
 			}
 		default: //nothing
 	}
