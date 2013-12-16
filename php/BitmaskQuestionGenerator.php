@@ -68,8 +68,7 @@
 			if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_AND) $ans = $intval & (1 << $j);
 			else if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_OR) $ans = $intval | (1 << $j);
 			else if($qObj->qParams["subtype"] == QUESTION_SUB_TYPE_XOR) $ans = $intval ^ (1 << $j);
-
-			return ($userAns == $ans);
+			return ($userAns[0] == $ans);
 		}
 		
 		//binary <--> decimal conversion
@@ -100,7 +99,7 @@
 			$ans;
 			if($qObj->qParams["toBase"] == QUESTION_SUB_TYPE_BINARY) $ans = intval(base_convert((string)$val, 10, 2));
 			else if($qObj->qParams["toBase"] == QUESTION_SUB_TYPE_DECIMAL) $ans = intval(base_convert((string)$val, 2, 10));
-			return ($userAns == $ans);
+			return ($userAns[0] == $ans);
 		}
 		
 		//popcount
@@ -123,7 +122,7 @@
 		public function checkAnswerNumberOn($qObj, $userAns) {
 			$val = $qObj->qParams["value"];
 			$ans = gmp_popcount($val);
-			return ($userAns == $ans);
+			return ($userAns[0] == $ans);
 		}
 		
 		//LS One
@@ -148,7 +147,7 @@
 			$j = (~ $val) + 1;
 			
 			$ans = intval(log($val & $j, 2));
-			return ($userAns == $ans);
+			return ($userAns[0] == $ans);
 		}
 	}
 ?>
