@@ -69,6 +69,7 @@
 
     public function generateRandomBst($amt, $heightLimit){
       $insertionSequence = array();
+      $amt = min($amt, (int)pow(2,$heightLimit) - 1);
 
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,99);
