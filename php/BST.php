@@ -156,6 +156,18 @@
       return $temp[$k-1];
     }
 
+    public function getAllLeaves(){
+
+    }
+
+    public function getRoot(){
+
+    }
+
+    public function getAllInternalVertices(){
+      
+    }
+
     public function isAvl(){
       $isAvl = true;
 

@@ -47,6 +47,8 @@
         }
         else $i--;
       }
+
+      $this->heapArr = array_merge($this->heapArr, $values);
     }
 
     public function heapify($arr){
