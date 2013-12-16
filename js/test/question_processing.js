@@ -10,35 +10,38 @@ function extractQnText(topic, type, params) { //returns string
 	switch(topic) {
 		case QUESTION_TOPIC_BST:
 			switch(type) {
-				case QUESTION_TYPE_SEARCH: return BST_SEARCH.replace('|value|', params.value);
-				case QUESTION_TYPE_TRAVERSAL: return BST_TRAVERSAL.replace('|subtype|', params.subtype);
-				case QUESTION_TYPE_SUCCESSOR: return BST_SUCCESSOR.replace('|value|', params.value);
-				case QUESTION_TYPE_PREDECESSOR: return BST_PREDECESSOR.replace('|value|', params.value);
-				case QUESTION_TYPE_MIN_VALUE: return BST_MIN;
-				case QUESTION_TYPE_MAX_VALUE: return BST_MAX;
-				case QUESTION_TYPE_SWAP: return BST_SWAP;
-				case QUESTION_TYPE_IS_AVL: return BST_IS_AVL;
-				case QUESTION_TYPE_HEIGHT: return BST_HEIGHT;
-				case QUESTION_TYPE_AVL_ROTATION_INSERT: return BST_AVL_ROTATION_INSERT.replace('|limitBtm|', params.limitBtm)
-																					.replace('|limitTop|', params.limitTop)
-																					.replace('|rotationAmt|', params.rotationAmt);
-				case QUESTION_TYPE_AVL_ROTATION_DELETE: return BST_AVL_ROTATION_DELETE.replace('|limitBtm|', params.limitBtm)
-																					.replace('|limitTop|', params.limitTop)
-																					.replace('|rotationAmt|', params.rotationAmt);
-				case QUESTION_TYPE_AVL_HEIGHT: return BST_AVL_HEIGHT;
+				case QUESTION_TYPE_SEARCH: 		toReturn = BST_SEARCH; break;
+				case QUESTION_TYPE_TRAVERSAL: 	toReturn = BST_TRAVERSAL; break; 
+				case QUESTION_TYPE_SUCCESSOR:	toReturn = BST_SUCCESSOR; break;
+				case QUESTION_TYPE_PREDECESSOR:	toReturn = BST_PREDECESSOR; break;
+				case QUESTION_TYPE_MIN_VALUE: 	toReturn = BST_MIN; break;
+				case QUESTION_TYPE_MAX_VALUE: 	toReturn = BST_MAX; break;
+				case QUESTION_TYPE_SWAP: 		toReturn = BST_SWAP; break;
+				case QUESTION_TYPE_IS_AVL:		toReturn = BST_IS_AVL; break;
+				case QUESTION_TYPE_HEIGHT:		toReturn = BST_HEIGHT; break;
+				case QUESTION_TYPE_AVL_HEIGHT:	toReturn = BST_AVL_HEIGHT; break;
+				case QUESTION_TYPE_K_SMALLEST_VALUE:	toReturn = BST_K_SMALLEST_VALUE; break;
+				case QUESTION_TYPE_AVL_ROTATION_INSERT:	toReturn = BST_AVL_ROTATION_INSERT; break;
+				case QUESTION_TYPE_AVL_ROTATION_DELETE:	toReturn = BST_AVL_ROTATION_DELETE; break;
 			}
 			break;
 		case QUESTION_TOPIC_HEAP:
 			switch(type) {
-				case QUESTION_TYPE_INSERTION: return HEAP_INSERTION.replace(/\|value\|/g, params.value)
-																.replace('|subtype|', params.subtype);
-				case QUESTION_TYPE_EXTRACT: return HEAP_EXTRACT.replace('|subtype|', params.subtype);
-				case QUESTION_TYPE_HEAP_SORT: return HEAP_HEAP_SORT.replace(/\|amt\|/g, params.amt)
-																	.replace(/\|subtype\|/g, params.subtype);
-				case QUESTION_TYPE_HEAPIFY: return HEAP_HEAPIFY.replace(/\|subtype\|/g, params.subtype);
+				case QUESTION_TYPE_INSERTION:	toReturn = HEAP_INSERTION; break;
+				case QUESTION_TYPE_EXTRACT:		toReturn = HEAP_EXTRACT; break;
+				case QUESTION_TYPE_HEAP_SORT:	toReturn = HEAP_HEAP_SORT; break;
+				case QUESTION_TYPE_HEAPIFY:		toReturn = HEAP_HEAPIFY; break;
 			}
 		default: //nothing
 	}
+	var matches = toReturn.match(/\|[^|]+\|/g); //words between 2 pipes: |something|
+	if(matches != null) {
+		for(var i=0; i<matches.length; i++) {
+			var p = matches[i].replace(/\|/g, "");
+			toReturn = toReturn.replace(matches[i], params[p]);
+		}
+	}
+	return toReturn;
 }
 
 function extractQnType(type, amt) {
