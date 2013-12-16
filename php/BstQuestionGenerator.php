@@ -402,6 +402,9 @@
       $bst = $qObj->internalDS;
       $ans = $bst->getAllLeaves();
 
+      sort($userAns);
+      sort($ans);
+
       $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
@@ -438,8 +441,8 @@
       $bst = $qObj->internalDS;
       $ans = $bst->getAllInternal();
 
-      $correctness = true;
-      $ans = $bst->getAllLeaves();
+      sort($userAns);
+      sort($ans);
 
       $correctness = true;
       if(count($ans) != count($userAns)) $correctness = false;

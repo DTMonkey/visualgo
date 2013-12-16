@@ -209,7 +209,7 @@
           $leftChildHeight = $node->leftChild->height;
         }
 
-        if(abs($leftChildHeight-$rightChildHeight) > 2){
+        if(abs($leftChildHeight-$rightChildHeight) >= 2){
           $isAvl = false;
           break;
         }

@@ -123,6 +123,7 @@
         // echo 1;
       }
       // else echo 0;
+      // else echo $i.",";
     }
 
     echo $score;
