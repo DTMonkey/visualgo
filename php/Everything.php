@@ -7,6 +7,7 @@
   require 'Heap.php';
   require 'HeapQuestionGenerator.php';
   require 'BitmaskQuestionGenerator.php';
+  require 'UFDS.php';
   require 'Constant.php';
   require 'Misc.php';
 ?>
