@@ -1,6 +1,7 @@
 <?php
   class UFDS{
     protected $elements;
+    protected $setAmt;
 
     public function __construct(){
       $this->init();
@@ -16,19 +17,37 @@
 
     protected function init(){
       $this->elements = array();
+      $this->setAmt = 0;
     }
 
     public function toGraphState(){
-      foreach($this->elements as $key => $value){
+      $graphState = array("vl" => array(), "el" => array());
 
+      foreach($this->elements as $key => $value){
+        $vertexState = array(
+          "cxPercentage" => $value->cxPercentage,
+          "cyPercentage" => $value->cyPercentage,
+          "text" => $value->value
+          );
+        $graphState["vl"] += array($key => $vertexState);
+        if(!$isRoot){
+          $edgeState = array(
+            "vertexA" => $value->parent->key,
+            "vertexB" => $value->key
+            );
+          $graphState["el"] += array($key => $edgeState);
+        }
       }
+
+      return $graphState;
     }
 
     public function insert($val){
-      $this->elements[$val] = array("parent" => $val, "rank" => 0);
+      $this->elements[$val] = array("parent" => $val, "rank" => 0, "childrenAmt" => 0);
+      $this->setAmt++;
     }
 
-    public function insertRandomElement($amt, $setAmt){
+    public function insertElements($amt, $setAmt){
       $sets = array();
       $singleMemberSets = array();
 
@@ -86,10 +105,12 @@
 
       if($rank1 > $rank2){
         $this->elements[$root2]["parent"] = $root1;
+        $this->elements[$root1]["childrenAmt"]++;
       }
       else{
         $this->elements[$root1]["parent"] = $root2;
         if($rank1 == $rank2) $this->elements[$root2]++;
+        $this->elements[$root2]["childrenAmt"]++;
       }
     }
 
@@ -109,6 +130,8 @@
         $this->elements[$root1]["parent"] = $root2;
         if($rank1 == $rank2) $this->elements[$root2]++;
       }
+
+      $this->setAmt--;
     }
 
     protected function findSetNoPathCompression($val){
@@ -124,7 +147,11 @@
     }
 
     protected function compressPath($val, $root){
+      $originalParent = $this->elements[$val]["parent"];
+      $this->elements[$originalParent]["childrenAmt"]--;
+
       $this->elements[$val]["rank"] = $root;
+      $this->elements[$root]["childrenAmt"]++;
     }
   }
 ?>

@@ -28,12 +28,10 @@
         $newElement = mt_rand(1,99);
         if(!in_array($newElement, $values)){
           $values[] = $newElement;
-          // echo $newElement." ";
         }
         else $i--;
       }
-
-      // echo "|";
+      
       $this->heapify($values);
     }
 
@@ -151,6 +149,13 @@
     protected function shiftDown($i, &$shiftDownSequence){
       $leftChild = -1;
       $rightChild = -1;
+
+      if($this->min){
+        $leftChild = INFINITY;
+        $rightChild = INFINITY;
+      }
+
+      // echo "aa".$this->left($i)."aa";
 
       if($this->left($i) > count($this->heapArr)-1) return;
 
