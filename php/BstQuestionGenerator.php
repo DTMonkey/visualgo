@@ -19,6 +19,7 @@
       $questions = array();
       for($i = 0; $i < $amt; $i++){
         $bstSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
+        $linkedListBstSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_LINKED_LIST_UPPER_BOUND);
 
         $potentialQuestions = array();
 
@@ -26,8 +27,8 @@
         $potentialQuestions[] = $this->generateQuestionTraversalSequence($bstSize);
         $potentialQuestions[] = $this->generateQuestionSuccessorSequence($bstSize);
         $potentialQuestions[] = $this->generateQuestionPredecessorSequence($bstSize);
-        $potentialQuestions[] = $this->generateQuestionMinValue($bstSize);
-        $potentialQuestions[] = $this->generateQuestionMaxValue($bstSize);
+        $potentialQuestions[] = $this->generateQuestionMinValue($linkedListBstSize);
+        $potentialQuestions[] = $this->generateQuestionMaxValue($linkedListBstSize);
         $potentialQuestions[] = $this->generateQuestionSwapQuestion($bstSize);
         $potentialQuestions[] = $this->generateQuestionIsAvl($bstSize);
         $potentialQuestions[] = $this->generateQuestionAvlRotationInsert($bstSize);
@@ -79,7 +80,7 @@
 
     protected function generateQuestionSearchSequence($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
       $varToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
 
@@ -118,7 +119,7 @@
 
     protected function generateQuestionTraversalSequence($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $subtype;
 
       switch(mt_rand(0,2)){
@@ -173,7 +174,7 @@
 
     protected function generateQuestionSuccessorSequence($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_pop($bstContent);
@@ -214,7 +215,7 @@
 
     protected function generateQuestionPredecessorSequence($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_shift($bstContent);
@@ -313,7 +314,7 @@
 
     protected function generateQuestionDeletionQuestion($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -348,7 +349,7 @@
 
     protected function generateQuestionHeight($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -372,7 +373,7 @@
 
     protected function generateQuestionSwapQuestion($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
       $bstElement1 = mt_rand(0, count($bstContent)-1);
       $bstElement2 = $bstElement1;
@@ -408,7 +409,7 @@
 
     protected function generateQuestionIsAvl($bstSize){
       $bst = $this->generateBst();
-      $bst->generateRandomBst($bstSize);
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -437,7 +438,7 @@
 
     protected function generateQuestionAvlRotationInsert($avlSize){
       $avl = $this->generateAvl();
-      $avl->generateRandomBst($avlSize);
+      $avl->generateRandomBst($avlSize, BST_HEIGHT_LIMIT);
       $avlContent = $avl->getAllElements();
       $choice = array();
 
@@ -480,7 +481,7 @@
 
     protected function generateQuestionAvlRotationDelete($avlSize){
       $avl = $this->generateAvl();
-      $avl->generateRandomBst($avlSize);
+      $avl->generateRandomBst($avlSize, BST_HEIGHT_LIMIT);
       $avlContent = $avl->getAllElements();
       $choice = array();
 

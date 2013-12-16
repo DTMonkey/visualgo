@@ -56,20 +56,23 @@
   const NO_ANSWER = "noAnswer";
 
   // Keep inside PHP
-  const BST_LINKED_LIST_ASCENDING = true;
-  const BST_LINKED_LIST_DESCENDING = false;
-
-  const BST_SWAP_ANS_VALID = 0;
-  const BST_SWAP_ANS_INVALID = 1;
+  const BST_HEIGHT_LIMIT = 5;
 
   const BST_IS_AVL_ANS_VALID = 0;
   const BST_IS_AVL_ANS_INVALID = 1;
 
-  const BST_SIZE_UPPER_BOUND = 10;
-  const BST_SIZE_LOWER_BOUND = 3;
+  const BST_LINKED_LIST_ASCENDING = true;
+  const BST_LINKED_LIST_DESCENDING = false;
 
-  const BST_RANGE_UPPER_BOUND = 99;
   const BST_RANGE_LOWER_BOUND = 1;
+  const BST_RANGE_UPPER_BOUND = 99;
+
+  const BST_SWAP_ANS_VALID = 0;
+  const BST_SWAP_ANS_INVALID = 1;
+
+  const BST_SIZE_LOWER_BOUND = 3;
+  const BST_SIZE_LINKED_LIST_UPPER_BOUND = 5;
+  const BST_SIZE_UPPER_BOUND = 10;
 
   const HEAP_RANGE_UPPER_BOUND = 99;
   const HEAP_RANGE_LOWER_BOUND = 1;

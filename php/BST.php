@@ -67,14 +67,18 @@
       return $insertionSequence;
     }
 
-    public function generateRandomBst($amt){
+    public function generateRandomBst($amt, $heightLimit){
       $insertionSequence = array();
 
       for($i = 0; $i < $amt; $i++){
         $newElement = mt_rand(1,99);
         if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
-          $insertionSequence[] = $newElement;
+          if($this->height > $heightLimit){
+            $this->delete($newElement);
+            $i--;
+          }
+          else $insertionSequence[] = $newElement;
         }
         else $i--;
       }
