@@ -157,15 +157,24 @@
     }
 
     public function getAllLeaves(){
+      $leaves = array();
 
+      foreach($this->elements as $key => $value){
+        $noLeftChild = is_null($value->leftChild);
+        $noRightChild = is_null($value->rightChild);
+
+        if($noLeftChild && $noRightChild){
+
+        }
+      }
     }
 
     public function getRoot(){
-
+      return $this->root;
     }
 
     public function getAllInternalVertices(){
-      
+
     }
 
     public function isAvl(){

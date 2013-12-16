@@ -49,6 +49,7 @@
       else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkAnswerPredecessorSequence($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkAnswerMinValue($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkAnswerMaxValue($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_K_SMALLEST_VALUE) return $this->checkAnswerKthSmallestValue($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
