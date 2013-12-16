@@ -27,6 +27,7 @@
         $potentialQuestions[] = $this->generateQuestionInsertion($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
+		$potentialQuestions[] = $this->generateQuestionRoot($heapSize);
 
         $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
@@ -39,6 +40,7 @@
       else if($qObj->qType == QUESTION_TYPE_INSERTION) return $this->checkAnswerInsertion($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAPIFY) return $this->checkAnswerHeapify($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAP_SORT) return $this->checkAnswerHeapSort($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
       else return false;
     }
 
@@ -223,6 +225,31 @@
       }
 
       return $correctness;
+    }
+	
+	public function generateQuestionRoot($heapSize){
+      $heap = $this->generateMaxHeap();
+      $heap->buildRandomHeap($heapSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_ROOT;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerRoot($qObj, $userAns){
+      $heap = $qObj->internalDS;
+      $ans = $heap->getRoot();
+
+      return ($userAns[0] == $ans);
     }
   }
 ?>

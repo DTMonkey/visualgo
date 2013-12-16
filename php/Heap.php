@@ -196,6 +196,10 @@
         }
       }
     }
+	
+	public function getRoot() {
+	  return $this->heapArr[1];
+	}
 
     protected function parent($i){
       return floor($i/2);

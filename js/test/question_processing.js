@@ -34,6 +34,7 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_EXTRACT:		toReturn = HEAP_EXTRACT; break;
 				case QUESTION_TYPE_HEAP_SORT:	toReturn = HEAP_HEAP_SORT; break;
 				case QUESTION_TYPE_HEAPIFY:		toReturn = HEAP_HEAPIFY; break;
+				case QUESTION_TYPE_ROOT:		toReturn = HEAP_ROOT; break;
 			}
 			break;
 		case QUESTION_TOPIC_BITMASK:
