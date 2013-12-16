@@ -121,7 +121,16 @@
 		
 		public function checkAnswerNumberOn($qObj, $userAns) {
 			$val = $qObj->qParams["value"];
-			$ans = gmp_popcount($val);
+			$ans = 0;
+			$pow = 5;
+			
+			while($val != 0) {
+				if($val >= pow(2,$pow)) {
+					$val -= pow(2,$pow);
+					$ans++;
+				}
+				$pow--;
+			}
 			return ($userAns[0] == $ans);
 		}
 		
