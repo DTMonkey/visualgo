@@ -8,6 +8,7 @@
   const QUESTION_TYPE_INSERTION = "Insertion";
   const QUESTION_TYPE_MIN_VALUE = "MinVal";
   const QUESTION_TYPE_MAX_VALUE = "MaxVal";
+  const QUESTION_TYPE_K_SMALLEST_VALUE = "KSmallestVal";
 
   // BST-Specific
   const QUESTION_TYPE_AVL_ROTATION_INSERT = "avlRotationInsert";

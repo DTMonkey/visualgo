@@ -34,6 +34,7 @@
         $potentialQuestions[] = $this->generateQuestionAvlRotationInsert($bstSize);
         $potentialQuestions[] = $this->generateQuestionAvlRotationDelete($bstSize);
         $potentialQuestions[] = $this->generateQuestionHeight($bstSize);
+        $potentialQuestions[] = $this->generateQuestionKthSmallestValue($bstSize);
 
         $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
@@ -178,7 +179,7 @@
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_pop($bstContent);
-      $varWhoseSuccessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
+      $varWhoseSuccessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-2)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -219,7 +220,7 @@
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_shift($bstContent);
-      $varWhosePredecessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
+      $varWhosePredecessorIsToBeSearched = $bstContent[mt_rand(1,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -308,6 +309,37 @@
       $correctness = true;
       if(count($userAns) > 1) $correctness = false;
       else if($userAns[0] != $maxVal) $correctness = false;
+
+      return $correctness;
+    }
+
+    protected function generateQuestionKthSmallestValue($bstSize){
+      $bst = $this->generateBst();
+      $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
+      $bstContent = $bst->getAllElements();
+      $kthSmallestElementToBeSearched = mt_rand(1,count($bstContent));
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_BST;
+      $qObj->qType = QUESTION_TYPE_K_SMALLEST_VALUE;
+      $qObj->qParams = array("value" => $kthSmallestElementToBeSearched,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $bst->toGraphState();
+      $qObj->internalDS = $bst;
+
+      return $qObj;
+    }
+
+    protected function checkAnswerKthSmallestValue($qObj, $userAns){
+      $bst = $qObj->internalDS;
+      $kthSmallestVal = $bst->getKthSmallestValue($qObj->qParams["value"]);
+
+      $correctness = true;
+      if(count($userAns) > 1) $correctness = false;
+      else if($userAns[0] != $kthSmallestVal) $correctness = false;
 
       return $correctness;
     }

@@ -150,6 +150,12 @@
       return $temp[0];
     }
 
+    public function getKthSmallestValue($k){
+      $temp = array_keys($this->elements);
+      sort($temp);
+      return $temp[$k-1];
+    }
+
     public function isAvl(){
       $isAvl = true;
 
