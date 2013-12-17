@@ -116,33 +116,37 @@
       $this->setAmt++;
     }
 
-    public function insertElements($amt, $setAmt){
+    public function insertElements($amt, $desiredSetAmt){
       $sets = array();
-      $singleMemberSets = array();
+      // $singleMemberSets = array();
 
       for($i = 0; $i < $amt; $i++){
         $this->insert($i);
-        $singleMemberSets[] = $i;
+        // $singleMemberSets[] = $i;
       }
 
-      for($i = 0; $i < $setAmt; $i++){
-        $temp = rand(0, count($singleMemberSets)-1);
-        $sets[] = array($singleMemberSets[$temp]);
-        unset($singleMemberSets[$temp]);
-        $singleMemberSets = array_values($singleMemberSets);
+      while($this->setAmt > $desiredSetAmt){
+        $this->unionSet(0, $amt-1);
       }
 
-      while(count($singleMemberSets) > 0){
-        $setToAssign = rand(0, $setAmt - 1);
-        $sets[$setToAssign][] = $singleMemberSets[0];
-        array_shift($singleMemberSets);
-      }
+      // for($i = 0; $i < $setAmt; $i++){
+      //   $temp = rand(0, count($singleMemberSets)-1);
+      //   $sets[] = array($singleMemberSets[$temp]);
+      //   unset($singleMemberSets[$temp]);
+      //   $singleMemberSets = array_values($singleMemberSets);
+      // }
 
-      foreach($sets as $set){
-        foreach($set as $value){
-          $this->unionSet($value, $set[rand(0, count(set)-1)]);
-        }
-      }
+      // while(count($singleMemberSets) > 0){
+      //   $setToAssign = rand(0, $setAmt - 1);
+      //   $sets[$setToAssign][] = $singleMemberSets[0];
+      //   array_shift($singleMemberSets);
+      // }
+
+      // foreach($sets as $set){
+      //   foreach($set as $value){
+      //     $this->unionSet($value, $set[rand(0, count(set)-1)]);
+      //   }
+      // }
 
       $this->updateRankRoot();
     }
