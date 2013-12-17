@@ -100,6 +100,13 @@
         $this->drawRest($childs[$j], $vertexDistance, $currSubSection1++, $level+1);
     }
 
+    protected function updateRankRoot(){
+      for($i = 0; $i < count($this->elements); $i++){
+        $arr = $this->findSetNoPathCompression($i);
+        $this->elements[$arr[count($arr)-1]]["rank"] = count($arr);
+      }
+    }
+
     public function getAllElements(){
       return $this->elements;
     }
@@ -133,13 +140,17 @@
 
       foreach($sets as $set){
         foreach($set as $value){
-          $this->unionSetNoPathCompression($value, $set[0]);
+          $this->unionSet($value, $set[rand(0, count(set)-1)]);
         }
       }
+
+      $this->updateRankRoot();
     }
 
     public function isSameSetNoPathCompression($val1, $val2){
-      return $this->findSetNoPathCompression($val1) == $this->findSetNoPathCompression($val2);
+      $arr1 = $this->findSetNoPathCompression($val1);
+      $arr2 = $this->findSetNoPathCompression($val2);
+      return $arr1[count($arr1)-1] == $arr2[count($arr2)-1];
     }
 
     public function isSameSet($val1, $val2){
@@ -166,8 +177,11 @@
     }
 
     public function unionSet($val1, $val2){
-      $root1 = $this->findSet($val1);
-      $root2 = $this->findSet($val2);
+      $arr1 = $this->findSetNoPathCompression($val1);
+      $arr2 = $this->findSetNoPathCompression($val2);
+
+      $root1 = $arr1[count($arr1)-1];
+      $root2 = $arr2[count($arr2)-1];
 
       if($root1 == $root2) return;
 
@@ -183,11 +197,16 @@
         if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
         $this->elements[$root2]["childrenAmt"]++;
       }
+
+      $this->setAmt--;
     }
 
     public function unionSetNoPathCompression($val1, $val2){
-      $root1 = $this->findSetNoPathCompression($val1);
-      $root2 = $this->findSetNoPathCompression($val2);
+      $arr1 = $this->findSetNoPathCompression($val1);
+      $arr2 = $this->findSetNoPathCompression($val2);
+
+      $root1 = $arr1[count($arr1)-1];
+      $root2 = $arr2[count($arr2)-1];
 
       if($root1 == $root2) return;
 
@@ -209,12 +228,14 @@
       $root = $val;
       $originalVal = $val;
 
-      do{
-        $val = $root;
-        $root = $this->elements[$val]["parent"];
-      } while($val != $root);
+      $findSetSequence = array();
 
-      return $root;
+      do{
+        $findSetSequence[] = $root;
+        $val = $root;
+      } while($val != $root);
+    
+      return $findSetSequence;
     }
 
     protected function compressPath($val, $root){
