@@ -177,8 +177,8 @@
     }
 
     public function unionSet($val1, $val2){
-      $arr1 = $this->findSetNoPathCompression($val1);
-      $arr2 = $this->findSetNoPathCompression($val2);
+      $arr1 = $this->findSet($val1);
+      $arr2 = $this->findSet($val2);
 
       $root1 = $arr1[count($arr1)-1];
       $root2 = $arr2[count($arr2)-1];
