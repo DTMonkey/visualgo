@@ -17,7 +17,9 @@
     }
 
     public function checkAnswer($qObj, $userAns){
-      return false;
+      if($qObj->qType == QUESTION_TYPE_FIND_SET_SEQUENCE) return $this->checkAnswerFindSetSequence($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_FIND_SET_COMPRESSION) return $this->checkAnswerFindSetCompression($qObj, $userAns);
+      else return false;
     }
 
     protected function generateUfds(){
