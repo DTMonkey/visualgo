@@ -143,7 +143,9 @@
     }
 
     public function isSameSet($val1, $val2){
-      return $this->findSet($val1) == $this->findSet($val2);
+	  $arr1 = $this->findSet($val1);
+	  $arr2 = $this->findSet($val2);
+      return $arr1[count($arr1)-1] == $arr2[count($arr2)-1];
     }
 
     public function findSet($val){

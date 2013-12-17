@@ -50,6 +50,7 @@ function extractQnText(topic, type, params) { //returns string
 			switch(type) {
 				case QUESTION_TYPE_FIND_SET_SEQUENCE:		toReturn = UFDS_FIND_SET_SEQUENCE; break;
 				case QUESTION_TYPE_FIND_SET_COMPRESSION:	toReturn = UFDS_FIND_SET_COMPRESSION; break;
+				case QUESTION_TYPE_IS_SAME_SET:				toReturn = UFDS_IS_SAME_SET; break;
 			}
 		default: //nothing
 	}
