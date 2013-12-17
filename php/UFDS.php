@@ -126,7 +126,7 @@
       }
 
       while($this->setAmt > $desiredSetAmt){
-        $this->unionSet(0, $amt-1);
+        $this->unionSet(rand(0, $amt-1), rand(0, $amt-1));
       }
 
       // for($i = 0; $i < $setAmt; $i++){
