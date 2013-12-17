@@ -26,16 +26,16 @@
       $this->layoutGraph();
 
       foreach($this->elements as $key => $value){
-        $isRoot = $value->parent == $key;
+        $isRoot = $value["parent"] == $key;
         $vertexState = array(
-          "cxPercentage" => $value->cxPercentage,
-          "cyPercentage" => $value->cyPercentage,
+          "cxPercentage" => $value["cxPercentage"],
+          "cyPercentage" => $value["cyPercentage"],
           "text" => $key
           );
         $graphState["vl"] += array($key => $vertexState);
         if(!$isRoot){
           $edgeState = array(
-            "vertexA" => $value->parent,
+            "vertexA" => $value["parent"],
             "vertexB" => $key
             );
           $graphState["el"] += array($key => $edgeState);
@@ -61,9 +61,9 @@
       $xCoord = $sectionWidth / 2;
       $yCoord = 10;
       for ($i = 0; $i < count($this->elements); $i++)
-        if ($this->elements["parent"] == $i) {
+        if ($this->elements[$i]["parent"] == $i) {
           $roots[] = $i;
-          $this->elements[$i]["drawn"] = 0;
+          $this->elements[$i]["drawn"] = 1;
           $this->elements[$i]["cxPercentage"] = $xCoord;
           $this->elements[$i]["cyPercentage"] = $yCoord;
           $xCoord += $sectionWidth;
@@ -77,13 +77,15 @@
     protected function drawRest($root, $subSectionWidth, $currSubSection, $level) {
       $totalChild = 0;
       $childs = array();
-      for ($i = 0; $i < count($elements); $i++)
+      for ($i = 0; $i < count($this->elements); $i++)
         if ($this->elements[$i]["parent"] == $root && $this->elements[$i]["drawn"] != 1)
           $totalChild++;
 
+      if($totalChild <= 0) return;
+
       $vertexDistance = $subSectionWidth / $totalChild;
-      $xCoord = ($this->elements[$i]["cxPercentage"] - $subSectionWidth/2) + ($vertexDistance/2);
-      $yCoord = 20 + 60 * $level;
+      $xCoord = ($this->elements[$root]["cxPercentage"] - $subSectionWidth/2) + ($vertexDistance/2);
+      $yCoord = 10 + 10 * $level;
       for ($i = 0; $i < count($this->elements); $i++)
         if ($this->elements[$i]["parent"] == $root && $this->elements[$i]["drawn"] != 1){
           $childs[] = $i;
@@ -114,7 +116,7 @@
 
       for($i = 0; $i < $setAmt; $i++){
         $temp = mt_rand(0, count($singleMemberSets)-1);
-        $sets[] = array($temp);
+        $sets[] = array($singleMemberSets[$temp]);
         unset($singleMemberSets[$temp]);
         $singleMemberSets = array_values($singleMemberSets);
       }
@@ -127,7 +129,7 @@
 
       foreach($sets as $set){
         foreach($set as $value){
-          $this->unionSetNoPathCompression($set[0], $value);
+          $this->unionSetNoPathCompression($value, $set[0]);
         }
       }
     }
@@ -165,7 +167,7 @@
       }
       else{
         $this->elements[$root1]["parent"] = $root2;
-        if($rank1 == $rank2) $this->elements[$root2]++;
+        if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
         $this->elements[$root2]["childrenAmt"]++;
       }
     }
@@ -184,7 +186,7 @@
       }
       else{
         $this->elements[$root1]["parent"] = $root2;
-        if($rank1 == $rank2) $this->elements[$root2]++;
+        if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
       }
 
       $this->setAmt--;
