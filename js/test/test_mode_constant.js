@@ -45,6 +45,7 @@ const QUESTION_TYPE_LSONE = "LSOne";
 // UFDS-Specific
 const QUESTION_TYPE_FIND_SET_SEQUENCE = "findSetSeq";
 const QUESTION_TYPE_FIND_SET_COMPRESSION = "findSetCompress";
+const QUESTION_TYPE_IS_SAME_SET = "isSameSet";
 
 // General
 const QUESTION_SUB_TYPE_NONE = "";
