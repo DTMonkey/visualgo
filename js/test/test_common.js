@@ -10,8 +10,8 @@ var qnNoAnsArr = new Array(); //1 for allow no answer option, 0 otherwise
 var ansArr = new Array(); //answers to be sent to server
 
 var topics = new Array();
-var seed = "1280733249";
-//const seed = (Math.floor(Math.random()*10000000000));
+const seed = (Math.floor(Math.random()*1000000000));
+console.log("seed is: "+seed);
 var qnNo; //1-based
 var nQns; //total number of questions
 var nAnswered = 0;
@@ -19,7 +19,7 @@ var nAnswered = 0;
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
 	//how many questions?
-	return 20;
+	return 10;
 }
 
 function init() {

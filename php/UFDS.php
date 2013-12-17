@@ -153,13 +153,13 @@
       $findSetSequence = array();
 
       do{
-        $findSetSequence[] = $val;
+        $findSetSequence[] = $root;
         $val = $root;
         $root = $this->elements[$val]["parent"];
       } while($val != $root);
 
       $this->compressPath($originalVal, $root);
-
+	  
       return $findSetSequence;
     }
 
