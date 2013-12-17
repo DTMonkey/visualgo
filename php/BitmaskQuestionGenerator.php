@@ -1,15 +1,15 @@
 <?php
 	class BitmaskQuestionGenerator implements QuestionGeneratorInterface{
 		
-		public function seedRng($seed){
-			$this->rngSeed = $seed;
-			mt_srand($rngSeed);
-		}
+		// public function seedRng($seed){
+		// 	$this->rngSeed = $seed;
+		// 	srand($rngSeed);
+		// }
 	
-		public function removeSeed(){
-			$this->rngSeed = NULL;
-			mt_srand();
-		}
+		// public function removeSeed(){
+		// 	$this->rngSeed = NULL;
+		// 	srand();
+		// }
 		
 		//constructor
 		public function __construct(){
@@ -27,7 +27,7 @@
 				$potentialQuestions[] = $this->generateQuestionNumberOn();
 				$potentialQuestions[] = $this->generateQuestionLSOne();
 	
-				$questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
+				$questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
 			}
 			return $questions;
 		}
@@ -43,9 +43,9 @@
 		//each question type generator and checker
 		//AND/OR/XOR
 		public function generateQuestionBitOperations() {
-			$intval = mt_rand(0,63);
-			$j = mt_rand(0,5);
-			$subtype = mt_rand(0,2);
+			$intval = rand(0,63);
+			$j = rand(0,5);
+			$subtype = rand(0,2);
 			$subtypeArr = array(QUESTION_SUB_TYPE_AND, QUESTION_SUB_TYPE_OR, QUESTION_SUB_TYPE_XOR);
 			
 			$qObj = new QuestionObject();
@@ -73,8 +73,8 @@
 		
 		//binary <--> decimal conversion
 		public function generateQuestionConversion() {
-			$val = mt_rand(0,63);
-			$whichway = mt_rand(0,1);
+			$val = rand(0,63);
+			$whichway = rand(0,1);
 			$subtypeArr = array(QUESTION_SUB_TYPE_BINARY, QUESTION_SUB_TYPE_DECIMAL);
 			if($whichway == 0) { //binary to decimal question
 				$val = intval(base_convert((string)$val, 10, 2)); //convert to binary
@@ -104,7 +104,7 @@
 		
 		//popcount
 		public function generateQuestionNumberOn() {
-			$val = mt_rand(0,63);
+			$val = rand(0,63);
 			
 			$qObj = new QuestionObject();
 			$qObj->qTopic = QUESTION_TOPIC_BITMASK;
@@ -136,7 +136,7 @@
 		
 		//LS One
 		public function generateQuestionLSOne() {
-			$val = mt_rand(0,63);
+			$val = rand(0,63);
 			
 			$qObj = new QuestionObject();
 			$qObj->qTopic = QUESTION_TOPIC_BITMASK;

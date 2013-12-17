@@ -7,9 +7,9 @@
       $this->init();
     }
 
-    public function seedRng($seed){
-      mt_srand($seed);
-    }
+    // public function seedRng($seed){
+    //   srand($seed);
+    // }
 
     public function clearAll(){
       $this->init();
@@ -100,6 +100,10 @@
         $this->drawRest($childs[$j], $vertexDistance, $currSubSection1++, $level+1);
     }
 
+    public function getAllElements(){
+      return $this->elements;
+    }
+
     public function insert($val){
       $this->elements[$val] = array("parent" => $val, "rank" => 0, "childrenAmt" => 0, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
       $this->setAmt++;
@@ -115,14 +119,14 @@
       }
 
       for($i = 0; $i < $setAmt; $i++){
-        $temp = mt_rand(0, count($singleMemberSets)-1);
+        $temp = rand(0, count($singleMemberSets)-1);
         $sets[] = array($singleMemberSets[$temp]);
         unset($singleMemberSets[$temp]);
         $singleMemberSets = array_values($singleMemberSets);
       }
 
       while(count($singleMemberSets) > 0){
-        $setToAssign = mt_rand(0, $setAmt - 1);
+        $setToAssign = rand(0, $setAmt - 1);
         $sets[$setToAssign][] = $singleMemberSets[0];
         array_shift($singleMemberSets);
       }
@@ -134,6 +138,10 @@
       }
     }
 
+    public function isSameSetNoPathCompression($val1, $val2){
+      return $this->findSetNoPathCompression($val1) == $this->findSetNoPathCompression($val2);
+    }
+
     public function isSameSet($val1, $val2){
       return $this->findSet($val1) == $this->findSet($val2);
     }
@@ -142,14 +150,17 @@
       $root = $val;
       $originalVal = $val;
 
+      $findSetSequence = array();
+
       do{
+        $findSetSequence[] = $val;
         $val = $root;
         $root = $this->elements[$val]["parent"];
       } while($val != $root);
 
       $this->compressPath($originalVal, $root);
 
-      return $root;
+      return $findSetSequence;
     }
 
     public function unionSet($val1, $val2){

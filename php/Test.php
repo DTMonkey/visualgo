@@ -22,7 +22,7 @@
   $mode = $_GET["mode"];
 
   if($mode == MODE_GENERATE_SEED){
-    echo(mt_rand());
+    echo(rand());
   }
 
   if($mode == MODE_GENERATE_QUESTIONS){
@@ -31,13 +31,13 @@
     $qTopics = $_GET["topics"];
 
     // Question generator
-    mt_srand($seed);
+    srand((int)$qSeed);
 
     $qTopics = explode(",", $qTopics);
 
-    foreach($questionGenerator as $key => $value){
-      $value->seedRng(mt_rand());
-    }
+    // foreach($questionGenerator as $key => $value){
+    //   $value->seedRng(rand());
+    // }
 
     $qArr = array();
     $qAmtTopic = array();
@@ -50,7 +50,7 @@
     }
 
     for($i = 0; $qAmt > 0; $i = ($i+1)%count($qAmtTopic)){
-      $addition = mt_rand(1, $qAmt);
+      $addition = rand(1, $qAmt);
       $qAmt -= $addition;
       $qAmtTopic[$i] += $addition;
     }
@@ -82,13 +82,13 @@
     $score = 0;
 
     // Question generator
-    mt_srand($seed);
+    srand((int)$qSeed);
 
     $qTopics = explode(",", $qTopics);
 
-    foreach($questionGenerator as $key => $value){
-      $value->seedRng(mt_rand());
-    }
+    // foreach($questionGenerator as $key => $value){
+    //   $value->seedRng(rand());
+    // }
 
     $qArr = array();
     $qAmtTopic = array();
@@ -101,7 +101,7 @@
     }
 
     for($i = 0; $qAmt > 0; $i = ($i+1)%count($qAmtTopic)){
-      $addition = mt_rand(1, $qAmt);
+      $addition = rand(1, $qAmt);
       $qAmt -= $addition;
       $qAmtTopic[$i] += $addition;
     }

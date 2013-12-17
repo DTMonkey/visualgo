@@ -29,5 +29,5 @@ const BITMASK_CONVERT = "What is the |toBase| representation of |fromBase| value
 const BITMASK_NUMBER_ON = "How many bit(s) in the binary representation of |value| is/are 1?";
 const BITMASK_LSONE = "What is the index of the least significant bit (first bit counted from the right, 0-based indexing) that is 1 in the binary representation of |value|?";
 
-const UFDS_FIND_SET_COMPRESSION = "";
-const UFDS_FIND_SET_SEQUENCE = "";
+const UFDS_FIND_SET_COMPRESSION = "Given the UFDS as shown in the picture, click all vertices when findSet(v) is performed on vertex v, the UFDS structure does not change! The path compression and union by rank heuristics are used.";
+const UFDS_FIND_SET_SEQUENCE = "Given the UFDS as shown in the picture, click the sequence of vertices (the order matters) that are visited by findSet(|value|)!";

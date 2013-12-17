@@ -6,20 +6,20 @@
 
     }
 
-    public function seedRng($seed){
-      $this->rngSeed = $seed;
-      mt_srand($this->rngSeed);
-    }
+    // public function seedRng($seed){
+    //   $this->rngSeed = $seed;
+    //   srand($this->rngSeed);
+    // }
 
-    public function removeSeed(){
-      $this->rngSeed = NULL;
-      mt_srand();
-    }
+    // public function removeSeed(){
+    //   $this->rngSeed = NULL;
+    //   srand();
+    // }
 
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        $heapSize = mt_rand(HEAP_SIZE_LOWER_BOUND,HEAP_SIZE_UPPER_BOUND);
+        $heapSize = rand(HEAP_SIZE_LOWER_BOUND,HEAP_SIZE_UPPER_BOUND);
 
         $potentialQuestions = array();
 
@@ -28,10 +28,10 @@
         $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
         $potentialQuestions[] = $this->generateQuestionRoot($heapSize);
-		$potentialQuestions[] = $this->generateQuestionLeaves($heapSize);
-		$potentialQuestions[] = $this->generateQuestionInternal($heapSize);
+        $potentialQuestions[] = $this->generateQuestionLeaves($heapSize);
+        $potentialQuestions[] = $this->generateQuestionInternal($heapSize);
 
-        $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
+        $questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
       }
 
       return $questions;
@@ -43,22 +43,22 @@
       else if($qObj->qType == QUESTION_TYPE_HEAPIFY) return $this->checkAnswerHeapify($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAP_SORT) return $this->checkAnswerHeapSort($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
-	  else if($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
-	  else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
       else return false;
     }
 
     protected function generateMinHeap(){
       $heap = new Heap(true);
-      $seed = mt_rand();
-      $heap->seedRng($seed);
+      // $seed = rand();
+      // $heap->seedRng($seed);
       return $heap;
     }
 
     protected function generateMaxHeap(){
       $heap = new Heap(false);
-      $seed = mt_rand();
-      $heap->seedRng($seed);
+      // $seed = rand();
+      // $heap->seedRng($seed);
       return $heap;
     }
 
@@ -76,7 +76,7 @@
       $heapContent = $heap->getAllElements();
       $varToBeInserted = $heapContent[0];
       while(in_array($varToBeInserted, $heapContent)){
-        $varToBeInserted = mt_rand(HEAP_RANGE_LOWER_BOUND,HEAP_RANGE_UPPER_BOUND);
+        $varToBeInserted = rand(HEAP_RANGE_LOWER_BOUND,HEAP_RANGE_UPPER_BOUND);
       }
 
       $qObj = new QuestionObject();
@@ -152,7 +152,7 @@
       $heap = $this->generateMaxHeap();
       $heap->buildRandomHeap($heapSize);
       $heapContent = $heap->getAllElements();
-      $amt = mt_rand(1, count($heapContent)-2);
+      $amt = rand(1, count($heapContent)-2);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_HEAP;
@@ -277,7 +277,7 @@
     public function checkAnswerLeaves($qObj, $userAns){
       $heap = $qObj->internalDS;
       $ans = $heap->getLeaves();
-	  sort($ans);
+      sort($ans);
       sort($userAns);
 
       $correctness = true;
@@ -315,11 +315,11 @@
     public function checkAnswerInternal($qObj, $userAns){
       $heap = $qObj->internalDS;
       $ans = $heap->getInternal();
-	  sort($ans);
+      sort($ans);
       sort($userAns);
 
       $correctness = true;
-	  if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
+      if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){

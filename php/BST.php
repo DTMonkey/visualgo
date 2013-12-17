@@ -10,9 +10,9 @@
       // while (@ob_end_flush());
     }
 
-    public function seedRng($seed){
-      mt_srand($seed);
-    }
+    // public function seedRng($seed){
+    //   srand($seed);
+    // }
 
     public function clearAll(){
       $this->init();
@@ -57,7 +57,7 @@
       $insertionSequence = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
           $insertionSequence[] = $newElement;
@@ -73,7 +73,7 @@
       $amt = min($amt, (int)pow(2,$heightLimit) - 1);
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!array_key_exists($newElement, $this->elements)){
           $this->insert($newElement);
           if($this->height > $heightLimit){
@@ -92,7 +92,7 @@
       $tempInsertionSequence = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!array_key_exists($newElement, $tempInsertionSequence)){
           $tempInsertionSequence[$newElement] = true;
         }
@@ -119,7 +119,7 @@
       $tempInsertionSequence = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!array_key_exists($newElement, $tempInsertionSequence)){
           $tempInsertionSequence[$newElement] = true;
         }

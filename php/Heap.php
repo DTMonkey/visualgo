@@ -17,15 +17,15 @@
       $this->heapArr[] = INFINITY;
     }
 
-    public function seedRng($seed){
-      mt_srand($seed);
-    }
+    // public function seedRng($seed){
+    //   srand($seed);
+    // }
 
     public function buildRandomHeap($amt){
       $values = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!in_array($newElement, $values)){
           $values[] = $newElement;
         }
@@ -39,7 +39,7 @@
       $values = array();
 
       for($i = 0; $i < $amt; $i++){
-        $newElement = mt_rand(1,99);
+        $newElement = rand(1,99);
         if(!in_array($newElement, $values)){
           $values[] = $newElement;
         }

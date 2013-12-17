@@ -6,21 +6,21 @@
       // while (@ob_end_flush());
     }
 
-    public function seedRng($seed){
-      $this->rngSeed = $seed;
-      mt_srand($rngSeed);
-    }
+    // public function seedRng($seed){
+    //   $this->rngSeed = $seed;
+    //   srand($rngSeed);
+    // }
 
-    public function removeSeed(){
-      $this->rngSeed = NULL;
-      mt_srand();
-    }
+    // public function removeSeed(){
+    //   $this->rngSeed = NULL;
+    //   srand();
+    // }
 
     public function generateQuestion($amt){
       $questions = array();
       for($i = 0; $i < $amt; $i++){
-        $bstSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
-        $linkedListBstSize = mt_rand(BST_SIZE_LOWER_BOUND,BST_SIZE_LINKED_LIST_UPPER_BOUND);
+        $bstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
+        $linkedListBstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_LINKED_LIST_UPPER_BOUND);
 
         $potentialQuestions = array();
 
@@ -40,7 +40,7 @@
         $potentialQuestions[] = $this->generateQuestionLeaves($bstSize);
         $potentialQuestions[] = $this->generateQuestionInternal($bstSize);
 
-        $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
+        $questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
       }
 
       return $questions;
@@ -67,15 +67,15 @@
 
     protected function generateBst(){
       $bst = new BST();
-      $seed = mt_rand();
-      $bst->seedRng($seed);
+      // $seed = rand();
+      // $bst->seedRng($seed);
       return $bst;
     }
 
     protected function generateAvl(){
       $avl = new AVL();
-      $seed = mt_rand();
-      $avl->seedRng($seed);
+      // $seed = rand();
+      // $avl->seedRng($seed);
       return $avl;
     }
 
@@ -91,7 +91,7 @@
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
-      $varToBeSearched = $bstContent[mt_rand(0,count($bstContent)-1)];
+      $varToBeSearched = $bstContent[rand(0,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -131,7 +131,7 @@
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $subtype;
 
-      switch(mt_rand(0,2)){
+      switch(rand(0,2)){
         case 0:
           $subtype = QUESTION_SUB_TYPE_INORDER_TRAVERSAL;
           break;
@@ -187,7 +187,7 @@
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_pop($bstContent);
-      $varWhoseSuccessorIsToBeSearched = $bstContent[mt_rand(0,count($bstContent)-2)];
+      $varWhoseSuccessorIsToBeSearched = $bstContent[rand(0,count($bstContent)-2)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -228,7 +228,7 @@
       $bstContent = $bst->getAllElements();
       sort($bstContent);
       array_shift($bstContent);
-      $varWhosePredecessorIsToBeSearched = $bstContent[mt_rand(1,count($bstContent)-1)];
+      $varWhosePredecessorIsToBeSearched = $bstContent[rand(1,count($bstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -325,7 +325,7 @@
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
-      $kthSmallestElementToBeSearched = mt_rand(1,count($bstContent));
+      $kthSmallestElementToBeSearched = rand(1,count($bstContent));
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -521,10 +521,10 @@
       $bst = $this->generateBst();
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
       $bstContent = $bst->getAllElements();
-      $bstElement1 = mt_rand(0, count($bstContent)-1);
+      $bstElement1 = rand(0, count($bstContent)-1);
       $bstElement2 = $bstElement1;
       while($bstElement2 == $bstElement1){
-        $bstElement2 = mt_rand(0, count($bstContent)-1);
+        $bstElement2 = rand(0, count($bstContent)-1);
       }
       $bst->swap($bstContent[$bstElement1], $bstContent[$bstElement2]);
 
@@ -589,14 +589,14 @@
       $choice = array();
 
       while(count($choice) < 5){
-        $elementsToBeInserted = mt_rand(1,99);
+        $elementsToBeInserted = rand(1,99);
         if(!in_array($elementsToBeInserted, $avlContent)) $choice[$elementsToBeInserted] = $elementsToBeInserted;
       }
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_AVL_ROTATION_INSERT;
-      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_VERTEX_MCQ;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->aParams = $choice;
@@ -630,14 +630,14 @@
       $choice = array();
 
       while(count($choice) < 5){
-        $elementsToBeInserted = mt_rand(1,99);
+        $elementsToBeInserted = rand(1,99);
         if(!in_array($elementsToBeInserted, $avlContent)) $choice[$elementsToBeInserted] = $elementsToBeInserted;
       }
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
       $qObj->qType = QUESTION_TYPE_AVL_ROTATION_DELETE;
-      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => mt_rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("limitBtm" => 1, "limitTop" => 3,"rotationAmt" => rand(0,2),"subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->aParams = $choice;
