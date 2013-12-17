@@ -200,6 +200,24 @@
 	public function getRoot() {
 	  return $this->heapArr[1];
 	}
+	
+	public function getLeaves() {
+	  $lowerBound = ceil(count($this->heapArr)/2); //inclusive
+	  $ans = array();
+	  for($i=$lowerBound; $i<count($this->heapArr); $i++) {
+		$ans[] = $this->heapArr[$i]; 
+	  }
+	  return $ans;
+	}
+	
+	public function getInternal() {
+	  $ans = array();
+	  $lowerBound = ceil(count($this->heapArr)/2);
+	  for($i=2; $i<$lowerBound; $i++) {
+		$ans[] = $this->heapArr[$i];
+	  }
+	  return $ans;
+	}
 
     protected function parent($i){
       return floor($i/2);

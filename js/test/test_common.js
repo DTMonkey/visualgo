@@ -19,7 +19,7 @@ var nAnswered = 0;
 /*-------START TEST FUNCTIONS-------*/
 function getNumberOfQns() {
 	//how many questions?
-	return 10;
+	return 20;
 }
 
 function init() {

@@ -28,6 +28,8 @@
         $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
 		$potentialQuestions[] = $this->generateQuestionRoot($heapSize);
+		$potentialQuestions[] = $this->generateQuestionLeaves($heapSize);
+		$potentialQuestions[] = $this->generateQuestionInternal($heapSize);
 
         $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
@@ -41,6 +43,8 @@
       else if($qObj->qType == QUESTION_TYPE_HEAPIFY) return $this->checkAnswerHeapify($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAP_SORT) return $this->checkAnswerHeapSort($qObj, $userAns);
 	  else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
       else return false;
     }
 
@@ -237,7 +241,7 @@
       $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_ONE;
-      $qObj->ordered = true;
+      $qObj->ordered = false;
       $qObj->allowNoAnswer = false;
       $qObj->graphState = $heap->toGraphState();
       $qObj->internalDS = $heap;
@@ -251,5 +255,83 @@
 
       return ($userAns[0] == $ans);
     }
+	
+	public function generateQuestionLeaves($heapSize){
+      $heap = $this->generateMaxHeap();
+      $heap->buildRandomHeap($heapSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_LEAVES;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerLeaves($qObj, $userAns){
+      $heap = $qObj->internalDS;
+      $ans = $heap->getLeaves();
+	  sort($ans);
+      sort($userAns);
+
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
+    }
+	
+	public function generateQuestionInternal($heapSize){
+      $heap = $this->generateMaxHeap();
+      $heap->buildRandomHeap($heapSize);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_INTERNAL;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerInternal($qObj, $userAns){
+      $heap = $qObj->internalDS;
+      $ans = $heap->getInternal();
+	  sort($ans);
+      sort($userAns);
+
+      $correctness = true;
+	  if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
+    }
+	
   }
 ?>
