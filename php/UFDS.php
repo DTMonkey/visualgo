@@ -112,7 +112,7 @@
     }
 
     public function insert($val){
-      $this->elements[$val] = array("parent" => $val, "rank" => 0, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
+      $this->elements[$val] = array("parent" => $val, "rank" => 0, "setSize" => 1, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
       $this->setAmt++;
     }
 
@@ -188,16 +188,20 @@
       $root2 = $arr2[count($arr2)-1];
 
       if($root1 == $root2) return;
+      // if($this->elements[$root1]["setSize"] > 5) return;
+      // if($this->elements[$root2]["setSize"] > 5) return;
 
       $rank1 = $this->elements[$root1]["rank"];
       $rank2 = $this->elements[$root2]["rank"];
 
       if($rank1 > $rank2){
         $this->elements[$root2]["parent"] = $root1;
+        $this->elements[$root1]["setSize"] += $this->elements[$root2]["setSize"];
       }
       else{
         $this->elements[$root1]["parent"] = $root2;
         if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
+        $this->elements[$root2]["setSize"] += $this->elements[$root1]["setSize"];
       }
 
       $this->setAmt--;
