@@ -183,7 +183,7 @@
       }
     }
 
-    protected function unionSetNoPathCompression($val1, $val2){
+    public function unionSetNoPathCompression($val1, $val2){
       $root1 = $this->findSetNoPathCompression($val1);
       $root2 = $this->findSetNoPathCompression($val2);
 
@@ -203,7 +203,7 @@
       $this->setAmt--;
     }
 
-    protected function findSetNoPathCompression($val){
+    public function findSetNoPathCompression($val){
       $root = $val;
       $originalVal = $val;
 

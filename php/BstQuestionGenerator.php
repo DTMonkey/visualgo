@@ -430,7 +430,7 @@
       $qObj->aType = ANSWER_TYPE_VERTEX;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
-      $qObj->allowNoAnswer = false;
+      $qObj->allowNoAnswer = true;
       $qObj->graphState = $bst->toGraphState();
       $qObj->internalDS = $bst;
 
