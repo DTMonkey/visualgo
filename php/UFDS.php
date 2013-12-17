@@ -112,7 +112,7 @@
     }
 
     public function insert($val){
-      $this->elements[$val] = array("parent" => $val, "rank" => 0, "childrenAmt" => 0, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
+      $this->elements[$val] = array("parent" => $val, "rank" => 0, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
       $this->setAmt++;
     }
 
@@ -190,12 +190,10 @@
 
       if($rank1 > $rank2){
         $this->elements[$root2]["parent"] = $root1;
-        $this->elements[$root1]["childrenAmt"]++;
       }
       else{
         $this->elements[$root1]["parent"] = $root2;
         if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
-        $this->elements[$root2]["childrenAmt"]++;
       }
 
       $this->setAmt--;
@@ -239,11 +237,7 @@
     }
 
     protected function compressPath($val, $root){
-      $originalParent = $this->elements[$val]["parent"];
-      $this->elements[$originalParent]["childrenAmt"]--;
-
-      $this->elements[$val]["rank"] = $root;
-      $this->elements[$root]["childrenAmt"]++;
+      $this->elements[$val]["parent"] = $root;
     }
   }
 ?>
