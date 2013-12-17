@@ -27,7 +27,7 @@
         $potentialQuestions[] = $this->generateQuestionInsertion($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
         $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
-		$potentialQuestions[] = $this->generateQuestionRoot($heapSize);
+        $potentialQuestions[] = $this->generateQuestionRoot($heapSize);
 
         $questions[] = $potentialQuestions[mt_rand(0, count($potentialQuestions) - 1)];
       }
@@ -40,7 +40,7 @@
       else if($qObj->qType == QUESTION_TYPE_INSERTION) return $this->checkAnswerInsertion($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAPIFY) return $this->checkAnswerHeapify($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_HEAP_SORT) return $this->checkAnswerHeapSort($qObj, $userAns);
-	  else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
+      else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
       else return false;
     }
 
