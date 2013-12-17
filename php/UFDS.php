@@ -23,17 +23,20 @@
     public function toGraphState(){
       $graphState = array("vl" => array(), "el" => array());
 
+      $this->layoutGraph();
+
       foreach($this->elements as $key => $value){
+        $isRoot = $value->parent == $key;
         $vertexState = array(
           "cxPercentage" => $value->cxPercentage,
           "cyPercentage" => $value->cyPercentage,
-          "text" => $value->value
+          "text" => $key
           );
         $graphState["vl"] += array($key => $vertexState);
         if(!$isRoot){
           $edgeState = array(
-            "vertexA" => $value->parent->key,
-            "vertexB" => $value->key
+            "vertexA" => $value->parent,
+            "vertexB" => $key
             );
           $graphState["el"] += array($key => $edgeState);
         }
@@ -42,8 +45,61 @@
       return $graphState;
     }
 
+    protected function layoutGraph(){
+      // draw first level
+      $firstLevel = 0;
+      $roots = array();
+      for ($i = 0; $i < count($this->elements); $i++) {
+        $this->elements[$i]["cxPercentage"] = 0;
+        $this->elements[$i]["cyPercentage"] = 0;
+        $this->elements[$i]["drawn"] = 0;
+        if ($this->elements[$i]["parent"] == $i)
+          $firstLevel++;
+      }
+
+      $sectionWidth = 100 / $firstLevel;
+      $xCoord = $sectionWidth / 2;
+      $yCoord = 10;
+      for ($i = 0; $i < count($this->elements); $i++)
+        if ($this->elements["parent"] == $i) {
+          $roots[] = $i;
+          $this->elements[$i]["drawn"] = 0;
+          $this->elements[$i]["cxPercentage"] = $xCoord;
+          $this->elements[$i]["cyPercentage"] = $yCoord;
+          $xCoord += $sectionWidth;
+        }
+
+      $currSubSection = 0;
+      for ($j = 0; $j < count($roots); $j++)
+        $this->drawRest($roots[$j], $sectionWidth, $currSubSection++, 1);
+    }
+
+    protected function drawRest($root, $subSectionWidth, $currSubSection, $level) {
+      $totalChild = 0;
+      $childs = array();
+      for ($i = 0; $i < count($elements); $i++)
+        if ($this->elements[$i]["parent"] == $root && $this->elements[$i]["drawn"] != 1)
+          $totalChild++;
+
+      $vertexDistance = $subSectionWidth / $totalChild;
+      $xCoord = ($this->elements[$i]["cxPercentage"] - $subSectionWidth/2) + ($vertexDistance/2);
+      $yCoord = 20 + 60 * $level;
+      for ($i = 0; $i < count($this->elements); $i++)
+        if ($this->elements[$i]["parent"] == $root && $this->elements[$i]["drawn"] != 1){
+          $childs[] = $i;
+          $this->elements[$i]["drawn"] = 1;
+          $this->elements[$i]["cxPercentage"] = $xCoord;
+          $this->elements[$i]["cyPercentage"] = $yCoord;
+          $xCoord += $vertexDistance;
+        }
+
+      $currSubSection1 = 0;
+      for ($j = 0; $j < count($childs); $j++)
+        $this->drawRest($childs[$j], $vertexDistance, $currSubSection1++, $level+1);
+    }
+
     public function insert($val){
-      $this->elements[$val] = array("parent" => $val, "rank" => 0, "childrenAmt" => 0);
+      $this->elements[$val] = array("parent" => $val, "rank" => 0, "childrenAmt" => 0, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
       $this->setAmt++;
     }
 

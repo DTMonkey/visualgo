@@ -4,9 +4,10 @@
 
 const SITE_PREFIX = "http://algorithmics.comp.nus.edu.sg/~onlinequiz/Test.php";
 
+const QUESTION_TOPIC_BITMASK = "Bitmask";
 const QUESTION_TOPIC_BST = "BST";
 const QUESTION_TOPIC_HEAP = "Heap";
-const QUESTION_TOPIC_BITMASK = "Bitmask";
+const QUESTION_TOPIC_UFDS = "UFDS";
 
 // General in several data-structures
 const QUESTION_TYPE_DELETION = "Deletion";
@@ -40,6 +41,10 @@ const QUESTION_TYPE_OPERATION = "operation";
 const QUESTION_TYPE_CONVERT = "convert";
 const QUESTION_TYPE_NUMBER_ON = "numberOn";
 const QUESTION_TYPE_LSONE = "LSOne";
+
+// UFDS-Specific
+const QUESTION_TYPE_FIND_SET_SEQUENCE = "findSetSeq";
+const QUESTION_TYPE_FIND_SET_COMPRESSION = "findSetCompress";
 
 // General
 const QUESTION_SUB_TYPE_NONE = "";

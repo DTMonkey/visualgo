@@ -28,3 +28,6 @@ const BITMASK_OPERATIONS = "What is the integer result of |value| |subtype| (1 <
 const BITMASK_CONVERT = "What is the |toBase| representation of |fromBase| value |value|?";
 const BITMASK_NUMBER_ON = "How many bit(s) in the binary representation of |value| is/are 1?";
 const BITMASK_LSONE = "What is the index of the least significant bit (first bit counted from the right, 0-based indexing) that is 1 in the binary representation of |value|?";
+
+const UFDS_FIND_SET_COMPRESSION = "";
+const UFDS_FIND_SET_SEQUENCE = "";
