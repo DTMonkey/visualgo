@@ -95,7 +95,7 @@
 
     protected function checkAnswerFindSetCompression($qObj, $userAns){
       $ufds = $qObj->internalDS;
-      $ufdsContent = $ufds->getAllElements;
+      $ufdsContent = $ufds->getAllElements();
       $ans = array();
 
       for($i = 0; $i < count($ufdsContent); $i++){
