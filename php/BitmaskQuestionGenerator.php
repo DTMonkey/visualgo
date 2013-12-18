@@ -18,18 +18,31 @@
 		//interface functions
 		public function generateQuestion($amt){
 			$questions = array();
+			$potentialQuestions = $this->generatePotentialQuestions();
 			
 			for($i = 0; $i < $amt; $i++){
-				$potentialQuestions = array();
+				if(count($potentialQuestions) == 0) $potentialQuestions = $this->generatePotentialQuestions();
+
+        $questionIndex = rand(0, count($potentialQuestions) - 1);
+        $questionFunc = $potentialQuestions[$questionIndex];
 	
-				$potentialQuestions[] = $this->generateQuestionBitOperations();
-				$potentialQuestions[] = $this->generateQuestionConversion();
-				$potentialQuestions[] = $this->generateQuestionNumberOn();
-				$potentialQuestions[] = $this->generateQuestionLSOne();
-	
-				$questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
+				$questions[] = $this->$potentialQuestions[$questionIndex]();
+
+        unset($potentialQuestions[$questionIndex]);
+        $potentialQuestions = array_values($potentialQuestions);
 			}
 			return $questions;
+		}
+
+		protected function generatePotentialQuestions(){
+			$potentialQuestions = array();
+	
+			$potentialQuestions[] = "generateQuestionBitOperations";
+			$potentialQuestions[] = "generateQuestionConversion";
+			$potentialQuestions[] = "generateQuestionNumberOn";
+			$potentialQuestions[] = "generateQuestionLSOne";
+
+			return $potentialQuestions;
 		}
 		
 		public function checkAnswer($qObj, $userAns){
