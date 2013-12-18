@@ -36,6 +36,7 @@
       $potentialQuestions[] = "generateQuestionRoot";
       $potentialQuestions[] = "generateQuestionLeaves";
       $potentialQuestions[] = "generateQuestionInternal";
+	  $potentialQuestions[] = "generateQuestionGreaterLess";
 
       return $potentialQuestions;
     }
@@ -48,6 +49,7 @@
       else if($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_GREATER_LESS) return $this->checkAnswerGreaterLess($qObj, $userAns);
       else return false;
     }
 
@@ -319,6 +321,61 @@
       $heap = $qObj->internalDS;
       $ans = $heap->getInternal();
       sort($ans);
+      sort($userAns);
+
+      $correctness = true;
+      if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i] != $userAns[$i]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
+    }
+
+	public function generateQuestionGreaterLess($heapSize){
+      $heap = $this->generateMaxHeap();
+      $heap->buildRandomHeap($heapSize);
+	  $valIndex = rand(1, $heap->size());
+	  $val = $heap->getElementAtIndex($valIndex);
+	  $greaterLess = array("greater", "less");
+	  $greaterLessIndex = rand(0,1);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_GREATER_LESS;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP, "value" => $val, "greaterless" => $greaterLess[$greaterLessIndex]);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerGreaterLess($qObj, $userAns){
+      $heap = $qObj->internalDS;
+	  $val = $qObj->qParams["value"];
+	  $subtype = $qObj->qParams["subtype"];
+	  $greaterLess = $qObj->qParams["greaterless"];
+	  
+      $all = $heap->getAllElements();
+      sort($all);
+	  $indexof = array_search($val, $all);
+	  $ans;
+	  if($greaterLess == "greater") {
+		  $ans = array_slice($all, $indexof+1);
+		  $ans = array_slice($ans, 0, count($ans)-1); //to get rid of the inf
+	  } else if($greaterLess == "less"){
+		  $ans = array_slice($all, 0, $indexof);
+	  }
       sort($userAns);
 
       $correctness = true;

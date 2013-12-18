@@ -20,9 +20,10 @@ const HEAP_INSERTION = "An integer |value| is going to be inserted into the bina
 const HEAP_EXTRACT = "We are performing extract operation to the binary |subtype| heap as shown in the picture, click the sequence of vertices (the order matters) that will swap their content with the leaf vertex that replaces the root node!";
 const HEAP_HEAP_SORT = "We perform |amt| extract operations to the binary |subtype| heap as shown in the picture, click all vertices (in any order) that will remain in the binary |subtype| heap after all these operations are executed!";
 const HEAP_HEAPIFY = "We perform Build Heap O(n) to the binary |subtype| heap as shown in the picture, click all vertices (in any order) that violates the property of a |subtype| heap and will be shifted down!";
-const HEAP_ROOT = "Click the root of this Heap!";
-const HEAP_LEAVES = "Click all the leaf vertices of this Heap!";
-const HEAP_INTERNAL = "Click all the internal vertices of this Heap!";
+const HEAP_ROOT = "Click the root of this heap!";
+const HEAP_LEAVES = "Click all the leaf vertices of this heap!";
+const HEAP_INTERNAL = "Click all the internal vertices of this heap!";
+const HEAP_GREATER_LESS = "Click all vertices that are |greaterless| than |value| in this |subtype| heap!";
 
 const BITMASK_OPERATIONS = "What is the integer result of |value| |subtype| (1 << |shiftAmt|)?";
 const BITMASK_CONVERT = "What is the |toBase| representation of |fromBase| value |value|?";

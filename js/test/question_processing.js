@@ -30,13 +30,14 @@ function extractQnText(topic, type, params) { //returns string
 			break;
 		case QUESTION_TOPIC_HEAP:
 			switch(type) {
-				case QUESTION_TYPE_INSERTION:	toReturn = HEAP_INSERTION; break;
-				case QUESTION_TYPE_EXTRACT:		toReturn = HEAP_EXTRACT; break;
-				case QUESTION_TYPE_HEAP_SORT:	toReturn = HEAP_HEAP_SORT; break;
-				case QUESTION_TYPE_HEAPIFY:		toReturn = HEAP_HEAPIFY; break;
-				case QUESTION_TYPE_ROOT:		toReturn = HEAP_ROOT; break;
-				case QUESTION_TYPE_LEAVES:		toReturn = HEAP_LEAVES; break;
-				case QUESTION_TYPE_INTERNAL:	toReturn = HEAP_INTERNAL; break;
+				case QUESTION_TYPE_INSERTION:		toReturn = HEAP_INSERTION; break;
+				case QUESTION_TYPE_EXTRACT:			toReturn = HEAP_EXTRACT; break;
+				case QUESTION_TYPE_HEAP_SORT:		toReturn = HEAP_HEAP_SORT; break;
+				case QUESTION_TYPE_HEAPIFY:			toReturn = HEAP_HEAPIFY; break;
+				case QUESTION_TYPE_ROOT:			toReturn = HEAP_ROOT; break;
+				case QUESTION_TYPE_LEAVES:			toReturn = HEAP_LEAVES; break;
+				case QUESTION_TYPE_INTERNAL:		toReturn = HEAP_INTERNAL; break;
+				case QUESTION_TYPE_GREATER_LESS:	toReturn = HEAP_GREATER_LESS; break;
 			}
 			break;
 		case QUESTION_TOPIC_BITMASK:

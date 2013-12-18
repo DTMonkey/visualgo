@@ -218,6 +218,10 @@
 	  }
 	  return $ans;
 	}
+	
+	public function getElementAtIndex($i) {
+		return $this->heapArr[$i];
+	}
 
     protected function parent($i){
       return floor($i/2);
