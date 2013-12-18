@@ -285,7 +285,11 @@
 
     protected function generateQuestionMinValue($bstSize){
       $bst = $this->generateBst();
-      $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_ASCENDING);
+      if(rand(0,4)){
+        if(rand(0,1)) $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_DESCENDING);
+        else $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_ASCENDING);
+      }
+      else $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -314,7 +318,11 @@
 
     protected function generateQuestionMaxValue($bstSize){
       $bst = $this->generateBst();
-      $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_DESCENDING);
+      if(rand(0,4)){
+        if(rand(0,1)) $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_DESCENDING);
+        else $bst->generateLinkedListBst($bstSize, BST_LINKED_LIST_ASCENDING);
+      }
+      else $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_BST;
@@ -574,7 +582,9 @@
     }
 
     protected function generateQuestionIsAvl($bstSize){
-      $bst = $this->generateBst();
+      $bst;
+      if(rand(0,1)) $bst = $this->generateBst();
+      else $bst = $this->generateAvl();
       $bst->generateRandomBst($bstSize, BST_HEIGHT_LIMIT);
 
       $qObj = new QuestionObject();
