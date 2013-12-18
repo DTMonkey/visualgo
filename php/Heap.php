@@ -5,7 +5,7 @@
 
     public function __construct($isMin){
       $this->init();
-      $min = $isMin;
+      $this->min = $isMin;
     }
 
     public function clearAll(){
