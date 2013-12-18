@@ -125,7 +125,7 @@
         // $singleMemberSets[] = $i;
       }
 
-      while($this->setAmt > $desiredSetAmt){
+      for($i = 0; $i < 1000 && $this->setAmt > $desiredSetAmt; $i++){
         $this->unionSet(rand(0, $amt-1), rand(0, $amt-1));
       }
 
@@ -188,8 +188,8 @@
       $root2 = $arr2[count($arr2)-1];
 
       if($root1 == $root2) return;
-      // if($this->elements[$root1]["setSize"] > 5) return;
-      // if($this->elements[$root2]["setSize"] > 5) return;
+      if($this->elements[$root1]["setSize"] > 5) return;
+      if($this->elements[$root2]["setSize"] > 5) return;
 
       $rank1 = $this->elements[$root1]["rank"];
       $rank2 = $this->elements[$root2]["rank"];
