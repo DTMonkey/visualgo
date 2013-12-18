@@ -18,32 +18,45 @@
 
     public function generateQuestion($amt){
       $questions = array();
+      $potentialQuestions = $this->generatePotentialQuestions();
       for($i = 0; $i < $amt; $i++){
         $bstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
         $linkedListBstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_LINKED_LIST_UPPER_BOUND);
 
-        $potentialQuestions = array();
+        if(count($potentialQuestions) == 0) $potentialQuestions = $this->generatePotentialQuestions();
 
-        $potentialQuestions[] = $this->generateQuestionSearchSequence($bstSize);
-        $potentialQuestions[] = $this->generateQuestionTraversalSequence($bstSize);
-        $potentialQuestions[] = $this->generateQuestionSuccessorSequence($bstSize);
-        $potentialQuestions[] = $this->generateQuestionPredecessorSequence($bstSize);
-        $potentialQuestions[] = $this->generateQuestionMinValue($linkedListBstSize);
-        $potentialQuestions[] = $this->generateQuestionMaxValue($linkedListBstSize);
-        $potentialQuestions[] = $this->generateQuestionSwapQuestion($bstSize);
-        $potentialQuestions[] = $this->generateQuestionIsAvl($bstSize);
-        $potentialQuestions[] = $this->generateQuestionAvlRotationInsert($bstSize);
-        $potentialQuestions[] = $this->generateQuestionAvlRotationDelete($bstSize);
-        $potentialQuestions[] = $this->generateQuestionHeight($bstSize);
-        $potentialQuestions[] = $this->generateQuestionKthSmallestValue($bstSize);
-        $potentialQuestions[] = $this->generateQuestionRoot($bstSize);
-        $potentialQuestions[] = $this->generateQuestionLeaves($bstSize);
-        $potentialQuestions[] = $this->generateQuestionInternal($bstSize);
-
-        $questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
+        $questionIndex = rand(0, count($potentialQuestions) - 1);
+        $questionFunc = $potentialQuestions[$questionIndex];
+        if($questionFunc == "generateQuestionMinValue" || $questionFunc == "generateQuestionMaxValue")
+          $questions[] = $this->$potentialQuestions[$questionIndex]($linkedListBstSize);
+        else $questions[] = $this->$potentialQuestions[$questionIndex]($bstSize);
+        unset($potentialQuestions[$questionIndex]);
+        $potentialQuestions = array_values($potentialQuestions);
       }
 
       return $questions;
+    }
+
+    protected function generatePotentialQuestions(){
+      $potentialQuestions = array();
+
+      $potentialQuestions[] = "generateQuestionSearchSequence";
+      $potentialQuestions[] = "generateQuestionTraversalSequence";
+      $potentialQuestions[] = "generateQuestionSuccessorSequence";
+      $potentialQuestions[] = "generateQuestionPredecessorSequence";
+      $potentialQuestions[] = "generateQuestionMinValue";
+      $potentialQuestions[] = "generateQuestionMaxValue";
+      $potentialQuestions[] = "generateQuestionSwapQuestion";
+      $potentialQuestions[] = "generateQuestionIsAvl";
+      $potentialQuestions[] = "generateQuestionAvlRotationInsert";
+      $potentialQuestions[] = "generateQuestionAvlRotationDelete";
+      $potentialQuestions[] = "generateQuestionHeight";
+      $potentialQuestions[] = "generateQuestionKthSmallestValue";
+      $potentialQuestions[] = "generateQuestionRoot";
+      $potentialQuestions[] = "generateQuestionLeaves";
+      $potentialQuestions[] = "generateQuestionInternal";
+
+      return $potentialQuestions;
     }
 
     public function checkAnswer($qObj, $userAns){
