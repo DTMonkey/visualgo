@@ -18,23 +18,37 @@
 
     public function generateQuestion($amt){
       $questions = array();
+      $potentialQuestions = $this->generatePotentialQuestions();
+      
       for($i = 0; $i < $amt; $i++){
         $heapSize = rand(HEAP_SIZE_LOWER_BOUND,HEAP_SIZE_UPPER_BOUND);
 
-        $potentialQuestions = array();
+        if(count($potentialQuestions) == 0) $potentialQuestions = $this->generatePotentialQuestions();
 
-        $potentialQuestions[] = $this->generateQuestionExtract($heapSize);
-        $potentialQuestions[] = $this->generateQuestionInsertion($heapSize);
-        $potentialQuestions[] = $this->generateQuestionHeapify($heapSize);
-        $potentialQuestions[] = $this->generateQuestionHeapSort($heapSize);
-        $potentialQuestions[] = $this->generateQuestionRoot($heapSize);
-        $potentialQuestions[] = $this->generateQuestionLeaves($heapSize);
-        $potentialQuestions[] = $this->generateQuestionInternal($heapSize);
+        $questionIndex = rand(0, count($potentialQuestions) - 1);
+        $questionFunc = $potentialQuestions[$questionIndex];
 
-        $questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
+        $questions[] = $this->$potentialQuestions[$questionIndex]($heapSize);
+
+        unset($potentialQuestions[$questionIndex]);
+        $potentialQuestions = array_values($potentialQuestions);
       }
 
       return $questions;
+    }
+
+    protected function generatePotentialQuestions(){
+      $potentialQuestions = array();
+
+      $potentialQuestions[] = "generateQuestionExtract";
+      $potentialQuestions[] = "generateQuestionInsertion";
+      $potentialQuestions[] = "generateQuestionHeapify";
+      $potentialQuestions[] = "generateQuestionHeapSort";
+      $potentialQuestions[] = "generateQuestionRoot";
+      $potentialQuestions[] = "generateQuestionLeaves";
+      $potentialQuestions[] = "generateQuestionInternal";
+
+      return $potentialQuestions;
     }
 
     public function checkAnswer($qObj, $userAns){

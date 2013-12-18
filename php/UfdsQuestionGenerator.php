@@ -21,9 +21,7 @@
         $questionIndex = rand(0, count($potentialQuestions) - 1);
         $questionFunc = $potentialQuestions[$questionIndex];
 
-        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
-        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
-        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
+        $questions[] = $this->$potentialQuestions[$questionIndex]($ufdsSize, $setAmt);
 
         unset($potentialQuestions[$questionIndex]);
         $potentialQuestions = array_values($potentialQuestions);

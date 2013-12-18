@@ -19,6 +19,7 @@
     public function generateQuestion($amt){
       $questions = array();
       $potentialQuestions = $this->generatePotentialQuestions();
+
       for($i = 0; $i < $amt; $i++){
         $bstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_UPPER_BOUND);
         $linkedListBstSize = rand(BST_SIZE_LOWER_BOUND,BST_SIZE_LINKED_LIST_UPPER_BOUND);
@@ -27,9 +28,11 @@
 
         $questionIndex = rand(0, count($potentialQuestions) - 1);
         $questionFunc = $potentialQuestions[$questionIndex];
+
         if($questionFunc == "generateQuestionMinValue" || $questionFunc == "generateQuestionMaxValue")
           $questions[] = $this->$potentialQuestions[$questionIndex]($linkedListBstSize);
         else $questions[] = $this->$potentialQuestions[$questionIndex]($bstSize);
+        
         unset($potentialQuestions[$questionIndex]);
         $potentialQuestions = array_values($potentialQuestions);
       }
