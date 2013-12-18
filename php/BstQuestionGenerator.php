@@ -1,6 +1,22 @@
 <?php
   class BstQuestionGenerator implements QuestionGeneratorInterface{
-    protected $rngSeed;
+    protected $answerFunctionList = array(
+      QUESTION_TYPE_SEARCH => "checkAnswerSearchSequence",
+      QUESTION_TYPE_TRAVERSAL => "checkAnswerTraversalSequence",
+      QUESTION_TYPE_SUCCESSOR => "checkAnswerSuccessorSequence",
+      QUESTION_TYPE_PREDECESSOR => "checkAnswerPredecessorSequence",
+      QUESTION_TYPE_MIN_VALUE => "checkAnswerMinValue",
+      QUESTION_TYPE_MAX_VALUE => "checkAnswerMaxValue",
+      QUESTION_TYPE_K_SMALLEST_VALUE => "checkAnswerKthSmallestValue",
+      QUESTION_TYPE_SWAP => "checkAnswerSwapQuestion",
+      QUESTION_TYPE_IS_AVL => "checkAnswerIsAvl",
+      QUESTION_TYPE_HEIGHT => "checkAnswerHeight",
+      QUESTION_TYPE_ROOT => "checkAnswerRoot",
+      QUESTION_TYPE_LEAVES => "checkAnswerLeaves",
+      QUESTION_TYPE_INTERNAL => "checkAnswerInternal",
+      QUESTION_TYPE_AVL_ROTATION_INSERT => "checkAnswerAvlRotationInsert",
+      QUESTION_TYPE_AVL_ROTATION_DELETE => "checkAnswerAvlRotationDelete"
+      );
 
     public function __construct(){
       // while (@ob_end_flush());
@@ -53,21 +69,23 @@
     }
 
     public function checkAnswer($qObj, $userAns){
-      if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkAnswerSearchSequence($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkAnswerTraversalSequence($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkAnswerSuccessorSequence($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkAnswerPredecessorSequence($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkAnswerMinValue($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkAnswerMaxValue($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_K_SMALLEST_VALUE) return $this->checkAnswerKthSmallestValue($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
-      else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
+      // if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkAnswerSearchSequence($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkAnswerTraversalSequence($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkAnswerSuccessorSequence($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkAnswerPredecessorSequence($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkAnswerMinValue($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkAnswerMaxValue($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_K_SMALLEST_VALUE) return $this->checkAnswerKthSmallestValue($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
+      // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
+      if(array_key_exists($qObj->qType, $this->answerFunctionList))
+        return $this->$answerFunctionList[$qObj->qType]($qObj, $userAns);
       else return false;
     }
 
