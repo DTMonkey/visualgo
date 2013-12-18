@@ -37,6 +37,7 @@
       $potentialQuestions[] = "generateQuestionLeaves";
       $potentialQuestions[] = "generateQuestionInternal";
 	  $potentialQuestions[] = "generateQuestionGreaterLess";
+	  $potentialQuestions[] = "generateQuestionRelations";
 
       return $potentialQuestions;
     }
@@ -50,6 +51,7 @@
       else if($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
       else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
 	  else if($qObj->qType == QUESTION_TYPE_GREATER_LESS) return $this->checkAnswerGreaterLess($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_RELATIONS) return $this->checkAnswerRelations($qObj, $userAns);
       else return false;
     }
 
@@ -324,7 +326,6 @@
       sort($userAns);
 
       $correctness = true;
-      if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
@@ -379,7 +380,6 @@
       sort($userAns);
 
       $correctness = true;
-      if((count($ans)==0)&&($userAns==NO_ANSWER)) return $correctness;
       if(count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
@@ -391,6 +391,52 @@
       }
 
       return $correctness;
+    }
+	
+	public function generateQuestionRelations($heapSize){
+      $heap = $this->generateMaxHeap();
+	  $amt = rand(16,31);
+      $heap->buildRandomHeap($amt);
+	  $valIndex = rand(1, $heap->size());
+	  $val = $heap->getElementAtIndex($valIndex);
+	  $relationsArr = array("parent", "left child", "right child");
+	  $relation = rand(0,2);
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_RELATIONS;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP, "value" => $val, "relation" => $relationsArr[$relation]);
+      $qObj->aType = ANSWER_TYPE_VERTEX;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = true;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerRelations($qObj, $userAns){
+      $heap = $qObj->internalDS;
+	  $val = $qObj->qParams["value"];
+	  $subtype = $qObj->qParams["subtype"];
+	  $relation = $qObj->qParams["relation"];
+	  
+	  $all = $heap->getAllElements();
+	  $indexof = array_search($val, $all);
+	  if($relation == "parent") {
+		$ansindex = floor($indexof/2);
+	  } else if($relation == "left child") {
+		 $ansindex = $indexof*2;
+	  } else if($relation == "right child") {
+		 $ansindex = $indexof*2 + 1;
+	  }
+	  
+	  $ans;
+	  if ($ansindex>0 || $ansindex<(count($all))) {
+	    $ans = $all[$ansindex];
+	  }
+	  return ($ans == $userAns[0]);
     }
 	
   }

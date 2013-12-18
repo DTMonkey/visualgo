@@ -36,6 +36,7 @@ const QUESTION_TYPE_EXTRACT = "extract";
 const QUESTION_TYPE_HEAPIFY = "heapify";
 const QUESTION_TYPE_HEAP_SORT = "heapSort";
 const QUESTION_TYPE_GREATER_LESS = "greaterLess";
+const QUESTION_TYPE_RELATIONS = "relations";
 
 //Bitmask-Specific
 const QUESTION_TYPE_OPERATION = "operation";
