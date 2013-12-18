@@ -10,26 +10,43 @@
 
     public function generateQuestion($amt){
       $questions = array();
+      $potentialQuestions = $this->generatePotentialQuestions();
+
       for($i = 0; $i < $amt; $i++){
         $ufdsSize = rand(5,15);
         $setAmt = rand(1,$ufdsSize);
 
-        $potentialQuestions = array();
+        if(count($potentialQuestions) == 0) $potentialQuestions = $this->generatePotentialQuestions();
 
-        $potentialQuestions[] = $this->generateQuestionFindSetSequence($ufdsSize, $setAmt);
-        $potentialQuestions[] = $this->generateQuestionFindSetCompression($ufdsSize, $setAmt);
-        $potentialQuestions[] = $this->generateQuestionIsSameSet($ufdsSize, $setAmt);
+        $questionIndex = rand(0, count($potentialQuestions) - 1);
+        $questionFunc = $potentialQuestions[$questionIndex];
 
-        $questions[] = $potentialQuestions[rand(0, count($potentialQuestions) - 1)];
+        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
+        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
+        $potentialQuestions[] = $this->$questionFunc($ufdsSize, $setAmt);
+
+        unset($potentialQuestions[$questionIndex]);
+        $potentialQuestions = array_values($potentialQuestions);
+
       }
 
       return $questions;
     }
 
+    protected function generatePotentialQuestions(){
+      $potentialQuestions = array();
+
+      $potentialQuestions[] = "generateQuestionFindSetSequence";
+      $potentialQuestions[] = "generateQuestionFindSetCompression";
+      $potentialQuestions[] = "generateQuestionIsSameSet";
+
+      return $potentialQuestions;
+    }
+
     public function checkAnswer($qObj, $userAns){
       if($qObj->qType == QUESTION_TYPE_FIND_SET_SEQUENCE) return $this->checkAnswerFindSetSequence($qObj, $userAns);
       else if ($qObj->qType == QUESTION_TYPE_FIND_SET_COMPRESSION) return $this->checkAnswerFindSetCompression($qObj, $userAns);
-	  else if ($qObj->qType == QUESTION_TYPE_IS_SAME_SET) return $this->checkAnswerIsSameSet($qObj, $userAns);
+      else if ($qObj->qType == QUESTION_TYPE_IS_SAME_SET) return $this->checkAnswerIsSameSet($qObj, $userAns);
       else return false;
     }
 
