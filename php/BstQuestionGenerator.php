@@ -6,16 +6,6 @@
       // while (@ob_end_flush());
     }
 
-    // public function seedRng($seed){
-    //   $this->rngSeed = $seed;
-    //   srand($rngSeed);
-    // }
-
-    // public function removeSeed(){
-    //   $this->rngSeed = NULL;
-    //   srand();
-    // }
-
     public function generateQuestion($amt){
       $questions = array();
       $potentialQuestions = $this->generatePotentialQuestions();
@@ -32,7 +22,7 @@
         if($questionFunc == "generateQuestionMinValue" || $questionFunc == "generateQuestionMaxValue")
           $questions[] = $this->$potentialQuestions[$questionIndex]($linkedListBstSize);
         else $questions[] = $this->$potentialQuestions[$questionIndex]($bstSize);
-        
+
         unset($potentialQuestions[$questionIndex]);
         $potentialQuestions = array_values($potentialQuestions);
       }
@@ -83,15 +73,11 @@
 
     protected function generateBst(){
       $bst = new BST();
-      // $seed = rand();
-      // $bst->seedRng($seed);
       return $bst;
     }
 
     protected function generateAvl(){
       $avl = new AVL();
-      // $seed = rand();
-      // $avl->seedRng($seed);
       return $avl;
     }
 

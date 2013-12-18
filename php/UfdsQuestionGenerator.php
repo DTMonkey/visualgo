@@ -4,10 +4,6 @@
 
     }
 
-    // public function seedRng($seed){
-    //   srand($seed);
-    // }
-
     public function generateQuestion($amt){
       $questions = array();
       $potentialQuestions = $this->generatePotentialQuestions();

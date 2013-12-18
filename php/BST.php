@@ -10,10 +10,6 @@
       // while (@ob_end_flush());
     }
 
-    // public function seedRng($seed){
-    //   srand($seed);
-    // }
-
     public function clearAll(){
       $this->init();
     }

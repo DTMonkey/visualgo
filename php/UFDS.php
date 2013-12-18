@@ -7,10 +7,6 @@
       $this->init();
     }
 
-    // public function seedRng($seed){
-    //   srand($seed);
-    // }
-
     public function clearAll(){
       $this->init();
     }

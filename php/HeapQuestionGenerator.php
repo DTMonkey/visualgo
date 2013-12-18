@@ -1,20 +1,9 @@
 <?php
   class HeapQuestionGenerator implements QuestionGeneratorInterface{
-    protected $rngSeed;
 
     public function __construct(){
 
     }
-
-    // public function seedRng($seed){
-    //   $this->rngSeed = $seed;
-    //   srand($this->rngSeed);
-    // }
-
-    // public function removeSeed(){
-    //   $this->rngSeed = NULL;
-    //   srand();
-    // }
 
     public function generateQuestion($amt){
       $questions = array();
