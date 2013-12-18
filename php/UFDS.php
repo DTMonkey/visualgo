@@ -114,6 +114,8 @@
 
     public function insertElements($amt, $desiredSetAmt){
       $sets = array();
+      $setSizeLimit = (int)($amt/$desiredSetAmt) + 1;
+      $iterationLimit = 1000;
       // $singleMemberSets = array();
 
       for($i = 0; $i < $amt; $i++){
@@ -121,30 +123,38 @@
         // $singleMemberSets[] = $i;
       }
 
-      for($i = 0; $i < 1000 && $this->setAmt > $desiredSetAmt; $i++){
-        $this->unionSet(rand(0, $amt-1), rand(0, $amt-1));
+      for($i = 0; $i < $iterationLimit && $this->setAmt > $desiredSetAmt; $i++){
+        $this->unionSetBuildUfds(rand(0, $amt-1), rand(0, $amt-1), $setSizeLimit);
       }
 
-      // for($i = 0; $i < $setAmt; $i++){
-      //   $temp = rand(0, count($singleMemberSets)-1);
-      //   $sets[] = array($singleMemberSets[$temp]);
-      //   unset($singleMemberSets[$temp]);
-      //   $singleMemberSets = array_values($singleMemberSets);
-      // }
-
-      // while(count($singleMemberSets) > 0){
-      //   $setToAssign = rand(0, $setAmt - 1);
-      //   $sets[$setToAssign][] = $singleMemberSets[0];
-      //   array_shift($singleMemberSets);
-      // }
-
-      // foreach($sets as $set){
-      //   foreach($set as $value){
-      //     $this->unionSet($value, $set[rand(0, count(set)-1)]);
-      //   }
-      // }
-
       $this->updateRankRoot();
+    }
+
+    protected function unionSetBuildUfds($val1, $val2, $setSizeLimit){
+      $arr1 = $this->findSet($val1);
+      $arr2 = $this->findSet($val2);
+
+      $root1 = $arr1[count($arr1)-1];
+      $root2 = $arr2[count($arr2)-1];
+
+      if($root1 == $root2) return;
+      if($this->elements[$root1]["setSize"] > $setSizeLimit) return;
+      if($this->elements[$root2]["setSize"] > $setSizeLimit) return;
+
+      $rank1 = $this->elements[$root1]["rank"];
+      $rank2 = $this->elements[$root2]["rank"];
+
+      if($rank1 > $rank2){
+        $this->elements[$root2]["parent"] = $root1;
+        $this->elements[$root1]["setSize"] += $this->elements[$root2]["setSize"];
+      }
+      else{
+        $this->elements[$root1]["parent"] = $root2;
+        if($rank1 == $rank2) $this->elements[$root2]["rank"]++;
+        $this->elements[$root2]["setSize"] += $this->elements[$root1]["setSize"];
+      }
+
+      $this->setAmt--;
     }
 
     public function isSameSetNoPathCompression($val1, $val2){
@@ -184,8 +194,6 @@
       $root2 = $arr2[count($arr2)-1];
 
       if($root1 == $root2) return;
-      if($this->elements[$root1]["setSize"] > 5) return;
-      if($this->elements[$root2]["setSize"] > 5) return;
 
       $rank1 = $this->elements[$root1]["rank"];
       $rank2 = $this->elements[$root2]["rank"];
