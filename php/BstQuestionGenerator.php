@@ -84,8 +84,10 @@
       // else if ($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
       // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
       // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
-      if(array_key_exists($qObj->qType, $this->answerFunctionList))
-        return $this->$this->answerFunctionList[$qObj->qType]($qObj, $userAns);
+      if(array_key_exists($qObj->qType, $this->answerFunctionList)){
+        $verifierFunc = $this->answerFunctionList[$qObj->qType];
+        return $this->$verifierFunc($qObj, $userAns);
+      }
       else return false;
     }
 
