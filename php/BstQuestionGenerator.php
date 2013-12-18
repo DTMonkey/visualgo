@@ -85,7 +85,7 @@
       // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
       // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
       if(array_key_exists($qObj->qType, $this->answerFunctionList))
-        return $this->$answerFunctionList[$qObj->qType]($qObj, $userAns);
+        return $this->$this->answerFunctionList[$qObj->qType]($qObj, $userAns);
       else return false;
     }
 
