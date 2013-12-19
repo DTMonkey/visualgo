@@ -1,9 +1,9 @@
 <?php
-const GRAPH_TEMPLATE_EMPTY = array(
+$GRAPH_TEMPLATE_EMPTY = array(
     "internalAdjList" => array(),
     "internalEdgeList" => array()
   );
-const GRAPH_TEMPLATE_K5 = array(
+$GRAPH_TEMPLATE_K5 = array(
     "internalAdjList" => array(
       0=>array(
           "cxPercentage" => 31.1,
@@ -45,7 +45,7 @@ const GRAPH_TEMPLATE_K5 = array(
           2 => 8,
           3 => 9
         ),
-      )
+      ),
     "internalEdgeList" => array(
       0=>array(
           "vertexA" => 0,
@@ -99,7 +99,7 @@ const GRAPH_TEMPLATE_K5 = array(
         )
       )
   );
-const GRAPH_TEMPLATE_TESSELLATION = array(
+$GRAPH_TEMPLATE_TESSELLATION = array(
     "internalAdjList" => array(
       0 => array(
           "cxPercentage" => 22.2,
@@ -260,14 +260,14 @@ function createState($internalAdjListObject, $internalEdgeListObject){
     "el"=>array()
   );
 
-  for($internalAdjListObject as $key => $value){
+  foreach ($internalAdjListObject as $key => $value){
     $state["vl"][$key] = array();
 
     $state["vl"][$key]["cxPercentage"] = $internalAdjListObject[$key]["cxPercentage"];
     $state["vl"][$key]["cyPercentage"] = $internalAdjListObject[$key]["cyPercentage"];
     $state["vl"][$key]["text"] = $key;
   }
-  for($internalEdgeListObject as $key => $value){
+  foreach ($internalEdgeListObject as $key => $value){
     $state["el"][$key] = arrray();
 
     $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];

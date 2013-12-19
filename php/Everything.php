@@ -11,4 +11,5 @@
   require 'UfdsQuestionGenerator.php';
   require 'Constant.php';
   require 'Misc.php';
+  require 'GraphTemplate.php';
 ?>
