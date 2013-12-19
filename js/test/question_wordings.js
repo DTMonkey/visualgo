@@ -35,3 +35,7 @@ const BITMASK_LSONE = "What is the index of the least significant bit (first bit
 const UFDS_FIND_SET_COMPRESSION = "Given the UFDS as shown in the picture, click all vertices when findSet(v) is performed on vertex v, the UFDS structure does not change! The path compression and union by rank heuristics are used.";
 const UFDS_FIND_SET_SEQUENCE = "Given the UFDS as shown in the picture, click the sequence of vertices (the order matters) that are visited by findSet(|value|)!";
 const UFDS_IS_SAME_SET = "Given the UFDS as shown in the picture, click all vertices that belongs to the same set as |value|!";
+
+const MST_PRIM_SEQUENCE = "";
+const MST_KRUSKAL_SEQUENCE = "";
+const MST_MINIMAX_EDGE = "";

@@ -1,9 +1,9 @@
 <?php
 class MstQuestionGenerator{
   protected $answerFunctionList = array(
-      QUESTION_TYPE_SEARCH => "checkAnswerPrimSequence",
-      QUESTION_TYPE_TRAVERSAL => "checkAnswerKruskalSequence",
-      QUESTION_TYPE_SUCCESSOR => "checkAnswerMinimaxEdge",
+      QUESTION_TYPE_PRIM_SEQUENCE => "checkAnswerPrimSequence",
+      QUESTION_TYPE_KRUSKAL_SEQUENCE => "checkAnswerKruskalSequence",
+      QUESTION_TYPE_MINIMAX_EDGE => "checkAnswerMinimaxEdge",
       );
 
     public function __construct(){
@@ -47,8 +47,29 @@ class MstQuestionGenerator{
       else return false;
     }
 
-    protected function generateQuestionPrimSequence(){
+    protected function generateMinST(){
 
+    }
+
+    protected function generateMaxST(){
+
+    }
+
+    protected function generateQuestionPrimSequence(){
+      $mst = $this->generateMinST();
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_MST;
+      $qObj->qType = QUESTION_TYPE_PRIM_SEQUENCE;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_EDGE;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $mst->toGraphState();
+      $qObj->internalDS = $mst;
+
+      return $qObj;
     }
 
     protected function checkAnswerPrimSequence($qObj, $userAns){
@@ -56,7 +77,20 @@ class MstQuestionGenerator{
     }
 
     protected function generateQuestionKruskalSequence(){
+      $mst = $this->generateMinST();
 
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_MST;
+      $qObj->qType = QUESTION_TYPE_KRUSKAL_SEQUENCE;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_EDGE;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $mst->toGraphState();
+      $qObj->internalDS = $mst;
+
+      return $qObj;
     }
 
     protected function checkAnswerKruskalSequence($qObj, $userAns){
@@ -64,7 +98,22 @@ class MstQuestionGenerator{
     }
 
     protected function generateQuestionMinimaxEdge(){
+      $mst = $this->generateMinST();
+      $vertexA = NULL;
+      $vertexB = NULL;
 
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_MST;
+      $qObj->qType = QUESTION_TYPE_MINIMAX_EDGE;
+      $qObj->qParams = array("vertexA" => $vertexA, "vertexB" => $vertexB,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->aType = ANSWER_TYPE_EDGE;
+      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
+      $qObj->ordered = true;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $mst->toGraphState();
+      $qObj->internalDS = $mst;
+
+      return $qObj;
     }
 
     protected function checkAnswerMinimaxEdge($qObj, $userAns){
