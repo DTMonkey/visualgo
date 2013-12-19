@@ -449,16 +449,16 @@ class GraphTemplate{
   }
 
   public static function getGraph($numVertex, $connected, $directed){
-    $template = self::$graphTemplate[GRAPH_TEMPLATE_EMPTY];
+    $template = array_copy(self::$graphTemplate[GRAPH_TEMPLATE_EMPTY]);
 
     while(count($template["internalAdjList"]) < $numVertex){
       $templateName = self::$graphTemplateIndex[rand(0, count(self::$graphTemplateIndex)-1)];
-      $template = self::$graphTemplate[$templateName];
+      $template = array_copy(self::$graphTemplate[$templateName]);
     }
 
     $weightList = array(0);
 
-    self::reduceVertex($template, $numVertex, $connected, $directed);
+    // self::reduceVertex($template, $numVertex, $connected, $directed);
     if(!$connected && !self::isConnected($template, $directed)) self::disconnect($template);
     self::randomizeWeight($template);
 
