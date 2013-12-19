@@ -1,6 +1,6 @@
 <?php
 class GraphTemplate{
-  protected $graphTemplate = array(
+  protected static $graphTemplate = array(
     GRAPH_TEMPLATE_EMPTY => array(
         "internalAdjList" => array(),
         "internalEdgeList" => array()
@@ -468,7 +468,7 @@ class GraphTemplate{
           )
       )
     );
-  protected $graphTemplateIndex = array(
+  protected static $graphTemplateIndex = array(
     GRAPH_TEMPLATE_EMPTY, GRAPH_TEMPLATE_K5, GRAPH_TEMPLATE_TESSELLATION, GRAPH_TEMPLATE_RAIL, GRAPH_TEMPLATE_CP4P10
     );
 
@@ -477,8 +477,8 @@ class GraphTemplate{
   }
 
   public static function getGraph($numVertex, $connected, $directed){
-    $templateName = $this->graphTemplateIndex[mt_rand(0, count($this->graphTemplateIndex))];
-    return $this->graphTemplate[$templateName];
+    $templateName = self::$graphTemplateIndex[mt_rand(0, count(self::$graphTemplateIndex)-1)];
+    return self::$graphTemplate[$templateName];
   }
 }
 

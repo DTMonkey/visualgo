@@ -64,7 +64,7 @@
     }
 
     protected function init(){
-	  $this->graphTemplate = GraphTemplate.getGraph(5, true, true);
+	  $this->graphTemplate = GraphTemplate::getGraph(5, true, true);
       $this->generateAdjList($this->graphTemplate); //array of array of Pairs
     }
 	
