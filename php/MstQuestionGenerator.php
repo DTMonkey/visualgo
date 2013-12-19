@@ -48,11 +48,13 @@ class MstQuestionGenerator{
     }
 
     protected function generateMinST(){
-
+      $mst = new MST(true);
+      return $mst;
     }
 
     protected function generateMaxST(){
-
+      $mst = new MST(false);
+      return $mst;
     }
 
     protected function generateQuestionPrimSequence(){

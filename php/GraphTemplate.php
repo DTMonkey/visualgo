@@ -483,11 +483,13 @@ function createState($graphTemplate){
     $state["vl"][$key]["text"] = $key;
   }
   foreach ($internalEdgeListObject as $key => $value){
-    $state["el"][$key] = arrray();
+    $state["el"][$key] = array();
 
     $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];
     $state["el"][$key]["vertexB"] = $internalEdgeListObject[$key]["vertexB"];
     $state["el"][$key]["weight"] = $internalEdgeListObject[$key]["weight"];
   }
+
+  return $state;
 }
 ?>

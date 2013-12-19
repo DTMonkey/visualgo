@@ -75,6 +75,7 @@
 
   const ANSWER_TYPE_VERTEX = "vertex";
   const ANSWER_TYPE_VERTEX_MCQ = "vertexMcq";
+  const ANSWER_TYPE_EDGE = "edge";
   const ANSWER_TYPE_MCQ = "mcq";
   const ANSWER_TYPE_FILL_BLANKS = "fillBlanks";
 
