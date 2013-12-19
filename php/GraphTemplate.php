@@ -466,7 +466,7 @@ $GRAPH_TEMPLATE__CP4P10 = array(
       )
   );
 
-function createState($graphTemplate){
+function createState($graphTemplate, $displayWeight){
   $internalAdjListObject = $graphTemplate["internalAdjList"];
   $internalEdgeListObject = $graphTemplate["internalEdgeList"];
 
@@ -488,6 +488,7 @@ function createState($graphTemplate){
     $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];
     $state["el"][$key]["vertexB"] = $internalEdgeListObject[$key]["vertexB"];
     $state["el"][$key]["weight"] = $internalEdgeListObject[$key]["weight"];
+    if($displayWeight) $state["el"][$key]["displayWeight"] = true;
   }
 
   return $state;
