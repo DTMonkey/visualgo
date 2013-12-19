@@ -89,7 +89,7 @@ function showAnswerInterface(q, mode) {
 				
 				$('#edge path').click( function() {
 					var edgeID = $(this).attr('id');
-					var edgeList = ansArr[q]; if(edgeList==UNANSWERED || vertexList==NO_ANSWER) edgeList=new Array();
+					var edgeList = ansArr[q]; if(edgeList==UNANSWERED || edgeList==NO_ANSWER) edgeList=new Array();
 					
 					//find vertices it joins
 					var edgeIDNo = parseInt(edgeID.substr(1));

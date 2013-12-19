@@ -64,8 +64,7 @@
     }
 
     protected function init(){
-	  global $GRAPH_TEMPLATE_K5;
-	  $this->graphTemplate = $GRAPH_TEMPLATE_K5;
+	  $this->graphTemplate = GraphTemplate.getGraph(5, true, true);
       $this->generateAdjList($this->graphTemplate); //array of array of Pairs
     }
 	
@@ -94,7 +93,7 @@
 	}
 
     public function toGraphState(){
-	  return createState($this->graphTemplate);
+	  return createState($this->graphTemplate, true);
     }
 
     public function createRandomGraph(){
@@ -137,8 +136,23 @@
 	  return $edgeSet;
     }
 
+/*
     public function kruskal(){
-
+		//generate edge triple list
+		$edgeList = array(); //array of triples
+		for($i=0; $i<count($this->adjList); $i++) {
+			for($j=0; $j<count($this->adjList[$i]); $j++) {
+				$pair = $this->adjList[$i][$j];
+				$triple = new Triple($i, $pair->v(), $pair->w());
+				
+				if() { //check for doublecount for undirected graphs
+					$edgeList[] = $triple;
+				}
+			}
+		}
+		
+		
     }
+	*/
   }
 ?>

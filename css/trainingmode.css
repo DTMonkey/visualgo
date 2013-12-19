@@ -101,10 +101,11 @@
 	#viz { }
 		svg { 
 			position: fixed;
+			height: 400px;
 			top: 50%;
 			left: 50%;
 			margin-left: -450px;
-			margin-top: -125px;
+			margin-top: -150px;
 			z-index: -15;
 		}
 	

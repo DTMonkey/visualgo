@@ -82,6 +82,13 @@ function extractQnType(type, amt) {
 				return INTERFACE_MULT_V;
 			}
 			break;
+		case ANSWER_TYPE_EDGE:
+			if(amt==ANSWER_AMT_ONE) {
+				return INTERFACE_SINGLE_E;
+			} else if(amt==ANSWER_AMT_MULTIPLE) {
+				return INTERFACE_MULT_E;
+			}
+			break;
 		case ANSWER_TYPE_MCQ:
 			return INTERFACE_MCQ;
 			break;
@@ -122,7 +129,7 @@ function extractQnGraph(graph) {
 		v.cx = (temp/100)*MAIN_SVG_WIDTH;
 		temp = v.cyPercentage;
 		v.cyPercentage = v.cy;
-		v.cy = (temp/100)*MAIN_SVG_HEIGHT;
+		v.cy = (temp/100)*400; //we use 400 instead of MAIN_SVG_WIDTH
 	}
 	return graph;
 }
