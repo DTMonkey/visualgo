@@ -449,9 +449,58 @@ class GraphTemplate{
   }
 
   public static function getGraph($numVertex, $connected, $directed){
-    $templateName = self::$graphTemplateIndex[rand(0, count(self::$graphTemplateIndex)-1)];
-    $template = self::$graphTemplate[$templateName];
+    $template = self::$graphTemplate[GRAPH_TEMPLATE_EMPTY];
 
+    while(count($template["internalAdjList"]) < $numVertex){
+      $templateName = self::$graphTemplateIndex[rand(0, count(self::$graphTemplateIndex)-1)];
+      $template = self::$graphTemplate[$templateName];
+    }
+
+    $weightList = array(0);
+
+    // self::reduceVertex($template, $numVertex, $connected);
+    self::randomizeWeight($template);
+
+    return $template;
+  }
+
+  public static function createState($graphTemplate, $displayWeight){
+    $internalAdjListObject = $graphTemplate["internalAdjList"];
+    $internalEdgeListObject = $graphTemplate["internalEdgeList"];
+
+    $state = array(
+      "vl"=>array(),
+      "el"=>array()
+    );
+
+    foreach ($internalAdjListObject as $key => $value){
+      $state["vl"][$key] = array();
+
+      $state["vl"][$key]["cxPercentage"] = $internalAdjListObject[$key]["cxPercentage"];
+      $state["vl"][$key]["cyPercentage"] = $internalAdjListObject[$key]["cyPercentage"];
+      $state["vl"][$key]["text"] = $key;
+    }
+    foreach ($internalEdgeListObject as $key => $value){
+      $state["el"][$key] = array();
+
+      $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];
+      $state["el"][$key]["vertexB"] = $internalEdgeListObject[$key]["vertexB"];
+      $state["el"][$key]["weight"] = $internalEdgeListObject[$key]["weight"];
+      if($displayWeight) $state["el"][$key]["displayWeight"] = true;
+    }
+
+    return $state;
+  }
+
+  protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
+    for($i = count($template) - 1; $i >= 0; $i--){
+      $templateCopy = array_copy($template);
+      $adjacent = $template["internalAdjList"][$i];
+
+    }
+  }
+
+  protected static function randomizeWeight(&$template){
     $weightList = array(0);
 
     for($i = 0; $i < count($template["internalEdgeList"]); $i++){
@@ -463,11 +512,51 @@ class GraphTemplate{
       $weightList[] = $weight;
 
       $template["internalEdgeList"][$i]["weight"] = $weight;
-      // echo $edgeId."|";
+    }
+  }
+
+  protected static function disconnect(&$template, $directed){
+
+  }
+
+  protected static function isConnected($template, $directed){
+    $visited = array();
+
+    if(!$directed){
+      $arr = array_keys($template["internalAdjList"]);
+      $initVertex = $arr[0];
+      $queue = array();
+      $visited[] = $initVertex;
+      $adjacent = $template["internalAdjList"][$initVertex];
+
+      foreach($adjacent as $key => $value){
+        if($key == "cxPercentage" || $key == "cyPercentage") continue;
+        $queue[] = $key;
+      }
+
+      while(count($queue) > 0){
+        $currVertex = $queue[0];
+        array_shift($queue);
+        if(!in_array($currVertex, $visited)){
+          $visited[] = $currVertex;
+          $adjacent = $template["internalAdjList"][$initVertex];
+
+          foreach($adjacent as $key => $value){
+            if($key == "cxPercentage" || $key == "cyPercentage") continue;
+            $queue[] = $key;
+          }
+        }
+      }
+    }
+    else{
+
     }
 
-    // echo $template["internalEdgeList"][0]["vertexB"]."|";
-    return $template;
+    return count($visited) == count($template["internalAdjList"]);
+  }
+
+  protected static function toposort($template){
+
   }
 }
 
