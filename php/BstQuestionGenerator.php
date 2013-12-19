@@ -69,21 +69,6 @@
     }
 
     public function checkAnswer($qObj, $userAns){
-      // if($qObj->qType == QUESTION_TYPE_SEARCH) return $this->checkAnswerSearchSequence($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_TRAVERSAL) return $this->checkAnswerTraversalSequence($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_SUCCESSOR) return $this->checkAnswerSuccessorSequence($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_PREDECESSOR) return $this->checkAnswerPredecessorSequence($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_MIN_VALUE) return $this->checkAnswerMinValue($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_MAX_VALUE) return $this->checkAnswerMaxValue($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_K_SMALLEST_VALUE) return $this->checkAnswerKthSmallestValue($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_SWAP) return $this->checkAnswerSwapQuestion($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_IS_AVL) return $this->checkAnswerIsAvl($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_HEIGHT) return $this->checkAnswerHeight($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_ROOT) return $this->checkAnswerRoot($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_LEAVES) return $this->checkAnswerLeaves($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_INSERT) return $this->checkAnswerAvlRotationInsert($qObj, $userAns);
-      // else if ($qObj->qType == QUESTION_TYPE_AVL_ROTATION_DELETE) return $this->checkAnswerAvlRotationDelete($qObj, $userAns);
       if(array_key_exists($qObj->qType, $this->answerFunctionList)){
         $verifierFunc = $this->answerFunctionList[$qObj->qType];
         return $this->$verifierFunc($qObj, $userAns);
