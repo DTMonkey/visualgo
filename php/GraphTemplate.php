@@ -1,11 +1,11 @@
 <?php
 class GraphTemplate{
-  protected graphTemplate = array(
+  protected $graphTemplate = array(
     GRAPH_TEMPLATE_EMPTY => array(
         "internalAdjList" => array(),
         "internalEdgeList" => array()
-      );
-    GRAPH_TEMPLATE_K5 = array(
+      ),
+    GRAPH_TEMPLATE_K5 => array(
         "internalAdjList" => array(
           0=>array(
               "cxPercentage" => 31.1,
@@ -100,8 +100,8 @@ class GraphTemplate{
               "weight" => 19
             )
           )
-      );
-    GRAPH_TEMPLATE_TESSELLATION = array(
+      ),
+    GRAPH_TEMPLATE_TESSELLATION => array(
         "internalAdjList" => array(
           0 => array(
               "cxPercentage" => 22.2,
@@ -254,8 +254,8 @@ class GraphTemplate{
               "weight" => 9
             )
           )
-      );
-    GRAPH_TEMPLATE_RAIL = array(
+      ),
+    GRAPH_TEMPLATE_RAIL => array(
         "internalAdjList" => array(
           0 => array(
               "cxPercentage" =>  5.6,
@@ -391,8 +391,8 @@ class GraphTemplate{
               "weight" =>  10
             )
           )
-      );
-    GRAPH_TEMPLATE_CP4P10 = array(
+      ),
+    GRAPH_TEMPLATE_CP4P10 => array(
         "internalAdjList" => array(
           0 => array(
               "cxPercentage" =>  38.9,
@@ -468,7 +468,7 @@ class GraphTemplate{
           )
       )
     );
-  protected graphTemplateIndex = array(
+  protected $graphTemplateIndex = array(
     GRAPH_TEMPLATE_EMPTY, GRAPH_TEMPLATE_K5, GRAPH_TEMPLATE_TESSELLATION, GRAPH_TEMPLATE_RAIL, GRAPH_TEMPLATE_CP4P10
     );
 
