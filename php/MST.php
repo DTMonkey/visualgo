@@ -1,47 +1,48 @@
 <?php
+  //to remove later
+	require 'GraphTemplate.php';
+	while(@ob_end_flush());
+	$mst = new MST(true);
+	$mst->prim(0);
 
-  require 'GraphTemplate.php';
-  while(@ob_end_flush());
-  $mst = new MST(true);
-
-  class Pair {
-    protected $v;
-	protected $w;
+	class Pair {
+		protected $v;
+		protected $w;
 	
-    public function __construct($v, $w) {
-      $this->v = $v;
-	  $this->w = $w;
-    }
+		public function __construct($v, $w) {
+			$this->v = $v;
+			$this->w = $w;
+		}
 	
-	//accessors
-	public function v() { return $this->v; }
-	public function w() { return $this->w; }
+		//accessors
+		public function v() { return $this->v; }
+		public function w() { return $this->w; }
 	
-	public function toString() {
-	  return "(".$this->v.",".$this->w.") ";
+		public function toString() {
+			return "(".$this->v.",".$this->w.") ";
+		}
 	}
-  }
 
-  class Triple {
-    protected $from;
-	protected $tp;
-	protected $w; 
+	class Triple {
+		protected $from;
+		protected $tp;
+		protected $w; 
 	
-    public function __construct($f, $t, $w) {
-      $this->from = $f;
-	  $this->to = $t;
-	  $this->w = $w;
-    }
+		public function __construct($f, $t, $w) {
+			$this->from = $f;
+			$this->to = $t;
+			$this->w = $w;
+		}
 	
-	//accessors
-	public function from() { return $this->from; }
-	public function to() { return $this->to; }
-	public function weight() { return $this->w; }
+		//accessors
+		public function from() { return $this->from; }
+		public function to() { return $this->to; }
+		public function weight() { return $this->w; }
 	
-	public function toString() {
-	  return "(".$this->from.",".$this->to.",".$this->w.") ";
+		public function toString() {
+			return "(".$this->from.",".$this->to.",".$this->w.") ";
+		}
 	}
-  }
   
   class MST{
 	protected $adjList;
@@ -88,7 +89,7 @@
 	}
 
     public function toGraphState(){
-
+	  return createState($this->graphTemplate);
     }
 
     public function createRandomGraph(){
@@ -113,7 +114,8 @@
 	  $PQ = array(); //array of triples (from, to, weight)
 	  $nNeighbours = count($this->adjList[$start]);
 	  for($i=0; $i<$nNeighbours; $i++) { //enqueue neighbours
-		  $PQ[] = new Triple($start, $this->adjList[$start][$i]->v(), $this->adjList[$start][$i]->w());
+	  	  $neighbourEdge = new Triple($start, $this->adjList[$start][$i]->v(), $this->adjList[$start][$i]->w());
+		  $PQ[] = $neighbourEdge;
 	  }
 	  usort($PQ, "tripleSort"); //by weight
 	  
@@ -130,6 +132,14 @@
 		  usort($PQ, "pairSort"); //by weight
 		}
 	  }
+	  
+	  $str = "";
+	  //echo(count($edgeSet));
+	  for($i=0; $i<count($edgeSet); $i++) {
+		$str .=  $edgeSet[$i]->toString();
+	  }
+	  $str .= "<br/>";
+	  //echo($str);
 	  return $edgeSet;
     }
 
