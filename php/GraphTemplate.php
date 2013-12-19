@@ -567,32 +567,4 @@ class GraphTemplate{
 
   }
 }
-
-function createState($graphTemplate, $displayWeight){
-  $internalAdjListObject = $graphTemplate["internalAdjList"];
-  $internalEdgeListObject = $graphTemplate["internalEdgeList"];
-
-  $state = array(
-    "vl"=>array(),
-    "el"=>array()
-  );
-
-  foreach ($internalAdjListObject as $key => $value){
-    $state["vl"][$key] = array();
-
-    $state["vl"][$key]["cxPercentage"] = $internalAdjListObject[$key]["cxPercentage"];
-    $state["vl"][$key]["cyPercentage"] = $internalAdjListObject[$key]["cyPercentage"];
-    $state["vl"][$key]["text"] = $key;
-  }
-  foreach ($internalEdgeListObject as $key => $value){
-    $state["el"][$key] = array();
-
-    $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];
-    $state["el"][$key]["vertexB"] = $internalEdgeListObject[$key]["vertexB"];
-    $state["el"][$key]["weight"] = $internalEdgeListObject[$key]["weight"];
-    if($displayWeight) $state["el"][$key]["displayWeight"] = true;
-  }
-
-  return $state;
-}
 ?>
