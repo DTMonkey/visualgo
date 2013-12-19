@@ -458,7 +458,8 @@ class GraphTemplate{
 
     $weightList = array(0);
 
-    // self::reduceVertex($template, $numVertex, $connected);
+    self::reduceVertex($template, $numVertex, $connected, $directed);
+    if(!$connected && !self::isConnected($template, $directed)) self::disconnect($template);
     self::randomizeWeight($template);
 
     return $template;
@@ -496,7 +497,14 @@ class GraphTemplate{
     for($i = count($template) - 1; $i >= 0; $i--){
       $templateCopy = array_copy($template);
       $adjacent = $template["internalAdjList"][$i];
-
+      foreach($adjacent as $key => $value){
+        if($key == "cxPercentage" || $key == "cyPercentage") continue;
+        unset($templateCopy["internalAdjList"][$key][$i]);
+        unset($templateCopy["internalEdgeList"][$value]);
+      }
+      if(!$connected || self::isConnected($templateCopy, $directed)){
+        $template = $templateCopy;
+      }
     }
   }
 
