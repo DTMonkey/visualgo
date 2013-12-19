@@ -256,69 +256,69 @@ $GRAPH_TEMPLATE_TESSELLATION = array(
 $GRAPH_TEMPLATE_RAIL = array(
     "internalAdjList" => array(
       0 => array(
-          "cx" =>  50,
-          "cy" =>  100,
+          "cxPercentage" =>  5.6,
+          "cyPercentage" =>  20,
           1 => 0
         ),
       1 => array(
-          "cx" =>  250,
-          "cy" =>  100,
+          "cxPercentage" =>  27.8,
+          "cyPercentage" =>  20,
           0 => 0,
           2 => 1,
           6 => 2,
           7 => 3
         ),
       2 => array(
-          "cx" =>  450,
-          "cy" =>  100,
+          "cxPercentage" =>  50,
+          "cyPercentage" =>  20,
           1 => 1,
           3 => 4,
           7 => 5,
           8 => 6
         ),
       3 => array(
-          "cx" =>  650,
-          "cy" =>  100,
+          "cxPercentage" =>  72.2,
+          "cyPercentage" =>  20,
           2 => 4,
           4 => 7,
           8 => 8
         ),
       4 => array(
-          "cx" =>  850,
-          "cy" =>  100,
+          "cxPercentage" =>  94.4,
+          "cyPercentage" =>  20,
           3 => 7
         ),
       5 => array(
-          "cx" =>  50,
-          "cy" =>  250,
+          "cxPercentage" =>  5.6,
+          "cyPercentage" =>  50,
           6 => 9
         ),
       6 => array(
-          "cx" =>  250,
-          "cy" =>  250,
+          "cxPercentage" =>  27.8,
+          "cyPercentage" =>  50,
           1 => 2,
           5 => 9,
           7 => 10
         ),
       7 => array(
-          "cx" =>  450,
-          "cy" =>  250,
+          "cxPercentage" =>  50,
+          "cyPercentage" =>  50,
           1 => 3,
           2 => 5,
           6 => 10,
           8 => 11
         ),
       8 => array(
-          "cx" =>  650,
-          "cy" =>  250,
+          "cxPercentage" =>  72.2,
+          "cyPercentage" =>  50,
           2 => 6,
           3 => 8,
           7 => 11,
           9 => 12
         ),
       9 => array(
-          "cx" =>  850,
-          "cy" =>  250,
+          "cxPercentage" =>  94.4,
+          "cyPercentage" =>  50,
           8 => 12
         )
       ),
@@ -393,36 +393,36 @@ $GRAPH_TEMPLATE_RAIL = array(
 $GRAPH_TEMPLATE__CP4P10 = array(
     "internalAdjList" => array(
       0 => array(
-          "cx" =>  350,
-          "cy" =>  150,
+          "cxPercentage" =>  38.9,
+          "cyPercentage" =>  30,
           1 => 0,
           2 => 1,
           3 => 2,
           4 => 3
         ),
       1 => array(
-          "cx" =>  450,
-          "cy" =>  50,
+          "cxPercentage" =>  50,
+          "cyPercentage" =>  10,
           0 => 0,
           2 => 4
         ),
       2 => array(
-          "cx" =>  550,
-          "cy" =>  150,
+          "cxPercentage" =>  61.1,
+          "cyPercentage" =>  30,
           0 => 1,
           1 => 4,
           3 => 5
         ),
       3 => array(
-          "cx" =>  450,
-          "cy" =>  250,
+          "cxPercentage" =>  50,
+          "cyPercentage" =>  50,
           0 => 2,
           2 => 5,
           4 => 6
         ),
       4 => array(
-          "cx" =>  350,
-          "cy" =>  350,
+          "cxPercentage" =>  38.9,
+          "cyPercentage" =>  70,
           0 => 3,
           3 => 6
         )
