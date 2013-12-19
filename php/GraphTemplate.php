@@ -390,7 +390,81 @@ $GRAPH_TEMPLATE_RAIL = array(
         )
       )
   );
-
+$GRAPH_TEMPLATE__CP4P10 = array(
+    "internalAdjList" => array(
+      0 => array(
+          "cx" =>  350,
+          "cy" =>  150,
+          1 => 0,
+          2 => 1,
+          3 => 2,
+          4 => 3
+        ),
+      1 => array(
+          "cx" =>  450,
+          "cy" =>  50,
+          0 => 0,
+          2 => 4
+        ),
+      2 => array(
+          "cx" =>  550,
+          "cy" =>  150,
+          0 => 1,
+          1 => 4,
+          3 => 5
+        ),
+      3 => array(
+          "cx" =>  450,
+          "cy" =>  250,
+          0 => 2,
+          2 => 5,
+          4 => 6
+        ),
+      4 => array(
+          "cx" =>  350,
+          "cy" =>  350,
+          0 => 3,
+          3 => 6
+        )
+      ),
+    "internalEdgeList" => array(
+      0 => array(
+          "vertexA" =>  0,
+          "vertexB" =>  1,
+          "weight" =>  4
+        ),
+      1 => array(
+          "vertexA" =>  0,
+          "vertexB" =>  2,
+          "weight" =>  4
+        ),
+      2 => array(
+          "vertexA" =>  0,
+          "vertexB" =>  3,
+          "weight" =>  6
+        ),
+      3 => array(
+          "vertexA" =>  0,
+          "vertexB" =>  4,
+          "weight" =>  6
+        ),
+      4 => array(
+          "vertexA" =>  1,
+          "vertexB" =>  2,
+          "weight" =>  2
+        ),
+      5 => array(
+          "vertexA" =>  2,
+          "vertexB" =>  3,
+          "weight" =>  8
+        ),
+      6 => array(
+          "vertexA" =>  3,
+          "vertexB" =>  4,
+          "weight" =>  9
+        )
+      )
+  );
 
 function createState($internalAdjListObject, $internalEdgeListObject){
   $state = array(
