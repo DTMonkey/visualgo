@@ -38,6 +38,7 @@
       $potentialQuestions[] = "generateQuestionInternal";
 	  $potentialQuestions[] = "generateQuestionGreaterLess";
 	  $potentialQuestions[] = "generateQuestionRelations";
+	  $potentialQuestions[] = "generateQuestionIsHeap";
 
       return $potentialQuestions;
     }
@@ -52,6 +53,7 @@
       else if($qObj->qType == QUESTION_TYPE_INTERNAL) return $this->checkAnswerInternal($qObj, $userAns);
 	  else if($qObj->qType == QUESTION_TYPE_GREATER_LESS) return $this->checkAnswerGreaterLess($qObj, $userAns);
 	  else if($qObj->qType == QUESTION_TYPE_RELATIONS) return $this->checkAnswerRelations($qObj, $userAns);
+	  else if($qObj->qType == QUESTION_TYPE_IS_HEAP) return $this->checkAnswerIsHeap($qObj, $userAns);
       else return false;
     }
 
@@ -436,6 +438,36 @@
 	  if ($ansindex>0 || $ansindex<(count($all))) {
 	    $ans = $all[$ansindex];
 	  }
+	  return ($ans == $userAns[0]);
+    }
+	
+	public function generateQuestionIsHeap($heapSize){
+      $heap = $this->generateMaxHeap();
+	  $amt = rand(16,31);
+      $heap->buildRandomHeap($amt);
+	  $swap = rand(0,1);
+	  if($swap) { $heap->swap(); }
+
+      $qObj = new QuestionObject();
+      $qObj->qTopic = QUESTION_TOPIC_HEAP;
+      $qObj->qType = QUESTION_TYPE_IS_HEAP;
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_MAX_HEAP);
+      $qObj->aType = ANSWER_TYPE_MCQ;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+	  $qObj->aParams = array("Valid" => HEAP_SWAP_ANS_VALID, "Invalid" => HEAP_SWAP_ANS_INVALID);
+      $qObj->ordered = false;
+      $qObj->allowNoAnswer = false;
+      $qObj->graphState = $heap->toGraphState();
+      $qObj->internalDS = $heap;
+
+      return $qObj;
+    }
+
+    public function checkAnswerIsHeap($qObj, $userAns){
+      $heap = $qObj->internalDS;
+	  $subtype = $qObj->qParams["subtype"];
+	  $ans = $heap->isHeap();
+	  
 	  return ($ans == $userAns[0]);
     }
 	

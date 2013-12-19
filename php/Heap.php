@@ -219,6 +219,30 @@
 	  return $ans;
 	}
 	
+	public function swap() {
+	  $parenti = rand(1,floor((count($this->heapArr)-1)/2));
+	  $childi = $this->left($parenti);
+	  $temp = $this->heapArr[$parenti];
+	  $this->heapArr[$parenti] = $this->heapArr[$childi];
+	  $this->heapArr[$childi] = $temp;
+	}
+	
+	public function isHeap() {
+	  $upperParentBound = floor((count($this->heapArr)-1)/2);
+	  for($i = 1; $i<= $upperParentBound; $i++) { //for all parents
+	    $parentVal = $this->heapArr[$i];
+		$leftVal = $this->heapArr[$this->left($i)]; //there is at least a left child
+		$rightVal = 0;
+		if($this->right($i) < count($this->heapArr)) { //if there is a right child
+		  $rightVal = $this->heapArr[$this->right($i)];
+		}
+		if($parentVal < $leftVal || $parentVal < $rightVal) {
+			return HEAP_SWAP_ANS_INVALID;
+		}
+	  }
+	  return HEAP_SWAP_ANS_VALID;
+	}
+	
 	public function getElementAtIndex($i) {
 		return $this->heapArr[$i];
 	}

@@ -33,6 +33,7 @@
   const QUESTION_TYPE_HEAP_SORT = "heapSort";
   const QUESTION_TYPE_GREATER_LESS = "greaterLess";
   const QUESTION_TYPE_RELATIONS = "relations";
+  const QUESTION_TYPE_IS_HEAP = "isHeap";
   
   //Bitmask-Specific
   const QUESTION_TYPE_OPERATION = "operation";
@@ -105,6 +106,9 @@
 
   const HEAP_SIZE_UPPER_BOUND = 10;
   const HEAP_SIZE_LOWER_BOUND = 3;
+  
+  const HEAP_SWAP_ANS_VALID = 0;
+  const HEAP_SWAP_ANS_INVALID = 1;
 
   const INFINITY = 1000000000;
 ?>

@@ -39,6 +39,7 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_INTERNAL:		toReturn = HEAP_INTERNAL; break;
 				case QUESTION_TYPE_GREATER_LESS:	toReturn = HEAP_GREATER_LESS; break;
 				case QUESTION_TYPE_RELATIONS:		toReturn = HEAP_RELATIONS; break;
+				case QUESTION_TYPE_IS_HEAP:			toReturn = HEAP_IS_HEAP; break;
 			}
 			break;
 		case QUESTION_TOPIC_BITMASK:

@@ -25,6 +25,7 @@ const HEAP_LEAVES = "Click all the leaf vertices of this heap!";
 const HEAP_INTERNAL = "Click all the internal vertices of this heap!";
 const HEAP_GREATER_LESS = "Click all vertices that are |greaterless| than |value| in this |subtype| heap!";
 const HEAP_RELATIONS = "Click the |relation| of |value|.";
+const HEAP_IS_HEAP = "Is this a valid |subtype| heap?";
 
 const BITMASK_OPERATIONS = "What is the integer result of |value| |subtype| (1 << |shiftAmt|)?";
 const BITMASK_CONVERT = "What is the |toBase| representation of |fromBase| value |value|?";
