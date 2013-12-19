@@ -1,5 +1,5 @@
 <?php
-  // Sync with JS file
+  // Sync with test/test_mode_constant.js file
   const QUESTION_TOPIC_BITMASK = "Bitmask";
   const QUESTION_TOPIC_BST = "BST";
   const QUESTION_TOPIC_HEAP = "Heap";
@@ -81,6 +81,12 @@
 
   const UNANSWERED = "unanswered";
   const NO_ANSWER = "noAnswer";
+
+  // Sync with graph_library/constant.js file
+
+  const EDGE_TYPE_UDE = 0;
+  const EDGE_TYPE_DE = 1;
+  const EDGE_TYPE_BDE = 2;
 
   // Keep inside PHP
   const BST_HEIGHT_LIMIT = 5;
