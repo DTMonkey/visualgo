@@ -41,6 +41,7 @@
   
   class MST{
 	protected $adjList;
+	protected $edgeList;
 	protected $graphTemplate;
     protected $min; // true means the MST is minimum spanning tree
 
@@ -66,6 +67,7 @@
     protected function init(){
 	  $this->graphTemplate = GraphTemplate::getGraph(5, true, true);
       $this->generateAdjList($this->graphTemplate); //array of array of Pairs
+	  $this->generateEdgeList($this->graphTemplate); //array of triples
     }
 	
 	protected function generateAdjList($graph) {
@@ -90,6 +92,21 @@
 			$str .= "<br/>";
 			echo($str);
 		}*/
+	}
+
+	protected function generateEdgeList($graph) {
+		$e = $graph["internalEdgeList"];
+		for($i=0; $i<count($e); $i++) { //for each edge
+			$this->edgeList[] = new Triple($e[$i]["vertexA"], $e[$i]["vertexB"], $e[$i]["weight"]);
+		}
+		/*
+		$str = "";
+		for($i=0; $i<count($this->edgeList); $i++) {
+			$str .= $this->edgeList[$i]->toString();
+		}
+		$str .= "<br/>";
+		echo($str);
+		*/
 	}
 
     public function toGraphState(){
@@ -136,23 +153,32 @@
 	  return $edgeSet;
     }
 
-/*
     public function kruskal(){
-		//generate edge triple list
-		$edgeList = array(); //array of triples
-		for($i=0; $i<count($this->adjList); $i++) {
-			for($j=0; $j<count($this->adjList[$i]); $j++) {
-				$pair = $this->adjList[$i][$j];
-				$triple = new Triple($i, $pair->v(), $pair->w());
-				
-				if() { //check for doublecount for undirected graphs
-					$edgeList[] = $triple;
-				}
+		$ufds = new UFDS();
+		$edgeQ = $this->edgeList;
+		$ufds->insertElements(count($this->adjList),count($this->adjList));
+		$edgeSet = array();
+		usort($edgeQ, array('MST', 'tripleSort')); //by weight
+		
+		$length = count($edgeQ);
+		for($i=0; $i<$length; $i++) {
+			$e = array_shift($edgeQ);
+			if(!($ufds->isSameSet($e->from(), $e->to()))) { //if does not form cycle
+				$edgeSet[] = $e;
+				$ufds->unionSet($e->from(), $e->to());
 			}
 		}
 		
-		
+		/*
+		$str = "";
+	    for($i=0; $i<count($edgeSet); $i++) {
+		  $str .=  $edgeSet[$i]->toString();
+	    }
+	    $str .= "<br/>";
+		echo($str);
+		*/
+		return $edgeSet;
     }
-	*/
+	
   }
 ?>
