@@ -1,9 +1,4 @@
 <?php
-  //to remove later
-	require 'GraphTemplate.php';
-	while(@ob_end_flush());
-	$mst = new MST(true);
-	$mst->prim(0);
 
 	class Pair {
 		protected $v;
@@ -53,6 +48,16 @@
       $this->init();
       $this->min = $isMin;
     }
+	
+	protected static function pairSort($a, $b) { //a and b are pairs
+	  if($a->w() == $b->w()) return ($a->v() - $b->v());
+	  else return ($a->w() > $b->w());
+	}
+	
+	protected static function tripleSort($a, $b) { //a and b are triples
+	  if($a->weight() == $b->weight()) return ($a->to() - $b->to());
+	  else return ($a->weight() > $b->weight());
+	}
 
     public function clearAll(){
       $this->init();
@@ -61,7 +66,7 @@
     protected function init(){
 	  global $GRAPH_TEMPLATE_K5;
 	  $this->graphTemplate = $GRAPH_TEMPLATE_K5;
-      $this->adjList = $this->generateAdjList($this->graphTemplate); //array of array of Pairs
+      $this->generateAdjList($this->graphTemplate); //array of array of Pairs
     }
 	
 	protected function generateAdjList($graph) {
@@ -95,16 +100,6 @@
     public function createRandomGraph(){
 
     }
-	
-	protected function pairSort($a, $b) { //a and b are pairs
-	  if($a->w() == $b->w()) return ($a->v() - $b->v());
-	  else return ($a->w() > $b->w());
-	}
-	
-	protected function tripleSort($a, $b) { //a and b are triples
-	  if($a->weight() == $b->weight()) return ($a->to() - $b->to());
-	  else return ($a->weight() > $b->weight());
-	}
 
     public function prim($start){
 	  $edgeSet = array(); //empty set
@@ -117,7 +112,7 @@
 	  	  $neighbourEdge = new Triple($start, $this->adjList[$start][$i]->v(), $this->adjList[$start][$i]->w());
 		  $PQ[] = $neighbourEdge;
 	  }
-	  usort($PQ, "tripleSort"); //by weight
+	  usort($PQ, array('MST', 'tripleSort')); //by weight
 	  
 	  while(!empty($PQ)) {
 	    $edge = array_shift($PQ); //edge is a (from, to, weight) triple
@@ -129,17 +124,16 @@
 		  for($i=0; $i<$nNeighbours; $i++) { //and enqueue neighbours
 			  $PQ[] = new Triple($v, $this->adjList[$v][$i]->v(), $this->adjList[$v][$i]->w());
 		  }
-		  usort($PQ, "pairSort"); //by weight
+		  usort($PQ, array('MST', 'tripleSort')); //by weight
 		}
 	  }
 	  
+	  /*
 	  $str = "";
-	  //echo(count($edgeSet));
 	  for($i=0; $i<count($edgeSet); $i++) {
 		$str .=  $edgeSet[$i]->toString();
 	  }
-	  $str .= "<br/>";
-	  //echo($str);
+	  $str .= "<br/>";*/
 	  return $edgeSet;
     }
 
