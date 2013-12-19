@@ -331,44 +331,43 @@ class GraphTemplate{
             ),
           3 => array(
               "vertexA" =>  1,
-              "vertexB" =>  7,
+              "vertexB" =>  7
             ),
           4 => array(
               "vertexA" =>  2,
-              "vertexB" =>  3,
+              "vertexB" =>  3
             ),
           5 => array(
               "vertexA" =>  2,
-              "vertexB" =>  7,
+              "vertexB" =>  7
             ),
           6 => array(
               "vertexA" =>  2,
-              "vertexB" =>  8,
+              "vertexB" =>  8
             ),
           7 => array(
               "vertexA" =>  3,
-              "vertexB" =>  4,
+              "vertexB" =>  4
             ),
           8 => array(
               "vertexA" =>  3,
-              "vertexB" =>  8,
-              
+              "vertexB" =>  8
             ),
           9 => array(
               "vertexA" =>  5,
-              "vertexB" =>  6,
+              "vertexB" =>  6
             ),
           10 => array(
               "vertexA" =>  6,
-              "vertexB" =>  7,
+              "vertexB" =>  7
             ),
           11 => array(
               "vertexA" =>  7,
-              "vertexB" =>  8,
+              "vertexB" =>  8
             ),
           12 => array(
               "vertexA" =>  8,
-              "vertexB" =>  9,
+              "vertexB" =>  9
             )
           )
       ),
@@ -412,38 +411,31 @@ class GraphTemplate{
         "internalEdgeList" => array(
           0 => array(
               "vertexA" =>  0,
-              "vertexB" =>  1,
-              
+              "vertexB" =>  1
             ),
           1 => array(
               "vertexA" =>  0,
-              "vertexB" =>  2,
-              
+              "vertexB" =>  2
             ),
           2 => array(
               "vertexA" =>  0,
-              "vertexB" =>  3,
-              
+              "vertexB" =>  3
             ),
           3 => array(
               "vertexA" =>  0,
-              "vertexB" =>  4,
-              
+              "vertexB" =>  4
             ),
           4 => array(
               "vertexA" =>  1,
-              "vertexB" =>  2,
-              
+              "vertexB" =>  2
             ),
           5 => array(
               "vertexA" =>  2,
-              "vertexB" =>  3,
-              
+              "vertexB" =>  3
             ),
           6 => array(
               "vertexA" =>  3,
-              "vertexB" =>  4,
-              
+              "vertexB" =>  4
             )
           )
       )
@@ -457,12 +449,12 @@ class GraphTemplate{
   }
 
   public static function getGraph($numVertex, $connected, $directed){
-    $templateName = self::$graphTemplateIndex[mt_rand(0, count(self::$graphTemplateIndex)-1)];
+    $templateName = self::$graphTemplateIndex[rand(0, count(self::$graphTemplateIndex)-1)];
     $template = self::$graphTemplate[$templateName];
 
     $weightList = array(0);
 
-    foreach ($template["internalEdgeList"] as $edgeId => $edgeData){
+    for($i = 0; $i < count($template["internalEdgeList"]); $i++){
       $weight = 0;
 
       while(in_array($weight, $weightList)){
@@ -470,9 +462,11 @@ class GraphTemplate{
       }
       $weightList[] = $weight;
 
-      $edgeData["weight"] = $weight;
+      $template["internalEdgeList"][$i]["weight"] = $weight;
+      // echo $edgeId."|";
     }
 
+    // echo $template["internalEdgeList"][0]["vertexB"]."|";
     return $template;
   }
 }
