@@ -8,7 +8,7 @@ const QUESTION_TOPIC_BITMASK = "Bitmask";
 const QUESTION_TOPIC_BST = "BST";
 const QUESTION_TOPIC_HEAP = "Heap";
 const QUESTION_TOPIC_UFDS = "UFDS";
-const QUESTION_TOPIC_MST = "mst";
+const QUESTION_TOPIC_MST = "MST";
 
 // General in several data-structures
 const QUESTION_TYPE_DELETION = "Deletion";

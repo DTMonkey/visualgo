@@ -253,6 +253,144 @@ $GRAPH_TEMPLATE_TESSELLATION = array(
         )
       )
   );
+$GRAPH_TEMPLATE_RAIL = array(
+    "internalAdjList" => array(
+      0 => array(
+          "cx" =>  50,
+          "cy" =>  100,
+          1 => 0
+        ),
+      1 => array(
+          "cx" =>  250,
+          "cy" =>  100,
+          0 => 0,
+          2 => 1,
+          6 => 2,
+          7 => 3
+        ),
+      2 => array(
+          "cx" =>  450,
+          "cy" =>  100,
+          1 => 1,
+          3 => 4,
+          7 => 5,
+          8 => 6
+        ),
+      3 => array(
+          "cx" =>  650,
+          "cy" =>  100,
+          2 => 4,
+          4 => 7,
+          8 => 8
+        ),
+      4 => array(
+          "cx" =>  850,
+          "cy" =>  100,
+          3 => 7
+        ),
+      5 => array(
+          "cx" =>  50,
+          "cy" =>  250,
+          6 => 9
+        ),
+      6 => array(
+          "cx" =>  250,
+          "cy" =>  250,
+          1 => 2,
+          5 => 9,
+          7 => 10
+        ),
+      7 => array(
+          "cx" =>  450,
+          "cy" =>  250,
+          1 => 3,
+          2 => 5,
+          6 => 10,
+          8 => 11
+        ),
+      8 => array(
+          "cx" =>  650,
+          "cy" =>  250,
+          2 => 6,
+          3 => 8,
+          7 => 11,
+          9 => 12
+        ),
+      9 => array(
+          "cx" =>  850,
+          "cy" =>  250,
+          8 => 12
+        )
+      ),
+    "internalEdgeList" => array(
+      0 => array(
+          "vertexA" =>  0,
+          "vertexB" =>  1,
+          "weight" =>  10
+        ),
+      1 => array(
+          "vertexA" =>  1,
+          "vertexB" =>  2,
+          "weight" =>  10
+        ),
+      2 => array(
+          "vertexA" =>  1,
+          "vertexB" =>  6,
+          "weight" =>  8
+        ),
+      3 => array(
+          "vertexA" =>  1,
+          "vertexB" =>  7,
+          "weight" =>  13
+        ),
+      4 => array(
+          "vertexA" =>  2,
+          "vertexB" =>  3,
+          "weight" =>  10
+        ),
+      5 => array(
+          "vertexA" =>  2,
+          "vertexB" =>  7,
+          "weight" =>  8
+        ),
+      6 => array(
+          "vertexA" =>  2,
+          "vertexB" =>  8,
+          "weight" =>  13
+        ),
+      7 => array(
+          "vertexA" =>  3,
+          "vertexB" =>  4,
+          "weight" =>  10
+        ),
+      8 => array(
+          "vertexA" =>  3,
+          "vertexB" =>  8,
+          "weight" =>  8
+        ),
+      9 => array(
+          "vertexA" =>  5,
+          "vertexB" =>  6,
+          "weight" =>  10
+        ),
+      10 => array(
+          "vertexA" =>  6,
+          "vertexB" =>  7,
+          "weight" =>  10
+        ),
+      11 => array(
+          "vertexA" =>  7,
+          "vertexB" =>  8,
+          "weight" =>  10
+        ),
+      12 => array(
+          "vertexA" =>  8,
+          "vertexB" =>  9,
+          "weight" =>  10
+        )
+      )
+  );
+
 
 function createState($internalAdjListObject, $internalEdgeListObject){
   $state = array(
