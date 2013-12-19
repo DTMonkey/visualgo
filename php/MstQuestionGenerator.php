@@ -59,11 +59,12 @@ class MstQuestionGenerator{
 
     protected function generateQuestionPrimSequence(){
       $mst = $this->generateMinST();
+      $startValue = 0;
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_PRIM_SEQUENCE;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("value" => $startValue, "subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -75,7 +76,22 @@ class MstQuestionGenerator{
     }
 
     protected function checkAnswerPrimSequence($qObj, $userAns){
+      $mst = $qObj->internalDS;
+      $startValue = $qObj->qParams["value"];
+      $ans = $mst->prim($startValue);
 
+      $correctness = true;
+      if(count($ans) != count($userAns)) $correctness = false;
+      else{
+        for($i = 0; $i < count($ans); $i++){
+          if($ans[$i][0] != $userAns[$i][0] || $ans[$i][1] != $userAns[$i][1]){
+            $correctness = false;
+            break;
+          }
+        }
+      }
+
+      return $correctness;
     }
 
     protected function generateQuestionKruskalSequence(){
@@ -109,8 +125,8 @@ class MstQuestionGenerator{
       $qObj->qType = QUESTION_TYPE_MINIMAX_EDGE;
       $qObj->qParams = array("vertexA" => $vertexA, "vertexB" => $vertexB,"subtype" => QUESTION_SUB_TYPE_NONE);
       $qObj->aType = ANSWER_TYPE_EDGE;
-      $qObj->aAmt = ANSWER_AMT_MULTIPLE;
-      $qObj->ordered = true;
+      $qObj->aAmt = ANSWER_AMT_ONE;
+      $qObj->ordered = false;
       $qObj->allowNoAnswer = false;
       $qObj->graphState = $mst->toGraphState();
       $qObj->internalDS = $mst;
