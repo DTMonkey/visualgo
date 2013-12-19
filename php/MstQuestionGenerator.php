@@ -64,7 +64,7 @@ class MstQuestionGenerator{
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_PRIM_SEQUENCE;
-      $qObj->qParams = array("value" => $startValue, "subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("value" => $startValue, "subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -81,10 +81,12 @@ class MstQuestionGenerator{
       $ans = $mst->prim($startValue);
 
       $correctness = true;
-      if(count($ans) != count($userAns)) $correctness = false;
+      if(2*count($ans) != count($userAns)) $correctness = false;
       else{
         for($i = 0; $i < count($ans); $i++){
-          if($ans[$i][0] != $userAns[$i][0] || $ans[$i][1] != $userAns[$i][1]){
+          $currEdge = array($ans[$i]->from(), $ans[$i]->to());
+          if(!($qObj->qParams["value"])) sort($currEdge);
+          if($currEdge[0] != $userAns[$i*2] || $currEdge[1] != $userAns[$i*2 + 1]){
             $correctness = false;
             break;
           }
@@ -100,7 +102,7 @@ class MstQuestionGenerator{
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_KRUSKAL_SEQUENCE;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -123,7 +125,7 @@ class MstQuestionGenerator{
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_MINIMAX_EDGE;
-      $qObj->qParams = array("vertexA" => $vertexA, "vertexB" => $vertexB,"subtype" => QUESTION_SUB_TYPE_NONE);
+      $qObj->qParams = array("vertexA" => $vertexA, "vertexB" => $vertexB,"subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_ONE;
       $qObj->ordered = false;
