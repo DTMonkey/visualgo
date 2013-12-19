@@ -20,7 +20,7 @@ class MstQuestionGenerator{
         $questionIndex = rand(0, count($potentialQuestions) - 1);
         $questionFunc = $potentialQuestions[$questionIndex];
 
-        else $questions[] = $this->$potentialQuestions[$questionIndex]();
+        $questions[] = $this->$potentialQuestions[$questionIndex]();
 
         unset($potentialQuestions[$questionIndex]);
         $potentialQuestions = array_values($potentialQuestions);

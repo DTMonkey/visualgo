@@ -9,6 +9,8 @@
   require 'BitmaskQuestionGenerator.php';
   require 'UFDS.php';
   require 'UfdsQuestionGenerator.php';
+  require 'MST.php';
+  require 'MstQuestionGenerator.php';
   require 'Constant.php';
   require 'Misc.php';
   require 'GraphTemplate.php';
