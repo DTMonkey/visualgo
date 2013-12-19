@@ -6,40 +6,40 @@ const GRAPH_TEMPLATE_EMPTY = array(
 const GRAPH_TEMPLATE_K5 = array(
     "internalAdjList" => array(
       0=>array(
-          "cx" => 280,
-          "cy" => 150,
+          "cxPercentage" => 31.1,
+          "cyPercentage" => 30,
           1 => 0,
           2 => 1,
           3 => 2,
           4 => 3
         ),
       1=>array(
-          "cx" => 620,
-          "cy" => 150,
+          "cxPercentage" => 68.9,
+          "cyPercentage" => 30,
           0 => 0,
           2 => 4,
           3 => 5,
           4 => 6
         ),
       2=>array(
-          "cx" => 350,
-          "cy" => 340,
+          "cxPercentage" => 38.9,
+          "cyPercentage" => 76,
           0 => 1,
           1 => 4,
           3 => 7,
           4 => 8
         ),
       3=>array(
-          "cx" => 450,
-          "cy" => 50,
+          "cxPercentage" => 50,
+          "cyPercentage" => 10,
           0 => 2,
           1 => 5,
           2 => 7,
           4 => 9
         ),
       4=>array(
-          "cx" => 550,
-          "cy" => 340,
+          "cxPercentage" => 61.1,
+          "cyPercentage" => 76,
           0 => 3,
           1 => 6,
           2 => 8,
@@ -99,33 +99,33 @@ const GRAPH_TEMPLATE_K5 = array(
         )
       )
   );
-const GRAPH_TEMPLATE_TESSELATION = array(
+const GRAPH_TEMPLATE_TESSELLATION = array(
     "internalAdjList" => array(
       0 => array(
-          "cx" => 200,
-          "cy" => 50,
+          "cxPercentage" => 22.2,
+          "cyPercentage" => 10,
           1 => 0,
           2=>1
         ),
       1=>array(
-          "cx" => 200,
-          "cy" => 170,
+          "cxPercentage" => 22.2,
+          "cyPercentage" => 34,
           0 =>0,
           2=>2,
           3=>3,
           4=>4
         ),
       2=>array(
-          "cx" => 350,
-          "cy" => 110,
+          "cxPercentage" => 38.9,
+          "cyPercentage" => 22,
           0 =>1,
           1=>2,
           3=>5,
           6=>6
         ),
       3=>array(
-          "cx" => 500,
-          "cy" => 170,
+          "cxPercentage" => 55.6,
+          "cyPercentage" => 34,
           1 => 3,
           2 => 5,
           4 => 7,
@@ -135,36 +135,36 @@ const GRAPH_TEMPLATE_TESSELATION = array(
           8 => 11
         ),
       4=>array(
-          "cx" => 275,
-          "cy" => 290,
+          "cxPercentage" => 30.6,
+          "cyPercentage" => 58,
           1 => 4,
           3 => 7,
           5 => 12
         ),
       5=>array(
-          "cx" => 500,
-          "cy" => 290,
+          "cxPercentage" => 55.6,
+          "cyPercentage" => 58,
           3 => 8,
           4 => 12,
           7 => 13
         ),
       6=>array(
-          "cx" => 600,
-          "cy" => 50,
+          "cxPercentage" => 66.7,
+          "cyPercentage" => 10,
           2 => 6,
           3 => 9,
           8 => 14
         ),
       7=>array(
-          "cx" => 640,
-          "cy" => 240,
+          "cxPercentage" => 71.1,
+          "cyPercentage" => 48,
           3 => 10,
           5 => 13,
           8 => 15
         ),
       8=>array(
-          "cx" => 700,
-          "cy" => 120,
+          "cxPercentage" => 77.8,
+          "cyPercentage" => 24,
           3 => 11,
           6 => 14,
           7 => 15
@@ -263,8 +263,8 @@ function createState($internalAdjListObject, $internalEdgeListObject){
   for($internalAdjListObject as $key => $value){
     $state["vl"][$key] = array();
 
-    $state["vl"][$key]["cx"] = $internalAdjListObject[$key]["cx"];
-    $state["vl"][$key]["cy"] = $internalAdjListObject[$key]["cy"];
+    $state["vl"][$key]["cxPercentage"] = $internalAdjListObject[$key]["cxPercentage"];
+    $state["vl"][$key]["cyPercentage"] = $internalAdjListObject[$key]["cyPercentage"];
     $state["vl"][$key]["text"] = $key;
   }
   for($internalEdgeListObject as $key => $value){
