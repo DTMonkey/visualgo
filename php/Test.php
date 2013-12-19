@@ -5,12 +5,14 @@
   $heapQuestionGen = new HeapQuestionGenerator();
   $bitmaskQuestionGen = new BitmaskQuestionGenerator();
   $ufdsQuestionGen = new UfdsQuestionGenerator();
+  $mstQuestionGen = new MstQuestionGenerator();
 
   $questionGenerator = array(
     QUESTION_TOPIC_BST => $bstQuestionGen,
     QUESTION_TOPIC_HEAP => $heapQuestionGen,
     QUESTION_TOPIC_BITMASK => $bitmaskQuestionGen,
-    QUESTION_TOPIC_UFDS => $ufdsQuestionGen
+    QUESTION_TOPIC_UFDS => $ufdsQuestionGen,
+    QUESTION_TOPIC_MST => $mstQuestionGen
     );
 
   $qSeed = 0;

@@ -466,7 +466,10 @@ $GRAPH_TEMPLATE__CP4P10 = array(
       )
   );
 
-function createState($internalAdjListObject, $internalEdgeListObject){
+function createState($graphTemplate){
+  $internalAdjListObject = $graphTemplate["internalAdjList"];
+  $internalEdgeListObject = $graphTemplate["internalEdgeList"];
+
   $state = array(
     "vl"=>array(),
     "el"=>array()
