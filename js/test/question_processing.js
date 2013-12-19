@@ -55,6 +55,12 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_FIND_SET_COMPRESSION:	toReturn = UFDS_FIND_SET_COMPRESSION; break;
 				case QUESTION_TYPE_IS_SAME_SET:				toReturn = UFDS_IS_SAME_SET; break;
 			}
+		case QUESTION_TOPIC_MST:
+			switch(type) {
+				case QUESTION_TYPE_PRIM_SEQUENCE:			toReturn = MST_PRIM_SEQUENCE; break;
+				case QUESTION_TYPE_KRUSKAL_SEQUENCE:		toReturn = MST_KRUSKAL_SEQUENCE; break;
+				case QUESTION_TYPE_MINIMAX_EDGE:			toReturn = MST_MINIMAX_EDGE; break;
+			}
 		default: //nothing
 	}
 	var matches = toReturn.match(/\|[^|]+\|/g); //words between 2 pipes: |something|
