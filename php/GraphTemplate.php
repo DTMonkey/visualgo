@@ -52,52 +52,51 @@ class GraphTemplate{
           0=>array(
               "vertexA" => 0,
               "vertexB" => 1,
-              "weight" => 24
+              
             ),
           1=>array(
               "vertexA" => 0,
               "vertexB" => 2,
-              "weight" => 13
+              
             ),
           2=>array(
               "vertexA" => 0,
               "vertexB" => 3,
-              "weight" => 13
+              
             ),
           3=>array(
               "vertexA" => 0,
               "vertexB" => 4,
-              "weight" => 22
+              
             ),
           4=>array(
               "vertexA" => 1,
               "vertexB" => 2,
-              "weight" => 22
+              
             ),
           5=>array(
               "vertexA" => 1,
               "vertexB" => 3,
-              "weight" => 13
+              
             ),
           6=>array(
               "vertexA" => 1,
               "vertexB" => 4,
-              "weight" => 13
+              
             ),
           7=>array(
               "vertexA" => 2,
               "vertexB" => 3,
-              "weight" => 19
+              
             ),
           8=>array(
               "vertexA" => 2,
               "vertexB" => 4,
-              "weight" => 14
+              
             ),
           9=>array(
               "vertexA" => 3,
               "vertexB" => 4,
-              "weight" => 19
             )
           )
       ),
@@ -176,82 +175,74 @@ class GraphTemplate{
           0=>array(
               "vertexA" => 0,
               "vertexB" => 1,
-              "weight" => 8
             ),
           1=>array(
               "vertexA" => 0,
               "vertexB" => 2,
-              "weight" => 12
             ),
           2=>array(
               "vertexA" => 1,
               "vertexB" => 2,
-              "weight" => 13
+              
             ),
           3=>array(
               "vertexA" => 1,
               "vertexB" => 3,
-              "weight" => 25
+              
             ),
           4=>array(
               "vertexA" => 1,
               "vertexB" => 4,
-              "weight" => 9
             ),
           5=>array(
               "vertexA" => 2,
               "vertexB" => 3,
-              "weight" => 14
             ),
           6=>array(
               "vertexA" => 2,
               "vertexB" => 6,
-              "weight" => 21
+              
             ),
           7=>array(
               "vertexA" => 3,
               "vertexB" => 4,
-              "weight" => 20
+              
             ),
           8=>array(
               "vertexA" => 3,
               "vertexB" => 5,
-              "weight" => 8
             ),
           9=>array(
               "vertexA" => 3,
               "vertexB" => 6,
-              "weight" => 12
+              
             ),
           10=>array(
               "vertexA" => 3,
               "vertexB" => 7,
-              "weight" => 12
             ),
           11=>array(
               "vertexA" => 3,
               "vertexB" => 8,
-              "weight" => 16
             ),
           12=>array(
               "vertexA" => 4,
               "vertexB" => 5,
-              "weight" => 19
+              
             ),
           13=>array(
               "vertexA" => 5,
               "vertexB" => 7,
-              "weight" => 11
+              
             ),
           14=>array(
               "vertexA" => 6,
               "vertexB" => 8,
-              "weight" => 11
+              
             ),
           15=>array(
               "vertexA" => 7,
               "vertexB" => 8,
-              "weight" => 9
             )
           )
       ),
@@ -328,67 +319,56 @@ class GraphTemplate{
           0 => array(
               "vertexA" =>  0,
               "vertexB" =>  1,
-              "weight" =>  10
             ),
           1 => array(
               "vertexA" =>  1,
               "vertexB" =>  2,
-              "weight" =>  10
             ),
           2 => array(
               "vertexA" =>  1,
               "vertexB" =>  6,
-              "weight" =>  8
+              
             ),
           3 => array(
               "vertexA" =>  1,
               "vertexB" =>  7,
-              "weight" =>  13
             ),
           4 => array(
               "vertexA" =>  2,
               "vertexB" =>  3,
-              "weight" =>  10
             ),
           5 => array(
               "vertexA" =>  2,
               "vertexB" =>  7,
-              "weight" =>  8
             ),
           6 => array(
               "vertexA" =>  2,
               "vertexB" =>  8,
-              "weight" =>  13
             ),
           7 => array(
               "vertexA" =>  3,
               "vertexB" =>  4,
-              "weight" =>  10
             ),
           8 => array(
               "vertexA" =>  3,
               "vertexB" =>  8,
-              "weight" =>  8
+              
             ),
           9 => array(
               "vertexA" =>  5,
               "vertexB" =>  6,
-              "weight" =>  10
             ),
           10 => array(
               "vertexA" =>  6,
               "vertexB" =>  7,
-              "weight" =>  10
             ),
           11 => array(
               "vertexA" =>  7,
               "vertexB" =>  8,
-              "weight" =>  10
             ),
           12 => array(
               "vertexA" =>  8,
               "vertexB" =>  9,
-              "weight" =>  10
             )
           )
       ),
@@ -433,37 +413,37 @@ class GraphTemplate{
           0 => array(
               "vertexA" =>  0,
               "vertexB" =>  1,
-              "weight" =>  4
+              
             ),
           1 => array(
               "vertexA" =>  0,
               "vertexB" =>  2,
-              "weight" =>  4
+              
             ),
           2 => array(
               "vertexA" =>  0,
               "vertexB" =>  3,
-              "weight" =>  6
+              
             ),
           3 => array(
               "vertexA" =>  0,
               "vertexB" =>  4,
-              "weight" =>  6
+              
             ),
           4 => array(
               "vertexA" =>  1,
               "vertexB" =>  2,
-              "weight" =>  2
+              
             ),
           5 => array(
               "vertexA" =>  2,
               "vertexB" =>  3,
-              "weight" =>  8
+              
             ),
           6 => array(
               "vertexA" =>  3,
               "vertexB" =>  4,
-              "weight" =>  9
+              
             )
           )
       )
@@ -478,7 +458,22 @@ class GraphTemplate{
 
   public static function getGraph($numVertex, $connected, $directed){
     $templateName = self::$graphTemplateIndex[mt_rand(0, count(self::$graphTemplateIndex)-1)];
-    return self::$graphTemplate[$templateName];
+    $template = self::$graphTemplate[$templateName];
+
+    $weightList = array(0);
+
+    foreach ($template["internalEdgeList"] as $edgeId => $edgeData){
+      $weight = 0;
+
+      while(in_array($weight, $weightList)){
+        $weight = rand(1, 99);
+      }
+      $weightList[] = $weight;
+
+      $edgeData["weight"] = $weight;
+    }
+
+    return $template;
   }
 }
 
