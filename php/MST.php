@@ -65,7 +65,7 @@
     }
 
     protected function init(){
-	  $this->graphTemplate = GraphTemplate::getGraph(5, true, true);
+	  $this->graphTemplate = GraphTemplate::getGraph(5, true, false);
       $this->generateAdjList($this->graphTemplate); //array of array of Pairs
 	  $this->generateEdgeList($this->graphTemplate); //array of triples
     }
@@ -83,15 +83,6 @@
 			}
 			$this->adjList[$i] = $temp;
 		}
-	  
-		/*for($i=0; $i<count($this->adjList); $i++) {
-			$str = "";
-			for($j=0; $j<count($this->adjList[$i]); $j++) {
-				$str .= $this->adjList[$i][$j]->toString();
-			}
-			$str .= "<br/>";
-			echo($str);
-		}*/
 	}
 
 	protected function generateEdgeList($graph) {
@@ -99,18 +90,10 @@
 		for($i=0; $i<count($e); $i++) { //for each edge
 			$this->edgeList[] = new Triple($e[$i]["vertexA"], $e[$i]["vertexB"], $e[$i]["weight"]);
 		}
-		/*
-		$str = "";
-		for($i=0; $i<count($this->edgeList); $i++) {
-			$str .= $this->edgeList[$i]->toString();
-		}
-		$str .= "<br/>";
-		echo($str);
-		*/
 	}
 
     public function toGraphState(){
-	  return createState($this->graphTemplate, true);
+	  return GraphTemplate::createState($this->graphTemplate, true);
     }
 
     public function createRandomGraph(){
@@ -143,13 +126,6 @@
 		  usort($PQ, array('MST', 'tripleSort')); //by weight
 		}
 	  }
-	  
-	  /*
-	  $str = "";
-	  for($i=0; $i<count($edgeSet); $i++) {
-		$str .=  $edgeSet[$i]->toString();
-	  }
-	  $str .= "<br/>";*/
 	  return $edgeSet;
     }
 
@@ -168,17 +144,27 @@
 				$ufds->unionSet($e->from(), $e->to());
 			}
 		}
-		
-		/*
-		$str = "";
-	    for($i=0; $i<count($edgeSet); $i++) {
-		  $str .=  $edgeSet[$i]->toString();
-	    }
-	    $str .= "<br/>";
-		echo($str);
-		*/
 		return $edgeSet;
     }
+	
+	public function minimax($start, $end) { //on minimum ST
+		$tree = $this->prim($start); //edge triple list
+		//make adj list
+		$treeAdj = array();
+		for($i=0; $i<count($this->adjList); $i++) {
+			$treeAdj[$i] = array();
+		}
+		for($i=0; $i<count($tree); $i++) { //works for undirected graph only
+			$v1 = $tree[$i]->from();
+			$v2 = $tree[$i]->to();
+			$w = $tree[$i]->weight();
+			$treeAdj[$v1][] = new Pair($v2, $w);
+			$treeAdj[$v2][] = new Pair($v1, $w);
+		}
+		//traverse tree
+		$stack = array(); //of triples
+		
+	}
 	
   }
 ?>
