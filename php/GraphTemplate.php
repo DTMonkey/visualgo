@@ -497,9 +497,10 @@ class GraphTemplate{
   protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
     $tempTemplate = array_copy($template);
     $indexList = array_keys($template["internalAdjList"]);
-    for($i = count($indexList) - 1; $i >= 0; $i--){
+    while(count($indexList) > 0){
       if(count($tempTemplate["internalAdjList"]) <= $numVertex) break;
-      $index = $indexList[$i];
+      $indexChosen = rand(0, count($indexList)-1);
+      $index = $indexList[$indexChosen];
       $templateCopy = array_copy($tempTemplate);
       $adjacent = $tempTemplate["internalAdjList"][$index];
       unset($adjacent["cxPercentage"]);
@@ -513,6 +514,8 @@ class GraphTemplate{
       if(!$connected || self::isConnected($templateCopy, $directed)){
         $tempTemplate = $templateCopy;
       }
+      unset($indexList[$indexChosen]);
+      $indexList = array_values($indexList);
     }
     $template = $tempTemplate;
   }
