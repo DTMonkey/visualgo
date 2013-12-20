@@ -468,17 +468,17 @@ class GraphTemplate{
     $template = array_copy(self::$graphTemplate[GRAPH_TEMPLATE_EMPTY]);
     $templateBank;
 
-    $if($params["directed"]) $templateBank = $graphTemplateIndex[GRAPH_TEMPLATE_TYPE_DIRECTED];
-    else $templateBank = $graphTemplateIndex[GRAPH_TEMPLATE_TYPE_UNDIRECTED];
+    if($params["directed"]) $templateBank = self::$graphTemplateIndex[GRAPH_TEMPLATE_TYPE_DIRECTED];
+    else $templateBank = self::$graphTemplateIndex[GRAPH_TEMPLATE_TYPE_UNDIRECTED];
 
-    while(count($template["internalAdjList"]) < $numVertex){
-      $templateName = self::$templateBank[rand(0, count(self::$graphTemplateIndex)-1)];
+    while(count($template["internalAdjList"]) < $params["numVertex"]){
+      $templateName = $templateBank[rand(0, count($templateBank)-1)];
       $template = array_copy(self::$graphTemplate[$templateName]);
     }
 
     $weightList = array(0);
-    $connected = FALSE;
-    if($params["connected"]) $connected = TRUE;
+    $connected = false;
+    if($params["connected"]) $connected = true;
 
     self::reduceVertexUndirected($template, $params["numVertex"], $connected);
     if(!$connected && !self::isConnected($template, $params["directed"])) self::disconnect($template);
