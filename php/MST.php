@@ -107,6 +107,10 @@
     public function createRandomGraph(){
 
     }
+	
+	public function getAllElements() {
+		return array_keys($this->adjList);
+	}
 
     public function prim($start){
 	  $edgeSet = array(); //empty set
