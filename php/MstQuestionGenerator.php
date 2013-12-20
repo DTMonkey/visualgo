@@ -61,11 +61,12 @@ class MstQuestionGenerator{
       $mst = $this->generateMinST();
       $mstContent = $mst->getAllElements();
       $startValue = $mstContent[rand(0, count($mstContent)-1)];
+      $amtEdge = rand((int)(count($mstContent)/2), count($mstContent)-1);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_PRIM_SEQUENCE;
-      $qObj->qParams = array("value" => $startValue, "subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
+      $qObj->qParams = array("value" => $startValue, "amt" => $amtEdge,"subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -79,7 +80,8 @@ class MstQuestionGenerator{
     protected function checkAnswerPrimSequence($qObj, $userAns){
       $mst = $qObj->internalDS;
       $startValue = $qObj->qParams["value"];
-      $ans = $mst->prim($startValue);
+      $$amtEdge = $qObj->qParams["amt"];
+      $ans = array_slice($ans, 0, $amtEdge);
 
       $correctness = true;
       if(2*count($ans) != count($userAns)) $correctness = false;
@@ -99,11 +101,13 @@ class MstQuestionGenerator{
 
     protected function generateQuestionKruskalSequence(){
       $mst = $this->generateMinST();
+      $mstContent = $mst->getAllElements();
+      $amtEdge = rand((int)(count($mstContent)/2), count($mstContent)-1);
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
       $qObj->qType = QUESTION_TYPE_KRUSKAL_SEQUENCE;
-      $qObj->qParams = array("subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
+      $qObj->qParams = array("amt" => $amtEdge, "subtype" => QUESTION_SUB_TYPE_NONE, "directed" => false);
       $qObj->aType = ANSWER_TYPE_EDGE;
       $qObj->aAmt = ANSWER_AMT_MULTIPLE;
       $qObj->ordered = true;
@@ -117,6 +121,8 @@ class MstQuestionGenerator{
     protected function checkAnswerKruskalSequence($qObj, $userAns){
       $mst = $qObj->internalDS;
       $ans = $mst->kruskal();
+      $$amtEdge = $qObj->qParams["amt"];
+      $ans = array_slice($ans, 0, $amtEdge);
 
       $correctness = true;
       if(2*count($ans) != count($userAns)) $correctness = false;
