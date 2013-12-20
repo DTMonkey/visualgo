@@ -620,6 +620,7 @@ class GraphTemplate{
     );
   protected static $graphTemplateIndex = array(
     GRAPH_TEMPLATE_TYPE_DIRECTED => array(
+      GRAPH_TEMPLATE_CP3_4_17, GRAPH_TEMPLATE_CP3_4_18, GRAPH_TEMPLATE_CP3_4_19
       ),
     GRAPH_TEMPLATE_TYPE_UNDIRECTED => array(
       GRAPH_TEMPLATE_K5, GRAPH_TEMPLATE_TESSELLATION, GRAPH_TEMPLATE_RAIL, GRAPH_TEMPLATE_CP4P10
@@ -665,7 +666,13 @@ class GraphTemplate{
     return $template;
   }
 
-  public static function createState($graphTemplate, $displayWeight){
+  /*
+   * Pass in a variable called $params to createState, containing these informations =>
+   * - "displayWeight" => boolean, display or hide weight
+   * - "directed" => boolean, directed or undirected
+   */
+
+  public static function createState($graphTemplate, $params){
     $internalAdjListObject = $graphTemplate["internalAdjList"];
     $internalEdgeListObject = $graphTemplate["internalEdgeList"];
 
@@ -687,7 +694,8 @@ class GraphTemplate{
       $state["el"][$key]["vertexA"] = $internalEdgeListObject[$key]["vertexA"];
       $state["el"][$key]["vertexB"] = $internalEdgeListObject[$key]["vertexB"];
       $state["el"][$key]["weight"] = $internalEdgeListObject[$key]["weight"];
-      if($displayWeight) $state["el"][$key]["displayWeight"] = true;
+      if($params["displayWeight"]) $state["el"][$key]["displayWeight"] = true;
+      if($params["directed"]) $state["el"][$key]["type"] = EDGE_TYPE_DE;
     }
 
     return $state;
