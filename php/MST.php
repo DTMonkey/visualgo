@@ -1,10 +1,5 @@
 <?php
 
-	/*require 'GraphTemplate.php';
-	require 'Misc.php';
-	$mst = new MST(true);
-	$mst->minimax(1,4);*/
-
 	class Pair {
 		protected $v;
 		protected $w;
@@ -94,15 +89,15 @@
 
 	protected function generateEdgeList($graph) {
 		$e = $graph["internalEdgeList"];
-		for($i=0; $i<count($e); $i++) { //for each edge
-			$this->edgeList[] = new Triple($e[$i]["vertexA"], $e[$i]["vertexB"], $e[$i]["weight"]);
+		$keys = array_keys($e);
+		for($i=0; $i<count($keys); $i++) { //for each edge
+			$this->edgeList[] = new Triple($e[$keys[$i]]["vertexA"], $e[$keys[$i]]["vertexB"], $e[$keys[$i]]["weight"]);
 		}
 		/*
 		for($i=0; $i<count($this->edgeList); $i++) {
 			echo($this->edgeList[$i]->toString()." ");
 			echo("<br/>");
-		}
-		*/
+		}*/
 	}
 
     public function toGraphState(){
@@ -194,7 +189,18 @@
 		}
 		//backward traverse path to find max on path
 		$ans = 0;
-		
+		$v = $end;
+		while(isset($parent[$v])) {
+			$p = $parent[$v];
+			$weight = 0;
+			for($i=0; $i<count($treeAdj[$p]); $i++) {
+				if($treeAdj[$p][$i]->v() == $v) {
+					$weight = $treeAdj[$p][$i]->w();
+				}
+			}
+			$ans = max($ans, $weight);
+			$v = $p;
+		}
 		return $ans;
 	}
 	
