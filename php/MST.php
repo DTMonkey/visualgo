@@ -43,6 +43,7 @@
 	protected $adjList;
 	protected $edgeList;
 	protected $graphTemplate;
+	protected $size;
     protected $min; // true means the MST is minimum spanning tree
 
     public function __construct($isMin){
@@ -65,7 +66,8 @@
     }
 
     protected function init(){
-		$this->graphTemplate = GraphTemplate::getGraph(6, true, false);
+		$this->size = rand(6,8);
+		$this->graphTemplate = GraphTemplate::getGraph($this->size, true, false);
 		$this->generateAdjList($this->graphTemplate); //array of array of Pairs
 		$this->generateEdgeList($this->graphTemplate); //array of triples
     }
@@ -107,6 +109,10 @@
     public function createRandomGraph(){
 
     }
+	
+	public function getSize() {
+		return $this->size;
+	}
 	
 	public function getAllElements() {
 		return array_keys($this->adjList);
