@@ -86,7 +86,7 @@ class MstQuestionGenerator{
       else{
         for($i = 0; $i < count($ans); $i++){
           $currEdge = array($ans[$i]->from(), $ans[$i]->to());
-          if(!($qObj->qParams["value"])) sort($currEdge);
+          if(!($qObj->qParams["directed"])) sort($currEdge);
           if($currEdge[0] != $userAns[$i*2] || $currEdge[1] != $userAns[$i*2 + 1]){
             $correctness = false;
             break;
