@@ -59,7 +59,8 @@ class MstQuestionGenerator{
 
     protected function generateQuestionPrimSequence(){
       $mst = $this->generateMinST();
-      $startValue = 0;
+      $mstContent = $mst->getAllElements();
+      $startValue = $mstContent[rand(0, count($mstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
