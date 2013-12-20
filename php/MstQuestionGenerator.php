@@ -116,8 +116,7 @@ class MstQuestionGenerator{
 
     protected function checkAnswerKruskalSequence($qObj, $userAns){
       $mst = $qObj->internalDS;
-      $startValue = $qObj->qParams["value"];
-      $ans = $mst->kruskal($startValue);
+      $ans = $mst->kruskal();
 
       $correctness = true;
       if(2*count($ans) != count($userAns)) $correctness = false;
@@ -137,8 +136,11 @@ class MstQuestionGenerator{
 
     protected function generateQuestionMinimaxEdge(){
       $mst = $this->generateMinST();
-      $vertexA = NULL;
-      $vertexB = NULL;
+      $mstContent = $mst->getAllElements();
+      $vertexAIndex = rand(0, count($mstContent)-1);
+      $vertexA = $mstContent[$vertexAIndex];
+      unset($mstContent[$vertexAIndex]);
+      $vertexB = $mstContent[rand(0, count($mstContent)-1)];
 
       $qObj = new QuestionObject();
       $qObj->qTopic = QUESTION_TOPIC_MST;
@@ -155,7 +157,19 @@ class MstQuestionGenerator{
     }
 
     protected function checkAnswerMinimaxEdge($qObj, $userAns){
+      $mst = $qObj->internalDS;
+      $vertexA = $qObj->qParams["vertexA"];
+      $vertexB = $qObj->qParams["vertexB"];
+      $ans = $mst->minimax($vertexA, $vertexB);
 
+      $correctness = true;
+      $currEdge = array($ans->from(), $ans->to());
+      if(!($qObj->qParams["directed"])) sort($currEdge);
+      if($currEdge[0] != $userAns[0] || $currEdge[1] != $userAns[1]){
+        $correctness = false;
+      }
+
+      return $correctness;
     }
 }
 
