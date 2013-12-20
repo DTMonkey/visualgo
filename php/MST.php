@@ -103,7 +103,7 @@
 	}
 
     public function toGraphState(){
-		return GraphTemplate::createState($this->graphTemplate, true);
+		return GraphTemplate::createState($this->graphTemplate, array("displayWeight" => true, "directed" => false));
     }
 
     public function createRandomGraph(){
