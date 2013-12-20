@@ -61,13 +61,13 @@
 	}
 
     public function clearAll(){
-      $this->init();
+		$this->init();
     }
 
     protected function init(){
-	  $this->graphTemplate = GraphTemplate::getGraph(6, true, false);
-      $this->generateAdjList($this->graphTemplate); //array of array of Pairs
-	  $this->generateEdgeList($this->graphTemplate); //array of triples
+		$this->graphTemplate = GraphTemplate::getGraph(6, true, false);
+		$this->generateAdjList($this->graphTemplate); //array of array of Pairs
+		$this->generateEdgeList($this->graphTemplate); //array of triples
     }
 	
 	protected function generateAdjList($graph) {
@@ -101,7 +101,7 @@
 	}
 
     public function toGraphState(){
-	  return GraphTemplate::createState($this->graphTemplate, true);
+		return GraphTemplate::createState($this->graphTemplate, true);
     }
 
     public function createRandomGraph(){
@@ -139,14 +139,16 @@
 		  usort($PQ, array('MST', 'tripleSort')); //by weight
 		}
 	  }
-	  
 	  return $edgeSet;
     }
 
     public function kruskal(){
 		$ufds = new UFDS();
 		$edgeQ = $this->edgeList;
-		$ufds->insertElements(count($this->adjList),count($this->adjList));
+		$akeys = array_keys($this->adjList);
+		for($i=0; $i<count($akeys); $i++) {
+			$ufds->insert($akeys[$i]);
+		}
 		$edgeSet = array();
 		usort($edgeQ, array('MST', 'tripleSort')); //by weight
 		
@@ -165,13 +167,13 @@
 		$tree = $this->prim($start); //edge triple list
 		//make adj list
 		$treeAdj = array();
-		for($i=0; $i<count($this->adjList); $i++) {
-			$treeAdj[$i] = array();
-		}
 		for($i=0; $i<count($tree); $i++) { //works for undirected graph only
 			$v1 = $tree[$i]->from();
 			$v2 = $tree[$i]->to();
 			$w = $tree[$i]->weight();
+			
+			if(!isset($treeAdj[$v1])) $treeAdj[$v1] = array();
+			if(!isset($treeAdj[$v2])) $treeAdj[$v2] = array();
 			$treeAdj[$v1][] = new Pair($v2, $w);
 			$treeAdj[$v2][] = new Pair($v1, $w);
 		}
@@ -195,6 +197,7 @@
 		}
 		//backward traverse path to find max on path
 		$ans = 0;
+		$ansTriple;
 		$v = $end;
 		while(isset($parent[$v])) {
 			$p = $parent[$v];
@@ -204,10 +207,13 @@
 					$weight = $treeAdj[$p][$i]->w();
 				}
 			}
-			$ans = max($ans, $weight);
+			if($weight > $ans) {
+				$ans = $weight;
+				$ansTriple = new Triple($p,$v,$weight);
+			}
 			$v = $p;
 		}
-		return $ans;
+		return $ansTriple;
 	}
 	
   }
