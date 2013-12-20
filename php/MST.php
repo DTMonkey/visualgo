@@ -65,7 +65,7 @@
     }
 
     protected function init(){
-	  $this->graphTemplate = GraphTemplate::getGraph(5, true, false);
+	  $this->graphTemplate = GraphTemplate::getGraph(6, true, false);
       $this->generateAdjList($this->graphTemplate); //array of array of Pairs
 	  $this->generateEdgeList($this->graphTemplate); //array of triples
     }
@@ -74,16 +74,16 @@
 		$a = $graph["internalAdjList"];
 		$e = $graph["internalEdgeList"];
 	  
-		for($i=0; $i<count($a); $i++) { //for each vertex
-			if(array_key_exists($i, $a)) {
-				$temp = array();
-				foreach ($a[$i] as $key => $value) {
-					if(!is_string($key)) {
-						$temp[] = new Pair($key, $e[$value]["weight"]);
-					}
+	  	$akeys = array_keys($a);
+		for($i=0; $i<count($akeys); $i++) { //for each vertex
+			$temp = array();
+			foreach ($a[$akeys[$i]] as $key => $value) {
+				if(!is_string($key)) {
+					$new = new Pair($key, $e[$value]["weight"]);
+					$temp[] = $new;
 				}
-				$this->adjList[$i] = $temp;
 			}
+			$this->adjList[$akeys[$i]] = $temp;
 		}
 	}
 
@@ -124,16 +124,18 @@
 	  while(!empty($PQ)) {
 	    $edge = array_shift($PQ); //edge is a (from, to, weight) triple
 		$v = $edge->to();
-		if(array_search($v, $vertexSet) === false) { //v is not in vertexSet
+		if(!in_array($v, $vertexSet)) { //v is not in vertexSet
 		  $vertexSet[] = $v; //put it in
 		  $edgeSet[] = new Triple($edge->from(), $v, $edge->weight());
 		  $nNeighbours = count($this->adjList[$v]);
 		  for($i=0; $i<$nNeighbours; $i++) { //and enqueue neighbours
-			  $PQ[] = new Triple($v, $this->adjList[$v][$i]->v(), $this->adjList[$v][$i]->w());
+		  	  $neighbourEdge = new Triple($v, $this->adjList[$v][$i]->v(), $this->adjList[$v][$i]->w());
+			  $PQ[] = $neighbourEdge;
 		  }
 		  usort($PQ, array('MST', 'tripleSort')); //by weight
 		}
 	  }
+	  
 	  return $edgeSet;
     }
 
