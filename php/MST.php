@@ -1,5 +1,10 @@
 <?php
 
+	/*require 'GraphTemplate.php';
+	require 'Misc.php';
+	$mst = new MST(true);
+	$mst->minimax(1,4);*/
+
 	class Pair {
 		protected $v;
 		protected $w;
@@ -75,13 +80,15 @@
 		$e = $graph["internalEdgeList"];
 	  
 		for($i=0; $i<count($a); $i++) { //for each vertex
-			$temp = array();
-			foreach ($a[$i] as $key => $value) {
-				if(!is_string($key)) {
-					$temp[] = new Pair($key, $e[$value]["weight"]);
+			if(array_key_exists($i, $a)) {
+				$temp = array();
+				foreach ($a[$i] as $key => $value) {
+					if(!is_string($key)) {
+						$temp[] = new Pair($key, $e[$value]["weight"]);
+					}
 				}
+				$this->adjList[$i] = $temp;
 			}
-			$this->adjList[$i] = $temp;
 		}
 	}
 
@@ -90,6 +97,12 @@
 		for($i=0; $i<count($e); $i++) { //for each edge
 			$this->edgeList[] = new Triple($e[$i]["vertexA"], $e[$i]["vertexB"], $e[$i]["weight"]);
 		}
+		/*
+		for($i=0; $i<count($this->edgeList); $i++) {
+			echo($this->edgeList[$i]->toString()." ");
+			echo("<br/>");
+		}
+		*/
 	}
 
     public function toGraphState(){
@@ -162,8 +175,27 @@
 			$treeAdj[$v2][] = new Pair($v1, $w);
 		}
 		//traverse tree
-		$stack = array(); //of triples
+		$stack = array();
+		$visited = array();
+		$parent = array();
 		
+		$stack[] = $start;
+		$visited[$start] = true;
+		while(!empty($stack)) {
+			$u = array_pop($stack);
+			for($i=0; $i<count($treeAdj[$u]); $i++) {
+				$v = $treeAdj[$u][$i]->v();
+				if(!$visited[$v]) {
+					$visited[$v] = true;
+					$parent[$v] = $u;
+					$stack[] = $v;
+				}
+			}
+		}
+		//backward traverse path to find max on path
+		$ans = 0;
+		
+		return $ans;
 	}
 	
   }
