@@ -441,26 +441,47 @@ class GraphTemplate{
       )
     );
   protected static $graphTemplateIndex = array(
-    GRAPH_TEMPLATE_K5, GRAPH_TEMPLATE_TESSELLATION, GRAPH_TEMPLATE_RAIL, GRAPH_TEMPLATE_CP4P10
+    GRAPH_TEMPLATE_TYPE_DIRECTED => array(
+      ),
+    GRAPH_TEMPLATE_TYPE_UNDIRECTED => array(
+      GRAPH_TEMPLATE_K5, GRAPH_TEMPLATE_TESSELLATION, GRAPH_TEMPLATE_RAIL, GRAPH_TEMPLATE_CP4P10
+      )
     );
 
   public function __construct(){
 
   }
 
-  public static function getGraph($numVertex, $connected, $directed){
-    while (@ob_end_flush());
-    $template = array_copy(self::$graphTemplate[GRAPH_TEMPLATE_EMPTY]);
+  /*
+   * Pass in a variable called $params to getGraph, containing these informations:
+   * - "numVertex": number of vertex desired
+   * - "directed": boolean, directed or undirected
+   * - Optionals:
+   *   - "connected": boolean, connected or disconnected
+   *   - "negativeEdge": boolean, contains negative edges or not
+   *   - "negativeCycle": boolean, contains negative cycles or not
+   * - Optionals for directed graphs:
+   *   - "isDag": boolean, is DAG or not
+   */
 
-    while(count($template["internalAdjList"]) < $numVertex){
-      $templateName = self::$graphTemplateIndex[rand(0, count(self::$graphTemplateIndex)-1)];
+  public static function getGraph($params){
+    $template = array_copy(self::$graphTemplate[GRAPH_TEMPLATE_EMPTY]);
+    $templateBank;
+
+    if($params["directed"]) $templateBank = self::$graphTemplateIndex[GRAPH_TEMPLATE_TYPE_DIRECTED];
+    else $templateBank = self::$graphTemplateIndex[GRAPH_TEMPLATE_TYPE_UNDIRECTED];
+
+    while(count($template["internalAdjList"]) < $params["numVertex"]){
+      $templateName = $templateBank[rand(0, count($templateBank)-1)];
       $template = array_copy(self::$graphTemplate[$templateName]);
     }
 
     $weightList = array(0);
+    $connected = false;
+    if($params["connected"]) $connected = true;
 
-    self::reduceVertex($template, $numVertex, $connected, $directed);
-    if(!$connected && !self::isConnected($template, $directed)) self::disconnect($template);
+    self::reduceVertexUndirected($template, $params["numVertex"], $connected);
+    if(!$connected && !self::isConnected($template, $params["directed"])) self::disconnect($template);
     self::randomizeWeight($template);
 
     return $template;
@@ -494,7 +515,7 @@ class GraphTemplate{
     return $state;
   }
 
-  protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
+  protected static function reduceVertexUndirected(&$template, $numVertex, $connected){
     $tempTemplate = array_copy($template);
     $indexList = array_keys($template["internalAdjList"]);
     while(count($indexList) > 0){
@@ -511,7 +532,7 @@ class GraphTemplate{
         unset($templateCopy["internalEdgeList"][$value]);
       }
       unset($templateCopy["internalAdjList"][$index]);
-      if(!$connected || self::isConnected($templateCopy, $directed)){
+      if(!$connected || self::isConnected($templateCopy, FALSE)){
         $tempTemplate = $templateCopy;
       }
       unset($indexList[$indexChosen]);
@@ -548,9 +569,10 @@ class GraphTemplate{
       $queue = array();
       $visited[] = $initVertex;
       $adjacent = $template["internalAdjList"][$initVertex];
+      unset($adjacent["cxPercentage"]);
+      unset($adjacent["cyPercentage"]);
 
       foreach($adjacent as $key => $value){
-        if($key == "cxPercentage" || $key == "cyPercentage") continue;
         $queue[] = $key;
       }
 
@@ -560,18 +582,45 @@ class GraphTemplate{
         if(!in_array($currVertex, $visited)){
           $visited[] = $currVertex;
           $adjacent = $template["internalAdjList"][$currVertex];
+          unset($adjacent["cxPercentage"]);
+          unset($adjacent["cyPercentage"]);
           foreach($adjacent as $key => $value){
-            if($key == "cxPercentage" || $key == "cyPercentage") continue;
             $queue[] = $key;
           }
         }
       }
+
+      return count($visited) == count($template["internalAdjList"]);
     }
     else{
+      // $vertexList = array_keys($template["internalAdjList"]);
+      // $ufds = new UFDS();
 
+      // foreach($vertexList as $key){
+      //   $ufds->insert($key);
+      // }
+
+      // while(count($visited) != count($template["internalAdjList"])){
+      //   $vertex = array_shift($vertexList);
+      //   if(in_array($vertex, $visited)) continue;
+      //   $queue = array($vertex);
+
+      //   while(count($queue) > 0){
+      //     $currVertex = array_shift($queue);
+      //     if(in_array($currVertex, $visited)) continue;
+      //     $visited[] = $currVertex;
+      //     $ufds->unionSet($currVertex, $vertex);
+      //     $adjacent = $template["internalAdjList"][$currVertex];
+      //     unset($adjacent["cxPercentage"]);
+      //     unset($adjacent["cyPercentage"]);
+      //     foreach($adjacent as $key){
+      //       $queue[] = $key;
+      //     }
+      //   }
+      // }
+
+      // return $ufds->getSetAmt() == 1;
     }
-
-    return count($visited) == count($template["internalAdjList"]);
   }
 
   protected static function toposort($template){

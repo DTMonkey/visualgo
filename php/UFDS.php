@@ -107,6 +107,10 @@
       return $this->elements;
     }
 
+    public function getSetAmt(){
+      return $this->setAmt;
+    }
+
     public function insert($val){
       $this->elements[$val] = array("parent" => $val, "rank" => 0, "setSize" => 1, "cxPercentage" => 0, "cyPercentage" => 0, "drawn" => 0);
       $this->setAmt++;
