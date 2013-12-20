@@ -515,7 +515,7 @@ class GraphTemplate{
   protected static function randomizeWeight(&$template){
     $weightList = array(0);
 
-    for($i = 0; $i < count($template["internalEdgeList"]); $i++){
+    foreach($template["internalEdgeList"] as $key => $value){
       $weight = 0;
 
       while(in_array($weight, $weightList)){
@@ -523,7 +523,7 @@ class GraphTemplate{
       }
       $weightList[] = $weight;
 
-      $template["internalEdgeList"][$i]["weight"] = $weight;
+      $template["internalEdgeList"][$key]["weight"] = $weight;
     }
   }
 
