@@ -449,6 +449,7 @@ class GraphTemplate{
   }
 
   public static function getGraph($numVertex, $connected, $directed){
+    while (@ob_end_flush());
     $template = array_copy(self::$graphTemplate[GRAPH_TEMPLATE_EMPTY]);
 
     while(count($template["internalAdjList"]) < $numVertex){
@@ -458,7 +459,7 @@ class GraphTemplate{
 
     $weightList = array(0);
 
-    // self::reduceVertex($template, $numVertex, $connected, $directed);
+    self::reduceVertex($template, $numVertex, $connected, $directed);
     if(!$connected && !self::isConnected($template, $directed)) self::disconnect($template);
     self::randomizeWeight($template);
 
@@ -494,14 +495,17 @@ class GraphTemplate{
   }
 
   protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
-    for($i = count($template) - 1; $i >= 0; $i--){
+    for($i = count($template) - 1; $i >= 0 && count($template["internalAdjList"]) > $numVertex; $i--){
       $templateCopy = array_copy($template);
       $adjacent = $template["internalAdjList"][$i];
+      unset($adjacent["cxPercentage"]);
+      unset($adjacent["cyPercentage"]);
+
       foreach($adjacent as $key => $value){
-        if($key == "cxPercentage" || $key == "cyPercentage") continue;
         unset($templateCopy["internalAdjList"][$key][$i]);
         unset($templateCopy["internalEdgeList"][$value]);
       }
+      unset($templateCopy["internalAdjList"][$i]);
       if(!$connected || self::isConnected($templateCopy, $directed)){
         $template = $templateCopy;
       }
@@ -547,8 +551,7 @@ class GraphTemplate{
         array_shift($queue);
         if(!in_array($currVertex, $visited)){
           $visited[] = $currVertex;
-          $adjacent = $template["internalAdjList"][$initVertex];
-
+          $adjacent = $template["internalAdjList"][$currVertex];
           foreach($adjacent as $key => $value){
             if($key == "cxPercentage" || $key == "cyPercentage") continue;
             $queue[] = $key;

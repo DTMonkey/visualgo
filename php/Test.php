@@ -69,7 +69,7 @@
       $qArrJson[] = $qArr[$i]->toJsonObject();
     }
 
-    echo arrayOfJsonStringEncoder($qArrJson);
+    // echo arrayOfJsonStringEncoder($qArrJson);
   }
 
   else if($mode == MODE_CHECK_ANSWERS){
