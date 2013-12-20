@@ -495,21 +495,24 @@ class GraphTemplate{
   }
 
   protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
-    for($i = count($template) - 1; $i >= 0 && count($template["internalAdjList"]) > $numVertex; $i--){
-      $templateCopy = array_copy($template);
-      $adjacent = $template["internalAdjList"][$i];
+    $tempTemplate = array_copy($template);
+    foreach($template["internalAdjList"] as $index => $vertex){
+      if(count($tempTemplate) < $numVertex) break;
+      $templateCopy = array_copy($tempTemplate);
+      $adjacent = $tempTemplate["internalAdjList"][$index];
       unset($adjacent["cxPercentage"]);
       unset($adjacent["cyPercentage"]);
 
       foreach($adjacent as $key => $value){
-        unset($templateCopy["internalAdjList"][$key][$i]);
+        unset($templateCopy["internalAdjList"][$key][$index]);
         unset($templateCopy["internalEdgeList"][$value]);
       }
-      unset($templateCopy["internalAdjList"][$i]);
+      unset($templateCopy["internalAdjList"][$index]);
       if(!$connected || self::isConnected($templateCopy, $directed)){
-        $template = $templateCopy;
+        $tempTemplate = $templateCopy;
       }
     }
+    $template = $tempTemplate;
   }
 
   protected static function randomizeWeight(&$template){
