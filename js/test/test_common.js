@@ -30,8 +30,6 @@ function init() {
 	qnParamsArr[0] = false;
 	qnNoAnsArr[0] = DISALLOW_NO_ANS;
 	for(var i=0; i<=nQns; i++) { ansArr[i] = UNANSWERED; } //Initialise ansArr with all false - not answered yet
-	
-	prepareQnNav(nQns);
 }
 
 function prepareQnNav(n) { //n is the number of questions

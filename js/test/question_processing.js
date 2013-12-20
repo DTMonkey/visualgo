@@ -61,6 +61,10 @@ function extractQnText(topic, type, params) { //returns string
 				case QUESTION_TYPE_KRUSKAL_SEQUENCE:		toReturn = MST_KRUSKAL_SEQUENCE; break;
 				case QUESTION_TYPE_MINIMAX_EDGE:			toReturn = MST_MINIMAX_EDGE; break;
 			}
+		case QUESTION_TOPIC_SSSP:
+			switch(type) {
+				
+			}
 		default: //nothing
 	}
 	var matches = toReturn.match(/\|[^|]+\|/g); //words between 2 pipes: |something|

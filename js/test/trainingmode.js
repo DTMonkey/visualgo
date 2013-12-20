@@ -36,6 +36,7 @@ function getQnsAndStart() {
 		}
 		
 		//switch screens
+		prepareQnNav(nQns);
 		$('#topics-screen').fadeOut("fast");
 		$('#test-screen').fadeIn("fast");
 		$('#ans-key').hide();
