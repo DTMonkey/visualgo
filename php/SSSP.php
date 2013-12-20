@@ -54,10 +54,32 @@ class SSSP {
 	}
 	
 	public function bellmanFord($start) {
+		$shortestPath = array(); //from $start
+		$parent = array();
+		
+		//initialize $shortestPath to infinity
 		$akeys = $this->getAllElements();
 		for($i=0; $i<count($akeys); $i++) {
-			$shortestPaths[$akeys[$i]] = INFINITY;
+			$shortestPath[$akeys[$i]] = INFINITY;
 		}
+		
+		//relax edges
+		for($i=1; $i<count($akeys); $i++) { // V-1 times
+			//for all edges
+			for($iu=0; $iu<count($akeys); $iu++) { //iu goes from 0 to number of vertices-1
+				$u = $akeys[$iu]; //u is the key of the vertex
+				for($iv=0; $iv<count($this->adjList[$u]); $iv++) { //iu goes from 0 to number of adjacent vertices-1
+					$v = $this->adjList[$u][$iv]->v(); //v is the key of the adjacent vertex
+					$w = $this->adjList[$u][$iv]->w(); //w is the weight of edge u-->v
+					if (($shortestPath[$u] + $w) < $shortestPath[$v]) {
+						$shortestPath[$v] = $shortestPath[$u] + $w;
+						$parent[$v] = $u;
+					}
+				}
+			}
+		}
+		//this bellman ford does not look for negative cycles
+		return $shortestPath;
 	}
 	
 }
