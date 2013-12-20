@@ -496,8 +496,10 @@ class GraphTemplate{
 
   protected static function reduceVertex(&$template, $numVertex, $connected, $directed){
     $tempTemplate = array_copy($template);
-    foreach($template["internalAdjList"] as $index => $vertex){
-      if(count($tempTemplate) < $numVertex) break;
+    $indexList = array_keys($template["internalAdjList"]);
+    for($i = count($indexList) - 1; $i >= 0; $i--){
+      if(count($tempTemplate["internalAdjList"]) <= $numVertex) break;
+      $index = $indexList[$i];
       $templateCopy = array_copy($tempTemplate);
       $adjacent = $tempTemplate["internalAdjList"][$index];
       unset($adjacent["cxPercentage"]);
