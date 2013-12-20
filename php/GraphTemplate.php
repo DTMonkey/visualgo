@@ -438,6 +438,184 @@ class GraphTemplate{
               "vertexB" =>  4
             )
           )
+      ),
+    GRAPH_TEMPLATE_CP3_4_17 => array(
+        "internalAdjList" => array(
+          0 => array(
+              "cx" => 210,
+              "cy" => 190,
+              "text" => 0,
+              4 =>3
+            ),
+          1 => array(
+              "cx" => 50,
+              "cy" => 50,
+              "text" => 1,
+              3 =>1,
+              4 =>0
+            ),
+          2 => array(
+              "cx" => 170,
+              "cy" => 120,
+              "text" => 2,
+              0 =>4,
+              1 =>2,
+              3 =>6
+            ),
+          3 => array(
+              "cx" => 330,
+              "cy" => 50,
+              "text" => 3,
+              4 =>5
+            ),
+          4 => array(
+              "cx" => 240,
+              "cy" => 280,
+              "text" => 4,
+            )
+          ),
+        "internalEdgeList" => array(
+          0 => array(
+              "vertexA" => 1,
+              "vertexB" => 4
+            ),
+          1 => array(
+              "vertexA" => 1,
+              "vertexB" => 3
+            ),
+          2 => array(
+              "vertexA" => 2,
+              "vertexB" => 1
+            ),
+          3 => array(
+              "vertexA" => 0,
+              "vertexB" => 4
+            ),
+          4 => array(
+              "vertexA" => 2,
+              "vertexB" => 0
+            ),
+          5 => array(
+              "vertexA" => 3,
+              "vertexB" => 4
+            ),
+          6 => array(
+              "vertexA" => 2,
+              "vertexB" => 3
+            )
+          )
+      ),
+    GRAPH_TEMPLATE_CP3_4_18 => array(
+        "internalAdjList" => array(
+          0 => array(
+              "cx" => 50,
+              "cy" => 125,
+              "text" => 0,
+              1 =>0,
+              2 =>3
+            ),
+          1 => array(
+              "cx" => 150,
+              "cy" => 50,
+              "text" => 1,
+              3 =>2
+            ),
+          2 => array(
+              "cx" => 150,
+              "cy" => 200,
+              "text" => 2,
+              3 =>4
+            ),
+          3 => array(
+              "cx" => 250,
+              "cy" => 125,
+              "text" => 3,
+              4 =>2
+            ),
+          4 => array(
+              "cx" => 350,
+              "cy" => 125,
+              "text" => 4,
+            )
+          ),
+        "internalEdgeList" => array(
+          0 => array(
+              "vertexA" => 0,
+              "vertexB" => 1
+            ),
+          1 => array(
+              "vertexA" => 1,
+              "vertexB" => 3
+            ),
+          2 => array(
+              "vertexA" => 3,
+              "vertexB" => 4
+            ),
+          3 => array(
+              "vertexA" => 0,
+              "vertexB" => 2
+            ),
+          4 => array(
+              "vertexA" => 2,
+              "vertexB" => 3
+            )
+          )
+      ),
+    GRAPH_TEMPLATE_CP3_4_19 => array(
+        "internalAdjList" => array(
+          0 => array(
+            "cx" => 50,
+            "cy" => 50,
+            "text" => 0,
+            1 =>0,
+            4 =>4
+            ),
+          1 => array(
+            "cx" => 150,
+            "cy" => 50,
+            "text" => 1,
+            2 =>1
+            ),
+          2 => array(
+            "cx" => 250,
+            "cy" => 50,
+            "text" => 2,
+            1 =>2,
+            3 =>3
+            ),
+          3 => array(
+            "cx" => 350,
+            "cy" => 50,
+            "text" => 3
+            ),
+          4 => array(
+            "cx" => 150,
+            "cy" => 125,
+            "text" => 4
+            )
+          ),
+        "internalEdgeList" => array(
+          0 => array(
+              "vertexA" => 0,
+              "vertexB" => 1
+            ),
+          1 => array(
+              "vertexA" => 1,
+              "vertexB" => 2
+            ),
+          2 => array(
+              "vertexA" => 2,
+              "vertexB" => 1
+            ),
+          3 => array(
+              "vertexA" => 2,
+              "vertexB" => 3
+            ),
+          4 => array(
+              "vertexA" => 0,
+              "vertexB" => 4
+            )
+          )
       )
     );
   protected static $graphTemplateIndex = array(
@@ -453,15 +631,15 @@ class GraphTemplate{
   }
 
   /*
-   * Pass in a variable called $params to getGraph, containing these informations:
-   * - "numVertex": number of vertex desired
-   * - "directed": boolean, directed or undirected
-   * - Optionals:
-   *   - "connected": boolean, connected or disconnected
-   *   - "negativeEdge": boolean, contains negative edges or not
-   *   - "negativeCycle": boolean, contains negative cycles or not
-   * - Optionals for directed graphs:
-   *   - "isDag": boolean, is DAG or not
+   * Pass in a variable called $params to getGraph, containing these informations =>
+   * - "numVertex" => number of vertex desired
+   * - "directed" => boolean, directed or undirected
+   * - Optionals =>
+   *   - "connected" => boolean, connected or disconnected
+   *   - "negativeEdge" => boolean, contains negative edges or not
+   *   - "negativeCycle" => boolean, contains negative cycles or not
+   * - Optionals for directed graphs =>
+   *   - "isDag" => boolean, is DAG or not
    */
 
   public static function getGraph($params){
