@@ -67,7 +67,7 @@
 
     protected function init(){
 		$this->size = rand(6,8);
-		$this->graphTemplate = GraphTemplate::getGraph($this->size, true, false);
+		$this->graphTemplate = GraphTemplate::getGraph(array("numVertex" => $this->size, "directed" => false, "connected" => true));
 		$this->generateAdjList($this->graphTemplate); //array of array of Pairs
 		$this->generateEdgeList($this->graphTemplate); //array of triples
     }
