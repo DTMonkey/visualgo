@@ -80,7 +80,8 @@ class MstQuestionGenerator{
     protected function checkAnswerPrimSequence($qObj, $userAns){
       $mst = $qObj->internalDS;
       $startValue = $qObj->qParams["value"];
-      $$amtEdge = $qObj->qParams["amt"];
+      $amtEdge = $qObj->qParams["amt"];
+      $ans = $mst->prim($startValue);
       $ans = array_slice($ans, 0, $amtEdge);
 
       $correctness = true;
@@ -121,7 +122,7 @@ class MstQuestionGenerator{
     protected function checkAnswerKruskalSequence($qObj, $userAns){
       $mst = $qObj->internalDS;
       $ans = $mst->kruskal();
-      $$amtEdge = $qObj->qParams["amt"];
+      $amtEdge = $qObj->qParams["amt"];
       $ans = array_slice($ans, 0, $amtEdge);
 
       $correctness = true;
